@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.user.master')
 
-        <title>Laravel</title>
+@section('title', 'PENRO Archiving System')
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-        @vite('resources/css/app.css')
-      
-      
-    </head>
-    <body class="">
-    <h1 class="text-3xl font-bold underline text-red-600">
-        Hello world!
-    </h1>
-    </body>
-</html>
+@section('content')
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the content of the home page.</p>
+@endsection
