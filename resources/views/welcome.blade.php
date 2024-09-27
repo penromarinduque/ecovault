@@ -5,7 +5,7 @@
 @section('content')
     <div class="grid grid-flow-col m-14 gap-5">
 
-        <div>
+        <div>            
             <div class="bg-red-700 w-[720px] h-[380px]  rounded-lg "></div>
         </div>
         
