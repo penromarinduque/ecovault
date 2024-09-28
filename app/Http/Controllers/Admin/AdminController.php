@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     //
-
-    function Home(){
+    function ShowHome(){
         return view('admin.home');
     }
+
+    function ShowFileManager(){
+        return view('admin.file-manager.file-manager');
+    }
+
 }
