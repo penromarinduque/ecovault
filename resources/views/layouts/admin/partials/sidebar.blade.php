@@ -14,7 +14,7 @@
        
 
         <li class="flex items-center space-x-2">
-            <a href="#" class="flex  gap-2 items-center">
+            <a href="{{route('file-manager.show')}}" class="flex  gap-2 items-center">
                 <img src="{{ asset('images/navigation/file-manager.png') }}" alt="" class="w-16">
                 <span class="">File Manager</span>
             </a>
