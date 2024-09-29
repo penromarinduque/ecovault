@@ -9,7 +9,5 @@ class MunicipalityController extends Controller
 {
     //
 
-    function ShowMunicipality($type){
-        return view('admin.file-manager.municipality', compact('type'));
-    }
+
 }
