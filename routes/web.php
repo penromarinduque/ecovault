@@ -14,12 +14,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/admin', [AdminController::class, 'Home']);
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
-Route::get('/admin', [AdminController::class, 'ShowHome']);
+Route::get('/register', [AuthController::class, 'ShowRegistrationForm'])->name('register.show');
+Route::post('store-account', [AuthController::class, 'StoreAccount'])->name('user.post');
+Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
+Route::post('login', [AuthController::class, 'Login'])->name('login.post');
+
+Route::get('/admin', [AdminController::class, 'ShowHome'])->name('admin.home.show');
 Route::get('/admin/file-manager', [AdminController::class, 'ShowFileManager']);
+
 
 Route::get('/admin/municipality/{type}', [MunicipalityController::class, 'ShowMunicipality'])->name('municipality.show');
 
