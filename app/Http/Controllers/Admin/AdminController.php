@@ -30,7 +30,7 @@ class AdminController extends Controller
         return view('admin.file-manager.land-title-categories', compact('type'));
     }
 
-    function ShowTable($type,$municipality){
+    function ShowTable($type, $municipality){
         return view('admin.file-manager.table', compact('type',  'municipality'));
     }
     function ShowTableWithCategory($type, $category, $municipality){

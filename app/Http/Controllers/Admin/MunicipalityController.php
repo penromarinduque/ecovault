@@ -9,5 +9,5 @@ class MunicipalityController extends Controller
 {
     //
 
-    
+
 }

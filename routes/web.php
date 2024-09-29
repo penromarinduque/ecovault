@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\AuthController;
 
 use App\Http\Controllers\Admin\MunicipalityController;
 
+use App\Http\Controllers\Admin\FileController;
+
 
 
 Route::get('/', function () {
@@ -27,3 +29,4 @@ Route::get('/admin/{type}/{municipality}', [AdminController::class, 'ShowTable']
 Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
 
 
+Route::post('/file-upload', [FileController::class, 'upload'])->name('file.post');
