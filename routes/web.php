@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\MunicipalityController;
 
 use App\Http\Controllers\Admin\FileController;
-
+use App\Http\Controllers\Admin\StorageController;
 
 
 Route::get('/', function () {
@@ -22,7 +22,7 @@ Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
 Route::post('login', [AuthController::class, 'Login'])->name('login.post');
 
 Route::get('/admin', [AdminController::class, 'ShowHome'])->name('admin.home.show');
-
+Route::get('/admin/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
 
 
 Route::get('/admin/municipality/{type}', [MunicipalityController::class, 'ShowMunicipality'])->name('municipality.show');

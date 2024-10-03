@@ -100,7 +100,7 @@
                         <form id="upload-form" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="" id="step-1">
+                            <div class="" id="step-1">z
 
                                 <div class="flex justify-between items-center mb-2 ">
                                     <h2 class="text-lg font-bold">Upload File</h2>
@@ -204,6 +204,12 @@
                                     class="mt-2 inline-block bg-green-500 text-white rounded-md px-8 py-2">
                                     No file chosen
                                 </p>
+
+                                {{-- Add a div here for form --}}
+                                {{-- if(@type == "tree-cutting-permits")    {
+                                    fields for tree cutting
+                                } --}}
+
 
                                 <div class="mt-4 flex justify-end gap-4">
 
@@ -426,7 +432,17 @@
                             const formData = new FormData(this);
                             const csrfToken = document.querySelector('input[name="_token"]').value;
 
+                            const officeSource = document.getElementById('office-source').value;
+                            const category = document.getElementById('category').value;
+                            const classification = document.getElementById('classification').value;
+                            const status = document.getElementById('status').value;
 
+                            formData.append('office-source', officeSource);
+                            formData.append('category', category);
+                            formData.append('classification', classification);
+                            formData.append('status', status);
+
+                            //const fileId = null
                             fetch("{{ route('file.post') }}", {
                                     method: 'POST',
                                     body: formData,
@@ -439,7 +455,13 @@
                                     if (data.success) {
 
                                         showToast(data.message, true);
+                                        console.log(data.data)
 
+                                        //if $type treecuting
+
+                                        //fetch for tree cutting
+                                        //const FileId = 1;
+                                        //  fetch()
 
                                         // Reset form fields
                                         this.reset();
@@ -462,14 +484,15 @@
                                 .catch(error => {
                                     showToast('An error occurred while uploading the file.', false);
                                 }).finally(() => {
+
+                                    //add post here
+                                    //id file
+
                                     // Re-enable the button and revert to the original state
                                     submitButton.disabled = false;
                                     buttonText.classList.remove('hidden'); // Show the button text again
                                     buttonSpinner.classList.add('hidden'); // Hide the spinner
 
-                                    document.getElementById('step-1').classList.remove('hidden');
-                                    document.getElementById('step-2')
-                                        .classList.add('hidden');
                                 });
                         });
                     </script>
