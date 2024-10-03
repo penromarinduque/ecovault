@@ -20,6 +20,8 @@ Route::get('/register', [AuthController::class, 'ShowRegistrationForm'])->name('
 Route::post('/store-account', [AuthController::class, 'StoreAccount'])->name('user.post');
 Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
 Route::post('/login/auth', [AuthController::class, 'Authenticate'])->name('login.post');
+Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verification.show');
+Route::get('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
 
 Route::middleware(['authentication'])->group(function () {
     Route::get('/admin', [AdminController::class, 'ShowHome'])->name('admin.home.show');

@@ -25,7 +25,7 @@ class VerifiedUser
             //         'message' => 'Email verification required.'
             //     ], 403);
             // }
-            return redirect()->route('verification.notice')->withErrors(['error' => 'Email verification required.']);
+            return redirect()->route('verification.show')->withErrors(['error' => 'Email verification required.']);
         }
 
         if (!$user) {
