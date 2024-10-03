@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\MunicipalityController;
 
 use App\Http\Controllers\Admin\FileController;
-
+use App\Http\Controllers\Admin\StorageController;
 
 
 Route::get('/', function () {
@@ -23,6 +23,8 @@ Route::post('/login/auth', [AuthController::class, 'Authenticate'])->name('login
 
 Route::middleware(['authentication'])->group(function () {
     Route::get('/admin', [AdminController::class, 'ShowHome'])->name('admin.home.show');
+    Route::get('/admin/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
+
     Route::get('/admin/municipality/{type}', [MunicipalityController::class, 'ShowMunicipality'])->name('municipality.show');
     Route::get('/admin/file-manager', [AdminController::class, 'ShowFileManager'])->name('file-manager.show');
     Route::get('/admin/{type}/municipality', [AdminController::class, 'ShowMunicipality'])->name('file-manager.municipality.show');
@@ -32,3 +34,4 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
     Route::post('/file-upload', [FileController::class, 'upload'])->name('file.post');
 });
+
