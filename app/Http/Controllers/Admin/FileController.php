@@ -57,7 +57,7 @@ class FileController extends Controller
         ]);
 
         // Specify the target directory on your HDD (D: drive)
-        $targetDirectory = 'D:/PENRO/uploads';
+        $targetDirectory = 'C:/PENRO/uploads';
 
         // Ensure the directory exists or create it if not
         if (!file_exists($targetDirectory)) {

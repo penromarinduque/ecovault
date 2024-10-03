@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     @vite('resources/css/app.css')
     <!-- Include your CSS files here -->
 </head>
+
 <body>
     <!-- Header section -->
     @include('layouts.user.partials.header')
@@ -19,4 +21,5 @@
     @include('layouts.user.partials.footer')
 
 </body>
+
 </html>
