@@ -114,4 +114,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'OTP is incorrect.'], 422);
         }
     }
+
+    public function Logout()
+    {
+        Auth::logout();
+    }
 }
