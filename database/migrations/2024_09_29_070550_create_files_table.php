@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -38,25 +37,7 @@ return new class extends Migration
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
             $table->string('location');
-            $table->string('serial_number');
-            $table->date('date_applied');
-            $table->timestamps();
-        });
-
-        Schema::create('tree_plantation_registration', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
-            $table->string('name_of_client');
-            $table->string('location');
-            $table->date('date_applied');
-            $table->timestamps();
-        });
-
-        Schema::create('tree_plantation_registration', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
-            $table->string('name_of_client');
-            $table->string('location');
+            // $table->string('serial_number');
             $table->date('date_applied');
             $table->timestamps();
         });
@@ -97,6 +78,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('land_titles');
+        Schema::dropIfExists('transport_permits');
+        Schema::dropIfExists('tree_plantation_registration');
+        Schema::dropIfExists('chainsaw_registrations');
+        Schema::dropIfExists('tree_cutting_permits');
         Schema::dropIfExists('files');
     }
 };
