@@ -108,7 +108,7 @@ class AuthController extends Controller
             $user->otp = null; // Clear OTP after verification
             $user->save();
 
-            return response()->json(['message' => 'Email verified successfully.'], 200);
+            return redirect()->intended(route('login.show'));
         } else {
             // Failure - OTP is incorrect
             return response()->json(['message' => 'OTP is incorrect.'], 422);
