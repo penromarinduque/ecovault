@@ -25,8 +25,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
-            $table->integer('number_of_trees');
-            $table->string('species');
+            $table->integer('number_of_trees');           
             $table->string('location');
             $table->date('date_applied');
             $table->timestamps();
@@ -37,7 +36,7 @@ return new class extends Migration {
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
             $table->string('location');
-            // $table->string('serial_number');
+            $table->string('serial_number');
             $table->date('date_applied');
             $table->timestamps();
         });
@@ -46,6 +45,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
+             $table->integer('number_of_trees');  
             $table->string('location');
             $table->date('date_applied');
             $table->timestamps();
@@ -55,8 +55,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to the files table
             $table->string('name_of_client');  // Name of the client
-            $table->integer('number_of_trees');  // Number of trees
-            $table->string('species');  // Species of trees
+            $table->integer('number_of_trees');  // Number of trees           
             $table->date('date_applied');  // Date of application
             $table->date('date_of_transport');  // Date of transport
             $table->timestamps();
