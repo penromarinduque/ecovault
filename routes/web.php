@@ -21,10 +21,10 @@ Route::post('/store-account', [AuthController::class, 'StoreAccount'])->name('us
 Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
 Route::post('/login/auth', [AuthController::class, 'Authenticate'])->name('login.post');
 Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verification.show');
-Route::get('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
+Route::post('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
 
 Route::middleware(['authentication'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'ShowHome'])->name('admin.home.show');
+    Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
     Route::get('/admin/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
 
     Route::get('/admin/municipality/{type}', [MunicipalityController::class, 'ShowMunicipality'])->name('municipality.show');
