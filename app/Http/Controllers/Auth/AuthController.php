@@ -117,6 +117,13 @@ class AuthController extends Controller
 
     public function Logout()
     {
-        Auth::logout();
+        Auth::guard('')->logout();
+
+        // Get the user's email before logging out
+        // $email = Auth::user()->email;
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
+        // session(['email' => $email]);
+        return redirect()->route('login.show')->with('status', 'Logout Successful');
     }
 }
