@@ -216,13 +216,14 @@
 
                                 @if ($type == 'tree-cutting-permits')
                                     <div class="flex mt-4">
-                                        <label for="name-of-client" class="text-black mt-2 mr-4 w-1/6">Name of Client
+                                        <label for="name-of-client" class=" text-black mt-2 mr-4 w-1/6">Name
+                                            of Client
                                         </label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Value"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="name-of-client-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter an Name Client</p>
                                         </div>
                                     </div>
@@ -257,14 +258,15 @@
                                         <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
                                             <input type="date" id="date-applied"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3 ">
                                             <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Date Applied</p>
                                         </div>
                                     </div>
                                 @elseif ($type == 'tree-plantation')
                                     <div class="flex mt-4">
-                                        <label for="name-of-client" class="text-black mt-2 mr-4 w-1/6">Name of
+                                        <label for="name-of-client" class=" text-black mt-2 mr-4 w-1/6">Name
+                                            of
                                             Client</label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Value"
@@ -661,6 +663,20 @@
 
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
+
+                            let isValid = true; // Use 'let' so it can be reassigned
+
+                            let nameOfClient = document.querySelector('.name-of-client');
+                            let nameOfClientError = document.querySelector('.name-of-client-error')
+                            if (nameOfClient && nameOfClient.value === "") {
+                                nameOfClient.classList.add("border-red-500");
+                                nameOfClientError.classList.remove("invisible")
+                                isValid = false; // Reassigning isValid to false if validation fails
+                            }
+
+                            if (!isValid) {
+                                return; // Stop further execution if validation fails
+                            }
 
 
                             const submitButton = document.getElementById('upload-btn');
