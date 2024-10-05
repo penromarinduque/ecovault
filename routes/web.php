@@ -94,6 +94,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/admin/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
     Route::get('/admin/{type}/{municipality}', [AdminController::class, 'ShowTable'])->name('file-manager.table.show');
     Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
-    Route::post('/file-upload', [FileController::class, 'upload'])->name('file.post');
+    Route::post('/file-upload', [FileController::class, 'StoreFile'])->name('file.post');
+    Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
 });
 

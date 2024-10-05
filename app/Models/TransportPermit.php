@@ -9,11 +9,12 @@ class TransportPermit extends Model
 {
     use HasFactory;
 
+    protected $table = 'transport_permits';
     protected $fillable = [
         'file_id',
         'name_of_client',
         'number_of_trees',
-        'species',
+        'destination',
         'date_applied',
         'date_of_transport',
     ];

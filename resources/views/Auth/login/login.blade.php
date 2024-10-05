@@ -21,6 +21,7 @@
                                 placeholder="user@gmail.com" required />
                         </div>
 
+
                         <div class="mb-5 relative">
                             <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your
                                 password</label>
@@ -54,6 +55,7 @@
                                 <div class="flex items-center h-5">
                                     <input id="terms" type="checkbox" name="remember"
                                         class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300" />
+
                                 </div>
                                 <label for="terms" class="ms-2 text-sm font-medium text-gray-900 ">
                                     <a href="#" class="text-blue-600 hover:underline ">

@@ -10,8 +10,11 @@ class File extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'permit_type',
+        'land_category',
+        'municipality',
         'file_path',
+        'office_source',
         'category',
         'classification',
         'status',
@@ -25,7 +28,7 @@ class File extends Model
 
     public function treeCuttingPermits()
     {
-        return $this->hasMany(TreeCutting::class);
+        return $this->hasMany(TreeCuttingPermit::class);
     }
 
     public function chainsawRegistrations()

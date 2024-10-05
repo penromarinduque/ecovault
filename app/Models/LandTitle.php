@@ -9,6 +9,7 @@ class LandTitle extends Model
 {
     use HasFactory;
 
+    protected $table = 'land_titles';
     protected $fillable = [
         'file_id',
         'name_of_client',
