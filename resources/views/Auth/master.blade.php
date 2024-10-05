@@ -7,21 +7,15 @@
     <title>@yield('title', 'Landing Page')</title>
     @vite('resources/css/app.css')
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
-    <!-- Include your CSS files here -->
 </head>
 
-<body class="bg-[#F4F2F2]">
-    <!-- Header section -->
-    @include('layouts.admin.partials.navigation')
-    @include('layouts.admin.partials.sidebar')
-    <!-- Main content section -->
-    <div class="content ml-64 p-4 mt-20">
+<body class="bg-gray-50">
+    <div class="h-full w-full">
+        <a href="#" class="flex items-center justify-center text-2xl font-semibold text-gray-900">
+            <img class="bg-auto" src="{{ asset('images/logo.png') }}" alt="logo">
+        </a>
         @yield('content')
     </div>
-
-
-
 </body>
 
 </html>

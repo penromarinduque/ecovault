@@ -32,7 +32,7 @@ class AuthController extends Controller
             $user->otp = $otp;
             $user->save();
 
-            Auth::login($user);
+            session(['email' => $request->email]);
 
             Mail::to($request->email)->send(new OtpMailVerification($otp));
 
@@ -41,9 +41,6 @@ class AuthController extends Controller
                 ->with('message', 'Account created successfully. Please check your email for the OTP.');
 
         } catch (\Exception $e) {
-            // Log the exception
-            \Log::error('Account creation failed: ' . $e->getMessage());
-
             if ($request->expectsJson()) {
                 return response()->json([
                     'error' => 'Failed to create account or send verification email. Please try again later.'
@@ -56,8 +53,6 @@ class AuthController extends Controller
         }
     }
 
-
-
     public function ShowLogin()
     {
         return view('auth.login.login');
@@ -65,65 +60,92 @@ class AuthController extends Controller
 
     public function Authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            // Log the user state after successful login
+            \Log::info('User authenticated: ', ['email' => $request->email]);
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.home.show'));
         }
 
-        return back()->withErrors([
+        // Log the failed attempt
+        \Log::warning('Failed authentication attempt: ', ['email' => $request->email]);
 
-        ]);
+        return back()->withErrors([]);
     }
 
     public function ShowVerification()
     {
-        return view('auth.verification.verification');
+        $email = session('email');
+        return view('auth.verification.verification', ['email' => $email]);
     }
 
 
     public function VerifyEmail(Request $request)
     {
-        // Validate that 'otp' is an array with exactly 4 numeric characters
+
         $request->validate([
             'otp' => 'required|array|size:4', // Ensure it's an array of exactly 4 elements
-            'otp.*' => 'required|digits:1', // Each element must be a single digit
+            'otp.*' => 'required|digits:1',   // Each element must be a single digit
         ]);
 
-        // Combine the OTP digits into a single string
+
         $otpArray = $request->input('otp');
         $otp = implode('', $otpArray);
 
 
-        $user = Auth::user();
-        // Check if the user is authenticated and if the OTP matches
-        if ($user && $otp == $user->otp) {
-            // Success - OTP is correct, update email_verified_at
+        $email = session('email');
+
+        if (!$email) {
+
+            return response()->json(['message' => 'Email not found in session.'], 422);
+        }
+
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+
+        if ($otp == $user->otp) {
+
             $user->email_verified_at = now();
-            $user->otp = null; // Clear OTP after verification
+            $user->otp = null;
             $user->save();
+
+
+            session()->forget('email');
 
             return redirect()->intended(route('login.show'));
         } else {
-            // Failure - OTP is incorrect
             return response()->json(['message' => 'OTP is incorrect.'], 422);
         }
     }
 
-    public function Logout()
+    public function Logout(Request $request)
     {
-        Auth::guard('')->logout();
 
-        // Get the user's email before logging out
-        // $email = Auth::user()->email;
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
-        // session(['email' => $email]);
+        $user = Auth::user();
+
+        if ($user) {
+            $user->remember_token = null;
+            $user->save();
+        }
+
+        Auth::logout();
+
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login.show')->with('status', 'Logout Successful');
     }
 }
