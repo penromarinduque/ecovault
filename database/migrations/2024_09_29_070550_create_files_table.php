@@ -12,11 +12,14 @@ return new class extends Migration {
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('permit_type');
+            $table->string('land_category')->nullable();
+            $table->string('municipality');
             $table->string('file_path');
-            $table->string('category')->nullable();
-            $table->string('classification')->nullable();
-            $table->string('status')->nullable();
+            $table->string('office_source');
+            $table->string('category');
+            $table->string('classification');
+            $table->string('status');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -25,7 +28,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
-            $table->integer('number_of_trees');           
+            $table->integer('number_of_trees');
             $table->string('location');
             $table->date('date_applied');
             $table->timestamps();
@@ -45,7 +48,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
-             $table->integer('number_of_trees');  
+            $table->integer('number_of_trees');
             $table->string('location');
             $table->date('date_applied');
             $table->timestamps();
@@ -55,7 +58,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to the files table
             $table->string('name_of_client');  // Name of the client
-            $table->integer('number_of_trees');  // Number of trees           
+            $table->integer('number_of_trees');  // Number of trees    
+            $table->string('destination');
             $table->date('date_applied');  // Date of application
             $table->date('date_of_transport');  // Date of transport
             $table->timestamps();

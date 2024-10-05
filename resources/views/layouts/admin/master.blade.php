@@ -7,7 +7,7 @@
     <title>@yield('title', 'Landing Page')</title>
     @vite('resources/css/app.css')
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <!-- Include your CSS files here -->
 </head>
 

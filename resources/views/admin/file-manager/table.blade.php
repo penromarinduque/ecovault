@@ -140,7 +140,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="flex  my-2">
                                     <label for="category" class="text-black mr-4 w-1/6">Category:</label>
                                     <div class="w-full">
@@ -162,10 +161,8 @@
                                             <option value="" disabled selected>Select a Classification</option>
                                             <option value="highly-technical">Highly Technical</option>
                                             <option value="simple">Simple</option>
-
                                         </select>
                                     </div>
-
                                 </div>
 
                                 <div class="flex items-center my-4">
@@ -179,6 +176,18 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <input type="hidden" id="permit_type" value="{{ $type }}" name="permit-type">
+                                @if (!isset($category))
+                                    <input type="hidden" id="land_category" value="" name="land_category">
+                                @else
+                                    <input type="hidden" id="land_category" value="{{ $category }}"
+                                        name="land_category">
+                                @endif
+                                <input type="hidden" id="municipality" value="{{ $municipality }}" name="municipality">
+
+
+
 
                                 <div class="flex justify-end gap-4">
 
@@ -231,6 +240,8 @@
                                         </div>
                                     </div>
 
+
+
                                     <div class="flex mt-4">
                                         <label for="location" class="text-black mt-2 mr-4 w-1/6">Location
                                         </label>
@@ -243,13 +254,12 @@
                                     </div>
 
                                     <div class="flex mt-4">
-                                        <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Location
-                                        </label>
+                                        <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
-                                            <input type="text" id="date-applied" placeholder="Enter Value"
+                                            <input type="date" id="date-applied"
                                                 class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
-                                                Please enter a Location</p>
+                                                Please enter the Date Applied</p>
                                         </div>
                                     </div>
                                 @elseif ($type == 'tree-plantation')
@@ -266,15 +276,15 @@
                                     </div>
 
                                     <div class="flex mt-2">
-                                        <label for="no-of-trees-planted" class="text-black mt-2 mr-4 w-1/6">No. of Trees
+                                        <label for="number_of_trees" class="text-black mt-2 mr-4 w-1/6">No. of Trees
                                             Planted</label>
                                         <div class="w-full">
-                                            <input type="number" id="no-of-trees-planted"
-                                                placeholder="Enter number of trees planted"
+                                            <input type="number" id="number_of_trees"
+                                                placeholder="Enter number of trees"
                                                 class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="no-of-trees-planted-error"
+                                            <p id="number_of_trees-error"
                                                 class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the number
-                                                of trees planted.</p>
+                                                of trees.</p>
                                         </div>
                                     </div>
 
@@ -289,12 +299,12 @@
                                     </div>
 
                                     <div class="flex mt-4">
-                                        <label for="date-planted" class="text-black mt-2 mr-4 w-1/6">Date Planted</label>
+                                        <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
-                                            <input type="date" id="date-planted" placeholder="Enter Date Planted"
+                                            <input type="date" id="date-applied"
                                                 class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="date-planted-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
-                                                Please enter the date of planting</p>
+                                            <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the Date Applied</p>
                                         </div>
                                     </div>
                                 @elseif ($type == 'tree-transport-permits')
@@ -320,6 +330,16 @@
                                             <p id="number-of-trees-error"
                                                 class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the number
                                                 of trees</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex mt-4">
+                                        <label for="destination" class="text-black mt-2 mr-4 w-1/6">Destination</label>
+                                        <div class="w-full">
+                                            <input type="text" id="destination" placeholder="Enter Destination"
+                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="destination-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the Destionation</p>
                                         </div>
                                     </div>
 
@@ -592,11 +612,6 @@
                             }
                         });
 
-
-
-
-
-
                         function showToast(message, isSuccess) {
                             const toast = document.getElementById('toast');
                             const toastMessage = document.getElementById('toast-message');
@@ -644,10 +659,9 @@
                             };
                         }
 
-
-
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
+
 
                             const submitButton = document.getElementById('upload-btn');
                             const buttonText = document.getElementById('button-text');
@@ -664,13 +678,21 @@
                             const category = document.getElementById('category').value;
                             const classification = document.getElementById('classification').value;
                             const status = document.getElementById('status').value;
+                            const permit_type = document.getElementById("permit_type").value;
+                            const land_category = document.getElementById("land_category").value;
+                            const municipality = document.getElementById("municipality").value;
 
-                            formData.append('office-source', officeSource);
+
+                            formData.append('office_source', officeSource);
                             formData.append('category', category);
                             formData.append('classification', classification);
                             formData.append('status', status);
+                            formData.append('permit_type', permit_type);
+                            formData.append('land_category', land_category);
+                            formData.append('municipality', municipality);
 
-                            //const fileId = null
+                            let fileId = 1;
+
                             fetch("{{ route('file.post') }}", {
                                     method: 'POST',
                                     body: formData,
@@ -682,29 +704,73 @@
                                 .then(data => {
 
                                     if (data.success) {
-
                                         showToast(data.message, true);
-                                        // console.log(data.data)
+                                        fileId = data.fileId;
 
-                                        //if $type treecuting
+                                        let formPermit = new FormData();
+                                        formPermit.append('file_id', fileId);
+                                        formPermit.append('permit_type', permit_type);
 
-                                        //fetch for tree cutting
-                                        //const FileId = 1;
-                                        //  fetch()
+                                        // Gather values based on form type
+                                        if (permit_type === 'tree-cutting-permits') {
+                                            formPermit.append('name_of_client', document.getElementById('name-of-client')
+                                                .value);
+                                            formPermit.append('number_of_trees', document.getElementById('no-of-tree-species')
+                                                .value);
+                                            formPermit.append('location', document.getElementById('location').value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                        } else if (permit_type === 'tree-plantation') {
+                                            formPermit.append('name_of_client', document.getElementById('name-of-client')
+                                                .value);
+                                            formPermit.append('number_of_trees', document.getElementById(
+                                                'number_of_trees').value);
+                                            formPermit.append('location', document.getElementById('location').value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                        } else if (permit_type === 'tree-transport-permits') {
+                                            formPermit.append('name_of_client', document.getElementById('name-of-client')
+                                                .value);
+                                            formPermit.append('number_of_trees', document.getElementById('number-of-trees')
+                                                .value);
+                                            formPermit.append('destination', document.getElementById('destination')
+                                                .value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                            formPermit.append('date_of_transport', document.getElementById('date-of-transport')
+                                                .value);
+                                        } else if (permit_type === 'chainsaw-registration') {
+                                            formPermit.append('name_of_client', document.getElementById('name-of-client')
+                                                .value);
+                                            formPermit.append('location', document.getElementById('location').value);
+                                            formPermit.append('serial_number', document.getElementById('serial-number').value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                        } else if (permit_type === 'land-titles') {
+                                            formPermit.append('name_of_client', document.getElementById('name-of-client')
+                                                .value);
+                                            formPermit.append('location', document.getElementById('location').value);
+                                            formPermit.append('lot_number', document.getElementById('lot-number').value);
+                                            formPermit.append('property_category', document.getElementById('property-category')
+                                                .value);
+                                        }
 
-                                        // Reset form fields
-                                        this.reset();
+                                        console.log(permit_type)
+                                        fetch("{{ route('permit.post') }}", {
+                                                method: 'POST',
+                                                body: formPermit,
+                                                headers: {
+                                                    'X-CSRF-TOKEN': csrfToken
+                                                }
 
-                                        // Clear file upload display names
-                                        const fileInput = document.getElementById('file-upload');
-                                        const fileUploadName = document.getElementById('file-upload-name');
-                                        const fileUploadNameStep2 = document.getElementById('file-upload-name2');
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    console.log("Scueeess")
+                                                }
+                                            })
+                                            .catch((error) => {
 
-                                        // Clear file input (this.reset() should handle it, but manually if needed)
+                                                showToast(error || 'File upload failed.', false);
+                                            });
 
-                                        // Reset the file name displays
-                                        fileUploadName.textContent = 'No file chosen';
-                                        fileUploadNameStep2.textContent = 'No file chosen';
                                     } else {
                                         console.log(data);
                                         showToast(data.message || 'File upload failed.', false);
@@ -712,13 +778,17 @@
                                 })
                                 .catch(error => {
                                     console.log(error);
-                                    showToast('An error occurred while uploading the file.', false);
                                 }).finally(() => {
 
-                                    //add post here
-                                    //id file
+                                    this.reset();
 
-                                    // Re-enable the button and revert to the original state
+                                    const fileInput = document.getElementById('file-upload');
+                                    const fileUploadName = document.getElementById('file-upload-name');
+                                    const fileUploadNameStep2 = document.getElementById('file-upload-name2');
+
+                                    fileUploadName.textContent = 'No file chosen';
+                                    fileUploadNameStep2.textContent = 'No file chosen';
+
                                     submitButton.disabled = false;
                                     buttonText.classList.remove('hidden'); // Show the button text again
                                     buttonSpinner.classList.add('hidden'); // Hide the spinner

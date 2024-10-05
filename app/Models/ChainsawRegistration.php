@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ChainsawRegistration extends Model
 {
     use HasFactory;
-
+    protected $table = 'chainsaw_registrations';
     protected $fillable = [
         'file_id',
         'name_of_client',
         'location',
+        'serial_number',
         'date_applied',
     ];
 

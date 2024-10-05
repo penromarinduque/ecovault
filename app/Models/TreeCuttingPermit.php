@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TreeCutting extends Model
+class TreeCuttingPermit extends Model
 {
     use HasFactory;
-
+    protected $table = 'tree_cutting_permits';
     protected $fillable = [
         'file_id',
         'name_of_client',
