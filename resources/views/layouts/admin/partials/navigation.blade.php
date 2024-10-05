@@ -2,26 +2,32 @@
     <nav class="flex justify-between space-x-4 h-full mx-8">
         <div class="flex space-x-4 items-center">
             <img src="{{ asset('images/logo.png') }}" class="w-14" alt="">
-            <div class="font-medium text-xl text-black"> 
+            <div class="font-medium text-xl text-black">
                 <h1>Document Security and Digital Archiving System</h1>
-               
+
             </div>
         </div>
-            
-        <div class="flex space-x-4 items-center relative"> 
+
+        <div class="flex space-x-4 items-center relative">
             <button class="bg-white px-4 flex items-center py-1 rounded-md" id="adminBtn">
                 <i class='bx bxs-user-circle bx-md mr-2'></i> Admin
                 <i class='bx bx-chevron-down'></i>
             </button>
 
             <!-- Dropdown Menu -->
-            <div id="dropdown" class="border border-black absolute right-0 top-16 hidden bg-white shadow-lg rounded mt-2 w-48">
+            <div id="dropdown"
+                class="border border-black absolute right-0 top-16 hidden bg-white shadow-lg rounded mt-2 w-48">
                 <ul class="flex flex-col m-2">
                     <li>
                         <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Options</a>
                     </li>
                     <li>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+                        <form action="{{ route('logout.post') }}" method="post">
+                            @csrf
+                            <button type="submit"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
+                        </form>
+
                     </li>
                 </ul>
             </div>

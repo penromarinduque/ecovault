@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('auth.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
-    <title>Verification</title>
-</head>
+@section('title', 'Verification')
 
-<body>
-
-    <div class="flex justify-center items-center h-screen ">
+@section('content')
+    <div class="flex justify-center items-center ">
         <div class="max-w-md mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
             <header class="mb-8">
                 <h1 class="text-2xl font-bold mb-1">Gmail Verification</h1>
-                <p class="text-[15px] text-slate-500">Enter the 4-digit verification code that was sent to your Gmail
+                <p class="text-[15px] text-slate-500">Enter the 4-digit verification code that was sent to
+                    <span class="text-lg ">{{ $email }}</span>
                     account.
                 </p>
             </header>
@@ -110,6 +103,4 @@
             })
         })
     </script>
-</body>
-
-</html>
+@endsection
