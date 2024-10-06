@@ -96,5 +96,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
     Route::post('/file-upload', [FileController::class, 'StoreFile'])->name('file.post');
     Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
+    Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
+
 });
 

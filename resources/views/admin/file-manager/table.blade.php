@@ -6,7 +6,7 @@
     <div class="bg-slate-300 h-[600px] rounded-md text-black p-4">
         <nav aria-label="Breadcrumb">
             <ol class="flex space-x-2 text-sm text-gray-600">
-                <li><span class=""> File Manager </span></li>
+                <li><a href="{{ route('file-manager.show') }}"><span class=""> File Manager </span></a></li>
                 <li><span class="text-gray-400"> &gt; </span></li>
                 <li><a>{{ ucwords(str_replace('-', ' ', $type)) }}</a></li>
                 @if (isset($category))
@@ -14,7 +14,7 @@
                     <li><a>{{ ucwords(str_replace('-', ' ', $category)) }}</a></li>
                 @endif
                 <li><span class="text-gray-400"> &gt; </span></li>
-                <li><a class="">Municipality</a></li>
+                <li><a href="{{ route('file-manager.municipality.show', $type) }}">Municipality</a></li>
                 <li><span class="text-gray-400"> &gt; </span></li>
                 <li><a class="font-bold">{{ $municipality }}</a></li>
             </ol>
@@ -39,76 +39,57 @@
         <div class="relative">
             <div id="mainTable" class=" transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full border-t border-black">
-                        <thead>
-                            <tr class="text-sm leading-normal">
-                                <th class="py-3 px-6 border-b border-black text-left">Name</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Date Modified</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Modified By</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Category</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Classification</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Status</th>
-                                <th class="py-3 px-6 border-b border-black text-left">Action</th>
+                    <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden" id="filesTable">
+                        <thead class="bg-white">
+                            <tr class="text-sm leading-normal text-gray-600">
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Name</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Date Modified</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Modified By</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Category</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Classification</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Status</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left">Action</th>
                             </tr>
                         </thead>
-                        <tbody class="text-sm">
-                            <tr class="border-b border-black hover:bg-gray-100">
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 1</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 2</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 3</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 4</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 5</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 6</td>
-                                <td class="py-3 px-6 border-b border-black">Row 1, Col 7</td>
-                            </tr>
+                        <tbody class="text-sm bg-white" id="filesBody">
+                            <!-- Files will be populated here -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
+
+
             <div id="uploadFileSection"
                 class="absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none">
                 <div class="flex  gap-4">
                     <div class="overflow-x-auto w-5/12 gap-4 ">
-                        <table class="min-w-full border-t border-black">
-                            <thead>
-                                <tr class="text-sm leading-normal">
-                                    <th class="py-3 px-6 border-b border-black text-left">Name</th>
-                                    <th class="py-3 px-6 border-b border-black text-left">Action</th>
+                        <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                            <thead class="bg-white">
+                                <tr class="text-sm leading-normal text-gray-600">
+                                    <th class="py-3 px-6 border-b border-gray-300 text-left">Name</th>
+                                    <th class="py-3 px-6 border-b border-gray-300 text-left">Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-sm">
-                                <tr class="border-b border-black">
-                                    <td class="py-3 px-6 border-b border-black">File 1.zip</td>
-                                    <td class="py-3 px-6 border-b border-black">
-                                        <button class="text-black"><i class='bx bx-dots-vertical-rounded'></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b border-black">
-                                    <td class="py-3 px-6 border-b border-black">File 2</td>
-                                    <td class="py-3 px-6 border-b border-black">
-                                        <button class="text-black"><i class='bx bx-dots-vertical-rounded'></i></button>
-                                    </td>
-                                </tr>
+                            <tbody class="text-sm bg-white" id="filesBodyLimited">
+
                             </tbody>
                         </table>
                     </div>
 
                     <div class="w-full p-4 bg-white rounded-md ">
-
-
                         <form id="upload-form" enctype="multipart/form-data">
                             @csrf
-
+                            <div class="flex justify-between items-center mb-2">
+                                <h2 class="text-lg font-bold">Upload File</h2> {{-- add summary --}}
+                                <button type="button" id="close-upload-section"
+                                    class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                                    <i class='bx bx-x bx-md'></i>
+                                </button>
+                            </div>
                             <div class="" id="step-1">
 
-                                <div class="flex justify-between items-center mb-2 ">
-                                    <h2 class="text-lg font-bold">Upload File</h2>
-                                    <button type="button" id="close-upload-section"
-                                        class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                                        <i class='bx bx-x bx-md'></i>
-                                    </button>
-                                </div>
+
                                 <div class="flex items-center space-x-4">
                                     <label class="block mt-2">
                                         <input type="file" name="file" class="hidden" id="file-upload">
@@ -200,14 +181,7 @@
                             </div>
 
                             <div class="hidden" id="step-2">
-                                <div class="flex justify-between items-center mb-2 ">
-                                    <h2 class="text-lg font-bold">Upload File <span class="font-normal"> - File
-                                            Summary</span></h2>
-                                    <button type="button" id="close-upload-section"
-                                        class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                                        <i class='bx bx-x bx-md'></i>
-                                    </button>
-                                </div>
+
 
                                 <p id="file-upload-name2"
                                     class="mt-2 inline-block bg-green-500 text-white rounded-md px-8 py-2">
@@ -511,7 +485,7 @@
                         const fileUploadName = document.getElementById('file-upload-name');
                         const fileUploadNameStep2 = document.getElementById('file-upload-name2');
 
-
+                        fetchFiles();
                         document.getElementById('next-step').addEventListener('click', function() {
                             let isValid = true;
                             if (fileInput.files.length === 0) {
@@ -661,6 +635,70 @@
                             };
                         }
 
+                        function fetchFiles() {
+                            const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
+                            const municipality = "{{ $municipality }}"
+                            fetch(`/api/files/${permitType}/${municipality}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        populateTable(data.data);
+                                        populateTableLimited(data.data); // Call your populate function to update the table
+                                    } else {
+                                        console.error(data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        }
+
+                        // Function to populate the table with the fetched files
+                        function populateTable(files) {
+                            const tableBody = document.querySelector('tbody'); // Assuming your table has a <tbody>
+                            tableBody.innerHTML = ''; // Clear the existing rows
+                            console.log(files);
+
+
+                            files.forEach(file => {
+                                const row = document.createElement('tr');
+                                row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
+
+                                row.innerHTML = `
+                                <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">${file.updated_at}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">${file.user_name}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">${file.category}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">${file.classification}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">${file.status}</td>
+                                <td class="py-3 px-6 border-b border-gray-300">
+                                    <button class="delete-btn" data-id="${file.id}">Delete</button>
+                                </td>
+                            `;
+
+                                tableBody.appendChild(row);
+                            });
+                        }
+
+                        function populateTableLimited(files) {
+                            const tableBody = document.getElementById('filesBodyLimited'); // Assuming your table has a <tbody>
+                            tableBody.innerHTML = ''; // Clear the existing rows
+                            console.log(files);
+
+
+                            files.forEach(file => {
+                                const row = document.createElement('tr');
+                                row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
+
+                                row.innerHTML = `
+                                <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                               
+                                <td class="py-3 px-6 border-b border-gray-300">
+                                    <button class="delete-btn" data-id="${file.id}">Delete</button>
+                                </td>
+                            `;
+
+                                tableBody.appendChild(row);
+                            });
+                        }
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
 
@@ -786,6 +824,8 @@
 
                                                 showToast(error || 'File upload failed.', false);
                                             });
+
+                                        fetchFiles();
 
                                     } else {
                                         console.log(data);
