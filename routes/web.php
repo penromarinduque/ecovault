@@ -98,5 +98,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
     Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
 
+
+
 });
 
