@@ -199,7 +199,8 @@
                 class="absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none">
                 <div class="flex  gap-4">
                     <div class="overflow-x-auto w-5/12 gap-4 ">
-                        <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                        <table id="minimizeTable"
+                            class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
                             <thead class="bg-white">
                                 <tr class="text-sm leading-normal text-gray-600">
                                     <th class="py-3 px-6 border-b border-gray-300 text-left">Name</th>
@@ -210,6 +211,82 @@
 
                             </tbody>
                         </table>
+
+
+                        <!-- Template for Action Dropdown -->
+                        <div id="actionDropdownTemplate"
+                            class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+                            <ul class="py-1 text-sm text-gray-700" aria-labelledby="dropdown-button">
+                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
+                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
+                            </ul>
+                            <div class="py-1">
+                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                            </div>
+                        </div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const permitType = "{{ $type }}";
+                                const municipality = "{{ $municipality }}";
+
+                                // Fetch data from the API
+                                fetch(`/api/files/${permitType}/${municipality}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const filesBodyLimited = document.getElementById('filesBodyLimited');
+
+                                        // Populate the table with the fetched data
+                                        data.data.forEach(file => {
+                                            const row = document.createElement('tr');
+                                            row.innerHTML = `
+                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                    <td class="py-3 px-6 border-b border-gray-300 relative">
+                        <button class="option-btn p-2 bg-gray-100 rounded hover:bg-gray-200"
+                                onclick="showDropdown(event, ${file.id})">
+                            <i class='bx bx-dots-vertical'></i>
+                        </button>
+                        <div id="dropdown-${file.id}" class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+                            <ul class="py-1 text-sm text-gray-700">
+                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
+                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
+                            </ul>
+                            <div class="py-1">
+                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                                            filesBodyLimited.appendChild(row);
+                                        });
+
+                                        // Initialize DataTable after populating
+                                        $('#minimizeTable').DataTable({
+                                            dom: 't'
+                                        });
+                                    })
+                                    .catch(error => console.error('Fetch error:', error));
+                            });
+
+                            // Show/Hide dropdown logic
+                            function showDropdown(event, id) {
+                                event.stopPropagation(); // Prevent click event from closing the dropdown immediately
+                                const dropdown = document.getElementById(`dropdown-${id}`);
+
+                                // Toggle the dropdown visibility
+                                dropdown.classList.toggle('hidden');
+
+                                // Close dropdown if clicking outside
+                                document.addEventListener('click', function(e) {
+                                    if (!dropdown.contains(e.target)) {
+                                        dropdown.classList.add('hidden');
+                                    }
+                                }, {
+                                    once: true
+                                });
+                            }
+                        </script>
+
+
 
 
                     </div>
@@ -821,35 +898,7 @@
                             };
                         }
 
-                        // function fetchFiles() {
-                        //     const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
-                        //     const municipality = "{{ $municipality }}"
-                        //     fetch(`/api/files/${permitType}/${municipality}`)
-                        //         .then(response => response.json())
-                        //         .then(data => {
-                        //             if (data.success) {
-                        //                 const table = $('#example').DataTable();
-                        //                 table.clear(); // Clear any existing data
 
-                        //                 // Prepare the data for adding to the DataTable
-                        //                 const rows = data.files.map(file => [
-                        //                     file.name,
-                        //                     file.date_modified,
-                        //                     file.modified_by,
-                        //                     file.category,
-                        //                     file.classification,
-                        //                     file.status,
-                        //                     `<a href="${file.file_path}" class="btn btn-info">View</a>`
-                        //                 ]);
-
-                        //                 // Add the new rows to the DataTable
-                        //                 table.rows.add(rows).draw(); // Call your populate function to update the table
-                        //             } else {
-                        //                 console.error(data.message);
-                        //             }
-                        //         })
-                        //         .catch(error => console.error('Error:', error));
-                        // }
 
                         function populateTable(files) {
                             const tableBody = document.getElementById('filesBody'); // Assuming your table has a <tbody>
