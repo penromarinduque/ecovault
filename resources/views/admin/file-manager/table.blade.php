@@ -234,9 +234,10 @@
                                         <div class="w-full">
                                             <input type="number" id="no-of-tree-species"
                                                 placeholder="Enter number of trees / species"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="no-of-tree-species border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="no-of-tree-species-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the number
+                                                class="no-of-tree-species-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the number
                                                 of trees and species.</p>
                                         </div>
                                     </div>
@@ -248,8 +249,9 @@
                                         </label>
                                         <div class="w-full">
                                             <input type="text" id="location" placeholder="Enter Value"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="location-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="location border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="location-error"
+                                                class="location-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter a Location</p>
                                         </div>
                                     </div>
@@ -258,8 +260,9 @@
                                         <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
                                             <input type="date" id="date-applied"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3 ">
-                                            <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="date-applied border border-gray-300 p-2 rounded-md h-10 w-2/3 ">
+                                            <p id="date-applied-error"
+                                                class="date-applied-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Date Applied</p>
                                         </div>
                                     </div>
@@ -672,6 +675,30 @@
                                 nameOfClient.classList.add("border-red-500");
                                 nameOfClientError.classList.remove("invisible")
                                 isValid = false; // Reassigning isValid to false if validation fails
+                            }
+
+                            let noOfTreeSpecies = document.querySelector('.no-of-tree-species')
+                            let noOfTreeSpeciesError = document.querySelector('.no-of-tree-species-error')
+                            if (noOfTreeSpecies && noOfTreeSpecies.value === "") {
+                                noOfTreeSpecies.classList.add("border-red-500");
+                                noOfTreeSpeciesError.classList.remove("invisible")
+                                isValid = false;
+                            }
+
+                            let location = document.querySelector('.location');
+                            let locationError = document.querySelector('.location-error');
+                            if (location && location.value === "") {
+                                location.classList.add("border-red-500");
+                                locationError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let dateApplied = document.querySelector('.date-applied');
+                            let dateAppliedError = document.querySelector('.date-applied-error');
+                            if (dateApplied && dateApplied.value === "") {
+                                dateApplied.classList.add("border-red-500");
+                                dateAppliedError.classList.remove("invisible");
+                                isValid = false;
                             }
 
                             if (!isValid) {
