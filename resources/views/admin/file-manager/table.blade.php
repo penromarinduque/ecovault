@@ -39,7 +39,7 @@
         <div class="relative">
             <div id="mainTable" class=" transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden" id="filesTable">
+                    <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-visible" id="filesTable">
                         <thead class="bg-white">
                             <tr class="text-sm leading-normal text-gray-600">
                                 <th class="py-3 px-6 border-b border-gray-300 text-left">Name</th>
@@ -56,6 +56,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
 
@@ -75,6 +76,89 @@
 
                             </tbody>
                         </table>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
+                                const municipality = "{{ $municipality }}"; // Ensure you're getting the right municipality
+
+                                // Fetch data from the API
+                                fetch(`/api/files/${permitType}/${municipality}`)
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok ' + response.statusText);
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        // Initialize DataTable
+                                        const dataTable = $('#filesTable').DataTable({
+                                            data: data.data, // Use the 'data' property from your API response
+                                            columns: [{
+                                                    data: 'file_name',
+                                                    render: function(data) {
+                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
+                                                    }
+                                                },
+                                                {
+                                                    data: 'updated_at',
+                                                    render: function(data) {
+                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
+                                                    }
+                                                },
+                                                {
+                                                    data: 'user_name',
+                                                    render: function(data) {
+                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
+                                                    }
+                                                },
+                                                {
+                                                    data: 'category',
+                                                    render: function(data) {
+                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
+                                                    }
+                                                },
+                                                {
+                                                    data: 'classification',
+                                                    render: function(data) {
+                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
+                                                    }
+                                                },
+                                                {
+                                                    data: 'status',
+                                                    render: function(data) {
+                                                        return `
+                                                        <td class="py-3 px-6 border-b border-gray-300 text-gray-800 ${data === 'Approved' ? 'text-green-600' : data === 'Rejected' ? 'text-red-600' : 'text-yellow-600'}">
+                                                            ${data}
+                                                        </td>
+                                                    `;
+                                                    }
+                                                },
+                                                {
+                                                    data: null,
+                                                    render: function(data, type, row) {
+                                                        return `
+                                                        <td class="py-3 px-6 border-b border-gray-300 text-gray-800">
+                                                            <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" data-id="${row.id}">Edit</button>
+                                                            <button class="delete-button bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${row.id}">Delete</button>
+                                                        </td>
+                                                    `;
+                                                    }
+                                                }
+                                            ],
+                                            lengthMenu: [2, 10, 25, 50],
+                                            pageLength: 10,
+                                            language: {
+                                                search: "Filter records:"
+                                            }
+                                        });
+                                    })
+                                    .catch(error => {
+                                        console.error('There was a problem with the fetch operation:', error);
+                                        // Optionally show an error message to the user
+                                    });
+                            });
+                        </script>
                     </div>
 
                     <div class="w-full p-4 bg-white rounded-md ">
@@ -487,17 +571,50 @@
                         const fileInput = document.getElementById('file-upload');
                         const fileUploadName = document.getElementById('file-upload-name');
                         const fileUploadNameStep2 = document.getElementById('file-upload-name2');
+                        const fileUploadError = document.getElementById('file-upload-error');
 
-                        fetchFiles();
-                        document.getElementById('next-step').addEventListener('click', function() {
-                            let isValid = true;
+
+                        function validateFile() {
+                            const file = fileInput.files[0];
+
+
                             if (fileInput.files.length === 0) {
-
-                                const fileUploadError = document.getElementById('file-upload-error');
+                                fileUploadError.textContent = "Please upload a file.";
                                 fileUploadError.classList.remove('invisible');
-                                return;
+                                return false; // Validation failed
                             }
 
+
+                            const allowedTypes = ['application/pdf', 'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'image/jpeg', 'image/png', 'application/zip'
+                            ];
+
+                            if (!allowedTypes.includes(file.type)) {
+                                fileUploadError.textContent = "Invalid file type. Please upload a PDF, Word document, image, or ZIP file.";
+                                fileUploadError.classList.remove('invisible');
+                                return false;
+                            }
+
+                            const maxSize = 5 * 1024 * 1024;
+                            if (file.size > maxSize) {
+                                fileUploadError.textContent = "File size exceeds 2 MB. Please upload a smaller file.";
+                                fileUploadError.classList.remove('invisible');
+                                return false;
+                            }
+
+
+                            fileUploadError.classList.add('invisible');
+                            return true;
+
+                        }
+
+                        document.getElementById('next-step').addEventListener('click', function() {
+                            let isValid = true;
+
+                            if (!validateFile()) {
+                                return
+                            }
 
                             const officeSourceInput = document.getElementById('office-source');
                             const officeSourceError = document.getElementById('office-source-error');
@@ -638,44 +755,71 @@
                             };
                         }
 
-                        function fetchFiles() {
-                            const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
-                            const municipality = "{{ $municipality }}"
-                            fetch(`/api/files/${permitType}/${municipality}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        populateTable(data.data);
-                                        populateTableLimited(data.data); // Call your populate function to update the table
-                                    } else {
-                                        console.error(data.message);
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error));
-                        }
+                        // function fetchFiles() {
+                        //     const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
+                        //     const municipality = "{{ $municipality }}"
+                        //     fetch(`/api/files/${permitType}/${municipality}`)
+                        //         .then(response => response.json())
+                        //         .then(data => {
+                        //             if (data.success) {
+                        //                 const table = $('#example').DataTable();
+                        //                 table.clear(); // Clear any existing data
 
-                        // Function to populate the table with the fetched files
+                        //                 // Prepare the data for adding to the DataTable
+                        //                 const rows = data.files.map(file => [
+                        //                     file.name,
+                        //                     file.date_modified,
+                        //                     file.modified_by,
+                        //                     file.category,
+                        //                     file.classification,
+                        //                     file.status,
+                        //                     `<a href="${file.file_path}" class="btn btn-info">View</a>`
+                        //                 ]);
+
+                        //                 // Add the new rows to the DataTable
+                        //                 table.rows.add(rows).draw(); // Call your populate function to update the table
+                        //             } else {
+                        //                 console.error(data.message);
+                        //             }
+                        //         })
+                        //         .catch(error => console.error('Error:', error));
+                        // }
+
                         function populateTable(files) {
-                            const tableBody = document.querySelector('tbody'); // Assuming your table has a <tbody>
+                            const tableBody = document.getElementById('filesBody'); // Assuming your table has a <tbody>
                             tableBody.innerHTML = ''; // Clear the existing rows
                             console.log(files);
-
 
                             files.forEach(file => {
                                 const row = document.createElement('tr');
                                 row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
 
                                 row.innerHTML = `
-                                <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">${file.updated_at}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">${file.user_name}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">${file.category}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">${file.classification}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">${file.status}</td>
-                                <td class="py-3 px-6 border-b border-gray-300">
-                                    <button class="delete-btn" data-id="${file.id}">Delete</button>
-                                </td>
-                            `;
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.updated_at}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.user_name}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.category}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.classification}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.status}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">
+                                        <div class="relative inline-block text-left">
+                                            <button class="option-btn" data-id="${file.id}" onclick="toggleDropdown(event, 'main')">
+                                                <i class='bx bx-dots-vertical'></i>
+                                            </button>
+                                            <div class="absolute right-0 hidden w-32 bg-white rounded-md shadow-lg" id="dropdown-main-${file.id}" style="z-index: 99;">
+                                                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="viewFile(${file.id})">View</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="downloadFile(${file.id})">Download</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="editFile(${file.id})">Edit</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="moveFile(${file.id})">Move</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="shareFile(${file.id})">Share</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="archiveFile(${file.id})">Archived</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="fileSumarry(${file.id})">File Summary</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                `;
 
                                 tableBody.appendChild(row);
                             });
@@ -686,22 +830,98 @@
                             tableBody.innerHTML = ''; // Clear the existing rows
                             console.log(files);
 
-
                             files.forEach(file => {
                                 const row = document.createElement('tr');
                                 row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
 
                                 row.innerHTML = `
-                                <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                               
-                                <td class="py-3 px-6 border-b border-gray-300">
-                                    <button class="delete-btn" data-id="${file.id}">Delete</button>
-                                </td>
-                            `;
+                                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                                    <td class="py-3 px-6 border-b border-gray-300">
+                                        <div class="relative inline-block text-left">
+                                            <button class="option-btn" data-id="${file.id}" onclick="toggleDropdown(event, 'limited')">
+                                                <i class='bx bx-dots-vertical'></i>
+                                            </button>
+                                            <div class="absolute  right-0 hidden w-32 bg-white rounded-md shadow-lg" id="dropdown-limited-${file.id}" style="z-index: 99;">
+                                                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="viewFile(${file.id})">View</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="downloadFile(${file.id})">Download</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="editFile(${file.id})">Edit</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="moveFile(${file.id})">Move</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="shareFile(${file.id})">Share</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="archiveFile(${file.id})">Archived</a>
+                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="fileSumarry(${file.id})">File Summary</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                `;
 
                                 tableBody.appendChild(row);
                             });
                         }
+
+                        function toggleDropdown(event, type) {
+                            event.stopPropagation(); // Prevent event bubbling
+                            const button = event.currentTarget; // The button that was clicked
+                            const dropdownId = type === 'main' ? `dropdown-main-${button.getAttribute('data-id')}` :
+                                `dropdown-limited-${button.getAttribute('data-id')}`; // Determine which dropdown to toggle
+                            const dropdown = document.getElementById(dropdownId); // Get the dropdown element
+
+                            // Close any open dropdowns before opening a new one
+                            const existingDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+                            existingDropdowns.forEach(d => {
+                                if (d !== dropdown) {
+                                    d.classList.add('hidden'); // Hide other dropdowns
+                                }
+                            });
+
+                            // Calculate the position for fixed positioning
+                            const rect = button.getBoundingClientRect(); // Get the button's position
+                            const dropdownHeight = dropdown.offsetHeight; // Get the dropdown's height
+                            const viewportHeight = window.innerHeight; // Get the height of the viewport
+
+                            // Check available space below the button
+                            if (rect.bottom + dropdownHeight > viewportHeight) {
+                                // Not enough space below, position it above
+                                dropdown.style.top = `${rect.top - dropdownHeight - 200}px`; // Place above the button
+                            } else {
+                                // Enough space below, place it below the button
+                                dropdown.style.top = `${rect.bottom + 5}px`; // Place below the button
+                            }
+                            dropdown.style.position = 'fixed'; // Use fixed positioning
+                            dropdown.style.left = `${rect.left}px`; // Align with the button
+
+                            // Toggle the dropdown visibility
+                            dropdown.classList.toggle('hidden');
+                        }
+
+                        // Close dropdowns when clicking outside
+                        document.addEventListener('click', function() {
+                            const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+                            dropdowns.forEach(dropdown => dropdown.classList.add('hidden')); // Hide all dropdowns
+                        });
+
+
+
+
+                        // Define your action functions
+                        function viewFile(id) {
+                            console.log(`View file with ID: ${id}`);
+                            // Implement the view logic (e.g., open a modal or redirect)
+                        }
+
+                        function moveFile(id) {
+                            console.log(`Move file with ID: ${id}`);
+                            // Implement the move logic (e.g., open a modal or redirect)
+                        }
+
+                        function deleteFile(id) {
+                            if (confirm('Are you sure you want to delete this file?')) {
+                                console.log(`Delete file with ID: ${id}`);
+                                // Implement the delete logic (e.g., make an AJAX call to delete the file)
+                            }
+                        }
+
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
 
@@ -796,17 +1016,20 @@
                                         if (permit_type === 'tree-cutting-permits') {
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
-                                            formPermit.append('number_of_trees', document.getElementById('no-of-tree-species')
+                                            formPermit.append('number_of_trees', document.getElementById(
+                                                    'no-of-tree-species')
                                                 .value);
                                             formPermit.append('location', document.getElementById('location').value);
-                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied')
+                                                .value);
                                         } else if (permit_type === 'tree-plantation') {
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
                                             formPermit.append('number_of_trees', document.getElementById(
                                                 'number_of_trees').value);
                                             formPermit.append('location', document.getElementById('location').value);
-                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied')
+                                                .value);
                                         } else if (permit_type === 'tree-transport-permits') {
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
@@ -814,21 +1037,26 @@
                                                 .value);
                                             formPermit.append('destination', document.getElementById('destination')
                                                 .value);
-                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
-                                            formPermit.append('date_of_transport', document.getElementById('date-of-transport')
+                                            formPermit.append('date_applied', document.getElementById('date-applied')
+                                                .value);
+                                            formPermit.append('date_of_transport', document.getElementById(
+                                                    'date-of-transport')
                                                 .value);
                                         } else if (permit_type === 'chainsaw-registration') {
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
                                             formPermit.append('location', document.getElementById('location').value);
-                                            formPermit.append('serial_number', document.getElementById('serial-number').value);
-                                            formPermit.append('date_applied', document.getElementById('date-applied').value);
+                                            formPermit.append('serial_number', document.getElementById('serial-number')
+                                                .value);
+                                            formPermit.append('date_applied', document.getElementById('date-applied')
+                                                .value);
                                         } else if (permit_type === 'land-titles') {
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
                                             formPermit.append('location', document.getElementById('location').value);
                                             formPermit.append('lot_number', document.getElementById('lot-number').value);
-                                            formPermit.append('property_category', document.getElementById('property-category')
+                                            formPermit.append('property_category', document.getElementById(
+                                                    'property-category')
                                                 .value);
                                         }
 
@@ -875,7 +1103,9 @@
                                     submitButton.disabled = false;
                                     buttonText.classList.remove('hidden'); // Show the button text again
                                     buttonSpinner.classList.add('hidden'); // Hide the spinner
-
+                                    document.getElementById('step-1').classList.remove('hidden');
+                                    document.getElementById('step-2')
+                                        .classList.add('hidden');
                                 });
                         });
                     </script>

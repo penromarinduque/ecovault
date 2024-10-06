@@ -22,7 +22,7 @@ class FileController extends Controller
     public function StoreFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048',
+            'file' => 'required|file|max:2048|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
             'permit_type' => 'required|string',
             'municipality' => 'required|string',
             'category' => 'required|string',
