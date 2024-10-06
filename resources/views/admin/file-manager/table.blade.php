@@ -22,8 +22,8 @@
 
         <div class="flex justify-end items-center">
             <div class="relative">
-                <input type="text" class="placeholder:px-4 pl-2 py-1 rounded-md border border-gray-300"
-                    placeholder="Quick Search">
+                <input type="text" id="customSearchInput"
+                    class="placeholder:px-4 pl-2 py-1 rounded-md border border-gray-300" placeholder="Quick Search">
                 <i class='bx bx-search absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400'></i>
             </div>
         </div>
@@ -35,6 +35,25 @@
             <button class="bg-white px-2 p-1 rounded-md">View</button>
         </div>
 
+        <div class="flex justify-between ">
+            <div class="flex items-center">
+                <label for="entriesSelect" class="mr-2 text-gray-700">Show</label>
+                <select id="entriesSelect" class="border border-gray-300 rounded-md px-2 py-1">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span class="ml-2 text-gray-700">entries</span>
+            </div>
+            <div id="customPagination" class="flex items-center space-x-2 py-1">
+                <button id="prevPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Previous</button>
+                <span id="pageInfo" class="text-gray-700">Page 1 of 10</span>
+                <button id="nextPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Next</button>
+            </div>
+        </div>
+
+
 
         <div class="relative">
             <div id="mainTable" class=" transition-opacity duration-500 ease-in-out opacity-100">
@@ -42,19 +61,134 @@
                     <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-visible" id="filesTable">
                         <thead class="bg-white">
                             <tr class="text-sm leading-normal text-gray-600">
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Name</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Date Modified</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Modified By</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Category</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Classification</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Status</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left">Action</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Name</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Date Modified
+                                </th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Modified By</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Category</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Classification
+                                </th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Status</th>
+                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Action</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm bg-white" id="filesBody">
                             <!-- Files will be populated here -->
                         </tbody>
                     </table>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const permitType = "{{ $type }}";
+                            const municipality = "{{ $municipality }}";
+
+                            fetch(`/api/files/${permitType}/${municipality}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok ' + response.statusText);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const filesBody = document.getElementById('filesBody');
+                                    // Initialize DataTable with customizations
+                                    const table = $('#filesTable').DataTable({
+                                        data: data.data,
+                                        columns: [{
+                                                title: "Name <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "file_name"
+                                            },
+                                            {
+                                                title: "Date Modified <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "updated_at"
+                                            },
+                                            {
+                                                title: "Modified By <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "user_name"
+                                            },
+                                            {
+                                                title: "Category <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "category"
+                                            },
+                                            {
+                                                title: "Classification <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "classification"
+                                            },
+                                            {
+                                                title: "Status <i class='bx bx-sort hover:cursor-pointer' ></i>",
+                                                data: "status"
+                                            },
+                                            {
+                                                title: "Actions",
+                                                data: null,
+                                                defaultContent: "<button>Edit</button>" // Example action column
+                                            }
+                                        ],
+                                        pageLength: 5, // Set initial page length
+                                        paging: true, // Enable pagination
+                                        lengthChange: false,
+                                        dom: 't',
+                                        searching: true, // Allow changing the number of entries
+                                        info: false, // Disable default info display
+                                        ordering: true, // Enable column sorting
+                                        createdRow: function(row, data) {
+                                            // Customize specific td elements based on conditions
+                                            $('td', row).each(function() {
+                                                $(this).addClass('py-3 px-6 border-b border-gray-300');
+                                            });
+                                        }
+                                    });
+
+                                    // Update total pages and page info
+                                    function updatePageInfo() {
+                                        const totalPages = Math.ceil(table.page.info().recordsTotal / table.page.len());
+                                        const currentPage = table.page.info().page;
+                                        document.getElementById('pageInfo').innerText =
+                                            `Page ${currentPage + 1} of ${totalPages}`;
+                                    }
+
+                                    // Initial page info
+                                    updatePageInfo();
+
+                                    // Previous page button
+                                    document.getElementById('prevPage').addEventListener('click', function() {
+                                        if (table.page.info().page > 0) {
+                                            table.page('previous').draw(false); // Use DataTable's built-in method
+                                            updatePageInfo();
+                                        }
+                                    });
+
+                                    // Next page button
+                                    document.getElementById('nextPage').addEventListener('click', function() {
+                                        if (table.page.info().page < table.page.info().pages - 1) {
+                                            table.page('next').draw(false); // Use DataTable's built-in method
+                                            updatePageInfo();
+                                        }
+                                    });
+
+                                    // Bind custom search input to DataTable
+                                    $('#customSearchInput').on('keyup', function() {
+                                        table.search(this.value).draw();
+                                    });
+
+                                    // Handle entries select change
+                                    $('#entriesSelect').on('change', function() {
+                                        const entriesPerPage = parseInt(this.value); // Update the entries per page
+                                        table.page.len(entriesPerPage)
+                                            .draw(); // Set the page length based on the selected value
+                                        updatePageInfo(); // Update page info display
+                                    });
+
+                                    // Optional: If you want to refresh the page info after a search
+                                    table.on('search.dt', function() {
+                                        updatePageInfo();
+                                    });
+
+                                })
+                                .catch(error => {
+                                    console.error('There was a problem with the fetch operation:', error);
+                                });
+                        });
+                    </script>
                 </div>
 
             </div>
@@ -77,88 +211,7 @@
                             </tbody>
                         </table>
 
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                const permitType = "{{ $type }}"; // Ensure you're getting the right permit type
-                                const municipality = "{{ $municipality }}"; // Ensure you're getting the right municipality
 
-                                // Fetch data from the API
-                                fetch(`/api/files/${permitType}/${municipality}`)
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('Network response was not ok ' + response.statusText);
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
-                                        // Initialize DataTable
-                                        const dataTable = $('#filesTable').DataTable({
-                                            data: data.data, // Use the 'data' property from your API response
-                                            columns: [{
-                                                    data: 'file_name',
-                                                    render: function(data) {
-                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
-                                                    }
-                                                },
-                                                {
-                                                    data: 'updated_at',
-                                                    render: function(data) {
-                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
-                                                    }
-                                                },
-                                                {
-                                                    data: 'user_name',
-                                                    render: function(data) {
-                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
-                                                    }
-                                                },
-                                                {
-                                                    data: 'category',
-                                                    render: function(data) {
-                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
-                                                    }
-                                                },
-                                                {
-                                                    data: 'classification',
-                                                    render: function(data) {
-                                                        return `<td class="py-3 px-6 border-b border-gray-300 text-gray-800">${data}</td>`;
-                                                    }
-                                                },
-                                                {
-                                                    data: 'status',
-                                                    render: function(data) {
-                                                        return `
-                                                        <td class="py-3 px-6 border-b border-gray-300 text-gray-800 ${data === 'Approved' ? 'text-green-600' : data === 'Rejected' ? 'text-red-600' : 'text-yellow-600'}">
-                                                            ${data}
-                                                        </td>
-                                                    `;
-                                                    }
-                                                },
-                                                {
-                                                    data: null,
-                                                    render: function(data, type, row) {
-                                                        return `
-                                                        <td class="py-3 px-6 border-b border-gray-300 text-gray-800">
-                                                            <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" data-id="${row.id}">Edit</button>
-                                                            <button class="delete-button bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-id="${row.id}">Delete</button>
-                                                        </td>
-                                                    `;
-                                                    }
-                                                }
-                                            ],
-                                            lengthMenu: [2, 10, 25, 50],
-                                            pageLength: 10,
-                                            language: {
-                                                search: "Filter records:"
-                                            }
-                                        });
-                                    })
-                                    .catch(error => {
-                                        console.error('There was a problem with the fetch operation:', error);
-                                        // Optionally show an error message to the user
-                                    });
-                            });
-                        </script>
                     </div>
 
                     <div class="w-full p-4 bg-white rounded-md ">
