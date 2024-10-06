@@ -3,12 +3,14 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div class="bg-gray-400 h-[600px] rounded-md text-black p-4">
         <h2 class="text-lg font-bold mb-4">Storage Usage</h2>
         <canvas id="storageChart" width="400" height="400"></canvas>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             fetch("{{ route('admin.storage.usage') }}")
@@ -40,7 +42,7 @@
                                                 label += ': ';
                                             }
                                             label += Math.round(tooltipItem.raw * 100) / 100 +
-                                            ' GB';
+                                                ' GB';
                                             return label;
                                         }
                                     }
