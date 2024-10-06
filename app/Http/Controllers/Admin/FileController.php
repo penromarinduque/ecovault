@@ -12,7 +12,7 @@ use App\Models\ChainsawRegistration;
 use App\Models\TreePlantationRegistration;
 use App\Models\TransportPermit;
 use App\Models\LandTitle;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -49,6 +49,7 @@ class FileController extends Controller
                 'permit_type' => $request->input('permit_type'),  // Ensure this is present in the request
                 'land_category' => $request->input('land_category'), // This can be null
                 'municipality' => $request->input('municipality'), // Ensure this is present in the request
+                'file_name' => $originalFileName,
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
                 'category' => $request->input('category'), // Ensure this is present in the request
@@ -76,19 +77,6 @@ class FileController extends Controller
 
     public function StorePermit(Request $request)
     {
-        $validatedData = $request->validate([
-            // 'type' => 'required|string',
-            // 'name_of_client' => 'required|string|max:255',
-            // 'location' => 'required|string|max:255',
-            // 'date_applied' => 'required|date',
-            // 'number_of_trees' => 'nullable|integer|min:0',
-            // 'serial_number' => 'nullable|string|max:255',
-            // 'lot_number' => 'nullable|string|max:255',
-            // 'property_category' => 'nullable|string|max:255',
-            // 'date_of_transport' => 'nullable|date',
-            // 'file_id' => 'required|exists:files,id', 
-        ]);
-
 
         switch ($request->permit_type) {
             case 'tree-cutting-permits':
@@ -158,6 +146,28 @@ class FileController extends Controller
         ]);
     }
 
+    public function GetFiles($type, $municipality)
+    {
+        try {
+            $files = DB::table('files')
+                ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+                ->where('files.permit_type', $type)
+                ->where('files.municipality', $municipality)
+                ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+                ->get();
+            return response()->json([
+                'success' => true,
+                'data' => $files,
+                'message' => 'Files retrieved successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 }
