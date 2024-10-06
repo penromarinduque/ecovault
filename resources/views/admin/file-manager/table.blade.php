@@ -247,9 +247,9 @@
                                             Client</label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Value"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="name-of-client-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Name of the Client</p>
                                         </div>
                                     </div>
@@ -260,9 +260,10 @@
                                         <div class="w-full">
                                             <input type="number" id="number_of_trees"
                                                 placeholder="Enter number of trees"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="number_of_trees border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="number_of_trees-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the number
+                                                class="number_of_trees-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the number
                                                 of trees.</p>
                                         </div>
                                     </div>
@@ -271,8 +272,9 @@
                                         <label for="location" class="text-black mt-2 mr-4 w-1/6">Location</label>
                                         <div class="w-full">
                                             <input type="text" id="location" placeholder="Enter Value"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="location-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="location border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="location-error"
+                                                class="location-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter a Location</p>
                                         </div>
                                     </div>
@@ -281,8 +283,9 @@
                                         <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
                                             <input type="date" id="date-applied"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="date-applied border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="date-applied-error"
+                                                class="date-applied-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Date Applied</p>
                                         </div>
                                     </div>
@@ -292,9 +295,9 @@
                                             Client</label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Client's Name"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="name-of-client-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Name of the Client</p>
                                         </div>
                                     </div>
@@ -305,9 +308,10 @@
                                         <div class="w-full">
                                             <input type="number" id="number-of-trees"
                                                 placeholder="Enter Number of Trees"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="number-of-trees border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="number-of-trees-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the number
+                                                class="number-of-trees-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the number
                                                 of trees</p>
                                         </div>
                                     </div>
@@ -316,8 +320,9 @@
                                         <label for="destination" class="text-black mt-2 mr-4 w-1/6">Destination</label>
                                         <div class="w-full">
                                             <input type="text" id="destination" placeholder="Enter Destination"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="destination-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="destination border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="destination-error"
+                                                class="destination-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Destionation</p>
                                         </div>
                                     </div>
@@ -326,8 +331,9 @@
                                         <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
                                             <input type="date" id="date-applied"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="date-applied border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="date-applied-error"
+                                                class="date-applied-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Date Applied</p>
                                         </div>
                                     </div>
@@ -337,9 +343,10 @@
                                             Transport</label>
                                         <div class="w-full">
                                             <input type="date" id="date-of-transport"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="date-of-transport border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="date-of-transport-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the Date of
+                                                class="date-of-transport-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the Date of
                                                 Transport</p>
                                         </div>
                                     </div>
@@ -349,9 +356,9 @@
                                             Client</label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Client's Name"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="name-of-client-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Name of the Client</p>
                                         </div>
                                     </div>
@@ -360,8 +367,9 @@
                                         <label for="location" class="text-black mt-2 mr-4 w-1/6">Location</label>
                                         <div class="w-full">
                                             <input type="text" id="location" placeholder="Enter Location"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="location-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="location border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="location-error"
+                                                class="location-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter a Location</p>
                                         </div>
                                     </div>
@@ -371,9 +379,10 @@
                                             Number</label>
                                         <div class="w-full">
                                             <input type="text" id="serial-number" placeholder="Enter Serial Number"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="serial-number border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="serial-number-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please enter the Serial
+                                                class="serial-number-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please enter the Serial
                                                 Number</p>
                                         </div>
                                     </div>
@@ -382,8 +391,9 @@
                                         <label for="date-applied" class="text-black mt-2 mr-4 w-1/6">Date Applied</label>
                                         <div class="w-full">
                                             <input type="date" id="date-applied"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="date-applied-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="date-applied border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="date-applied-error"
+                                                class="date-applied-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Date Applied</p>
                                         </div>
                                     </div>
@@ -393,9 +403,9 @@
                                             Client</label>
                                         <div class="w-full">
                                             <input type="text" id="name-of-client" placeholder="Enter Client's Name"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                             <p id="name-of-client-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Name of the Client</p>
                                         </div>
                                     </div>
@@ -404,8 +414,9 @@
                                         <label for="location" class="text-black mt-2 mr-4 w-1/6">Location</label>
                                         <div class="w-full">
                                             <input type="text" id="location" placeholder="Enter Location"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="location-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="location border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="location-error"
+                                                class="location-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter a Location</p>
                                         </div>
                                     </div>
@@ -414,8 +425,9 @@
                                         <label for="lot-number" class="text-black mt-2 mr-4 w-1/6">Lot Number</label>
                                         <div class="w-full">
                                             <input type="text" id="lot-number" placeholder="Enter Lot Number"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
-                                            <p id="lot-number-error" class="text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                class="lot-number border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                            <p id="lot-number-error"
+                                                class="lot-number-error text-red-500 ml-2 min-h-[1.5rem] invisible">
                                                 Please enter the Lot Number</p>
                                         </div>
                                     </div>
@@ -425,14 +437,15 @@
                                             Category</label>
                                         <div class="w-full">
                                             <select id="property-category"
-                                                class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                                                class="property-category border border-gray-300 p-2 rounded-md h-10 w-2/3">
                                                 <option value="" disabled selected>Select Property Category</option>
                                                 <option value="residential">Residential</option>
                                                 <option value="agricultural">Agricultural</option>
                                                 <option value="special">Special</option>
                                             </select>
                                             <p id="property-category-error"
-                                                class="text-red-500 ml-2 min-h-[1.5rem] invisible">Please select a Property
+                                                class="property-category-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                                                Please select a Property
                                                 Category</p>
                                         </div>
                                     </div>
@@ -736,6 +749,54 @@
                             if (dateApplied && dateApplied.value === "") {
                                 dateApplied.classList.add("border-red-500");
                                 dateAppliedError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let numberOfTrees = document.querySelector('.number_of_trees, .number-of-trees');
+                            let numberOfTreesError = document.querySelector('.number_of_trees-error, .number-of-trees-error');
+                            if (numberOfTrees && numberOfTrees.value === "") {
+                                numberOfTrees.classList.add("border-red-500");
+                                numberOfTreesError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let destination = document.querySelector('.destination');
+                            let destinationError = document.querySelector('.destination-error');
+                            if (destination && destination.value === "") {
+                                destination.classList.add("border-red-500");
+                                destinationError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let dateOfTransport = document.querySelector('.date-of-transport');
+                            let dateOfTransportError = document.querySelector('.date-of-transport-error');
+                            if (dateOfTransport && dateOfTransport.value === "") {
+                                dateOfTransport.classList.add("border-red-500");
+                                dateOfTransportError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let serialNumber = document.querySelector('.serial-number');
+                            let serialNumberError = document.querySelector('.serial-number-error');
+                            if (serialNumber && serialNumber.value === "") {
+                                serialNumber.classList.add("border-red-500");
+                                serialNumberError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let lotNumber = document.querySelector('.lot-number');
+                            let lotNumberError = document.querySelector('.lot-number-error');
+                            if (lotNumber && lotNumber.value === "") {
+
+                                lotNumber.classList.add("border-red-500");
+                                lotNumberError.classList.remove("invisible");
+                                isValid = false;
+                            }
+
+                            let propertyCategory = document.querySelector('.property-category');
+
+                            if (propertyCategory && propertyCategory.value === "") {
+                                propertyCategory.classList.add("border-red-500");
                                 isValid = false;
                             }
 
