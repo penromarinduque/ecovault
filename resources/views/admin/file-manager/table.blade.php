@@ -1,7 +1,9 @@
 @extends('layouts.admin.master')
 
 @section('title', 'PENRO Archiving System')
-
+<link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
     <div class="bg-slate-300 h-[600px] rounded-md text-black p-4">
         <nav aria-label="Breadcrumb">
@@ -34,161 +36,144 @@
             <button class="bg-white px-2 p-1 rounded-md">Sort By</button>
             <button class="bg-white px-2 p-1 rounded-md">View</button>
         </div>
-
-        <div class="flex justify-between ">
-            <div class="flex items-center">
-                <label for="entriesSelect" class="mr-2 text-gray-700">Show</label>
-                <select id="entriesSelect" class="border border-gray-300 rounded-md px-2 py-1">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <span class="ml-2 text-gray-700">entries</span>
-            </div>
-            <div id="customPagination" class="flex items-center space-x-2 py-1">
-                <button id="prevPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Previous</button>
-                <span id="pageInfo" class="text-gray-700">Page 1 of 10</span>
-                <button id="nextPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Next</button>
-            </div>
-        </div>
-
-
-
+        {{-- here point --}}
         <div class="relative">
-            <div id="mainTable" class=" transition-opacity duration-500 ease-in-out opacity-100">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-visible" id="filesTable">
-                        <thead class="bg-white">
-                            <tr class="text-sm leading-normal text-gray-600">
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Name</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Date Modified
-                                </th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Modified By</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Category</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Classification
-                                </th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Status</th>
-                                <th class="py-3 px-6 border-b border-gray-300 text-left whitespace-nowrap">Action</th>
+            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
+                <div class="flex justify-between ">
+                    <div class="flex items-center">
+                        <label for="entriesSelect" class="mr-2 text-gray-700">Show</label>
+                        <select id="entriesSelect" class="border border-gray-300 rounded-md px-2 py-1">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="ml-2 text-gray-700">entries</span>
+                    </div>
+                    <div id="customPagination" class="flex items-center space-x-2 py-1">
+                        <button id="prevPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Previous</button>
+                        <span id="pageInfo" class="text-gray-700">Page 1 of 10</span>
+                        <button id="nextPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Next</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto bg-white rounded-lg ">
+                    <table id="default-table" class="min-w-full border-collapse border border-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-300">Name</th>
+                                <th class="border border-gray-300">Date Modified</th>
+                                <th class="border border-gray-300">Modified By</th>
+                                <th class="border border-gray-300">Category</th>
+                                <th class="border border-gray-300">Classification</th>
+                                <th class="border border-gray-300">Status</th>
+                                <th class="border border-gray-300">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="text-sm bg-white" id="filesBody">
-                            <!-- Files will be populated here -->
+                        <tbody id="filesBody">
+                            <!-- Data will be populated here -->
                         </tbody>
                     </table>
+
                     <script>
                         document.addEventListener("DOMContentLoaded", function() {
-                            const permitType = "{{ $type }}";
-                            const municipality = "{{ $municipality }}";
+                            const permitType = "{{ $type }}"; // Replace with your actual value
+                            const municipality = "{{ $municipality }}"; // Replace with your actual value
 
                             fetch(`/api/files/${permitType}/${municipality}`)
                                 .then(response => {
                                     if (!response.ok) {
-                                        throw new Error('Network response was not ok ' + response.statusText);
+                                        throw new Error('Network response was not ok');
                                     }
                                     return response.json();
                                 })
                                 .then(data => {
-                                    const filesBody = document.getElementById('filesBody');
-                                    // Initialize DataTable with customizations
-                                    const table = $('#filesTable').DataTable({
-                                        data: data.data,
-                                        columns: [{
-                                                title: "Name <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "file_name"
-                                            },
-                                            {
-                                                title: "Date Modified <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "updated_at"
-                                            },
-                                            {
-                                                title: "Modified By <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "user_name"
-                                            },
-                                            {
-                                                title: "Category <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "category"
-                                            },
-                                            {
-                                                title: "Classification <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "classification"
-                                            },
-                                            {
-                                                title: "Status <i class='bx bx-sort hover:cursor-pointer' ></i>",
-                                                data: "status"
-                                            },
-                                            {
-                                                title: "Actions",
-                                                data: null,
-                                                defaultContent: "<button>Edit</button>" // Example action column
-                                            }
+                                    const customData = {
+                                        headings: [
+                                            "Name",
+                                            "Date Modified",
+                                            "Modified By",
+                                            "Category",
+                                            "Classification",
+                                            "Status",
+                                            "Actions" // Add the Actions column
                                         ],
-                                        pageLength: 5, // Set initial page length
-                                        paging: true, // Enable pagination
-                                        lengthChange: false,
-                                        dom: 't',
-                                        searching: true, // Allow changing the number of entries
-                                        info: false, // Disable default info display
-                                        ordering: true, // Enable column sorting
-                                        createdRow: function(row, data) {
-                                            // Customize specific td elements based on conditions
-                                            $('td', row).each(function() {
-                                                $(this).addClass('py-3 px-6 border-b border-gray-300');
-                                            });
-                                        }
-                                    });
+                                        data: data.data.map((file) => [
+                                            file.file_name,
+                                            file.updated_at,
+                                            file.user_name,
+                                            file.category,
+                                            file.classification,
+                                            file.status,
+                                            `
+                            <button id="dropdownLeftButton${file.id}" data-dropdown-toggle="dropdownLeft${file.id}" data-dropdown-placement="left" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+                               <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                            </button>
 
-                                    // Update total pages and page info
-                                    function updatePageInfo() {
-                                        const totalPages = Math.ceil(table.page.info().recordsTotal / table.page.len());
-                                        const currentPage = table.page.info().page;
-                                        document.getElementById('pageInfo').innerText =
-                                            `Page ${currentPage + 1} of ${totalPages}`;
-                                    }
+                            <!-- Dropdown menu -->
+                            <div id="dropdownLeft${file.id}"   class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow ">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLeftButton${file.id}">
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">${file.id}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        `
+                                        ])
+                                    };
 
-                                    // Initial page info
-                                    updatePageInfo();
+                                    // Initialize the DataTable with options
+                                    const options = {
+                                        data: customData,
+                                        paging: true,
+                                        perPage: 5,
+                                        searchable: true,
+                                        sortable: true,
+                                        scrollY: "300px",
+                                    };
 
-                                    // Previous page button
-                                    document.getElementById('prevPage').addEventListener('click', function() {
-                                        if (table.page.info().page > 0) {
-                                            table.page('previous').draw(false); // Use DataTable's built-in method
-                                            updatePageInfo();
-                                        }
-                                    });
+                                    const dataTable = new simpleDatatables.DataTable("#default-table", options);
 
-                                    // Next page button
-                                    document.getElementById('nextPage').addEventListener('click', function() {
-                                        if (table.page.info().page < table.page.info().pages - 1) {
-                                            table.page('next').draw(false); // Use DataTable's built-in method
-                                            updatePageInfo();
-                                        }
-                                    });
+                                    // After the table is rendered, initialize the dropdowns
+                                    setTimeout(() => {
+                                        data.data.forEach((file) => {
+                                            const dropdownButton = document.getElementById(
+                                                `dropdownLeftButton${file.id}`);
+                                            const dropdownElement = document.getElementById(
+                                                `dropdownLeft${file.id}`);
 
-                                    // Bind custom search input to DataTable
-                                    $('#customSearchInput').on('keyup', function() {
-                                        table.search(this.value).draw();
-                                    });
-
-                                    // Handle entries select change
-                                    $('#entriesSelect').on('change', function() {
-                                        const entriesPerPage = parseInt(this.value); // Update the entries per page
-                                        table.page.len(entriesPerPage)
-                                            .draw(); // Set the page length based on the selected value
-                                        updatePageInfo(); // Update page info display
-                                    });
-
-                                    // Optional: If you want to refresh the page info after a search
-                                    table.on('search.dt', function() {
-                                        updatePageInfo();
-                                    });
-
+                                            // Ensure Flowbite's Dropdown object is initialized
+                                            if (dropdownButton && dropdownElement) {
+                                                new Dropdown(dropdownElement,
+                                                    dropdownButton); // Initialize Flowbite Dropdown
+                                            }
+                                        });
+                                    }, 100); // Add a delay to ensure elements are available in the DOM
                                 })
                                 .catch(error => {
                                     console.error('There was a problem with the fetch operation:', error);
                                 });
                         });
                     </script>
+                    <!-- Modal toggle -->
                 </div>
 
             </div>
@@ -214,16 +199,7 @@
 
 
                         <!-- Template for Action Dropdown -->
-                        <div id="actionDropdownTemplate"
-                            class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-                            <ul class="py-1 text-sm text-gray-700" aria-labelledby="dropdown-button">
-                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
-                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
-                            </ul>
-                            <div class="py-1">
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                            </div>
-                        </div>
+
                         <script>
                             document.addEventListener("DOMContentLoaded", function() {
                                 const permitType = "{{ $type }}";
@@ -239,23 +215,23 @@
                                         data.data.forEach(file => {
                                             const row = document.createElement('tr');
                                             row.innerHTML = `
-                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                    <td class="py-3 px-6 border-b border-gray-300 relative">
-                        <button class="option-btn p-2 bg-gray-100 rounded hover:bg-gray-200"
-                                onclick="showDropdown(event, ${file.id})">
-                            <i class='bx bx-dots-vertical'></i>
-                        </button>
-                        <div id="dropdown-${file.id}" class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-                            <ul class="py-1 text-sm text-gray-700">
-                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
-                                <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
-                            </ul>
-                            <div class="py-1">
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                `;
+                                            <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
+                                            <td class="py-3 px-6 border-b border-gray-300 relative">
+                                                <button class="option-btn p-2 bg-gray-100 rounded hover:bg-gray-200"
+                                                        onclick="showDropdown(event, ${row.id})">
+                                                    <i class='bx bx-dots-vertical'></i>
+                                                </button>
+                                                <div id="dropdown-${row.id}" class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+                                                    <ul class="py-1 text-sm text-gray-700">
+                                                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
+                                                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
+                                                    </ul>
+                                                    <div class="py-1">
+                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        `;
                                             filesBodyLimited.appendChild(row);
                                         });
 
@@ -285,8 +261,6 @@
                                 });
                             }
                         </script>
-
-
 
 
                     </div>
@@ -379,7 +353,8 @@
                                     <input type="hidden" id="land_category" value="{{ $category }}"
                                         name="land_category">
                                 @endif
-                                <input type="hidden" id="municipality" value="{{ $municipality }}" name="municipality">
+                                <input type="hidden" id="municipality" value="{{ $municipality }}"
+                                    name="municipality">
 
 
 
