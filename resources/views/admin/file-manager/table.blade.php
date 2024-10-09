@@ -36,7 +36,7 @@
             <button class="bg-white px-2 p-1 rounded-md">Sort By</button>
             <button class="bg-white px-2 p-1 rounded-md">View</button>
         </div>
-        {{-- here point --}}
+
         <div class="relative">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="flex justify-between ">
@@ -50,11 +50,7 @@
                         </select>
                         <span class="ml-2 text-gray-700">entries</span>
                     </div>
-                    <div id="customPagination" class="flex items-center space-x-2 py-1">
-                        <button id="prevPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Previous</button>
-                        <span id="pageInfo" class="text-gray-700">Page 1 of 10</span>
-                        <button id="nextPage" class="px-4 py-1 bg-white rounded-md text-gray-700">Next</button>
-                    </div>
+
                 </div>
                 <div class="overflow-x-auto bg-white rounded-lg ">
                     <table id="default-table" class="min-w-full border-collapse border border-gray-200">
@@ -117,7 +113,7 @@
                             <div id="dropdownLeft${file.id}"   class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow ">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLeftButton${file.id}">
                                     <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">${file.id}</a>
+                                        <a href="#"  class="block px-4 py-2 hover:bg-gray-100">View</a>
                                     </li>
                                     <li>
                                         <a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a>
@@ -145,28 +141,74 @@
                                         data: customData,
                                         paging: true,
                                         perPage: 5,
-                                        searchable: true,
+                                        searchable: false,
+                                        perPageSelect: false,
                                         sortable: true,
+
                                         scrollY: "300px",
                                     };
 
                                     const dataTable = new simpleDatatables.DataTable("#default-table", options);
 
-                                    // After the table is rendered, initialize the dropdowns
-                                    setTimeout(() => {
+                                    // Listen to events that indicate table content updates
+                                    dataTable.on("datatable.page", initializeDropdowns);
+                                    dataTable.on("datatable.update", initializeDropdowns);
+
+                                    // Initialize dropdowns for the current rows
+                                    function initializeDropdowns() {
                                         data.data.forEach((file) => {
                                             const dropdownButton = document.getElementById(
                                                 `dropdownLeftButton${file.id}`);
-                                            const dropdownElement = document.getElementById(
-                                                `dropdownLeft${file.id}`);
+                                            const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
 
-                                            // Ensure Flowbite's Dropdown object is initialized
                                             if (dropdownButton && dropdownElement) {
-                                                new Dropdown(dropdownElement,
-                                                    dropdownButton); // Initialize Flowbite Dropdown
+                                                new Dropdown(dropdownElement, dropdownButton);
                                             }
                                         });
-                                    }, 100); // Add a delay to ensure elements are available in the DOM
+                                    }
+
+                                    // Initial call for dropdowns in the first page
+                                    initializeDropdowns();
+
+                                    const searchInput = document.getElementById("customSearchInput");
+                                    searchInput.addEventListener("input", () => {
+                                        dataTable.search(searchInput.value);
+                                    });
+
+                                    // Custom Show Entries
+                                    const entriesSelect = document.getElementById("entriesSelect");
+                                    entriesSelect.addEventListener("change", () => {
+                                        dataTable.options.perPage = parseInt(entriesSelect.value, 10);
+                                        dataTable.update();
+                                    });
+
+                                    // Custom Pagination
+                                    const prevPage = document.getElementById("prevPage");
+                                    const nextPage = document.getElementById("nextPage");
+                                    const pageInfo = document.getElementById("pageInfo");
+
+                                    function updatePaginationInfo() {
+                                        const currentPage = dataTable.currentPage + 1;
+                                        const totalPages = dataTable.totalPages;
+                                        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                                    }
+
+                                    prevPage.addEventListener("click", () => {
+                                        if (dataTable.currentPage > 0) {
+                                            dataTable.previousPage();
+                                            updatePaginationInfo();
+                                        }
+                                    });
+
+                                    nextPage.addEventListener("click", () => {
+                                        if (dataTable.currentPage < dataTable.totalPages - 1) {
+                                            dataTable.nextPage();
+                                            updatePaginationInfo();
+                                        }
+                                    });
+
+                                    // Initial pagination info update
+                                    updatePaginationInfo();
                                 })
                                 .catch(error => {
                                     console.error('There was a problem with the fetch operation:', error);
