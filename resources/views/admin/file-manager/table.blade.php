@@ -22,51 +22,19 @@
             </ol>
         </nav>
 
-        <div class="flex justify-end items-center">
-            <div class="relative">
-                <input type="text" id="customSearchInput"
-                    class="placeholder:px-4 pl-2 py-1 rounded-md border border-gray-300" placeholder="Quick Search">
-                <i class='bx bx-search absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400'></i>
-            </div>
-        </div>
-
         <div class="my-4 space-x-3">
             <button class="bg-white px-2 p-1 rounded-md" id="uploadBtn">Upload File</button>
             <button class="bg-white px-2 p-1 rounded-md">Create a Folder</button>
-            <button class="bg-white px-2 p-1 rounded-md">Sort By</button>
-            <button class="bg-white px-2 p-1 rounded-md">View</button>
+
         </div>
 
         <div class="relative">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
-                <div class="flex justify-between ">
-                    <div class="flex items-center">
-                        <label for="entriesSelect" class="mr-2 text-gray-700">Show</label>
-                        <select id="entriesSelect" class="border border-gray-300 rounded-md px-2 py-1">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span class="ml-2 text-gray-700">entries</span>
-                    </div>
+                <div class="overflow-x-auto bg-white rounded-lg p-5 ">
 
-                </div>
-                <div class="overflow-x-auto bg-white rounded-lg ">
-                    <table id="default-table" class="min-w-full border-collapse border border-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="border border-gray-300">Name</th>
-                                <th class="border border-gray-300">Date Modified</th>
-                                <th class="border border-gray-300">Modified By</th>
-                                <th class="border border-gray-300">Category</th>
-                                <th class="border border-gray-300">Classification</th>
-                                <th class="border border-gray-300">Status</th>
-                                <th class="border border-gray-300">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="filesBody">
-                            <!-- Data will be populated here -->
+                    <table id="sorting-table">
+                        <tbody>
+
                         </tbody>
                     </table>
 
@@ -93,128 +61,146 @@
                                             "Status",
                                             "Actions" // Add the Actions column
                                         ],
-                                        data: data.data.map((file) => [
-                                            file.file_name,
-                                            file.updated_at,
-                                            file.user_name,
-                                            file.category,
-                                            file.classification,
-                                            file.status,
-                                            `
-                            <button id="dropdownLeftButton${file.id}" data-dropdown-toggle="dropdownLeft${file.id}" data-dropdown-placement="left" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                               <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                        </svg>
+                                        data: data.data.map((file) => ({
+                                            cells: [
+                                                file.file_name,
+                                                file.updated_at,
+                                                file.user_name,
+                                                file.category,
+                                                file.classification,
+                                                file.status,
+                                                `<button id="dropdownLeftButton${file.id}" data-dropdown-toggle="dropdownLeft${file.id}" data-dropdown-placement="left" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                </svg>
                             </button>
-
-                            <!-- Dropdown menu -->
-                            <div id="dropdownLeft${file.id}"   class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow ">
+                            <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLeftButton${file.id}">
-                                    <li>
-                                        <a href="#"  class="block px-4 py-2 hover:bg-gray-100">View</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a>
-                                    </li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">View</a></li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Edit</a></li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
+                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
                                 </ul>
-                            </div>
-                        `
-                                        ])
+                            </div>`
+                                            ],
+                                            attributes: {
+                                                class: "text-black text-left"
+                                            }
+                                        })),
                                     };
 
                                     // Initialize the DataTable with options
-                                    const options = {
-                                        data: customData,
-                                        paging: true,
-                                        perPage: 5,
-                                        searchable: false,
-                                        perPageSelect: false,
-                                        sortable: true,
+                                    const dataTableElement = document.getElementById("sorting-table");
+                                    if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+                                        const dataTable = new simpleDatatables.DataTable(dataTableElement, {
+                                            classes: {
+                                                dropdown: "datatable-perPage flex items-center", // Container for perPage dropdown
+                                                selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
+                                                info: "datatable-info text-sm text-gray-500", // Class for the info text (pagination info)                                       
+                                            },
+                                            labels: {
+                                                perPage: "<span class='text-gray-500 m-3'>Rows</span>", // Custom text for perPage dropdown
+                                                searchTitle: "Search through table data", // Title attribute for the search input
+                                            },
+                                            template: (options, dom) => `<div class='${options.classes.top}'>
+                                                ${
+                                                options.paging && options.perPageSelect ?
+                                                    `<div class='${options.classes.dropdown}'>
+                                                                                                                                                                                                                                                                                                                                                                    <label>
+                                                                                                                                                                                                                                                                                                                                                                        <select class='${options.classes.selector}'></select> ${options.labels.perPage}
+                                                                                                                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                                                                                                                </div>` :
+                                                    ""
+                                            }
+                                                ${
+                                                options.searchable ?
+                                                    `<div class='${options.classes.search}'>
+                                                                                                                                                                                                                                                                                                                                                                    <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
+                                                                                                                                                                                                                                                                                                                                                                </div>` :
+                                                    ""
+                                            }
+                                            </div>
+                                            <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+                                            <div class='${options.classes.bottom}'>
+                                                ${
+                                                options.paging ?
+                                                    `<div class='${options.classes.info}'></div>` :
+                                                    ""
+                                            }
+                                                <nav class='${options.classes.pagination}'></nav>
+                                            </div>`,
+                                            searchable: true,
+                                            perPageSelect: false,
+                                            sortable: true,
+                                            perPage: 5, // set the number of rows per page
+                                            perPageSelect: [5, 10, 20, 50],
+                                            data: customData
+                                        });
 
-                                        scrollY: "300px",
-                                    };
+                                        // Initialize dropdowns for the current rows
+                                        function initializeDropdowns() {
+                                            data.data.forEach((file) => {
+                                                const dropdownButton = document.getElementById(
+                                                    `dropdownLeftButton${file.id}`);
+                                                const dropdownElement = document.getElementById(
+                                                    `dropdownLeft${file.id}`);
 
-                                    const dataTable = new simpleDatatables.DataTable("#default-table", options);
+                                                if (dropdownButton && dropdownElement) {
+                                                    new Dropdown(dropdownElement, dropdownButton);
+                                                }
+                                            });
+                                        }
 
-                                    // Listen to events that indicate table content updates
-                                    dataTable.on("datatable.page", initializeDropdowns);
-                                    dataTable.on("datatable.update", initializeDropdowns);
+                                        // Listen to events that indicate table content updates
+                                        dataTable.on("datatable.page", initializeDropdowns);
+                                        dataTable.on("datatable.update", initializeDropdowns);
 
-                                    // Initialize dropdowns for the current rows
-                                    function initializeDropdowns() {
-                                        data.data.forEach((file) => {
-                                            const dropdownButton = document.getElementById(
-                                                `dropdownLeftButton${file.id}`);
-                                            const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
+                                        // Initial call for dropdowns in the first page
+                                        initializeDropdowns();
+                                        // Custom Show Entries
+                                        const entriesSelect = document.getElementById("entriesSelect");
+                                        entriesSelect.addEventListener("change", () => {
+                                            dataTable.options.perPage = parseInt(entriesSelect.value, 10);
+                                            dataTable.update();
+                                        });
 
-                                            if (dropdownButton && dropdownElement) {
-                                                new Dropdown(dropdownElement, dropdownButton);
+                                        // Custom Pagination
+                                        const prevPage = document.getElementById("prevPage");
+                                        const nextPage = document.getElementById("nextPage");
+                                        const pageInfo = document.getElementById("pageInfo");
+
+                                        function updatePaginationInfo() {
+                                            const currentPage = dataTable.currentPage + 1;
+                                            const totalPages = dataTable.totalPages;
+                                            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                                        }
+
+                                        prevPage.addEventListener("click", () => {
+                                            if (dataTable.currentPage > 0) {
+                                                dataTable.previousPage();
+                                                updatePaginationInfo();
                                             }
                                         });
+
+                                        nextPage.addEventListener("click", () => {
+                                            if (dataTable.currentPage < dataTable.totalPages - 1) {
+                                                dataTable.nextPage();
+                                                updatePaginationInfo();
+                                            }
+                                        });
+
+                                        // Initial pagination info update
+                                        updatePaginationInfo();
                                     }
-
-                                    // Initial call for dropdowns in the first page
-                                    initializeDropdowns();
-
-                                    const searchInput = document.getElementById("customSearchInput");
-                                    searchInput.addEventListener("input", () => {
-                                        dataTable.search(searchInput.value);
-                                    });
-
-                                    // Custom Show Entries
-                                    const entriesSelect = document.getElementById("entriesSelect");
-                                    entriesSelect.addEventListener("change", () => {
-                                        dataTable.options.perPage = parseInt(entriesSelect.value, 10);
-                                        dataTable.update();
-                                    });
-
-                                    // Custom Pagination
-                                    const prevPage = document.getElementById("prevPage");
-                                    const nextPage = document.getElementById("nextPage");
-                                    const pageInfo = document.getElementById("pageInfo");
-
-                                    function updatePaginationInfo() {
-                                        const currentPage = dataTable.currentPage + 1;
-                                        const totalPages = dataTable.totalPages;
-                                        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-                                    }
-
-                                    prevPage.addEventListener("click", () => {
-                                        if (dataTable.currentPage > 0) {
-                                            dataTable.previousPage();
-                                            updatePaginationInfo();
-                                        }
-                                    });
-
-                                    nextPage.addEventListener("click", () => {
-                                        if (dataTable.currentPage < dataTable.totalPages - 1) {
-                                            dataTable.nextPage();
-                                            updatePaginationInfo();
-                                        }
-                                    });
-
-                                    // Initial pagination info update
-                                    updatePaginationInfo();
                                 })
                                 .catch(error => {
                                     console.error('There was a problem with the fetch operation:', error);
                                 });
                         });
                     </script>
+
                     <!-- Modal toggle -->
                 </div>
 
