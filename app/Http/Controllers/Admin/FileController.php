@@ -201,7 +201,31 @@ class FileController extends Controller
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
 
+    public function GetFileById($id)
+    {
+        try {
+            $file = File::find($id);
+            return response()->json(["success" => true, "file" => $file]);
 
+
+            //condition 
+
+            //switch ($type)
+            //case : 
+            // $files = DB::table('files')
+            //     ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+            //     ->where('files.permit_type', $type)
+            //     ->where('files.municipality', $municipality)
+            //     ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+            //     ->get();
+            //break
+
+
+        } catch (\Exception $e) {
+            return response()->json(["succress" => false]);
+        }
+
+    }
 
 }
 
