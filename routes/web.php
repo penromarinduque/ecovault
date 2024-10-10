@@ -97,8 +97,11 @@ Route::middleware(['authentication'])->group(function () {
     Route::post('/file-upload', [FileController::class, 'StoreFile'])->name('file.post');
     Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
     Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
-
-
-
+    //for view
+    Route::get("/api/files/{id}", [FileController::class, "GetFileById"])->name("file.get");
+    Route::get('/download/{id}', [FileController::class, 'download'])->name('file.download');
+    // for update
+    //Route::put()
+    //post for movoe
 });
 

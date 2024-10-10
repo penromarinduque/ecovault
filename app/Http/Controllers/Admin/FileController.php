@@ -168,7 +168,64 @@ class FileController extends Controller
             ], 500);
         }
     }
+    public function download($id)
+    {
+        // Fetch the file record from the database
+        $file = File::find($id);
 
+        // Check if the file exists in the database
+        if (!$file) {
+            return response()->json([
+                'message' => 'File not found.'
+            ], 404);
+        }
+
+        // Define the path to the file in storage
+        $filePath = $file->file_path; // Assuming 'file_path' is a column in your 'files' table
+
+        // Check if the file exists in storage
+        if (!Storage::exists($filePath)) {
+            return response()->json([
+                'message' => 'File not found in storage.'
+            ], 404);
+        }
+
+        // Retrieve the file's content and mime type
+        $fileContents = Storage::get($filePath);
+        $mimeType = Storage::mimeType($filePath);
+        $fileName = basename($filePath);
+
+        // Return the file as a download response
+        return response($fileContents, 200)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+    }
+
+    public function GetFileById($id)
+    {
+        try {
+            $file = File::find($id);
+            return response()->json(["success" => true, "file" => $file]);
+
+
+            //condition 
+
+            //switch ($type)
+            //case : 
+            // $files = DB::table('files')
+            //     ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+            //     ->where('files.permit_type', $type)
+            //     ->where('files.municipality', $municipality)
+            //     ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+            //     ->get();
+            //break
+
+
+        } catch (\Exception $e) {
+            return response()->json(["succress" => false]);
+        }
+
+    }
 
 }
 
