@@ -94,14 +94,27 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/admin/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
     Route::get('/admin/{type}/{municipality}', [AdminController::class, 'ShowTable'])->name('file-manager.table.show');
     Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
+
+    Route::get("/admin/administrative-document", [AdminController::class, "ShowAdministrativeDocuments"]);
+    // Route::get("/admin/adminstrative-document")
+
+
     Route::post('/file-upload', [FileController::class, 'StoreFile'])->name('file.post');
     Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
+
     Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
     //for view
     Route::get("/api/files/{id}", [FileController::class, "GetFileById"])->name("file.get");
-    Route::get('/download/{id}', [FileController::class, 'download'])->name('file.download');
+    Route::get('/download/{id}', [FileController::class, 'Download'])->name('file.download');
     // for update
     //Route::put()
     //post for movoe
+
+
+    Route::post('/file-upload/test', [FileController::class, 'Upload'])->name('file.upload');
+
+    Route::get("/superuser/test", function () {
+        return view("superuser.test");
+    });
 });
 

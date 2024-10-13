@@ -108,17 +108,17 @@
                                                 ${
                                                 options.paging && options.perPageSelect ?
                                                     `<div class='${options.classes.dropdown}'>
-                                                                                                                                                                                                                                                                                                                                                                                                            <label>
-                                                                                                                                                                                                                                                                                                                                                                                                                <select class='${options.classes.selector}'></select> ${options.labels.perPage}
-                                                                                                                                                                                                                                                                                                                                                                                                            </label>
-                                                                                                                                                                                                                                                                                                                                                                                                        </div>` :
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <select class='${options.classes.selector}'></select> ${options.labels.perPage}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>` :
                                                     ""
                                             }
                                                 ${
                                                 options.searchable ?
                                                     `<div class='${options.classes.search}'>
-                                                                                                                                                                                                                                                                                                                                                                                                            <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
-                                                                                                                                                                                                                                                                                                                                                                                                        </div>` :
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>` :
                                                     ""
                                             }
                                             </div>
@@ -201,7 +201,6 @@
                         });
                     </script>
 
-                    <!-- Modal toggle -->
                 </div>
 
             </div>
@@ -226,69 +225,7 @@
                         </table>
 
 
-                        <!-- Template for Action Dropdown -->
 
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                const permitType = "{{ $type }}";
-                                const municipality = "{{ $municipality }}";
-
-                                // Fetch data from the API
-                                fetch(`/api/files/${permitType}/${municipality}`)
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        const filesBodyLimited = document.getElementById('filesBodyLimited');
-
-                                        // Populate the table with the fetched data
-                                        data.data.forEach(file => {
-                                            const row = document.createElement('tr');
-                                            row.innerHTML = `
-                                            <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                                            <td class="py-3 px-6 border-b border-gray-300 relative">
-                                                <button class="option-btn p-2 bg-gray-100 rounded hover:bg-gray-200"
-                                                        onclick="showDropdown(event, ${row.id})">
-                                                    <i class='bx bx-dots-vertical'></i>
-                                                </button>
-                                                <div id="dropdown-${row.id}" class="hidden absolute z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-                                                    <ul class="py-1 text-sm text-gray-700">
-                                                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Show</a></li>
-                                                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Edit</a></li>
-                                                    </ul>
-                                                    <div class="py-1">
-                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        `;
-                                            filesBodyLimited.appendChild(row);
-                                        });
-
-                                        // Initialize DataTable after populating
-                                        $('#minimizeTable').DataTable({
-                                            dom: 't'
-                                        });
-                                    })
-                                    .catch(error => console.error('Fetch error:', error));
-                            });
-
-                            // Show/Hide dropdown logic
-                            function showDropdown(event, id) {
-                                event.stopPropagation(); // Prevent click event from closing the dropdown immediately
-                                const dropdown = document.getElementById(`dropdown-${id}`);
-
-                                // Toggle the dropdown visibility
-                                dropdown.classList.toggle('hidden');
-
-                                // Close dropdown if clicking outside
-                                document.addEventListener('click', function(e) {
-                                    if (!dropdown.contains(e.target)) {
-                                        dropdown.classList.add('hidden');
-                                    }
-                                }, {
-                                    once: true
-                                });
-                            }
-                        </script>
 
 
                     </div>
@@ -381,8 +318,7 @@
                                     <input type="hidden" id="land_category" value="{{ $category }}"
                                         name="land_category">
                                 @endif
-                                <input type="hidden" id="municipality" value="{{ $municipality }}"
-                                    name="municipality">
+                                <input type="hidden" id="municipality" value="{{ $municipality }}" name="municipality">
 
 
 
@@ -902,143 +838,6 @@
                         }
 
 
-
-                        function populateTable(files) {
-                            const tableBody = document.getElementById('filesBody'); // Assuming your table has a <tbody>
-                            tableBody.innerHTML = ''; // Clear the existing rows
-                            console.log(files);
-
-                            files.forEach(file => {
-                                const row = document.createElement('tr');
-                                row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
-
-                                row.innerHTML = `
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.updated_at}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.user_name}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.category}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.classification}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.status}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">
-                                        <div class="relative inline-block text-left">
-                                            <button class="option-btn" data-id="${file.id}" onclick="toggleDropdown(event, 'main')">
-                                                <i class='bx bx-dots-vertical'></i>
-                                            </button>
-                                            <div class="absolute right-0 hidden w-32 bg-white rounded-md shadow-lg" id="dropdown-main-${file.id}" style="z-index: 99;">
-                                                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="viewFile(${file.id})">View</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="downloadFile(${file.id})">Download</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="editFile(${file.id})">Edit</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="moveFile(${file.id})">Move</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="shareFile(${file.id})">Share</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="archiveFile(${file.id})">Archived</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="fileSumarry(${file.id})">File Summary</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                `;
-
-                                tableBody.appendChild(row);
-                            });
-                        }
-
-                        function populateTableLimited(files) {
-                            const tableBody = document.getElementById('filesBodyLimited'); // Assuming your table has a <tbody>
-                            tableBody.innerHTML = ''; // Clear the existing rows
-                            console.log(files);
-
-                            files.forEach(file => {
-                                const row = document.createElement('tr');
-                                row.classList.add('border-b', 'border-black', 'hover:bg-gray-100');
-
-                                row.innerHTML = `
-                                    <td class="py-3 px-6 border-b border-gray-300">${file.file_name}</td>
-                                    <td class="py-3 px-6 border-b border-gray-300">
-                                        <div class="relative inline-block text-left">
-                                            <button class="option-btn" data-id="${file.id}" onclick="toggleDropdown(event, 'limited')">
-                                                <i class='bx bx-dots-vertical'></i>
-                                            </button>
-                                            <div class="absolute  right-0 hidden w-32 bg-white rounded-md shadow-lg" id="dropdown-limited-${file.id}" style="z-index: 99;">
-                                                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="viewFile(${file.id})">View</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="downloadFile(${file.id})">Download</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="editFile(${file.id})">Edit</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="moveFile(${file.id})">Move</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="shareFile(${file.id})">Share</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="archiveFile(${file.id})">Archived</a>
-                                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="fileSumarry(${file.id})">File Summary</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                `;
-
-                                tableBody.appendChild(row);
-                            });
-                        }
-
-                        function toggleDropdown(event, type) {
-                            event.stopPropagation(); // Prevent event bubbling
-                            const button = event.currentTarget; // The button that was clicked
-                            const dropdownId = type === 'main' ? `dropdown-main-${button.getAttribute('data-id')}` :
-                                `dropdown-limited-${button.getAttribute('data-id')}`; // Determine which dropdown to toggle
-                            const dropdown = document.getElementById(dropdownId); // Get the dropdown element
-
-                            // Close any open dropdowns before opening a new one
-                            const existingDropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                            existingDropdowns.forEach(d => {
-                                if (d !== dropdown) {
-                                    d.classList.add('hidden'); // Hide other dropdowns
-                                }
-                            });
-
-                            // Calculate the position for fixed positioning
-                            const rect = button.getBoundingClientRect(); // Get the button's position
-                            const dropdownHeight = dropdown.offsetHeight; // Get the dropdown's height
-                            const viewportHeight = window.innerHeight; // Get the height of the viewport
-
-                            // Check available space below the button
-                            if (rect.bottom + dropdownHeight > viewportHeight) {
-                                // Not enough space below, position it above
-                                dropdown.style.top = `${rect.top - dropdownHeight - 200}px`; // Place above the button
-                            } else {
-                                // Enough space below, place it below the button
-                                dropdown.style.top = `${rect.bottom + 5}px`; // Place below the button
-                            }
-                            dropdown.style.position = 'fixed'; // Use fixed positioning
-                            dropdown.style.left = `${rect.left}px`; // Align with the button
-
-                            // Toggle the dropdown visibility
-                            dropdown.classList.toggle('hidden');
-                        }
-
-                        // Close dropdowns when clicking outside
-                        document.addEventListener('click', function() {
-                            const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                            dropdowns.forEach(dropdown => dropdown.classList.add('hidden')); // Hide all dropdowns
-                        });
-
-
-
-
-                        // Define your action functions
-                        function viewFile(id) {
-                            console.log(`View file with ID: ${id}`);
-                            // Implement the view logic (e.g., open a modal or redirect)
-                        }
-
-                        function moveFile(id) {
-                            console.log(`Move file with ID: ${id}`);
-                            // Implement the move logic (e.g., open a modal or redirect)
-                        }
-
-                        function deleteFile(id) {
-                            if (confirm('Are you sure you want to delete this file?')) {
-                                console.log(`Delete file with ID: ${id}`);
-                                // Implement the delete logic (e.g., make an AJAX call to delete the file)
-                            }
-                        }
 
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
