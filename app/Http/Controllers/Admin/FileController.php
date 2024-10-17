@@ -256,14 +256,6 @@ class FileController extends Controller
         Storage::disk('public')->put($qrCodeFilePath, $result->getString());
         // Log file and QR code paths
 
-
-        // if ($extension === 'docx') {
-        //     // Embed QR code in the DOCX
-        //     $filePath = $this->embedQrCodeInDocx($filePath, $qrCodeFilePath);
-        // } elseif ($extension === 'pdf') {
-        //     // Embed QR code in the PDF
-        //     $filePath = $this->embedQrCodeInPdf($filePath, $qrCodeFilePath);
-        // }
         if ($extension === 'docx') {
             $filePath = $this->embedQrCodeInDocx($filePath, $qrCodeFilePath);
         } elseif ($extension === 'pdf') {
@@ -352,8 +344,6 @@ class FileController extends Controller
     }
 
 
-
-
     private function embedQrCodeInDocx($filePath, $qrCodePath)
     {
         // Load the existing DOCX file
@@ -379,25 +369,27 @@ class FileController extends Controller
         }
 
         // // Add the QR Code Image
-        $qrCodeSizeCm = 2.032; // This is 0.8 inches in centimeters
-        // Add a header to the first section
-        $section = $phpWord->getSections()[0]; // Get the first section
-        $header = $section->addHeader(); // Add a header to the section
 
-        // Add the QR Code Image in the header
-        $header->addImage($qrCodeFullPath, [
-            'width' => 40, // Image width in points
-            'height' => 40, // Image height in points
-            'wrappingStyle' => 'square', // Wrap around text, but since it's in the header, it should not affect the main content
-            'positioning' => 'absolute', // Use absolute positioning
-            'posHorizontal' => 'center', // Align the image horizontally to the center
-            'posHorizontalRel' => 'page', // Position relative to the page for consistent placement
-            'posVertical' => 'top', // Align vertically to the top
-            'posVerticalRel' => 'page', // Relative to the page, so it's fixed at the top
-            'marginTop' => -25, // Adjust to place above header text
-            'marginLeft' => -60, // Adjust to fine-tune left-right position
-        ]);
-        // Add a header to the section
+
+        $section = $phpWord->getSections()[0];
+
+        // Add the QR Code image to the footer at the bottom right corner
+        foreach ($phpWord->getSections() as $section) {
+            $footer = $section->addFooter();
+            $footer->addImage($qrCodeFullPath, [
+                'width' => 40, // Image width in points
+                'height' => 40, // Image height in points
+                'wrappingStyle' => 'infront', // Image in front of the text
+                'positioning' => 'absolute', // Absolute positioning for precise placement
+                'posHorizontal' => 'left', // Align to the right side
+                'posHorizontalRel' => 'page', // Relative to the entire page width
+                'posVertical' => 'bottom', // Align vertically to the bottom
+                'posVerticalRel' => 'page', // Relative to the entire page height
+                'marginBottom' => 10, // Distance from the bottom of the page
+                'marginLeft' => 460, // Large margin to ensure the right alignment\\
+
+            ]);
+        }
 
         // Save the modified document
         // $newFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.docx';
@@ -436,14 +428,24 @@ class FileController extends Controller
             $pdf->AddPage();
             $pdf->useTemplate($templateId);
 
+
+            $pageWidth = $pdf->GetPageWidth();
+            $pageHeight = $pdf->GetPageHeight();
+            $marginRight = 10; // Margin from the right edge of the page
+            $marginBottom = 10; // Margin from the bottom edge of the page
+
             // Set QR Code size and position (you can adjust these values)
             $qrCodeWidth = 20; // Width in mm
             $qrCodeHeight = 20; // Height in mm
             $marginLeft = 10; // Margin from the left edge of the page
             $marginTop = 10; // Margin from the top edge of the page
 
+
+            $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
+            $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
+
             // Add the QR Code image
-            $pdf->Image($qrCodeFullPath, $marginLeft, $marginTop, $qrCodeWidth, $qrCodeHeight);
+            $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
         }
 
         // Save the modified PDF to a new file
