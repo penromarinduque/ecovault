@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TreeCuttingPermit;
+use setasign\Fpdi\Fpdi;
 use App\Models\TreePlantation;
 use Illuminate\Http\Request;
 use App\Models\File;
@@ -14,7 +15,14 @@ use App\Models\TransportPermit;
 use App\Models\LandTitle;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use PhpOffice\PhpWord\TemplateProcessor;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use setasign\Fpdf\Fpdf;
 class FileController extends Controller
 {
 
@@ -39,7 +47,6 @@ class FileController extends Controller
             $uploadDir = "PENRO/uploads/{$request->input('permit_type')}/{$request->input('municipality')}";
 
             $filePath = $request->file('file')->storeAs("public/{$uploadDir}", $sanitizedFileName, 'public');
-
             // Get the relative path to store in the database
             $relativeFilePath = str_replace('public/', '', $filePath); // Remove 'public/' to get the path you want to store
 
@@ -168,7 +175,7 @@ class FileController extends Controller
             ], 500);
         }
     }
-    public function download($id)
+    public function Download($id)
     {
         // Fetch the file record from the database
         $file = File::find($id);
@@ -287,7 +294,241 @@ class FileController extends Controller
             ], 500);
         }
     }
+    public function Upload(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'file' => 'required|mimes:doc,docx,pdf,zip,rar|max:2048',
+        ]);
 
+        // Generate a unique ID for the file
+        $randomId = uniqid();
+        $file = $request->file('file');
+
+        // Sanitize the original file name
+        $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+
+        // Sanitize the file name: replace spaces with underscores and remove special characters
+        $sanitizedFileName = preg_replace('/[^A-Za-z0-9-_\.]/', '_', $originalFileName);
+        $sanitizedFileName = str_replace(' ', '_', $sanitizedFileName); // Optional: replace spaces with underscores
+        $sanitizedFileName = "{$randomId}_{$sanitizedFileName}.{$extension}";
+
+        // Store the uploaded file
+        $filePath = $file->storeAs('uploads', $sanitizedFileName, 'public');
+
+        // Generate QR code URL
+        $url = url("/download/{$randomId}");
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($url)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        // Save QR code to storage
+        $qrCodeFilePath = "qrcodes/{$randomId}.png";
+        Storage::disk('public')->put($qrCodeFilePath, $result->getString());
+        // Log file and QR code paths
+
+        if ($extension === 'docx') {
+            $filePath = $this->embedQrCodeInDocx($filePath, $qrCodeFilePath);
+        } elseif ($extension === 'pdf') {
+            $filePath = $this->embedQrCodeInPdf($filePath, $qrCodeFilePath);
+        } elseif ($extension === 'zip') {
+            // Process the ZIP file
+            $filePath = $this->processZipFile($filePath, $qrCodeFilePath);
+        }
+        return response()->json([
+            'file_path' => $filePath,
+            'qr_code_path' => $qrCodeFilePath,
+        ]);
+    }
+
+    private function processZipFile($filePath, $qrCodePath)
+    {
+        $fullFilePath = storage_path("app/public/{$filePath}");
+
+        // Check if the ZIP file exists
+        if (!file_exists($fullFilePath)) {
+            throw new \Exception("ZIP file not found at: {$fullFilePath}");
+        }
+
+        $zip = new \ZipArchive();
+        if ($zip->open($fullFilePath) === TRUE) {
+            $tempDir = storage_path("app/public/uploads/temp/");
+
+            // Create temp directory
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            // Extract the ZIP contents
+            $zip->extractTo($tempDir);
+            $zip->close();
+
+            // Loop through extracted files
+            $files = scandir($tempDir);
+            foreach ($files as $file) {
+                if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
+                    $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
+                } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
+                    $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
+                }
+            }
+
+            // Create a new ZIP file
+            $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
+            $newZip = new \ZipArchive();
+            if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
+                throw new \Exception("Could not create ZIP file");
+            }
+
+            // Add modified files back to the new ZIP
+            foreach ($files as $file) {
+                if ($file !== '.' && $file !== '..') {
+                    $newZip->addFile("{$tempDir}/{$file}", $file);
+                }
+            }
+            $newZip->close();
+
+            // Clean up temporary files
+            $this->deleteDir($tempDir); // Custom function to delete the directory
+
+            // Delete original ZIP file
+            Storage::disk('public')->delete($filePath);
+
+            return $newZipFilePath; // Return the path of the modified ZIP
+        } else {
+            throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
+        }
+    }
+
+
+    private function deleteDir($dir)
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? deleteDir("$dir/$file") : unlink("$dir/$file");
+        }
+        rmdir($dir);
+    }
+
+
+    private function embedQrCodeInDocx($filePath, $qrCodePath)
+    {
+        // Load the existing DOCX file
+        $fullFilePath = storage_path("app/public/{$filePath}");
+
+        // Check if the DOCX file exists
+        if (!file_exists($fullFilePath)) {
+            throw new \Exception("DOCX file not found at: {$fullFilePath}");
+        }
+
+        // Create a new PHPWord object
+        $phpWord = \PhpOffice\PhpWord\IOFactory::load($fullFilePath);
+
+
+        // Add a new section to the document
+        $section = $phpWord->addSection();
+
+        // Add existing content to the new section if needed
+        // You may want to read the original sections and add them here
+        $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
+        if (!file_exists($qrCodeFullPath)) {
+            throw new \Exception("QR Code not found at: {$qrCodeFullPath}");
+        }
+
+        // // Add the QR Code Image
+
+
+        $section = $phpWord->getSections()[0];
+
+        // Add the QR Code image to the footer at the bottom right corner
+        foreach ($phpWord->getSections() as $section) {
+            $footer = $section->addFooter();
+            $footer->addImage($qrCodeFullPath, [
+                'width' => 40, // Image width in points
+                'height' => 40, // Image height in points
+                'wrappingStyle' => 'infront', // Image in front of the text
+                'positioning' => 'absolute', // Absolute positioning for precise placement
+                'posHorizontal' => 'left', // Align to the right side
+                'posHorizontalRel' => 'page', // Relative to the entire page width
+                'posVertical' => 'bottom', // Align vertically to the bottom
+                'posVerticalRel' => 'page', // Relative to the entire page height
+                'marginBottom' => 10, // Distance from the bottom of the page
+                'marginLeft' => 460, // Large margin to ensure the right alignment\\
+
+            ]);
+        }
+
+        // Save the modified document
+        // $newFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.docx';
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter->save($fullFilePath);
+
+        return $fullFilePath; // Return the path of the modified document
+    }
+
+
+    public function embedQrCodeInPdf($filePath, $qrCodePath)
+    {
+        // Load the existing PDF file
+        $fullFilePath = storage_path("app/public/{$filePath}");
+
+        // Check if the PDF file exists
+        if (!file_exists($fullFilePath)) {
+            throw new \Exception("PDF file not found at: {$fullFilePath}");
+        }
+
+        // Load the QR Code image
+        $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
+        if (!file_exists($qrCodeFullPath)) {
+            throw new \Exception("QR Code not found at: {$qrCodeFullPath}");
+        }
+
+        // Create a new FPDI object
+        $pdf = new Fpdi();
+
+        // Set the source file
+        $pageCount = $pdf->setSourceFile($fullFilePath);
+
+        // Import each page
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $templateId = $pdf->importPage($pageNo);
+            $pdf->AddPage();
+            $pdf->useTemplate($templateId);
+
+
+            $pageWidth = $pdf->GetPageWidth();
+            $pageHeight = $pdf->GetPageHeight();
+            $marginRight = 10; // Margin from the right edge of the page
+            $marginBottom = 10; // Margin from the bottom edge of the page
+
+            // Set QR Code size and position (you can adjust these values)
+            $qrCodeWidth = 20; // Width in mm
+            $qrCodeHeight = 20; // Height in mm
+            $marginLeft = 10; // Margin from the left edge of the page
+            $marginTop = 10; // Margin from the top edge of the page
+
+
+            $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
+            $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
+
+            // Add the QR Code image
+            $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
+        }
+
+        // Save the modified PDF to a new file
+
+        $pdf->Output('F', $fullFilePath);
+
+        return $fullFilePath;
+    }
 
 }
 
