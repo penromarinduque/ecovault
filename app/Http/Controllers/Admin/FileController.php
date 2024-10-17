@@ -204,28 +204,90 @@ class FileController extends Controller
     public function GetFileById($id)
     {
         try {
-            $file = File::find($id);
-            return response()->json(["success" => true, "file" => $file]);
+            // First, retrieve the file and its permit type
+            $file = DB::table('files')
+                ->where('id', $id)
+                ->first();
 
+            if (!$file) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File not found.'
+                ], 404);
+            }
 
-            //condition 
+            // Get the permit type from the file
+            $permit_type = $file->permit_type;
 
-            //switch ($type)
-            //case : 
-            // $files = DB::table('files')
-            //     ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
-            //     ->where('files.permit_type', $type)
-            //     ->where('files.municipality', $municipality)
-            //     ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
-            //     ->get();
-            //break
+            // Initialize the variable to store permit details
+            $permit_details = null;
 
+            // Switch case based on the permit type
+            switch ($permit_type) {
+                case 'tree-cutting-permits':
+                    $permit_details = DB::table('tree_cutting_permits')
+                        ->where('file_id', $id)
+                        ->first();
+                    break;
+
+                case 'chainsaw-registration':
+                    $permit_details = DB::table('chainsaw_registration')
+                        ->where('file_id', $id)
+                        ->first();
+                    break;
+
+                case 'tree-plantation':
+                    $permit_details = DB::table('tree_plantation')
+                        ->where('file_id', $id)
+                        ->first();
+                    break;
+
+                case 'tree-transport-permits':
+                    $permit_details = DB::table('tree_transport_permits')
+                        ->where('file_id', $id)
+                        ->first();
+                    break;
+
+                case 'land-titles':
+                    $permit_details = DB::table('land_titles')
+                        ->where('file_id', $id)
+                        ->first();
+                    break;
+
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid permit type.',
+                        'received_permit_type' => $permit_type
+                    ], 400);
+            }
+
+            // Check if permit details were found
+            if (!$permit_details) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Permit details not found for the provided file ID.',
+                ], 404);
+            }
+
+            // Return a success response with permit details and file data
+            return response()->json([
+                'success' => true,
+                'message' => 'Permit details retrieved successfully.',
+                'file' => $file,  // Return file data including office source
+                'permit' => $permit_details // Return permit details based on permit type
+            ], 200);
 
         } catch (\Exception $e) {
-            return response()->json(["succress" => false]);
+            // Handle any exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving the file.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
     }
+
 
 }
 
