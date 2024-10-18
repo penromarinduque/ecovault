@@ -275,9 +275,10 @@ class FileController extends Controller
                     break;
 
                 case 'chainsaw-registration':
-                    $permit_details = DB::table('chainsaw_registration')
+                    $permit_details = DB::table('chainsaw_registrations')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Chainsaw Registration Details:', (array) $permit_details);
                     break;
 
                 case 'tree-plantation':
@@ -326,7 +327,7 @@ class FileController extends Controller
             // Handle any exceptions
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while retrieving the file.',
+                'message' => 'hehe An error occurred while retrieving the file.',
                 'error' => $e->getMessage()
             ], 500);
         }
