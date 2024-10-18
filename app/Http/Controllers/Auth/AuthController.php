@@ -39,13 +39,20 @@ class AuthController extends Controller
             session(['email' => $request->email]);
 
             Mail::to($request->email)->send(new OtpMailVerification($otp));
-
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn(auth()->user())
+                ->log('User Account Created Success');
 
             return redirect()->route('verification.show')
                 ->with('message', 'Account created successfully. Please check your email for the OTP.');
 
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
+                activity()
+                    ->causedBy(auth()->user())
+                    ->performedOn(auth()->user())
+                    ->log('User Account Created Failed');
                 return response()->json([
                     'error' => 'Failed to create account or send verification email. Please try again later.'
                 ], 500);
@@ -72,6 +79,10 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             // Log the user state after successful login
             \Log::info('User authenticated: ', ['email' => $request->email]);
+            activity()
+                ->causedBy(auth()->user())  // The authenticated user
+                ->performedOn(auth()->user())  // Log the activity on the user model
+                ->log('User logged in');  // Custom message
 
             $request->session()->regenerate();
 
@@ -80,6 +91,10 @@ class AuthController extends Controller
 
         // Log the failed attempt
         \Log::warning('Failed authentication attempt: ', ['email' => $request->email]);
+        activity()
+            ->causedBy(auth()->user())  // The authenticated user
+            ->performedOn(auth()->user())  // Log the activity on the user model
+            ->log('Failed authenticaten attempt');  // Custom message
 
         return back()->withErrors([]);
     }
@@ -125,13 +140,22 @@ class AuthController extends Controller
             $user->email_verified_at = now();
             $user->otp = null;
             $user->save();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn(auth()->user())
+                ->log('User Verified Email Success');
 
 
             session()->forget('email');
 
             return redirect()->intended(route('login.show'));
         } else {
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn(auth()->user())
+                ->log('User Verified Email Failed');
             return response()->json(['message' => 'OTP is incorrect.'], 422);
+
         }
     }
 
@@ -143,6 +167,11 @@ class AuthController extends Controller
         if ($user) {
             $user->remember_token = null;
             $user->save();
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn(auth()->user())
+                ->log('User Logged out');
         }
 
         Auth::logout();

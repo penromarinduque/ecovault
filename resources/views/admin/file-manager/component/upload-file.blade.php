@@ -1,4 +1,4 @@
-<div id="uploading-file" class="hidden">
+<div id="uploading-file" class="">
     <form id="upload-form" enctype="multipart/form-data">
         @csrf
         <div class="flex justify-between items-center mb-2">
@@ -111,7 +111,7 @@
                         of Client
                     </label>
                     <div class="w-full">
-                        <input type="text" id=" t" placeholder="Enter Value"
+                        <input type="text" id="name-of-client" placeholder="Enter Value"
                             class="name-of-client border border-gray-300 p-2 rounded-md h-10 w-2/3">
                         <p id="name-of-client-error"
                             class="name-of-client-error text-red-500 ml-2 min-h-[1.5rem] invisible">

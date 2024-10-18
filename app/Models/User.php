@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends Authenticatable implements CanResetPassword
 {
     use HasFactory, Notifiable, CanResetPasswordTrait;
@@ -47,5 +48,10 @@ class User extends Authenticatable implements CanResetPassword
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function recentActivities(): HasMany
+    {
+        return $this->hasMany(RecentActivity::class);
     }
 }

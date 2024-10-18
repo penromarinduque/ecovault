@@ -71,5 +71,8 @@ Route::middleware(['authentication'])->group(function () {
     Route::get("/superuser/test", function () {
         return view("superuser.test");
     });
+
+
+    Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
 });
 

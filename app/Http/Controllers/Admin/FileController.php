@@ -23,6 +23,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use PhpOffice\PhpWord\TemplateProcessor;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use setasign\Fpdf\Fpdf;
+use App\Models\RecentActivity;
 class FileController extends Controller
 {
 
@@ -39,14 +40,15 @@ class FileController extends Controller
         ]);
 
         if ($request->file('file')->isValid()) {
-            // Get the original file name and sanitize it to prevent issues with spaces or special characters
-            $originalFileName = $request->file('file')->getClientOriginalName();
-            $sanitizedFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $originalFileName);
 
-            // Define the directory structure based on the current date and file type    
+            $file = $request->file('file');
+            $originalFileName = $file->getClientOriginalName();
+            $sanitizedFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $originalFileName);
+            $extension = $file->getClientOriginalExtension();
+
             $uploadDir = "PENRO/uploads/{$request->input('permit_type')}/{$request->input('municipality')}";
 
-            $filePath = $request->file('file')->storeAs("public/{$uploadDir}", $sanitizedFileName, 'public');
+            $filePath = $request->file('file')->storeAs("{$uploadDir}", $sanitizedFileName, 'public');
             // Get the relative path to store in the database
             $relativeFilePath = str_replace('public/', '', $filePath); // Remove 'public/' to get the path you want to store
 
@@ -65,13 +67,48 @@ class FileController extends Controller
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
             ];
 
-            $file = File::create($formData);
 
+            $fileEntry = File::create($formData);
+
+
+            $url = url("/download/{$fileEntry->id}");
+            $result = Builder::create()
+                ->writer(new PngWriter())
+                ->data($url)
+                ->size(300)
+                ->margin(10)
+                ->build();
+
+            // Save QR code to storage
+            $qrCodeFilePath = "qrcodes/qrcode_{$fileEntry->id}.png";
+            Storage::disk('public')->put($qrCodeFilePath, $result->getString());
+            // Log file and QR code paths
+
+            if ($extension === 'docx') {
+                $filePath = $this->embedQrCodeInDocx($filePath, $qrCodeFilePath);
+            } elseif ($extension === 'pdf') {
+                $filePath = $this->embedQrCodeInPdf($filePath, $qrCodeFilePath);
+            } elseif ($extension === 'zip') {
+                // Process the ZIP file
+                $filePath = $this->processZipFile($filePath, $qrCodeFilePath);
+            }
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($fileEntry)
+                ->log('File uploaded successfully.');
+
+            RecentActivity::create([
+                'user_id' => auth()->user()->id,
+                'action' => 'File uploaded successfully.',
+                'subject_type' => get_class($fileEntry),
+                'subject_id' => $fileEntry->id,
+            ]);
             return response()->json([
                 'success' => true,
                 'message' => "File Upload Success",
                 'form' => $formData,
-                'fileId' => $file->id,
+                'fileId' => $fileEntry->id,
             ]);
         }
 
@@ -344,9 +381,9 @@ class FileController extends Controller
             'qr_code_path' => $qrCodeFilePath,
         ]);
     }
-
     private function processZipFile($filePath, $qrCodePath)
     {
+        // Full path to the original ZIP file
         $fullFilePath = storage_path("app/public/{$filePath}");
 
         // Check if the ZIP file exists
@@ -356,9 +393,8 @@ class FileController extends Controller
 
         $zip = new \ZipArchive();
         if ($zip->open($fullFilePath) === TRUE) {
+            // Create temporary directory for extraction
             $tempDir = storage_path("app/public/uploads/temp/");
-
-            // Create temp directory
             if (!file_exists($tempDir)) {
                 mkdir($tempDir, 0777, true);
             }
@@ -367,7 +403,7 @@ class FileController extends Controller
             $zip->extractTo($tempDir);
             $zip->close();
 
-            // Loop through extracted files
+            // Loop through extracted files and process them
             $files = scandir($tempDir);
             foreach ($files as $file) {
                 if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
@@ -377,32 +413,88 @@ class FileController extends Controller
                 }
             }
 
-            // Create a new ZIP file
-            $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
+            // Overwrite the original ZIP file without changing its name
             $newZip = new \ZipArchive();
-            if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
-                throw new \Exception("Could not create ZIP file");
+            if ($newZip->open($fullFilePath, \ZipArchive::OVERWRITE) !== TRUE) {
+                throw new \Exception("Could not overwrite the ZIP file");
             }
 
-            // Add modified files back to the new ZIP
+            // Add the modified files back into the original ZIP file
             foreach ($files as $file) {
                 if ($file !== '.' && $file !== '..') {
                     $newZip->addFile("{$tempDir}/{$file}", $file);
                 }
             }
+
             $newZip->close();
 
-            // Clean up temporary files
+            // Clean up temporary files and directory
             $this->deleteDir($tempDir); // Custom function to delete the directory
 
-            // Delete original ZIP file
-            Storage::disk('public')->delete($filePath);
-
-            return $newZipFilePath; // Return the path of the modified ZIP
+            return $filePath; // Return the original file path
         } else {
             throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
         }
     }
+
+    // private function processZipFile($filePath, $qrCodePath)
+    // {
+    //     $fullFilePath = storage_path("app/public/{$filePath}");
+
+    //     // Check if the ZIP file exists
+    //     if (!file_exists($fullFilePath)) {
+    //         throw new \Exception("ZIP file not found at: {$fullFilePath}");
+    //     }
+
+    //     $zip = new \ZipArchive();
+    //     if ($zip->open($fullFilePath) === TRUE) {
+    //         $tempDir = storage_path("app/public/uploads/temp/");
+
+    //         // Create temp directory
+    //         if (!file_exists($tempDir)) {
+    //             mkdir($tempDir, 0777, true);
+    //         }
+
+    //         // Extract the ZIP contents
+    //         $zip->extractTo($tempDir);
+    //         $zip->close();
+
+    //         // Loop through extracted files
+    //         $files = scandir($tempDir);
+    //         foreach ($files as $file) {
+    //             if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
+    //                 $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
+    //             } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
+    //                 $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
+    //             }
+    //         }
+
+    //         // Create a new ZIP file
+    //         $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
+    //         $newZip = new \ZipArchive();
+    //         if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
+    //             throw new \Exception("Could not create ZIP file");
+    //         }
+
+    //         // Add modified files back to the new ZIP
+    //         foreach ($files as $file) {
+    //             if ($file !== '.' && $file !== '..') {
+    //                 $newZip->addFile("{$tempDir}/{$file}", $file);
+    //             }
+    //         }
+    //         $newZip->close();
+
+    //         // Clean up temporary files
+    //         $this->deleteDir($tempDir); // Custom function to delete the directory
+
+    //         // Delete original ZIP file
+    //         Storage::disk('public')->delete($filePath);
+
+    //         return $newZipFilePath; // Return the path of the modified ZIP
+    //     } else {
+    //         throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
+    //     }
+    // }
 
 
     private function deleteDir($dir)

@@ -53,4 +53,64 @@
                 });
         });
     </script>
-@endsection
+
+
+    <script>
+        // Fetch recent uploads on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchRecentUploads();
+        });
+
+        function fetchRecentUploads() {
+            fetch('/recent-uploads')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayRecentUploads(data.data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function displayRecentUploads(uploads) {
+            const tableBody = document.getElementById('recent-uploads-body');
+            tableBody.innerHTML = ''; // Clear existing content
+
+            uploads.forEach(upload => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${upload.user}</td>
+                    <td>${upload.action}</td>
+                    <td>${upload.subject_type}</td>
+                    <td>${upload.subject_id}</td>
+                    <td>${upload.timestamp}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    </script>
+    </head>
+
+    <body>
+        <h1>Recent Uploads</h1>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Subject Type</th>
+                    <th>Subject ID</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="recent-uploads-body">
+                <!-- Recent uploads will be inserted here -->
+            </tbody>
+        </table>
+    @endsection

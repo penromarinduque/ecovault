@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\RecentActivity;
 use Illuminate\Http\Request;
 
 class StorageController extends Controller
@@ -40,4 +41,34 @@ class StorageController extends Controller
         }
         return $size;
     }
+
+    public function getRecentUploads()
+    {
+        $recentUploads = RecentActivity::with('user')
+            ->where('action', 'File uploaded successfully.')
+            ->latest()
+            ->take(10) // Fetch the latest 10 uploads
+            ->get();
+
+        // Check the count of uploads and prepare the response
+        $data = $recentUploads->map(function ($upload) {
+            return [
+                'user' => $upload->user->name,
+                'action' => $upload->action,
+                'subject_type' => $upload->subject_type,
+                'subject_id' => $upload->subject_id,
+                'timestamp' => $upload->created_at->format('Y-m-d H:i:s'),
+            ];
+        });
+        // file name
+
+        // Return a JSON response
+        return response()->json([
+            'data' => $data,
+            'count' => $data->count(),
+            'message' => $data->isEmpty() ? 'No recent uploads found.' : 'Recent uploads retrieved successfully.',
+        ]);
+    }
+
+
 }

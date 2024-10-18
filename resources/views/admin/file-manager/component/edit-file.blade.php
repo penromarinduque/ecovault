@@ -1,4 +1,4 @@
-<div id="edit-file" class="flex items-center justify-center">
+<div id="edit-file" class="flex items-center justify-center hidden">
     <div class="w-full max-w-3xl p-6">
         <!-- Heading for Edit File -->
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit File</h2>
