@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->string('category');
             $table->string('classification');
             $table->string('status');
+            $table->boolean('is_archived')->default(false);
+            $table->timestamp('archived_at')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -20,6 +20,8 @@ class File extends Model
         'classification',
         'status',
         'user_id',
+        'is_archived',
+        'archived_at'
     ];
 
     public function user()
@@ -50,5 +52,18 @@ class File extends Model
     public function landTitles()
     {
         return $this->hasMany(LandTitle::class);
+    }
+
+    public function archive()
+    {
+        $this->is_archived = true;
+        $this->archived_at = now();
+        $this->save();
+    }
+
+    // Check if the file is archived
+    public function isArchived()
+    {
+        return $this->is_archived;
     }
 }
