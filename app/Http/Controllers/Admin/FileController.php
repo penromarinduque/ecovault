@@ -272,31 +272,35 @@ class FileController extends Controller
                     $permit_details = DB::table('tree_cutting_permits')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'chainsaw-registration':
                     $permit_details = DB::table('chainsaw_registrations')
                         ->where('file_id', $id)
                         ->first();
-                    \Log::info('Chainsaw Registration Details:', (array) $permit_details);
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'tree-plantation':
-                    $permit_details = DB::table('tree_plantation')
+                    $permit_details = DB::table('tree_plantation_registration')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'tree-transport-permits':
-                    $permit_details = DB::table('tree_transport_permits')
+                    $permit_details = DB::table('transport_permits')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'land-titles':
                     $permit_details = DB::table('land_titles')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 default:
@@ -438,66 +442,6 @@ class FileController extends Controller
         }
     }
 
-    // private function processZipFile($filePath, $qrCodePath)
-    // {
-    //     $fullFilePath = storage_path("app/public/{$filePath}");
-
-    //     // Check if the ZIP file exists
-    //     if (!file_exists($fullFilePath)) {
-    //         throw new \Exception("ZIP file not found at: {$fullFilePath}");
-    //     }
-
-    //     $zip = new \ZipArchive();
-    //     if ($zip->open($fullFilePath) === TRUE) {
-    //         $tempDir = storage_path("app/public/uploads/temp/");
-
-    //         // Create temp directory
-    //         if (!file_exists($tempDir)) {
-    //             mkdir($tempDir, 0777, true);
-    //         }
-
-    //         // Extract the ZIP contents
-    //         $zip->extractTo($tempDir);
-    //         $zip->close();
-
-    //         // Loop through extracted files
-    //         $files = scandir($tempDir);
-    //         foreach ($files as $file) {
-    //             if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
-    //                 $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
-    //             } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
-    //                 $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
-    //             }
-    //         }
-
-    //         // Create a new ZIP file
-    //         $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
-    //         $newZip = new \ZipArchive();
-    //         if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
-    //             throw new \Exception("Could not create ZIP file");
-    //         }
-
-    //         // Add modified files back to the new ZIP
-    //         foreach ($files as $file) {
-    //             if ($file !== '.' && $file !== '..') {
-    //                 $newZip->addFile("{$tempDir}/{$file}", $file);
-    //             }
-    //         }
-    //         $newZip->close();
-
-    //         // Clean up temporary files
-    //         $this->deleteDir($tempDir); // Custom function to delete the directory
-
-    //         // Delete original ZIP file
-    //         Storage::disk('public')->delete($filePath);
-
-    //         return $newZipFilePath; // Return the path of the modified ZIP
-    //     } else {
-    //         throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
-    //     }
-    // }
-
-
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -622,6 +566,54 @@ class FileController extends Controller
 
         return $fullFilePath;
     }
+
+    public function EditFile(Request $request, $fileId)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'office_source' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'classification' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+            'permit.name_of_client' => 'required|string|max:255',
+            'permit.number_of_trees' => 'required|integer|min:1',
+            'permit.location' => 'required|string|max:255',
+            'permit.date_applied' => 'required|date',
+            // Add validation rules for other permit fields as needed
+        ]);
+
+        // Find the file by its ID
+        $file = File::findOrFail($fileId);
+
+        // Update the file attributes
+        $file->office_source = $validatedData['office_source'];
+        $file->category = $validatedData['category'];
+        $file->classification = $validatedData['classification'];
+        $file->status = $validatedData['status'];
+        $file->save(); // Save the updated file
+
+        // Handle permit-specific updates
+        $permitData = $validatedData['permit'];
+
+        // Assuming you have a relationship set up in your File model
+        $permit = $file->permit; // Adjust based on your relationship
+
+        // Update permit fields
+        $permit->name_of_client = $permitData['name_of_client'];
+        $permit->number_of_trees = $permitData['number_of_trees'];
+        $permit->location = $permitData['location'];
+        $permit->date_applied = $permitData['date_applied'];
+        // Update other permit fields as necessary
+
+        $permit->save(); // Save the updated permit
+
+        // Return a response indicating success
+        return response()->json([
+            'success' => true,
+            'message' => 'File updated successfully!',
+        ]);
+    }
+
 
 }
 

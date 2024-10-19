@@ -74,5 +74,6 @@ Route::middleware(['authentication'])->group(function () {
 
 
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
+    Route::put('/api/files/update/{fileId}', [FileController::class, 'EditFile'])->name('file.edit');
 });
 

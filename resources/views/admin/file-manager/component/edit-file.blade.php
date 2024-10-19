@@ -1,9 +1,9 @@
-<div id="edit-file" class="flex items-center justify-center hidden">
+<div id="edit-file-div" class="items-center justify-center">
     <div class="w-full max-w-3xl p-6">
         <!-- Heading for Edit File -->
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit File</h2>
 
-        <form method="POST" class="space-y-4">
+        <form id="edit-file-form" class="space-y-4">
             @csrf
 
             <!-- Flex container for left and right input sections -->
@@ -17,17 +17,19 @@
                             Source</label>
                         <input type="text" id="edit-office_source" name="office_source"
                             class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter office Source" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
-                        </p>
+                            placeholder="Enter office Source">
+                        @if ($errors->has('email'))
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!
+                            </p>
+                        @endif
                     </div>
 
                     <!-- Category Field -->
                     <div>
                         <label for="edit-category" class="block mb-2 text-sm font-medium text-red-700">Category</label>
                         <select id="edit-category" name="category"
-                            class="bg-red-50 border border-red-500 text-red-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            required>
+                            class="bg-red-50 border border-red-500 text-red-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
                             <option value="">Select a Category</option>
                             <option value="incoming">Incoming</option>
                             <option value="outgoing">Outgoing</option>
@@ -43,7 +45,7 @@
                             class="block mb-2 text-sm font-medium text-red-700">Classification</label>
                         <input type="text" id="edit-classification" name="classification"
                             class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Classification" required>
+                            placeholder="Enter Classification">
                         <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
                         </p>
                     </div>
@@ -53,7 +55,7 @@
                         <label for="edit-status" class="block mb-2 text-sm font-medium text-red-700">Status</label>
                         <input type="text" id="edit-status" name="status"
                             class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Status" required>
+                            placeholder="Enter Status">
                         <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
                         </p>
                     </div>
@@ -69,7 +71,7 @@
                                 Name</label>
                             <input type="text" id="edit-client_name" name="client_name"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter client name" required>
+                                placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!
                             </p>
@@ -81,7 +83,7 @@
                                 Trees / Species</label>
                             <input type="text" id="edit-number_of_trees" name="number_of_trees"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter number of trees" required>
+                                placeholder="Enter number of trees">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!
                             </p>
@@ -93,7 +95,7 @@
                                 class="block mb-2 text-sm font-medium text-red-700">Location</label>
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter Location" required>
+                                placeholder="Enter Location">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!
                             </p>
@@ -104,8 +106,7 @@
                             <label for="edit-date_applied" class="block mb-2 text-sm font-medium text-red-700">Date
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
-                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                required>
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!
                             </p>
@@ -117,7 +118,7 @@
                                 Name</label>
                             <input type="text" id="edit-client_name" name="name_of_client"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter client name" required>
+                                placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!</p>
                         </div>
@@ -128,7 +129,7 @@
                                 class="block mb-2 text-sm font-medium text-red-700">Location</label>
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter location" required>
+                                placeholder="Enter location">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!</p>
                         </div>
@@ -139,7 +140,7 @@
                                 Number</label>
                             <input type="text" id="edit-serial_number" name="serial_number"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                placeholder="Enter serial number" required>
+                                placeholder="Enter serial number">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!</p>
                         </div>
@@ -149,12 +150,152 @@
                             <label for="edit-date_applied" class="block mb-2 text-sm font-medium text-red-700">Date
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+                    @elseif ($type == 'tree-plantation')
+                        <!-- Name of Client Field -->
+                        <div>
+                            <label for="edit-client_name" class="block mb-2 text-sm font-medium text-red-700">Client
+                                Name</label>
+                            <input type="text" id="edit-client_name" name="name_of_client"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                                required>
+                                placeholder="Enter client name">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Number of Trees Field -->
+                        <div>
+                            <label for="edit-number_of_trees" class="block mb-2 text-sm font-medium text-red-700">No.
+                                of Trees</label>
+                            <input type="text" id="edit-number_of_trees" name="number_of_trees"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter number of trees">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Location Field -->
+                        <div>
+                            <label for="edit-location"
+                                class="block mb-2 text-sm font-medium text-red-700">Location</label>
+                            <input type="text" id="edit-location" name="location"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter location">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Date Applied Field -->
+                        <div>
+                            <label for="edit-date_applied" class="block mb-2 text-sm font-medium text-red-700">Date
+                                Applied</label>
+                            <input type="date" id="edit-date_applied" name="date_applied"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+                    @elseif ($type == 'tree-transport-permits')
+                        <!-- Transport Permits Inputs -->
+                        <div>
+                            <label for="edit-client_name" class="block mb-2 text-sm font-medium text-red-700">Client
+                                Name</label>
+                            <input type="text" id="edit-client_name" name="client_name"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter client name">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- No. of Trees Field -->
+                        <div>
+                            <label for="edit-number_of_trees" class="block mb-2 text-sm font-medium text-red-700">No.
+                                of Trees</label>
+                            <input type="text" id="edit-number_of_trees" name="number_of_trees"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter number of trees">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Destination Field -->
+                        <div>
+                            <label for="edit-destination"
+                                class="block mb-2 text-sm font-medium text-red-700">Destination</label>
+                            <input type="text" id="edit-destination" name="destination"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter destination">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Date Applied Field -->
+                        <div>
+                            <label for="edit-date_applied" class="block mb-2 text-sm font-medium text-red-700">Date
+                                Applied</label>
+                            <input type="date" id="edit-date_applied" name="date_applied"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Date of Transport Field -->
+                        <div>
+                            <label for="edit-date_of_transport"
+                                class="block mb-2 text-sm font-medium text-red-700">Date of Transport</label>
+                            <input type="date" id="edit-date_of_transport" name="date_of_transport"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+                    @elseif ($type == 'land-titles')
+                        <!-- Client Name Field -->
+                        <div>
+                            <label for="edit-client_name" class="block mb-2 text-sm font-medium text-red-700">Client
+                                Name</label>
+                            <input type="text" id="edit-client_name" name="client_name"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter client name">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Location Field -->
+                        <div>
+                            <label for="edit-location"
+                                class="block mb-2 text-sm font-medium text-red-700">Location</label>
+                            <input type="text" id="edit-location" name="location"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter location">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Lot Number Field -->
+                        <div>
+                            <label for="edit-lot_number" class="block mb-2 text-sm font-medium text-red-700">Lot
+                                Number</label>
+                            <input type="text" id="edit-lot_number" name="lot_number"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter lot number">
+                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                                input!</p>
+                        </div>
+
+                        <!-- Property Category Field -->
+                        <div>
+                            <label for="edit-property_category"
+                                class="block mb-2 text-sm font-medium text-red-700">Property Category</label>
+                            <input type="text" id="edit-property_category" name="property_category"
+                                class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                                placeholder="Enter property category">
                             <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
                                 input!</p>
                         </div>
                     @endif
+
                 </div>
             </div>
 
@@ -184,47 +325,76 @@
     });
 
     // This script fetches file data when an edit button is clicked
-    function fetchFileData(fileId) {
-        fetch(`/api/files/${fileId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const file = data.file; // File data
-                    const permit = data.permit; // Permit details
+    async function fetchFileData(fileId) {
+        try {
+            const response = await fetch(`/api/files/${fileId}`);
+            const data = await response.json();
 
-                    // Common fields for all permits
-                    document.getElementById('edit-office_source').value = file.office_source || '';
-                    document.getElementById('edit-category').value = file.category || '';
-                    document.getElementById('edit-classification').value = file.classification || '';
-                    document.getElementById('edit-status').value = file.status || '';
+            if (data.success) {
+                const file = data.file; // File data
+                const permit = data.permit; // Permit details
 
-                    // Check the permit type and populate fields accordingly
-                    switch (file.permit_type) {
-                        case 'tree-cutting-permits':
-                            document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                            document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
-                            document.getElementById('edit-location').value = permit.location || '';
-                            document.getElementById('edit-date_applied').value = permit.date_applied || '';
-                            break;
+                // Common fields for all permits
+                document.getElementById('edit-office_source').value = file.office_source || '';
+                document.getElementById('edit-category').value = file.category || '';
+                document.getElementById('edit-classification').value = file.classification || '';
+                document.getElementById('edit-status').value = file.status || '';
 
-                        case 'chainsaw-registration':
-                            document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                            document.getElementById('edit-location').value = permit.location || '';
-                            document.getElementById('edit-serial_number').value = permit.serial_number || '';
-                            document.getElementById('edit-date_applied').value = permit.date_applied || '';
-                            break;
+                // Check the permit type and populate fields accordingly
+                switch (file.permit_type) {
+                    case 'tree-cutting-permits':
+                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
+                        document.getElementById('edit-location').value = permit.location || '';
+                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        break;
 
-                            // Add cases for other permit types, e.g. tree-plantation, tree-transport-permits, etc.
+                    case 'chainsaw-registration':
+                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
+                        document.getElementById('edit-location').value = permit.location || '';
+                        document.getElementById('edit-serial_number').value = permit.serial_number || '';
+                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        break;
 
-                        default:
-                            console.error('Unknown permit type:', file.permit_type);
-                    }
+                    case 'tree-plantation':
+                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
+                        document.getElementById('edit-location').value = permit.location || '';
+                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        break;
 
-                    console.log(file.permit_type);
-                } else {
-                    console.error(data.message);
+                    case 'transport-permits':
+                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
+                        document.getElementById('edit-destination').value = permit.destination || '';
+                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        document.getElementById('edit-date_of_transport').value = permit.date_of_transport || '';
+                        break;
+
+                    case 'land-titles':
+                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
+                        document.getElementById('edit-location').value = permit.location || '';
+                        document.getElementById('edit-lot_number').value = permit.lot_number || '';
+                        document.getElementById('edit-property_category').value = permit.property_category || '';
+                        break;
+
+                    default:
+                        console.error('Unknown permit type:', file.permit_type);
                 }
-            })
-            .catch(error => console.error('Fetch error:', error));
+                console.log(file.permit_type);
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
     }
+
+    // Add event listener for form submission
+    document.getElementById('edit-file-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        const fileId = document.body.querySelector('.edit-button').dataset
+            .fileId; // Get the file ID from the last clicked edit button
+        updateFile(fileId); // Call the update function
+    });
 </script>
