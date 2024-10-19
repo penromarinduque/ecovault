@@ -49,4 +49,9 @@ class AdminController extends Controller
         return view('admin.administrative.administrative-documents');
     }
 
+    function ShowRecord($record)
+    {
+        return view('admin.administrative.records', compact('records'));
+    }
+
 }

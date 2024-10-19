@@ -51,6 +51,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/admin/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
 
     Route::get("/admin/administrative-document", [AdminController::class, "ShowAdministrativeDocuments"]);
+    Route::get('/admin/administrative-document/{record}', [AdminController::class, 'ShowRecord'])->name('admin.adminstrative.record.show');
     // Route::get("/admin/adminstrative-document")
 
 
