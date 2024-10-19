@@ -1,4 +1,4 @@
-<div id="uploading-file" class="">
+<div id="upload-file" class="">
     <form id="upload-form" enctype="multipart/form-data">
         @csrf
         <div class="flex justify-between items-center mb-2">

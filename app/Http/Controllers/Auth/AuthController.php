@@ -31,7 +31,6 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-
             $otp = random_int(1000, 9999);
             $user->otp = $otp;
             $user->save();
@@ -91,10 +90,8 @@ class AuthController extends Controller
 
         // Log the failed attempt
         \Log::warning('Failed authentication attempt: ', ['email' => $request->email]);
-        activity()
-            ->causedBy(auth()->user())  // The authenticated user
-            ->performedOn(auth()->user())  // Log the activity on the user model
-            ->log('Failed authenticaten attempt');  // Custom message
+
+
 
         return back()->withErrors([]);
     }
