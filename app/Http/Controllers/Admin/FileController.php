@@ -32,9 +32,9 @@ class FileController extends Controller
     {
         $request->validate([
             'file' => 'required|file|max:2048|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
-            'permit_type' => 'required|string',
-            'municipality' => 'required|string',
-            'category' => 'required|string',
+            'permit_type' => 'nullable|string', // Make this field nullable
+            'municipality' => 'nullable|string', // Make this field nullable
+            'category' => 'nullable|string', // Make this field nullable
             'classification' => 'required|string',
             'status' => 'required|string',
         ]);
@@ -67,10 +67,7 @@ class FileController extends Controller
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
             ];
 
-
             $fileEntry = File::create($formData);
-
-
             $url = url("/download/{$fileEntry->id}");
             $result = Builder::create()
                 ->writer(new PngWriter())
@@ -118,6 +115,7 @@ class FileController extends Controller
             'debug' => $request->all(),
         ]);
     }
+
 
     public function StorePermit(Request $request)
     {
@@ -272,31 +270,35 @@ class FileController extends Controller
                     $permit_details = DB::table('tree_cutting_permits')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'chainsaw-registration':
                     $permit_details = DB::table('chainsaw_registrations')
                         ->where('file_id', $id)
                         ->first();
-                    \Log::info('Chainsaw Registration Details:', (array) $permit_details);
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'tree-plantation':
-                    $permit_details = DB::table('tree_plantation')
+                    $permit_details = DB::table('tree_plantation_registration')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'tree-transport-permits':
-                    $permit_details = DB::table('tree_transport_permits')
+                    $permit_details = DB::table('transport_permits')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 case 'land-titles':
                     $permit_details = DB::table('land_titles')
                         ->where('file_id', $id)
                         ->first();
+                    \Log::info('Permit Details:', (array) $permit_details);
                     break;
 
                 default:
@@ -438,66 +440,6 @@ class FileController extends Controller
         }
     }
 
-    // private function processZipFile($filePath, $qrCodePath)
-    // {
-    //     $fullFilePath = storage_path("app/public/{$filePath}");
-
-    //     // Check if the ZIP file exists
-    //     if (!file_exists($fullFilePath)) {
-    //         throw new \Exception("ZIP file not found at: {$fullFilePath}");
-    //     }
-
-    //     $zip = new \ZipArchive();
-    //     if ($zip->open($fullFilePath) === TRUE) {
-    //         $tempDir = storage_path("app/public/uploads/temp/");
-
-    //         // Create temp directory
-    //         if (!file_exists($tempDir)) {
-    //             mkdir($tempDir, 0777, true);
-    //         }
-
-    //         // Extract the ZIP contents
-    //         $zip->extractTo($tempDir);
-    //         $zip->close();
-
-    //         // Loop through extracted files
-    //         $files = scandir($tempDir);
-    //         foreach ($files as $file) {
-    //             if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
-    //                 $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
-    //             } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
-    //                 $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
-    //             }
-    //         }
-
-    //         // Create a new ZIP file
-    //         $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
-    //         $newZip = new \ZipArchive();
-    //         if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
-    //             throw new \Exception("Could not create ZIP file");
-    //         }
-
-    //         // Add modified files back to the new ZIP
-    //         foreach ($files as $file) {
-    //             if ($file !== '.' && $file !== '..') {
-    //                 $newZip->addFile("{$tempDir}/{$file}", $file);
-    //             }
-    //         }
-    //         $newZip->close();
-
-    //         // Clean up temporary files
-    //         $this->deleteDir($tempDir); // Custom function to delete the directory
-
-    //         // Delete original ZIP file
-    //         Storage::disk('public')->delete($filePath);
-
-    //         return $newZipFilePath; // Return the path of the modified ZIP
-    //     } else {
-    //         throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
-    //     }
-    // }
-
-
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -622,6 +564,144 @@ class FileController extends Controller
 
         return $fullFilePath;
     }
+
+    public function EditFile(Request $request, $fileId)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'office_source' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'classification' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+
+            // Common fields for permits
+            'permit.name_of_client' => 'required|string|max:255',
+            'permit.location' => 'required|string|max:255',
+            'permit.date_applied' => 'required|date',
+
+            // Permit-specific fields
+            'permit.number_of_trees' => 'required|integer|min:1', // Applicable for tree-cutting, tree-plantation, transport permits
+            'permit.serial_number' => 'required|string|max:255', // Applicable for chainsaw-registration
+            'permit.destination' => 'required|string|max:255', // Applicable for transport-permits
+            'permit.date_of_transport' => 'required|date', // Applicable for transport-permits
+            'permit.lot_number' => 'required|string|max:255', // Applicable for land-titles
+            'permit.property_category' => 'required|string|max:255', // Applicable for land-titles
+        ]);
+
+        // Find the file by ID
+        $file = File::find($fileId);
+        dd($file);
+
+        // Check if the file exists
+        if (!$file) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found.'
+            ], 404);
+        }
+
+        // Update file properties
+        $file->office_source = $validatedData['office_source'];
+        $file->category = $validatedData['category'];
+        $file->classification = $validatedData['classification'];
+        $file->status = $validatedData['status'];
+
+        // Assuming there's a related Permit model that needs to be updated
+        // If the Permit model is related by a foreign key, you can find it like this:
+        $permit = $file->permit; // Assuming a relationship named 'permit'
+
+        // Check if the permit exists
+        if (!$permit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permit not found.'
+            ], 404);
+        }
+
+        // Update permit properties based on validated data
+        $permit->name_of_client = $validatedData['permit']['name_of_client'];
+        $permit->location = $validatedData['permit']['location'];
+        $permit->date_applied = $validatedData['permit']['date_applied'];
+
+        // Update permit-specific fields based on the permit type
+        if (array_key_exists('number_of_trees', $validatedData['permit'])) {
+            $permit->number_of_trees = $validatedData['permit']['number_of_trees'];
+        }
+
+        if (array_key_exists('serial_number', $validatedData['permit'])) {
+            $permit->serial_number = $validatedData['permit']['serial_number'];
+        }
+
+        if (array_key_exists('destination', $validatedData['permit'])) {
+            $permit->destination = $validatedData['permit']['destination'];
+        }
+
+        if (array_key_exists('date_of_transport', $validatedData['permit'])) {
+            $permit->date_of_transport = $validatedData['permit']['date_of_transport'];
+        }
+
+        if (array_key_exists('lot_number', $validatedData['permit'])) {
+            $permit->lot_number = $validatedData['permit']['lot_number'];
+        }
+
+        if (array_key_exists('property_category', $validatedData['permit'])) {
+            $permit->property_category = $validatedData['permit']['property_category'];
+        }
+
+        // Save changes to both the file and permit
+        $file->save();
+        $permit->save();
+
+        // Return a response indicating success
+        return response()->json([
+            'success' => true,
+            'message' => 'File updated successfully!',
+        ]);
+    }
+
+
+
+
+    public function GetFilesWithoutRelationships()
+    {
+        try {
+            // Fetch files without any relationships
+            $files = File::whereDoesntHave('treeCuttingPermits')
+                ->whereDoesntHave('chainsawRegistrations')
+                ->whereDoesntHave('treePlantationRegistrations')
+                ->whereDoesntHave('transportPermits')
+                ->whereDoesntHave('landTitles')
+                ->with('user:id,name')
+                ->get();
+
+            $files = $files->map(function ($file) {
+                return [
+                    'id' => $file->id,
+                    'file_name' => $file->file_name,
+                    'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                    'user_name' => $file->user_name,
+                    'category' => $file->category,
+                    'classification' => $file->classification,
+                    'status' => $file->status,
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Files retrieved successfully.',
+                'files' => $files
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+    }
+
+
 
 }
 

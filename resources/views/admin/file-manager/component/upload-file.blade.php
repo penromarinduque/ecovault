@@ -1,12 +1,9 @@
-<div id="upload-file" class="">
+<div id="upload-file-div" class="">
     <form id="upload-form" enctype="multipart/form-data">
         @csrf
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-lg font-bold">Upload File</h2> {{-- add summary --}}
-            <button type="button" id="close-upload-section"
-                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <i class='bx bx-x bx-md'></i>
-            </button>
+
         </div>
         <div class="" id="step-1">
 
