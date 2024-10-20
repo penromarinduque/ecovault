@@ -10,14 +10,10 @@
     {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <!-- Include your CSS files here -->
 
-    <!-- DataTables CSS -->
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"> --}}
-    <!-- jQuery (necessary for DataTables) -->
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-    {{-- <script src="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css"></script> --}}
-    <!-- DataTables JS -->
-    {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> --}}
 
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 </head>
 
 <body class="bg-[#F4F2F2]">

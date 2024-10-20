@@ -51,7 +51,7 @@ class AdminController extends Controller
 
     function ShowRecord($record)
     {
-        return view('admin.administrative.records', compact('records'));
+        return view('admin.administrative.records', compact('record'));
     }
 
 }

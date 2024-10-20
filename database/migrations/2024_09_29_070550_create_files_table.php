@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('permit_type');
+            $table->string('permit_type')->nullable();
             $table->string('land_category')->nullable();
-            $table->string('municipality');
+            $table->string('municipality')->nullable();
             $table->string(column: 'file_name');
             $table->string('file_path');
             $table->string('office_source');

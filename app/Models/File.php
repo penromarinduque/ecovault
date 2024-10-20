@@ -66,4 +66,9 @@ class File extends Model
     {
         return $this->is_archived;
     }
+
+    public function getUserNameAttribute()
+    {
+        return $this->user ? $this->user->name : 'No User'; // Return the user's name or a default value if not found
+    }
 }

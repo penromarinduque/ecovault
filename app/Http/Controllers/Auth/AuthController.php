@@ -89,12 +89,6 @@ class AuthController extends Controller
             return redirect()->intended(route('admin.home.show'));
         }
 
-        // Log the failed attempt
-        \Log::warning('Failed authentication attempt: ', ['email' => $request->email]);
-        activity()
-            ->causedBy(auth()->user())  // The authenticated user
-            ->performedOn(auth()->user())  // Log the activity on the user model
-            ->log('Failed authenticaten attempt');  // Custom message
 
         return back()->withErrors([]);
     }

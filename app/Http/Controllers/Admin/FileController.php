@@ -32,9 +32,9 @@ class FileController extends Controller
     {
         $request->validate([
             'file' => 'required|file|max:2048|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
-            'permit_type' => 'required|string',
-            'municipality' => 'required|string',
-            'category' => 'required|string',
+            'permit_type' => 'nullable|string', // Make this field nullable
+            'municipality' => 'nullable|string', // Make this field nullable
+            'category' => 'nullable|string', // Make this field nullable
             'classification' => 'required|string',
             'status' => 'required|string',
         ]);
@@ -67,10 +67,7 @@ class FileController extends Controller
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
             ];
 
-
             $fileEntry = File::create($formData);
-
-
             $url = url("/download/{$fileEntry->id}");
             $result = Builder::create()
                 ->writer(new PngWriter())
@@ -118,6 +115,7 @@ class FileController extends Controller
             'debug' => $request->all(),
         ]);
     }
+
 
     public function StorePermit(Request $request)
     {
@@ -437,66 +435,6 @@ class FileController extends Controller
         }
     }
 
-    // private function processZipFile($filePath, $qrCodePath)
-    // {
-    //     $fullFilePath = storage_path("app/public/{$filePath}");
-
-    //     // Check if the ZIP file exists
-    //     if (!file_exists($fullFilePath)) {
-    //         throw new \Exception("ZIP file not found at: {$fullFilePath}");
-    //     }
-
-    //     $zip = new \ZipArchive();
-    //     if ($zip->open($fullFilePath) === TRUE) {
-    //         $tempDir = storage_path("app/public/uploads/temp/");
-
-    //         // Create temp directory
-    //         if (!file_exists($tempDir)) {
-    //             mkdir($tempDir, 0777, true);
-    //         }
-
-    //         // Extract the ZIP contents
-    //         $zip->extractTo($tempDir);
-    //         $zip->close();
-
-    //         // Loop through extracted files
-    //         $files = scandir($tempDir);
-    //         foreach ($files as $file) {
-    //             if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
-    //                 $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
-    //             } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
-    //                 $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
-    //             }
-    //         }
-
-    //         // Create a new ZIP file
-    //         $newZipFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.zip';
-    //         $newZip = new \ZipArchive();
-    //         if ($newZip->open($newZipFilePath, \ZipArchive::CREATE) !== TRUE) {
-    //             throw new \Exception("Could not create ZIP file");
-    //         }
-
-    //         // Add modified files back to the new ZIP
-    //         foreach ($files as $file) {
-    //             if ($file !== '.' && $file !== '..') {
-    //                 $newZip->addFile("{$tempDir}/{$file}", $file);
-    //             }
-    //         }
-    //         $newZip->close();
-
-    //         // Clean up temporary files
-    //         $this->deleteDir($tempDir); // Custom function to delete the directory
-
-    //         // Delete original ZIP file
-    //         Storage::disk('public')->delete($filePath);
-
-    //         return $newZipFilePath; // Return the path of the modified ZIP
-    //     } else {
-    //         throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
-    //     }
-    // }
-
-
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -621,6 +559,47 @@ class FileController extends Controller
 
         return $fullFilePath;
     }
+
+    public function GetFilesWithoutRelationships()
+    {
+        try {
+            // Fetch files without any relationships
+            $files = File::whereDoesntHave('treeCuttingPermits')
+                ->whereDoesntHave('chainsawRegistrations')
+                ->whereDoesntHave('treePlantationRegistrations')
+                ->whereDoesntHave('transportPermits')
+                ->whereDoesntHave('landTitles')
+                ->with('user:id,name')
+                ->get();
+
+            $files = $files->map(function ($file) {
+                return [
+                    'id' => $file->id,
+                    'file_name' => $file->file_name,
+                    'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                    'user_name' => $file->user_name,
+                    'category' => $file->category,
+                    'classification' => $file->classification,
+                    'status' => $file->status,
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Files retrieved successfully.',
+                'files' => $files
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+    }
+
+
 
 }
 
