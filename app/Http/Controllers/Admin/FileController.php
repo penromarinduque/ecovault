@@ -575,37 +575,84 @@ class FileController extends Controller
             'category' => 'required|string|max:255',
             'classification' => 'required|string|max:255',
             'status' => 'required|string|max:255',
+
+            // Common fields for permits
             'permit.name_of_client' => 'required|string|max:255',
-            'permit.number_of_trees' => 'required|integer|min:1',
             'permit.location' => 'required|string|max:255',
             'permit.date_applied' => 'required|date',
-            // Add validation rules for other permit fields as needed
+
+            // Permit-specific fields
+            'permit.number_of_trees' => 'required|integer|min:1', // Applicable for tree-cutting, tree-plantation, transport permits
+            'permit.serial_number' => 'required|string|max:255', // Applicable for chainsaw-registration
+            'permit.destination' => 'required|string|max:255', // Applicable for transport-permits
+            'permit.date_of_transport' => 'required|date', // Applicable for transport-permits
+            'permit.lot_number' => 'required|string|max:255', // Applicable for land-titles
+            'permit.property_category' => 'required|string|max:255', // Applicable for land-titles
         ]);
 
-        // Find the file by its ID
-        $file = File::findOrFail($fileId);
+        // Find the file by ID
+        $file = File::find($fileId);
+        dd($file);
 
-        // Update the file attributes
+        // Check if the file exists
+        if (!$file) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found.'
+            ], 404);
+        }
+
+        // Update file properties
         $file->office_source = $validatedData['office_source'];
         $file->category = $validatedData['category'];
         $file->classification = $validatedData['classification'];
         $file->status = $validatedData['status'];
-        $file->save(); // Save the updated file
 
-        // Handle permit-specific updates
-        $permitData = $validatedData['permit'];
+        // Assuming there's a related Permit model that needs to be updated
+        // If the Permit model is related by a foreign key, you can find it like this:
+        $permit = $file->permit; // Assuming a relationship named 'permit'
 
-        // Assuming you have a relationship set up in your File model
-        $permit = $file->permit; // Adjust based on your relationship
+        // Check if the permit exists
+        if (!$permit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permit not found.'
+            ], 404);
+        }
 
-        // Update permit fields
-        $permit->name_of_client = $permitData['name_of_client'];
-        $permit->number_of_trees = $permitData['number_of_trees'];
-        $permit->location = $permitData['location'];
-        $permit->date_applied = $permitData['date_applied'];
-        // Update other permit fields as necessary
+        // Update permit properties based on validated data
+        $permit->name_of_client = $validatedData['permit']['name_of_client'];
+        $permit->location = $validatedData['permit']['location'];
+        $permit->date_applied = $validatedData['permit']['date_applied'];
 
-        $permit->save(); // Save the updated permit
+        // Update permit-specific fields based on the permit type
+        if (array_key_exists('number_of_trees', $validatedData['permit'])) {
+            $permit->number_of_trees = $validatedData['permit']['number_of_trees'];
+        }
+
+        if (array_key_exists('serial_number', $validatedData['permit'])) {
+            $permit->serial_number = $validatedData['permit']['serial_number'];
+        }
+
+        if (array_key_exists('destination', $validatedData['permit'])) {
+            $permit->destination = $validatedData['permit']['destination'];
+        }
+
+        if (array_key_exists('date_of_transport', $validatedData['permit'])) {
+            $permit->date_of_transport = $validatedData['permit']['date_of_transport'];
+        }
+
+        if (array_key_exists('lot_number', $validatedData['permit'])) {
+            $permit->lot_number = $validatedData['permit']['lot_number'];
+        }
+
+        if (array_key_exists('property_category', $validatedData['permit'])) {
+            $permit->property_category = $validatedData['permit']['property_category'];
+        }
+
+        // Save changes to both the file and permit
+        $file->save();
+        $permit->save();
 
         // Return a response indicating success
         return response()->json([
@@ -613,6 +660,8 @@ class FileController extends Controller
             'message' => 'File updated successfully!',
         ]);
     }
+
+
 
 
 }

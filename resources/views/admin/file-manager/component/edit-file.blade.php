@@ -313,6 +313,10 @@
 
 
 <script>
+    let selectedFileId = null;
+    let selectedPermitType = null;
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+
     document.body.addEventListener('click', function(event) {
         if (event.target.matches('.edit-button')) {
             toggleSections(true);
@@ -334,6 +338,10 @@
                 const file = data.file; // File data
                 const permit = data.permit; // Permit details
 
+                // Store the fileId and permit_type in global variables
+                selectedFileId = fileId;
+                selectedPermitType = file.permit_type;
+
                 // Common fields for all permits
                 document.getElementById('edit-office_source').value = file.office_source || '';
                 document.getElementById('edit-category').value = file.category || '';
@@ -348,21 +356,18 @@
                         document.getElementById('edit-location').value = permit.location || '';
                         document.getElementById('edit-date_applied').value = permit.date_applied || '';
                         break;
-
                     case 'chainsaw-registration':
                         document.getElementById('edit-client_name').value = permit.name_of_client || '';
                         document.getElementById('edit-location').value = permit.location || '';
                         document.getElementById('edit-serial_number').value = permit.serial_number || '';
                         document.getElementById('edit-date_applied').value = permit.date_applied || '';
                         break;
-
                     case 'tree-plantation':
                         document.getElementById('edit-client_name').value = permit.name_of_client || '';
                         document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
                         document.getElementById('edit-location').value = permit.location || '';
                         document.getElementById('edit-date_applied').value = permit.date_applied || '';
                         break;
-
                     case 'transport-permits':
                         document.getElementById('edit-client_name').value = permit.name_of_client || '';
                         document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
@@ -370,14 +375,12 @@
                         document.getElementById('edit-date_applied').value = permit.date_applied || '';
                         document.getElementById('edit-date_of_transport').value = permit.date_of_transport || '';
                         break;
-
                     case 'land-titles':
                         document.getElementById('edit-client_name').value = permit.name_of_client || '';
                         document.getElementById('edit-location').value = permit.location || '';
                         document.getElementById('edit-lot_number').value = permit.lot_number || '';
                         document.getElementById('edit-property_category').value = permit.property_category || '';
                         break;
-
                     default:
                         console.error('Unknown permit type:', file.permit_type);
                 }
@@ -390,11 +393,94 @@
         }
     }
 
-    // Add event listener for form submission
-    document.getElementById('edit-file-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-        const fileId = document.body.querySelector('.edit-button').dataset
-            .fileId; // Get the file ID from the last clicked edit button
-        updateFile(fileId); // Call the update function
+    document.getElementById('edit-file-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+
+        const fileId = selectedFileId;
+        const permitType = selectedPermitType;
+
+        // Initialize FormData object to hold the form data
+        const formData = new FormData();
+        formData.append('office_source', document.getElementById('edit-office_source').value);
+        formData.append('category', document.getElementById('edit-category').value);
+        formData.append('classification', document.getElementById('edit-classification').value);
+        formData.append('status', document.getElementById('edit-status').value);
+        formData.append('permit_type', permitType); // Store the permit type
+
+        // Populate permit fields based on the permit type
+        switch (permitType) {
+            case 'tree-cutting-permits':
+                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
+                    .value);
+                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
+                    .value);
+                formData.append('permit[location]', document.getElementById('edit-location').value);
+                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
+                break;
+
+            case 'chainsaw-registration':
+                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
+                    .value);
+                formData.append('permit[location]', document.getElementById('edit-location').value);
+                formData.append('permit[serial_number]', document.getElementById('edit-serial_number')
+                    .value);
+                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
+                break;
+
+            case 'tree-plantation':
+                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
+                    .value);
+                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
+                    .value);
+                formData.append('permit[location]', document.getElementById('edit-location').value);
+                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
+                break;
+
+            case 'transport-permits':
+                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
+                    .value);
+                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
+                    .value);
+                formData.append('permit[destination]', document.getElementById('edit-destination').value);
+                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
+                formData.append('permit[date_of_transport]', document.getElementById(
+                    'edit-date_of_transport').value);
+                break;
+
+            case 'land-titles':
+                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
+                    .value);
+                formData.append('permit[location]', document.getElementById('edit-location').value);
+                formData.append('permit[lot_number]', document.getElementById('edit-lot_number').value);
+                formData.append('permit[property_category]', document.getElementById(
+                    'edit-property_category').value);
+                break;
+
+            default:
+                console.error('Unknown permit type:', permitType);
+        }
+        console.log(formData);
+
+        try {
+            // Send formData as FormData in the request body
+            const response = await fetch(`/api/files/update/${fileId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include the CSRF token
+                },
+                body: formData // Send the data as FormData
+            });
+
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                alert('File updated successfully!');
+            } else {
+                console.error(result.message);
+                alert('Failed to update the file.');
+            }
+        } catch (error) {
+            console.error('Error updating the file:', error);
+        }
     });
 </script>
