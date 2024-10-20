@@ -31,7 +31,6 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-
             $otp = random_int(1000, 9999);
             $user->otp = $otp;
             $user->save();
@@ -88,6 +87,10 @@ class AuthController extends Controller
 
             return redirect()->intended(route('admin.home.show'));
         }
+
+        // Log the failed attempt
+        \Log::warning('Failed authentication attempt: ', ['email' => $request->email]);
+
 
 
         return back()->withErrors([]);
