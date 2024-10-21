@@ -59,7 +59,9 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
 
-    Route::get("/api/files/{id}", [FileController::class, "GetFileById"])->name("file.get");
+    Route::get("/api/file/{id}", [FileController::class, "GetFileById"])->name("file.get");
+    Route::get("/api/file-only/{id}", [FileController::class, "GetOnlyFileById"]);
+    Route::POST('/api/file-only/update/{id}', [FileController::class, "UpdateFileOnlyById"]);
     Route::get('/api/download/{id}', [FileController::class, 'Download'])->name('file.download');
 
 
@@ -70,7 +72,6 @@ Route::middleware(['authentication'])->group(function () {
     Route::get("/superuser/test", function () {
         return view("superuser.test");
     });
-
 
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
     Route::put('/api/files/update/{fileId}', [FileController::class, 'EditFile'])->name('file.edit');
