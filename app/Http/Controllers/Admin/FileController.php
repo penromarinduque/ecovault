@@ -635,96 +635,98 @@ class FileController extends Controller
 
     public function EditFile(Request $request, $fileId)
     {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'office_source' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'classification' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
+        try {
+            $file = File::find($fileId);
 
-            // Common fields for permits
-            'permit.name_of_client' => 'required|string|max:255',
-            'permit.location' => 'required|string|max:255',
-            'permit.date_applied' => 'required|date',
+            // $file = DB::table('files')
+            //     ->where('id', $fileId)
+            //     ->first();
 
-            // Permit-specific fields
-            'permit.number_of_trees' => 'required|integer|min:1', // Applicable for tree-cutting, tree-plantation, transport permits
-            'permit.serial_number' => 'required|string|max:255', // Applicable for chainsaw-registration
-            'permit.destination' => 'required|string|max:255', // Applicable for transport-permits
-            'permit.date_of_transport' => 'required|date', // Applicable for transport-permits
-            'permit.lot_number' => 'required|string|max:255', // Applicable for land-titles
-            'permit.property_category' => 'required|string|max:255', // Applicable for land-titles
-        ]);
+            if (!$file) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File not found.'
+                ], 404); // Return 404 if the file doesn't exist
+            }
+            $permit_type = $file->permit_type;
 
-        // Find the file by ID
-        $file = File::find($fileId);
-        dd($file);
+            DB::table('files')->where('id', $fileId)->update([
+                'office_source' => $request->input('office_source'),
+                'category' => $request->input('category'),
+                'classification' => $request->input('classification'),
+                'status' => $request->input('status'),
+                'updated_at' => now(), // Set the update timestamp
+            ]);
 
-        // Check if the file exists
-        if (!$file) {
+            switch ($permit_type) {
+                case 'tree-cutting-permits':
+                    DB::table('tree_cutting_permits')->where('file_id', $fileId)->update([
+                        'name_of_client' => $request->input('permit.name_of_client'),
+                        'number_of_trees' => $request->input('permit.number_of_trees'),
+                        'location' => $request->input('permit.location'),
+                        'date_applied' => $request->input('permit.date_applied')
+                    ]);
+
+                    break;
+
+                case 'chainsaw-registration':
+                    DB::table('chainsaw_registrations')->where('file_id', $fileId)->update([
+                        'name_of_client' => $request->input('permit.name_of_client'),
+                        'location' => $request->input('permit.location'),
+                        'serial_number' => $request->input('permit.serial_number'),
+                        'date_applied' => $request->input('permit.date_applied')
+                    ]);
+                    break;
+
+                case 'tree-plantation':
+                    DB::table('tree_plantation_registration')->where('file_id', $fileId)->update([
+                        'name_of_client' => $request->input('permit.name_of_client'),
+                        'number_of_trees' => $request->input('permit.number_of_trees'),
+                        'location' => $request->input('permit.location'),
+                        'date_applied' => $request->input('permit.date_applied')
+                    ]);
+                    break;
+
+                case 'transport-permits':
+                    DB::table('transport_permits')->where('file_id', $fileId)->update([
+                        'name_of_client' => $request->input('permit.name_of_client'),
+                        'number_of_trees' => $request->input('permit.number_of_trees'),
+                        'destination' => $request->input('permit.destination'),
+                        'date_applied' => $request->input('permit.date_applied'),
+                        'date_of_transport' => $request->input('permit.date_of_transport')
+                    ]);
+                    break;
+
+                case 'land-titles':
+                    DB::table('land_titles')->where('file_id', $fileId)->update([
+                        'name_of_client' => $request->input('permit.name_of_client'),
+                        'location' => $request->input('permit.location'),
+                        'lot_number' => $request->input('permit.lot_number'),
+                        'property_category' => $request->input('permit.property_category')
+                    ]);
+                    break;
+
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid permit type.'
+                    ], 400);
+            }
+
+            // Return success response after all updates
+            return response()->json([
+                'success' => true,
+                'message' => 'File and permit details updated successfully!',
+            ], 200);
+
+        } catch (\Exception $e) {
+            // Handle any exceptions
             return response()->json([
                 'success' => false,
-                'message' => 'File not found.'
-            ], 404);
+                'message' => 'An error occurred while updating the file.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Update file properties
-        $file->office_source = $validatedData['office_source'];
-        $file->category = $validatedData['category'];
-        $file->classification = $validatedData['classification'];
-        $file->status = $validatedData['status'];
-
-        // Assuming there's a related Permit model that needs to be updated
-        // If the Permit model is related by a foreign key, you can find it like this:
-        $permit = $file->permit; // Assuming a relationship named 'permit'
-
-        // Check if the permit exists
-        if (!$permit) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Permit not found.'
-            ], 404);
-        }
-
-        // Update permit properties based on validated data
-        $permit->name_of_client = $validatedData['permit']['name_of_client'];
-        $permit->location = $validatedData['permit']['location'];
-        $permit->date_applied = $validatedData['permit']['date_applied'];
-
-        // Update permit-specific fields based on the permit type
-        if (array_key_exists('number_of_trees', $validatedData['permit'])) {
-            $permit->number_of_trees = $validatedData['permit']['number_of_trees'];
-        }
-
-        if (array_key_exists('serial_number', $validatedData['permit'])) {
-            $permit->serial_number = $validatedData['permit']['serial_number'];
-        }
-
-        if (array_key_exists('destination', $validatedData['permit'])) {
-            $permit->destination = $validatedData['permit']['destination'];
-        }
-
-        if (array_key_exists('date_of_transport', $validatedData['permit'])) {
-            $permit->date_of_transport = $validatedData['permit']['date_of_transport'];
-        }
-
-        if (array_key_exists('lot_number', $validatedData['permit'])) {
-            $permit->lot_number = $validatedData['permit']['lot_number'];
-        }
-
-        if (array_key_exists('property_category', $validatedData['permit'])) {
-            $permit->property_category = $validatedData['permit']['property_category'];
-        }
-
-        // Save changes to both the file and permit
-        $file->save();
-        $permit->save();
-
-        // Return a response indicating success
-        return response()->json([
-            'success' => true,
-            'message' => 'File updated successfully!',
-        ]);
     }
 
 

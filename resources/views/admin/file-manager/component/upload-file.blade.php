@@ -67,9 +67,8 @@
                 <div class="w-full">
                     <select id="status" class="border border-gray-300 p-2 rounded-md h-10 w-2/3">
                         <option value="" disabled selected>Select a Status</option>
-                        <option value="recieved">Recieved</option>
+                        <option value="received">Received</option>
                         <option value="outgoing">Outgoing</option>
-
                     </select>
                 </div>
             </div>
