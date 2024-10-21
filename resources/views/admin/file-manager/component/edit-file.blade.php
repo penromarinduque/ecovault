@@ -10,32 +10,42 @@
             <div class="flex space-x-4">
 
                 <!-- Left Section -->
-                <div class="flex-1">
+                <div class="flex-1 space-y-4">
                     <!-- Office Source Field -->
                     <div>
                         <label for="edit-office_source" class="block mb-2 text-sm font-medium text-red-700">Office
                             Source</label>
                         <input type="text" id="edit-office_source" name="office_source"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter office Source">
-                        @if ($errors->has('email'))
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
-                                input!
-                            </p>
-                        @endif
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500 "
+                            placeholder="Enter office Source" required>
+
+                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid
+                            input!
+                        </p>
+
                     </div>
 
                     <!-- Category Field -->
                     <div>
                         <label for="edit-category" class="block mb-2 text-sm font-medium text-red-700">Category</label>
                         <select id="edit-category" name="category"
-                            class="bg-red-50 border border-red-500 text-red-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
+                            required>
                             <option value="">Select a Category</option>
                             <option value="incoming">Incoming</option>
                             <option value="outgoing">Outgoing</option>
                             <!-- Add more categories as needed -->
                         </select>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
+                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid
+                            input!
                         </p>
                     </div>
 
@@ -43,27 +53,49 @@
                     <div>
                         <label for="edit-classification"
                             class="block mb-2 text-sm font-medium text-red-700">Classification</label>
-                        <input type="text" id="edit-classification" name="classification"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Classification">
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
+                        <select id="edit-classification" name="classification"
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
+                            required>
+                            <option value="">Select Classification</option> <!-- Placeholder option -->
+                            <option value="highly-technical">Highly-technical</option>
+                            <option value="simple">Simple</option>
+                            <!-- Add more classification options as needed -->
+                        </select>
+                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid
+                            input!
                         </p>
                     </div>
+
 
                     <!-- Status Field -->
                     <div>
                         <label for="edit-status" class="block mb-2 text-sm font-medium text-red-700">Status</label>
-                        <input type="text" id="edit-status" name="status"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Status">
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
+                        <select id="edit-status" name="status"
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
+                            required>
+                            <option value="">Select Status</option> <!-- Placeholder option -->
+                            <option value="received">Received</option>
+                            <option value="outgoing">Outgoing</option>
+                            <!-- Add more status options as needed -->
+                        </select>
+                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid
+                            input!
                         </p>
                     </div>
+
                 </div>
 
                 <!-- Right Section -->
 
-                <div class="flex-1">
+                <div class="flex-1 space-y-4">
                     <!-- Name of Client Field -->
                     @if ($type == 'tree-cutting-permits')
                         <div>
@@ -72,7 +104,8 @@
                             <input type="text" id="edit-client_name" name="client_name"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter client name">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!
                             </p>
                         </div>
@@ -84,7 +117,8 @@
                             <input type="text" id="edit-number_of_trees" name="number_of_trees"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter number of trees">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!
                             </p>
                         </div>
@@ -96,7 +130,8 @@
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter Location">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!
                             </p>
                         </div>
@@ -107,7 +142,8 @@
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!
                             </p>
                         </div>
@@ -119,7 +155,8 @@
                             <input type="text" id="edit-client_name" name="name_of_client"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter client name">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -130,7 +167,8 @@
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter location">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -141,7 +179,8 @@
                             <input type="text" id="edit-serial_number" name="serial_number"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter serial number">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -151,7 +190,8 @@
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
                     @elseif ($type == 'tree-plantation')
@@ -162,7 +202,8 @@
                             <input type="text" id="edit-client_name" name="name_of_client"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter client name">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -173,7 +214,8 @@
                             <input type="text" id="edit-number_of_trees" name="number_of_trees"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter number of trees">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -184,7 +226,8 @@
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter location">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -194,7 +237,8 @@
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
                     @elseif ($type == 'tree-transport-permits')
@@ -205,7 +249,8 @@
                             <input type="text" id="edit-client_name" name="client_name"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter client name">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -216,7 +261,8 @@
                             <input type="text" id="edit-number_of_trees" name="number_of_trees"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter number of trees">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -227,7 +273,8 @@
                             <input type="text" id="edit-destination" name="destination"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter destination">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -237,7 +284,8 @@
                                 Applied</label>
                             <input type="date" id="edit-date_applied" name="date_applied"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -247,7 +295,8 @@
                                 class="block mb-2 text-sm font-medium text-red-700">Date of Transport</label>
                             <input type="date" id="edit-date_of_transport" name="date_of_transport"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
                     @elseif ($type == 'land-titles')
@@ -258,7 +307,8 @@
                             <input type="text" id="edit-client_name" name="client_name"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter client name">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -269,7 +319,8 @@
                             <input type="text" id="edit-location" name="location"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter location">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -280,7 +331,8 @@
                             <input type="text" id="edit-lot_number" name="lot_number"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter lot number">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
 
@@ -291,7 +343,8 @@
                             <input type="text" id="edit-property_category" name="property_category"
                                 class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 placeholder="Enter property category">
-                            <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid
                                 input!</p>
                         </div>
                     @endif
@@ -343,10 +396,10 @@
                 selectedPermitType = file.permit_type;
 
                 // Common fields for all permits
-                document.getElementById('edit-office_source').value = file.office_source || '';
-                document.getElementById('edit-category').value = file.category || '';
-                document.getElementById('edit-classification').value = file.classification || '';
-                document.getElementById('edit-status').value = file.status || '';
+                document.getElementById('edit-office_source').value = file.office_source;
+                document.getElementById('edit-category').value = file.category;
+                document.getElementById('edit-classification').value = file.classification;
+                document.getElementById('edit-status').value = file.status;
 
                 // Check the permit type and populate fields accordingly
                 switch (file.permit_type) {
