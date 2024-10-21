@@ -19,6 +19,7 @@
                             "Name",
                             "Date Modified",
                             "Modified By",
+                            "Office Source",
                             "Category",
                             "Classification",
                             "Status",
@@ -29,6 +30,7 @@
                                 file.file_name,
                                 file.updated_at,
                                 file.user_name,
+                                file.office_source,
                                 file.category,
                                 file.classification,
                                 file.status,
@@ -41,7 +43,7 @@
                                     <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
                                         <li><a href="/api/files/${file.id}" class="block px-4 py-2 hover:bg-gray-100">View</a></li>
                                         <li><a href="#" class="block px-4 py-2  hover:bg-gray-100">Download</a></li>
-                                        <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
+                                         <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>                                                                                                                                                                                                                                             
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>

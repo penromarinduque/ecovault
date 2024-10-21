@@ -334,6 +334,74 @@ class FileController extends Controller
             ], 500);
         }
     }
+
+    public function GetOnlyFileById($id)
+    {
+        try {
+            $file = DB::table('files')
+                ->where('id', $id)
+                ->first();
+
+            if (!$file) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File not found.'
+                ], 404); // Return 404 if file is not found
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File retrieved successfully.',
+                'file' => $file
+            ], 200); // Change 400 to 200
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving the file.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function UpdateFileOnlyById(Request $request, $id)
+    {
+        try {
+            $file = DB::table('files')->where('id', $id)->first();
+
+            if (!$file) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File not found.'
+                ], 404);
+            }
+
+            // Update the file's data
+            DB::table('files')
+                ->where('id', $id)
+                ->update([
+                    'office_source' => $request->input('office_source'),
+                    'category' => $request->input('category'),
+                    'classification' => $request->input('classification'),
+                    'status' => $request->input('status'),
+                    'updated_at' => now(), // Set the update timestamp
+                ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File updated successfully.',
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the file.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
     public function Upload(Request $request)
     {
         // Validate the incoming request
@@ -679,6 +747,7 @@ class FileController extends Controller
                     'id' => $file->id,
                     'file_name' => $file->file_name,
                     'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                    'office_source' => $file->office_source,
                     'user_name' => $file->user_name,
                     'category' => $file->category,
                     'classification' => $file->classification,
