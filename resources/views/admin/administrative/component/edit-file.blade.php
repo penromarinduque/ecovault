@@ -1,176 +1,108 @@
-<div id="edit-file" class="flex items-center justify-center hidden">
-    <div class="w-full max-w-3xl p-6">
-        <!-- Heading for Edit File -->
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit File</h2>
+<div id="edit-file" class="hidden">
+    <form id="edit-form" enctype="multipart/form-data">
+        @csrf
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-bold">Edit File</h2> {{-- add summary --}}
+            <button type="button" id="close-edit-btn"
+                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <i class='bx bx-x bx-md'></i>
+            </button>
+        </div>
+        <div class="flex space-x-4">
 
-        <form class="space-y-4">
-            @csrf
-
-            <!-- Flex container for left and right input sections -->
-            <div class="flex space-x-4">
-
-                <!-- Left Section -->
-                <div class="flex-1">
-                    <!-- Office Source Field -->
-                    <div>
-                        <label for="edit-office_source" class="block mb-2 text-sm font-medium text-red-700">Office
-                            Source</label>
-                        <input type="text" id="edit-office_source" name="office_source"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter office Source" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
-                        </p>
-                    </div>
-
-                    <!-- Category Field -->
-                    <div>
-                        <label for="edit-category" class="block mb-2 text-sm font-medium text-red-700">Category</label>
-                        <select id="edit-category" name="category"
-                            class="bg-red-50 border border-red-500 text-red-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            required>
-                            <option value="">Select a Category</option>
-                            <option value="incoming">Incoming</option>
-                            <option value="outgoing">Outgoing</option>
-                            <!-- Add more categories as needed -->
-                        </select>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
-                        </p>
-                    </div>
-
-                    <!-- Classification Field -->
-                    <div>
-                        <label for="edit-classification"
-                            class="block mb-2 text-sm font-medium text-red-700">Classification</label>
-                        <input type="text" id="edit-classification" name="classification"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Classification" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
-                        </p>
-                    </div>
-
-                    <!-- Status Field -->
-                    <div>
-                        <label for="edit-status" class="block mb-2 text-sm font-medium text-red-700">Status</label>
-                        <input type="text" id="edit-status" name="status"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Status" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid input!
-                        </p>
-                    </div>
+            <!-- Left Section -->
+            <div class="flex-1">
+                <!-- Office Source Field -->
+                <div>
+                    <label for="edit-office_source" class="block mb-2 text-sm font-medium text-gray-700">Office
+                        Source</label>
+                    <input type="text" id="edit-office_source" name="edit_office_source"
+                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-gray-900 "
+                        placeholder="Enter office Source" required>
+                    <p id="edit_office_source_error" class="mt-2 text-sm text-red-600 h-6 invisible"><span
+                            class="font-medium">Please!</span> Enter
+                        valid input!</p>
                 </div>
 
-                <!-- Right Section -->
 
-                <div class="flex-1">
-                    <!-- Name of Client Field -->
-
-                    <div>
-                        <label for="edit-client_name" class="block mb-2 text-sm font-medium text-red-700">Client
-                            Name</label>
-                        <input type="text" id="edit-client_name" name="client_name"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter client name" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
-                            input!
-                        </p>
-                    </div>
-
-                    <!-- No. of Trees / Species Field -->
-                    <div>
-                        <label for="edit-number_of_trees" class="block mb-2 text-sm font-medium text-red-700">No. of
-                            Trees / Species</label>
-                        <input type="text" id="edit-number_of_trees" name="number_of_trees"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter number of trees" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
-                            input!
-                        </p>
-                    </div>
-
-                    <!-- Location Field -->
-                    <div>
-                        <label for="edit-location" class="block mb-2 text-sm font-medium text-red-700">Location</label>
-                        <input type="text" id="edit-location" name="location"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            placeholder="Enter Location" required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
-                            input!
-                        </p>
-                    </div>
-
-                    <!-- Date Applied Field -->
-                    <div>
-                        <label for="edit-date_applied" class="block mb-2 text-sm font-medium text-red-700">Date
-                            Applied</label>
-                        <input type="date" id="edit-date_applied" name="date_applied"
-                            class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                            required>
-                        <p class="mt-2 text-sm text-red-600"><span class="font-medium">Please!</span> Enter valid
-                            input!
-                        </p>
-                    </div>
-
+                <!-- Category Field -->
+                <div>
+                    <label for="edit-category" class="block mb-2 text-sm font-medium text-gray-700">Category</label>
+                    <select id="edit-category" name="category"
+                        class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg valid:ring-green-500 valid:border-green-500 block w-full p-2.5 required:border-red-500 required:ring-red-500 required:text-red-500 valid:text-gray-900 "
+                        required>
+                        <option value="">Select a Category</option>
+                        <option value="incoming">Incoming</option>
+                        <option value="outgoing">Outgoing</option>
+                        <!-- Add more categories as needed -->
+                    </select>
+                    <p id="edit-category_error" class="mt-2 text-sm text-red-600 h-6 invisible"><span
+                            class="font-medium">Please!</span> Enter
+                        valid
+                        input!
+                    </p>
                 </div>
+
+                <!-- Classification Field -->
+                <div>
+                    <label for="edit-classification"
+                        class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                    <select id="edit-classification" name="classification"
+                        class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg valid:ring-green-500 valid:border-green-500 block w-full p-2.5 required:border-red-500 required:ring-red-500 required:text-red-500 valid:text-gray-900 "
+                        required>
+                        <option value="">Select Classification</option> <!-- Default empty option -->
+                        <option value="high-technical">High Technical</option>
+                        <option value="simple">Simple</option>
+                    </select>
+                    <p id="edit-classification_error" class="mt-2 text-sm text-red-600 h-6 invisible"><span
+                            class="font-medium">Please!</span> Select a
+                        valid classification.</p>
+                </div>
+
+                <!-- Status Field -->
+                <div>
+                    <label for="edit-status" class="block mb-2 text-sm font-medium text-gray-700">Status</label>
+                    <select id="edit-status" name="status"
+                        class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg valid:ring-green-500 valid:border-green-500 block w-full p-2.5 required:border-red-500 required:ring-red-500 required:text-red-500 valid:text-gray-900 "
+                        required>
+                        <option value="">Select Status</option> <!-- Default empty option -->
+                        <option value="received">Received</option>
+                        <option value="outgoing">Outgoing</option>
+                    </select>
+                    <p id="edit-status_error" class="mt-2 text-sm text-red-600 h-6 invisible"><span
+                            class="font-medium">Please!</span> Select a
+                        valid status.</p>
+                </div>
+
             </div>
 
-            <!-- Submit Button -->
-            <div class="text-end">
-                <button type="submit"
-                    class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button id="edit-submit-button" type="submit"
+                class="py-2.5 px-5 me-2 text-sm font-medium text-white bg-green-500 rounded-lg border border-green-200 
+            hover:bg-green-600 hover:text-white focus:z-10 focus:ring-4 focus:outline-none 
+            focus:ring-green-700 inline-flex items-center disabled:bg-green-300 disabled:text-gray-500 disabled:border-green-300">
+                <svg id="loading-icon" aria-hidden="true" role="status"
+                    class="inline w-4 h-4 me-3 text-gray-200 animate-spin hidden" viewBox="0 0 100 101" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor" />
+                    <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="#1C64F2" />
+                </svg>
+                <span id="button-text">Submit</span>
+            </button>
+        </div>
+    </form>
+
+
 </div>
 
-
-
-<script>
-    document.body.addEventListener('click', function(event) {
-        if (event.target.matches('.edit-button')) {
-            toggleSections(true);
-            const fileId = event.target.dataset.fileId; // Get the file ID
-            console.log('This is file ID:', fileId);
-
-            // Call the function to fetch the file data using the retrieved file ID
-            fetchFileData(fileId);
-        }
-    });
-
-    // This script fetches file data when an edit button is clicked
-    function fetchFileData(fileId) {
-        fetch(`/api/files/${fileId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const file = data.file; // File data
-                    const permit = data.permit; // Permit details
-                    console.log(data.permit);
-
-                    // Populate form fields with permit details
-                    document.getElementById('edit-client_name').value = permit.name_of_client ||
-                        '';
-                    document.getElementById('edit-number_of_trees').value = permit.number_of_trees ||
-                        '';
-                    document.getElementById('edit-category').value = file.category ||
-                        '';
-                    document.getElementById('edit-date_applied').value = permit.date_applied ||
-                        '';
-                    document.getElementById('edit-office_source').value = file.office_source ||
-                        '';
-                    document.getElementById('edit-classification').value = file.classification ||
-                        '';
-                    document.getElementById('edit-status').value = file.status ||
-                        '';
-                    document.getElementById('edit-location').value = permit.location ||
-                        '';
-                    console.log(file.permit_type);
-                    // Add more fields as needed
-                } else {
-                    console.error(data.message);
-                }
-            })
-            .catch(error => console.error('Fetch error:', error));
-    }
-</script>
+<script></script>

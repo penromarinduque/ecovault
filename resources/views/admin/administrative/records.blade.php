@@ -39,13 +39,7 @@
                         </div>
 
                         <div class=" p-4 col-span-2 bg-white rounded-md ">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-lg font-bold">Upload File</h2> {{-- add summary --}}
-                                <button type="button" id="close-upload-btn"
-                                    class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                                    <i class='bx bx-x bx-md'></i>
-                                </button>
-                            </div>
+
                             {{-- this for upload --}}
                             @include('admin.administrative.component.upload-file')
                             {{-- this for file edit --}}
