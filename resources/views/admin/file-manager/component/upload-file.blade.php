@@ -115,6 +115,18 @@
                     </div>
                 </div>
 
+                <div class="flex mt-4">
+                    <label for="species" class="text-black mt-2 mr-4 w-1/6">Species
+                    </label>
+                    <div class="w-full">
+                        <input type="text" id="species" placeholder="Enter Value"
+                            class="species border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                        <p id="species-error" class="species-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                            Please enter a Species</p>
+                    </div>
+                </div>
+
+
                 <div class="flex mt-2">
                     <label for="no-of-tree-species" class="text-black mt-2 mr-4 w-1/6">No. of Tree
                         / Species</label>
@@ -127,8 +139,6 @@
                             of trees and species.</p>
                     </div>
                 </div>
-
-
 
                 <div class="flex mt-4">
                     <label for="location" class="text-black mt-2 mr-4 w-1/6">Location
@@ -210,6 +220,18 @@
                             Please enter the Name of the Client</p>
                     </div>
                 </div>
+
+                <div class="flex mt-4">
+                    <label for="species" class="text-black mt-2 mr-4 w-1/6">Species
+                    </label>
+                    <div class="w-full">
+                        <input type="text" id="species" placeholder="Enter Value"
+                            class="species border border-gray-300 p-2 rounded-md h-10 w-2/3">
+                        <p id="species-error" class="species-error text-red-500 ml-2 min-h-[1.5rem] invisible">
+                            Please enter a Species</p>
+                    </div>
+                </div>
+
 
                 <div class="flex mt-2">
                     <label for="number-of-trees" class="text-black mt-2 mr-4 w-1/6">Number of
