@@ -190,6 +190,55 @@ class FileController extends Controller
         ]);
     }
 
+    // public function ViewFileById($id)
+    // {
+    //     // Fetch the file by ID
+    //     $file = File::find($id);
+
+    //     // Check if the file exists
+    //     if (!$file) {
+    //         return response()->json(['success' => false, 'message' => 'File not found.'], 404);
+    //     }
+
+    //     // Get the full path to the file
+    //     $filePath = storage_path("app/public/{$file->file_path}");
+
+    //     // Check if the file exists on the server
+    //     if (!file_exists($filePath)) {
+    //         return response()->json(['success' => false, 'message' => 'File not found on the server.'], 404);
+    //     }
+
+    //     // Return the file as a response
+    //     return response()->file($filePath);
+    // }
+
+    public function ViewFileById($id)
+    {
+        $file = File::findOrFail($id);
+        $filePath = storage_path("app/public/{$file->file_path}");
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $contentType = 'application/octet-stream'; // Default content type
+
+        if ($extension === 'pdf') {
+            $contentType = 'application/pdf';
+        } elseif ($extension === 'doc') {
+            $contentType = 'application/msword'; // Correct MIME type for DOC files
+        } elseif ($extension === 'docx') {
+            $contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // Correct MIME type for DOCX files
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => $contentType,
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        ]);
+    }
+
+
     public function GetFiles($type, $municipality)
     {
         try {
