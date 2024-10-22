@@ -1,10 +1,6 @@
 // // // // Table Function
 
- function FetchAndPopulate() {
-
-    
-
-  
+ function FetchAndPopulate() { 
         // PHP variable inside JavaScript
         fetch(`/api/files-without-relationships/${record}`)
             .then(response => {
@@ -41,7 +37,8 @@
                                 </button>
                                 <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
                                     <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                                        <li><a href="/api/files/${file.id}" class="block px-4 py-2 hover:bg-gray-100">View</a></li>
+                                        <li><a href="/api/file/view/${file.id}" target="_blank"  class="block px-4 py-2 hover:bg-gray-100">View</a></li>
+
                                         <li><a href="#" class="block px-4 py-2  hover:bg-gray-100">Download</a></li>
                                          <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>                                                                                                                                                                                                                                             
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
@@ -136,13 +133,6 @@
     });
 
 
-
-
-
-
-
-
-///
 const showUpload = document.getElementById("uploadBtn");
 const exitButtonUpload = document.getElementById("close-upload-btn");
 const exitButtonEdit = document.getElementById("close-edit-btn");
@@ -276,7 +266,8 @@ exitButtonEdit.addEventListener("click", (event) => {
                 // Handle error (e.g., show an error message)
                 loadingIcon.classList.add('hidden');
                 buttonText.innerText = 'Submit'; // Reset button text
-            });
+            })
+           
             
     });
 
@@ -421,6 +412,9 @@ async function  showEditFile(fileId) {
         } else {
             console.error('Error:', data.message); // Handle the error accordingly
         }
+
+        
+         
     }, 300);
 
        
@@ -460,6 +454,9 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
 
         if (response.ok) {
             console.log('File updated successfully:', data);
+              
+           
+         
             // Handle success (e.g., show a success message or refresh the table)
         } else {
             console.error('Error updating file:', data.message);

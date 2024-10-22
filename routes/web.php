@@ -64,7 +64,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::POST('/api/file-only/update/{id}', [FileController::class, "UpdateFileOnlyById"]);
     Route::get('/api/download/{id}', [FileController::class, 'Download'])->name('file.download');
 
-
+    Route::get('/api/file/view/{id}', [FileController::class, 'ViewFileById']);
 
     Route::post('/file-upload/test', [FileController::class, 'Upload'])->name('file.upload');
     Route::get('/api/files-without-relationships/{report}', [FileController::class, 'GetFilesWithoutRelationships']);
