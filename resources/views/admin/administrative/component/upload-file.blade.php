@@ -95,6 +95,7 @@
 
             </div>
 
+            <input id="report_type" type="hidden" value="{{ $record }}">
         </div>
 
         <div class="flex justify-end">

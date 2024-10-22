@@ -3,10 +3,11 @@
     </table>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+{{-- <script>
+    function FetchAndPopulate() {
 
-        fetch('/api/files-without-relationships')
+        const record = "{{ $record }}"; // PHP variable inside JavaScript
+        fetch(`/api/files-without-relationships/${record}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -101,7 +102,8 @@
                         data.files.forEach((file) => {
                             const dropdownButton = document.getElementById(
                                 `dropdownLeftButton${file.id}`);
-                            const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
+                            const dropdownElement = document.getElementById(
+                                `dropdownLeft${file.id}`);
                             // Options with default values for the dropdown
                             const options = {
                                 placement: 'left',
@@ -128,5 +130,9 @@
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        FetchAndPopulate();
     });
-</script>
+</script> --}}

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('permit_type')->nullable();
             $table->string('land_category')->nullable();
             $table->string('municipality')->nullable();
+            $table->string('report_type')->nullable();
             $table->string(column: 'file_name');
             $table->string('file_path');
             $table->string('office_source');

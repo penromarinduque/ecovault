@@ -58,6 +58,7 @@ class FileController extends Controller
                 'permit_type' => $request->input('permit_type'),  // Ensure this is present in the request
                 'land_category' => $request->input('land_category'), // This can be null
                 'municipality' => $request->input('municipality'), // Ensure this is present in the request
+                'report_type' => $request->input('report_type'),
                 'file_name' => $originalFileName,
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
@@ -65,6 +66,7 @@ class FileController extends Controller
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'status' => $request->input('status'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
+
             ];
 
             $fileEntry = File::create($formData);
@@ -732,7 +734,7 @@ class FileController extends Controller
 
 
 
-    public function GetFilesWithoutRelationships()
+    public function GetFilesWithoutRelationships($report)
     {
         try {
             // Fetch files without any relationships
@@ -741,6 +743,7 @@ class FileController extends Controller
                 ->whereDoesntHave('treePlantationRegistrations')
                 ->whereDoesntHave('transportPermits')
                 ->whereDoesntHave('landTitles')
+                ->where('report_type', $report)
                 ->with('user:id,name')
                 ->get();
 
