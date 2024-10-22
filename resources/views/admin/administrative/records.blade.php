@@ -41,7 +41,9 @@
                         <div class=" p-4 col-span-2 bg-white rounded-md ">
 
                             {{-- this for upload --}}
-                            @include('admin.administrative.component.upload-file')
+                            @include('admin.administrative.component.upload-file', [
+                                'record' => $record,
+                            ])
                             {{-- this for file edit --}}
                             @include('admin.administrative.component.edit-file')
 
@@ -64,6 +66,9 @@
             </div>
         </div>
     </div>
-
+    <script>
+        const record = {!! json_encode($record) !!};
+    </script>
     <script src="{{ asset('js/administrative.js') }}"></script>
+
 @endsection

@@ -13,6 +13,7 @@ class File extends Model
         'permit_type',
         'land_category',
         'municipality',
+        'report_type',
         'file_name',
         'file_path',
         'office_source',

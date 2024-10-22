@@ -67,7 +67,7 @@ Route::middleware(['authentication'])->group(function () {
 
 
     Route::post('/file-upload/test', [FileController::class, 'Upload'])->name('file.upload');
-    Route::get('/api/files-without-relationships', [FileController::class, 'GetFilesWithoutRelationships']);
+    Route::get('/api/files-without-relationships/{report}', [FileController::class, 'GetFilesWithoutRelationships']);
 
     Route::get("/superuser/test", function () {
         return view("superuser.test");
