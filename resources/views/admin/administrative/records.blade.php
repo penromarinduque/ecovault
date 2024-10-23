@@ -3,6 +3,8 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
+
+
     <div class="bg-slate-300  rounded-md text-black p-4 ">
         <div>
             <nav aria-label="Breadcrumb">
@@ -22,7 +24,7 @@
             @php
                 $url = '/api/files-without-relationships';
             @endphp
-
+            <x-modal.file-modal />
             <div class="grid">
                 <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                     <x-forms.table :$record :url="$url" />
@@ -57,7 +59,6 @@
                                 </div>
                                 <div id="toast-timer" class="w-full h-1 bg-green-300 mt-2"></div>
                             </div>
-
                         </div>
 
 
@@ -66,9 +67,11 @@
             </div>
         </div>
     </div>
+
     <script>
         const record = {!! json_encode($record) !!};
     </script>
     <script src="{{ asset('js/administrative.js') }}"></script>
 
+    <script src="{{ asset('js/file-modal.js') }}"></script>
 @endsection
