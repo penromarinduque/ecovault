@@ -23,7 +23,7 @@
         <li class="flex items-center space-x-2">
             <a href="{{ route('administrative.show') }}" class="flex  gap-2 items-center">
                 <img src="{{ asset('images/navigation/reports.png') }}" alt="" class="w-16">
-                <span class="">Adminstrive Documents</span>
+                <span class="">Administrive Documents</span>
             </a>
         </li>
 
