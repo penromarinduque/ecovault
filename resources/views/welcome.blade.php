@@ -6,7 +6,8 @@
     <div class="grid grid-flow-col m-14 gap-5">
 
         <div>
-            <div class="bg-red-700 w-[720px] h-[380px]  rounded-lg "></div>
+            <div class=""><img src="{{ asset('images/denr-home.jpg') }}"
+                    class="w-[720px] h-[380px] drop-shadow-md rounded-lg " alt="" srcset=""></div>
         </div>
 
         <div class="space-y-3 m-4 mt-20">
