@@ -130,6 +130,7 @@ class FileController extends Controller
                     'number_of_trees' => $request->number_of_trees,
                     'location' => $request->location,
                     'date_applied' => $request->date_applied,
+                    'species' => $request->species,
                 ]);
                 break;
 
@@ -161,6 +162,7 @@ class FileController extends Controller
                     'destination' => $request->destination,
                     'date_applied' => $request->date_applied,
                     'date_of_transport' => $request->date_of_transport,
+                    'species' => $request->species,
                 ]);
                 break;
 

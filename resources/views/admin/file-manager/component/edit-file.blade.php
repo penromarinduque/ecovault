@@ -1,7 +1,13 @@
 <div id="edit-file-div" class="items-center justify-center">
-    <div class="w-full max-w-3xl p-6">
+    <div class="w-full max-w-3xl">
         <!-- Heading for Edit File -->
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit File</h2>
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-bold">Edit File</h2> {{-- add summary --}}
+            <button type="button" id="close-edit-btn"
+                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <i class='bx bx-x bx-md'></i>
+            </button>
+        </div>
 
         <form id="edit-file-form" class="space-y-4">
             @csrf
