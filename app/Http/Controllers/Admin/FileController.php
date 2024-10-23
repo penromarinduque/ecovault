@@ -121,7 +121,6 @@ class FileController extends Controller
 
     public function StorePermit(Request $request)
     {
-
         switch ($request->permit_type) {
             case 'tree-cutting-permits':
                 TreeCuttingPermit::create([
@@ -222,6 +221,40 @@ class FileController extends Controller
         }
 
         $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        // Handle .docx and .doc files to be used with Google Docs Viewer
+        if ($extension === 'doc' || $extension === 'docx') {
+            $fileUrl = url("/storage/{$file->file_path}"); // Publicly accessible URL
+
+            // Return the file URL to be used with Google Docs Viewer on the client-side
+            return response()->json([
+                'file' => $fileUrl,
+                'type' => 'google-viewer',
+                'ext' => $extension
+            ]);
+        } else {
+            $contentType = 'application/pdf';
+            return response()->file($filePath, [
+                'Content-Type' => $contentType,
+                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+            ]);
+        }
+
+
+        // Handle PDF files directly in the browser
+
+    }
+
+    public function DownloadFileById($id)
+    {
+        $file = File::findOrFail($id);
+        $filePath = storage_path("app/public/{$file->file_path}");
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         $contentType = 'application/octet-stream'; // Default content type
 
         if ($extension === 'pdf') {
@@ -234,7 +267,7 @@ class FileController extends Controller
 
         return response()->file($filePath, [
             'Content-Type' => $contentType,
-            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+            'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"', // Change to 'attachment' for download
         ]);
     }
 
@@ -779,9 +812,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
-
-
 
     public function GetFilesWithoutRelationships($report)
     {

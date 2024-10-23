@@ -62,7 +62,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get("/api/file/{id}", [FileController::class, "GetFileById"])->name("file.get");
     Route::get("/api/file-only/{id}", [FileController::class, "GetOnlyFileById"]);
     Route::POST('/api/file-only/update/{id}', [FileController::class, "UpdateFileOnlyById"]);
-    Route::get('/api/download/{id}', [FileController::class, 'Download'])->name('file.download');
+    Route::get('/api/file/download/{id}', [FileController::class, 'DownloadFileById'])->name('file.download');
 
     Route::get('/api/file/view/{id}', [FileController::class, 'ViewFileById']);
 
@@ -75,6 +75,5 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
     Route::POST('/api/files/update/{fileId}', [FileController::class, 'EditFile'])->name('file.edit');
-
 });
 
