@@ -37,7 +37,7 @@ function FetchAndPopulate() {
                         <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
                             <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
                                 <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
-                                   onclick="openFileModal('/api/file/view/${file.id}', ${file.id})">View</a>
+                                   onclick="openFileModal(${file.id})">View</a>
                                 <li><a href="/api/file/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
                                 <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
