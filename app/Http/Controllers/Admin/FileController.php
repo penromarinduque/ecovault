@@ -34,7 +34,7 @@ class FileController extends Controller
     public function StoreFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
+            'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
             'municipality' => 'nullable|string', // Make this field nullable
             'category' => 'nullable|string', // Make this field nullable
@@ -674,13 +674,12 @@ class FileController extends Controller
                 'height' => 40, // Image height in points
                 'wrappingStyle' => 'infront', // Image in front of the text
                 'positioning' => 'absolute', // Absolute positioning for precise placement
-                'posHorizontal' => 'left', // Align to the right side
+                'posHorizontal' => 'right', // Align to the right side
                 'posHorizontalRel' => 'page', // Relative to the entire page width
                 'posVertical' => 'bottom', // Align vertically to the bottom
                 'posVerticalRel' => 'page', // Relative to the entire page height
-                'marginBottom' => 10, // Distance from the bottom of the page
-                'marginLeft' => 460, // Large margin to ensure the right alignment\\
-
+                'marginBottom' => 40, // Distance from the bottom of the page
+                'marginRight' => 40, // Distance from the right of the page
             ]);
         }
 
