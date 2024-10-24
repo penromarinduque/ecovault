@@ -1,367 +1,174 @@
-<div id="file-summary-div" class="p-4">
-    <h2 class="text-lg font-bold mb-4">File Summary</h2>
+<div id="file-summary-div" class="p-4 overflow-hidden">
+    <div id="child-file-summary-div">
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-bold text-gray-700">File Summary</h2> {{-- add summary --}}
+            <button type="button" id="close-summary-btn"
+                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <i class='bx bx-x bx-md'></i>
+            </button>
+        </div>
 
-    @if ($type == 'tree-cutting-permits')
-        <!-- File Name -->
         <div class="relative z-0 w-full mb-5 group">
             <div
                 class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                 <span class="text-sm font-medium text-gray-900">File Name:</span>
-                <span id="summary-file-name" class="text-gray-900">Loading...</span>
+                <span id="summary-file-name" class="text-gray-600 font-semibold pl-4 "> </span>
             </div>
         </div>
 
-        <!-- Name of Client -->
         <div class="relative z-0 w-full mb-5 group">
             <div
                 class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                 <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-900">Loading...</span>
+                <span id="summary-client-name" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
             </div>
         </div>
 
-        <!-- Number of Trees -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Number of Trees:</span>
-                <span id="summary-number-of-trees" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Tree Species -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Tree Species:</span>
-                <span id="summary-tree-species" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Location -->
         <div class="relative z-0 w-full mb-5 group">
             <div
                 class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                 <span class="text-sm font-medium text-gray-900">Location:</span>
-                <span id="summary-location" class="text-gray-900"></span>
+                <span id="summary-location" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
             </div>
         </div>
 
-        <!-- Date Applied -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Date Applied:</span>
-                <span id="summary-date-applied" class="text-gray-900"></span>
+        <!-- Conditional fields based on permit type -->
+        @if (in_array($type, ['tree-cutting-permits', 'tree-plantation', 'tree-transport-permits']))
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Number of Trees:</span>
+                    <span id="summary-number-of-trees" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
-    @elseif ($type == 'chainsaw-registration')
-        <!-- File Name -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">File Name:</span>
-                <span id="summary-file-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
+        @endif
 
-        <!-- Name of Client -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-900">Loading...</span>
+        @if ($type == 'chainsaw-registration')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Serial Number:</span>
+                    <span id="summary-serial-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
+        @endif
 
-        <!-- Location -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Location:</span>
-                <span id="summary-location" class="text-gray-900"></span>
+        @if ($type == 'tree-transport-permits')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Species:</span>
+                    <span id="summary-species" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Destination:</span>
+                    <span id="summary-destination" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @endif
 
-        <!-- Serial Number -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Serial Number:</span>
-                <span id="summary-serial-number" class="text-gray-900">Loading...</span>
+        @if ($type == 'land-titles')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Lot Number:</span>
+                    <span id="summary-lot-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Property Category:</span>
+                    <span id="summary-property-category" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @endif
 
-        <!-- Date Applied -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Date Applied:</span>
-                <span id="summary-date-applied" class="text-gray-900"></span>
+        @if ($type != 'land-titles')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-sm font-medium text-gray-900">Date Applied:</span>
+                    <span id="summary-date-applied" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
-    @elseif ($type == 'tree-plantation')
-        <!-- File Name -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">File Name:</span>
-                <span id="summary-file-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
+        @endif
 
-        <!-- Name of Client -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-900">Loading...</span>
-            </div>
+    </div>
+    <div id="loading-spinner" class="relative overflow-hidden flex justify-center items-center h-full">
+        <div role="status" class="absolute">
+            <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101"
+                fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentFill" />
+            </svg>
+            <span class="sr-only"> </span>
         </div>
-
-        <!-- Number of Trees -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Number of Trees:</span>
-                <span id="summary-number-of-trees" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Location -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Location:</span>
-                <span id="summary-location" class="text-gray-900"></span>
-            </div>
-        </div>
-
-        <!-- Date Applied -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Date Applied:</span>
-                <span id="summary-date-applied" class="text-gray-900"></span>
-            </div>
-        </div>
-    @elseif ($type == 'tree-transport-permits')
-        <!-- File Name -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">File Name:</span>
-                <span id="summary-file-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Name of Client -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Number of Trees -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Number of Trees:</span>
-                <span id="summary-number-of-trees" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Species -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Species:</span>
-                <span id="summary-species" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Destination -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Destination:</span>
-                <span id="summary-destination" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Date Applied -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Date Applied:</span>
-                <span id="summary-date-applied" class="text-gray-900"></span>
-            </div>
-        </div>
-    @elseif ($type == 'land-titles')
-        <!-- File Name -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">File Name:</span>
-                <span id="summary-file-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Name of Client -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Location -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Location:</span>
-                <span id="summary-location" class="text-gray-900"></span>
-            </div>
-        </div>
-
-        <!-- Lot Number -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Lot Number:</span>
-                <span id="summary-lot-number" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-
-        <!-- Property Category -->
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Property Category:</span>
-                <span id="summary-property-category" class="text-gray-900">Loading...</span>
-            </div>
-        </div>
-    @endif
-
-
+    </div>
 </div>
 
 
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.body.addEventListener('click', (event) => {
-            if (event.target.matches('.file-summary-button')) {
-                const fileId = event.target.dataset.fileId;
-                console.log('File Summary button clicked for file ID:', fileId);
-                toggleVisibility(true); // Show summary, hide others
-                fetchFileDetails(fileId);
+    async function fetchFileDetails(fileId) {
+        try {
+            // Show the loading spinner and hide the file summary
+            document.getElementById('loading-spinner').classList.remove('hidden');
+            document.getElementById('child-file-summary-div').classList.add('hidden');
+
+            const response = await fetch(`/api/file/${fileId}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        });
-    });
 
-    // Function to toggle visibility of file summary and other divs
-    function toggleVisibility(showSummary) {
-        document.getElementById('file-summary-div').classList.toggle('hidden', !showSummary);
-        document.getElementById('edit-file-div').classList.toggle('hidden', showSummary);
-        document.getElementById('upload-file-div').classList.toggle('hidden', showSummary);
-    }
+            const data = await response.json();
 
-    // Function to fetch file details from API
-    function fetchFileDetails(fileId) {
-        fetch(`/api/file/${fileId}`)
-            .then(response => response.json())
-            .then(data => handleFetchResponse(data))
-            .catch(error => console.error('Error fetching file details:', error));
-    }
+            // Populate the data into respective fields
+            document.getElementById('summary-file-name').textContent = data.file.file_name;
+            document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
+            document.getElementById('summary-location').textContent = data.permit.location;
 
-    // Function to handle the API response and update the UI
-    function handleFetchResponse(data) {
-        if (data.success) {
-            console.log(data); // Debugging data output
-            updateFileSummary(data);
-        } else {
-            alert(data.message);
+            // Handle conditional fields
+            if (data.file.permit_type === 'tree-cutting-permits' || data.file.permit_type === 'tree-plantation' ||
+                data.file.permit_type === 'tree-transport-permits') {
+                document.getElementById('summary-number-of-trees').textContent = data.permit.number_of_trees;
+            }
+
+            if (data.file.permit_type === 'chainsaw-registration') {
+                document.getElementById('summary-serial-number').textContent = data.serialNumber;
+            }
+
+            if (data.file.permit_type === 'tree-transport-permits') {
+                document.getElementById('summary-species').textContent = data.species;
+                document.getElementById('summary-destination').textContent = data.destination;
+            }
+
+            if (data.file.permit_type === 'land-titles') {
+                document.getElementById('summary-lot-number').textContent = data.lotNumber;
+                document.getElementById('summary-property-category').textContent = data.propertyCategory;
+            }
+
+            if (data.file.permit_type !== 'land-titles') {
+                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
+            }
+
+            // Hide the loading spinner and show the file summary
+            document.getElementById('loading-spinner').classList.add('hidden');
+            document.getElementById('child-file-summary-div').classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+
+        } finally {
+            document.getElementById('loading-spinner').classList.add('hidden');
         }
-    }
-
-    // Function to update the file summary UI with fetched data
-    function updateFileSummary(data) {
-        // Clear previous values
-        clearSummaryFields();
-
-        const permitType = data.permit.type; // Assuming the permit type is included in the response
-        console.log('try', permitType);
-        switch (permitType) {
-            case 'tree-cutting-permits':
-                document.getElementById('summary-file-name').textContent = data.file.file_name;
-                document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-                document.getElementById('summary-number-of-trees').textContent = data.permit.number_of_trees;
-                document.getElementById('summary-tree-species').textContent = data.permit.tree_species;
-                document.getElementById('summary-location').textContent = data.permit.location;
-                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
-                break;
-
-            case 'chainsaw-registration':
-                document.getElementById('summary-file-name').textContent = data.file.file_name;
-                document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-                document.getElementById('summary-location').textContent = data.permit.location;
-                document.getElementById('summary-serial-number').textContent = data.permit.serial_number;
-                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
-                break;
-
-            case 'tree-plantation':
-                document.getElementById('summary-file-name').textContent = data.file.file_name;
-                document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-                document.getElementById('summary-number-of-trees').textContent = data.permit.number_of_trees;
-                document.getElementById('summary-location').textContent = data.permit.location;
-                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
-                break;
-
-            case 'tree-transport-permits':
-                document.getElementById('summary-file-name').textContent = data.file.file_name;
-                document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-                document.getElementById('summary-number-of-trees').textContent = data.permit.number_of_trees;
-                document.getElementById('summary-species').textContent = data.permit.species;
-                document.getElementById('summary-destination').textContent = data.permit.destination;
-                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
-                break;
-
-            case 'land-titles':
-                document.getElementById('summary-file-name').textContent = data.file.file_name;
-                document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-                document.getElementById('summary-location').textContent = data.permit.location;
-                document.getElementById('summary-lot-number').textContent = data.permit.lot_number;
-                document.getElementById('summary-property-category').textContent = data.permit.property_category;
-                break;
-
-            default:
-                console.warn('Unknown permit type:', permitType);
-                break;
-        }
-    }
-
-    // Function to clear previous values in the summary fields
-    function clearSummaryFields() {
-        const fields = [
-            'summary-file-name',
-            'summary-client-name',
-            'summary-number-of-trees',
-            'summary-tree-species',
-            'summary-location',
-            'summary-date-applied',
-            'summary-serial-number',
-            'summary-species',
-            'summary-destination',
-            'summary-lot-number',
-            'summary-property-category'
-        ];
-
-        fields.forEach(field => {
-            document.getElementById(field).textContent = ''; // Clear each field
-        });
     }
 </script>

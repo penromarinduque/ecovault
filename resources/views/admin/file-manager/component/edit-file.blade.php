@@ -1,8 +1,8 @@
 <div id="edit-file-div" class="items-center justify-center">
-    <div class="w-full max-w-3xl">
+    <div id="child-edit-file-div" class="w-full max-w-3xl hidden">
         <!-- Heading for Edit File -->
         <div class="flex justify-between items-center mb-2">
-            <h2 class="text-lg font-bold">Edit File</h2> {{-- add summary --}}
+            <h2 class="text-lg font-bold text-gray-700">Edit File</h2> {{-- add summary --}}
             <button type="button" id="close-edit-btn"
                 class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
                 <i class='bx bx-x bx-md'></i>
@@ -458,6 +458,49 @@
             </div>
         </form>
     </div>
+
+    {{-- loading div --}}
+
+    <div id="loading" role="status"
+        class="max-w-md p-4 space-y-4 divide-y divide-gray-200   animate-pulse md:p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="h-2.5 bg-gray-300 rounded-full   w-24 mb-2.5"></div>
+                <div class="w-32 h-2 bg-gray-200 rounded-full  "></div>
+            </div>
+            <div class="h-2.5 bg-gray-300 rounded-full   w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+            <div>
+                <div class="h-2.5 bg-gray-300 rounded-full   w-24 mb-2.5"></div>
+                <div class="w-32 h-2 bg-gray-200 rounded-full  "></div>
+            </div>
+            <div class="h-2.5 bg-gray-300 rounded-full   w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+            <div>
+                <div class="h-2.5 bg-gray-300 rounded-full   w-24 mb-2.5"></div>
+                <div class="w-32 h-2 bg-gray-200 rounded-full  "></div>
+            </div>
+            <div class="h-2.5 bg-gray-300 rounded-full   w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+            <div>
+                <div class="h-2.5 bg-gray-300 rounded-full   w-24 mb-2.5"></div>
+                <div class="w-32 h-2 bg-gray-200 rounded-full  "></div>
+            </div>
+            <div class="h-2.5 bg-gray-300 rounded-full   w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+            <div>
+                <div class="h-2.5 bg-gray-300 rounded-full   w-24 mb-2.5"></div>
+                <div class="w-32 h-2 bg-gray-200 rounded-full  "></div>
+            </div>
+            <div class="h-2.5 bg-gray-300 rounded-full   w-12"></div>
+        </div>
+        <span class="sr-only">Loading...</span>
+    </div>
+
 </div>
 
 
@@ -467,22 +510,20 @@
     let permitType;
     const csrfToken = document.querySelector('input[name="_token"]').value;
 
-    document.body.addEventListener('click', function(event) {
-        if (event.target.matches('.edit-button')) {
-            toggleSections(true);
-            const fileId = event.target.dataset.fileId; // Get the file ID
-            console.log('This is file ID:', fileId);
-
-            // Call the function to fetch the file data using the retrieved file ID
-            fetchFileData(fileId);
-        }
-    });
-
     // This script fetches file data when an edit button is clicked
     async function fetchFileData(fileId) {
+        const startTime = performance.now(); // Start timing
+
+        // Show loading screen
+        document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('child-edit-file-div').classList.add('hidden');
         try {
+
+            //await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await fetch(`/api/file/${fileId}`);
             const data = await response.json();
+            const endTime = performance.now(); // End timing
+            console.log(`API call to fetch file data took ${endTime - startTime} ms`);
 
             if (data.success) {
                 const file = data.file; // File data
@@ -491,6 +532,7 @@
                 // Store the fileId and permit_type in global variables
                 selectedFileId = fileId;
                 permitType = file.permit_type;
+
                 // Common fields for all permits
                 document.getElementById('edit-office_source').value = file.office_source;
                 document.getElementById('edit-category').value = file.category;
@@ -498,37 +540,39 @@
                 document.getElementById('edit-status').value = file.status;
 
                 // Check the permit type and populate fields accordingly
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('child-edit-file-div').classList.remove('hidden');
                 switch (file.permit_type) {
                     case 'tree-cutting-permits':
-                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
-                        document.getElementById('edit-location').value = permit.location || '';
-                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        document.getElementById('edit-client_name').value = permit.name_of_client;
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
+                        document.getElementById('edit-location').value = permit.location;
+                        document.getElementById('edit-date_applied').value = permit.date_applied;
                         break;
                     case 'chainsaw-registration':
-                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                        document.getElementById('edit-location').value = permit.location || '';
-                        document.getElementById('edit-serial_number').value = permit.serial_number || '';
-                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        document.getElementById('edit-client_name').value = permit.name_of_client;
+                        document.getElementById('edit-location').value = permit.location;
+                        document.getElementById('edit-serial_number').value = permit.serial_number;
+                        document.getElementById('edit-date_applied').value = permit.date_applied;
                         break;
                     case 'tree-plantation':
-                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
-                        document.getElementById('edit-location').value = permit.location || '';
-                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
+                        document.getElementById('edit-client_name').value = permit.name_of_client;
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
+                        document.getElementById('edit-location').value = permit.location;
+                        document.getElementById('edit-date_applied').value = permit.date_applied;
                         break;
                     case 'tree-transport-permits':
-                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees || '';
-                        document.getElementById('edit-destination').value = permit.destination || '';
-                        document.getElementById('edit-date_applied').value = permit.date_applied || '';
-                        document.getElementById('edit-date_of_transport').value = permit.date_of_transport || '';
+                        document.getElementById('edit-client_name').value = permit.name_of_client;
+                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
+                        document.getElementById('edit-destination').value = permit.destination;
+                        document.getElementById('edit-date_applied').value = permit.date_applied;
+                        document.getElementById('edit-date_of_transport').value = permit.date_of_transport;
                         break;
                     case 'land-titles':
-                        document.getElementById('edit-client_name').value = permit.name_of_client || '';
-                        document.getElementById('edit-location').value = permit.location || '';
-                        document.getElementById('edit-lot_number').value = permit.lot_number || '';
-                        document.getElementById('edit-property_category').value = permit.property_category || '';
+                        document.getElementById('edit-client_name').value = permit.name_of_client;
+                        document.getElementById('edit-location').value = permit.location;
+                        document.getElementById('edit-lot_number').value = permit.lot_number;
+                        document.getElementById('edit-property_category').value = permit.property_category;
                         break;
                     default:
                         console.error('Unknown permit type:', file.permit_type);
@@ -539,12 +583,16 @@
             }
         } catch (error) {
             console.error('Fetch error:', error);
+        } finally {
+            // Hide loading screen after processing
+            document.getElementById('loading').classList.add('hidden');
         }
     }
 
     document.getElementById('edit-file-form').addEventListener('submit', async function(event) {
         event.preventDefault(); // Prevent form from submitting normally
         const csrfToken = document.querySelector('input[name="_token"]').value;
+
         // Initialize FormData object to hold the form data
         const formData = new FormData();
         formData.append('office_source', document.getElementById('edit-office_source').value);
@@ -563,7 +611,6 @@
                 formData.append('permit[location]', document.getElementById('edit-location').value);
                 formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
                 break;
-
             case 'chainsaw-registration':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
                     .value);
@@ -572,7 +619,6 @@
                     .value);
                 formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
                 break;
-
             case 'tree-plantation':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
                     .value);
@@ -581,8 +627,7 @@
                 formData.append('permit[location]', document.getElementById('edit-location').value);
                 formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
                 break;
-
-            case 'transport-permits':
+            case 'tree-transport-permits':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
                     .value);
                 formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
@@ -592,7 +637,6 @@
                 formData.append('permit[date_of_transport]', document.getElementById(
                     'edit-date_of_transport').value);
                 break;
-
             case 'land-titles':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
                     .value);
@@ -601,7 +645,6 @@
                 formData.append('permit[property_category]', document.getElementById(
                     'edit-property_category').value);
                 break;
-
             default:
                 console.error('Unknown permit type:', permitType);
         }
