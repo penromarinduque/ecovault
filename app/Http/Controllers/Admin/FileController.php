@@ -309,6 +309,7 @@ class FileController extends Controller
     {
         try {
             $files = DB::table('files')
+                ->where('is_archived', false)
                 ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
                 ->where('files.permit_type', $type)
                 ->where('files.municipality', $municipality)
@@ -887,8 +888,42 @@ class FileController extends Controller
 
     }
 
+    public function ArchivedById($id)
+    {
+        try {
+            $file = File::findOrFail($id);
 
+            $file->archive();
 
+            return response()->json([
+                'success' => true,
+                'message' => 'File archived successfully',
+                'files' => $file,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'archive file fail',
+                'error' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function GetArchivedFiles()
+    {
+        $files = Db::table('files')
+            ->where('is_archived', true)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'files retrieval is successful',
+            'files' => $files,
+        ]);
+    }
 }
 
 
