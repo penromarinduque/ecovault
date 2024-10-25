@@ -28,7 +28,7 @@
         </li>
 
         <li class="flex items-center space-x-2">
-            <a href="#" class="flex  gap-2 items-center">
+            <a href="{{ route('archived-file.file-manager.show') }}" class="flex  gap-2 items-center">
                 <img src="{{ asset('images/navigation/archive.png') }}" alt="" class="w-16">
                 <span class="">Archive Files</span>
             </a>

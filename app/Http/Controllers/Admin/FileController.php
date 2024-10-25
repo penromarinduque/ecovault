@@ -884,7 +884,6 @@ class FileController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-
     }
 
     public function ArchivedById($id)
@@ -911,17 +910,28 @@ class FileController extends Controller
         }
     }
 
-    public function GetArchivedFiles()
+    public function GetArchivedFiles($type, $municipality)
     {
-        $files = Db::table('files')
-            ->where('is_archived', true)
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'files retrieval is successful',
-            'files' => $files,
-        ]);
+        try {
+            $files = DB::table('files')
+                ->where('is_archived', true)
+                ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+                ->where('files.permit_type', $type)
+                ->where('files.municipality', $municipality)
+                ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+                ->get();
+            return response()->json([
+                'success' => true,
+                'data' => $files,
+                'message' => 'Files retrieved successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
 
