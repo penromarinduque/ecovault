@@ -54,4 +54,33 @@ class AdminController extends Controller
         return view('admin.administrative.records', compact('record'));
     }
 
+    function ShowArchivedFiles()
+    {
+        return view('admin.archived-file.archive-type');
+    }
+
+    function ShowArchivedFileManager()
+    {
+        return view('admin.archived-file.file-manager');
+    }
+
+    function ShowArchivedMunicipality($type)
+    {
+        return view('admin.archived-file.municipality', compact('type'));
+    }
+
+    function ShowArchivedandTitlesOrPatentedLots($type)
+    {
+        return view('admin.archived-file.land-title-categories', compact('type'));
+    }
+    function ShowArchivedMunicipalityWithCategory($type, $category)
+    {
+        return view('admin.archived-file.municipality', compact('type', 'category'));
+    }
+
+    function ShowArchivedFileManagerTable($type, $municipality)
+    {
+
+        return view('admin.archived-file.table', compact('type', 'municipality'));
+    }
 }
