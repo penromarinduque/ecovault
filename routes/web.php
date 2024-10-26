@@ -90,5 +90,6 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
     Route::POST('/api/files/update/{fileId}', [FileController::class, 'EditFile'])->name('file.edit');
+    Route::post('/api/file/archived/{id}', [FileController::class, 'ArchivedById'])->name('file.archived');
 });
 
