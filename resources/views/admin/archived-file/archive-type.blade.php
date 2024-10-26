@@ -17,7 +17,7 @@
 
             {{-- {{ route('archive.administrative-report.show', ['archiveType' => 'administrative']) }} --}}
             <div class="my-4">
-                <a href="">
+                <a href="{{ route('archived.administrative.show') }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
                     <h1 class="w-[120px]">Archived Administrative Documents</h1>
                 </a>

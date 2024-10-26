@@ -30,7 +30,6 @@ use PhpOffice\PhpWord\Settings;
 class FileController extends Controller
 {
 
-
     public function StoreFile(Request $request)
     {
         $request->validate([
@@ -120,8 +119,6 @@ class FileController extends Controller
             'debug' => $request->all(),
         ]);
     }
-
-
     public function StorePermit(Request $request)
     {
         switch ($request->permit_type) {
@@ -193,62 +190,6 @@ class FileController extends Controller
             'permit' => $request->permit_type
         ]);
     }
-
-    // public function ViewFileById($id)
-    // {
-    //     // Fetch the file by ID
-    //     $file = File::find($id);
-
-    //     // Check if the file exists
-    //     if (!$file) {
-    //         return response()->json(['success' => false, 'message' => 'File not found.'], 404);
-    //     }
-
-    //     // Get the full path to the file
-    //     $filePath = storage_path("app/public/{$file->file_path}");
-
-    //     // Check if the file exists on the server
-    //     if (!file_exists($filePath)) {
-    //         return response()->json(['success' => false, 'message' => 'File not found on the server.'], 404);
-    //     }
-
-    //     // Return the file as a response
-    //     return response()->file($filePath);
-    // }
-
-    // public function ViewFileById($id)
-    // {
-    //     $file = File::findOrFail($id);
-    //     $filePath = storage_path("app/public/{$file->file_path}");
-
-    //     if (!file_exists($filePath)) {
-    //         abort(404);
-    //     }
-
-    //     $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-    //     // Handle .docx and .doc files to be used with Google Docs Viewer
-    //     if ($extension === 'doc' || $extension === 'docx') {
-    //         $fileUrl = url("/storage/{$file->file_path}"); // Publicly accessible URL
-
-    //         // Return the file URL to be used with Google Docs Viewer on the client-side
-    //         return response()->json([
-    //             'file' => $fileUrl,
-    //             'type' => 'google-viewer',
-    //             'ext' => $extension
-    //         ]);
-    //     } else {
-    //         $contentType = 'application/pdf';
-    //         return response()->file($filePath, [
-    //             'Content-Type' => $contentType,
-    //             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
-    //         ]);
-    //     }
-
-
-    //     // Handle PDF files directly in the browser
-
-    // }
     public function ViewFileById($id)
     {
         $file = File::findOrFail($id);
@@ -277,7 +218,6 @@ class FileController extends Controller
             ]);
         }
     }
-
     public function DownloadFileById($id)
     {
         $file = File::findOrFail($id);
@@ -303,8 +243,6 @@ class FileController extends Controller
             'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"', // Change to 'attachment' for download
         ]);
     }
-
-
     public function GetFiles($type, $municipality)
     {
         try {
@@ -360,7 +298,6 @@ class FileController extends Controller
             ->header('Content-Type', $mimeType)
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
-
     public function GetFileById($id)
     {
         try {
@@ -452,7 +389,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
     public function GetOnlyFileById($id)
     {
         try {
@@ -481,7 +417,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
     public function UpdateFileOnlyById(Request $request, $id)
     {
         try {
@@ -518,8 +453,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
-
     public function Upload(Request $request)
     {
         // Validate the incoming request
@@ -625,7 +558,6 @@ class FileController extends Controller
             throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
         }
     }
-
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -638,8 +570,6 @@ class FileController extends Controller
         }
         rmdir($dir);
     }
-
-
     private function embedQrCodeInDocx($filePath, $qrCodePath)
     {
         // Load the existing DOCX file
@@ -693,8 +623,6 @@ class FileController extends Controller
 
         return $fullFilePath; // Return the path of the modified document
     }
-
-
     public function embedQrCodeInPdf($filePath, $qrCodePath)
     {
         // Load the existing PDF file
@@ -749,7 +677,6 @@ class FileController extends Controller
 
         return $fullFilePath;
     }
-
     public function EditFile(Request $request, $fileId)
     {
         try {
@@ -845,7 +772,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
     public function GetFilesWithoutRelationships($report)
     {
         try {
@@ -885,7 +811,6 @@ class FileController extends Controller
             ]);
         }
     }
-
     public function ArchivedById($id)
     {
         try {
@@ -909,7 +834,6 @@ class FileController extends Controller
 
         }
     }
-
     public function GetArchivedFiles($type, $municipality)
     {
         try {
