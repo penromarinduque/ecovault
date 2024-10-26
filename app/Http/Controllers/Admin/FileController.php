@@ -32,6 +32,9 @@ class FileController extends Controller
 
     public function StoreFile(Request $request)
     {
+
+        $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
+
         $request->validate([
             'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
@@ -68,7 +71,7 @@ class FileController extends Controller
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'status' => $request->input('status'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
-
+                'is_archived' => $isArchived
             ];
 
             $fileEntry = File::create($formData);
@@ -778,37 +781,72 @@ class FileController extends Controller
             ], 500);
         }
     }
-    public function GetFilesWithoutRelationships($report)
+    public function GetFilesWithoutRelationships($report, Request $request)
     {
         try {
-            // Fetch files without any relationships
-            $files = File::whereDoesntHave('treeCuttingPermits')
-                ->whereDoesntHave('chainsawRegistrations')
-                ->whereDoesntHave('treePlantationRegistrations')
-                ->whereDoesntHave('transportPermits')
-                ->whereDoesntHave('landTitles')
-                ->where('report_type', $report)
-                ->with('user:id,name')
-                ->get();
 
-            $files = $files->map(function ($file) {
-                return [
-                    'id' => $file->id,
-                    'file_name' => $file->file_name,
-                    'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
-                    'office_source' => $file->office_source,
-                    'user_name' => $file->user_name,
-                    'category' => $file->category,
-                    'classification' => $file->classification,
-                    'status' => $file->status,
-                ];
-            });
+            $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Files retrieved successfully.',
-                'files' => $files
-            ]);
+            if ($isArchived) {
+
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->where('is_archived', true)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            } else {
+                // Fetch files without any relationships
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            }
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
