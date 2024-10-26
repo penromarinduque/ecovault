@@ -246,11 +246,15 @@ class FileController extends Controller
             'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"', // Change to 'attachment' for download
         ]);
     }
-    public function GetFiles($type, $municipality)
+    public function GetFiles($type, $municipality, Request $request)
     {
         try {
+
+            $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
+
+
             $files = DB::table('files')
-                ->where('is_archived', false)
+                ->where('is_archived', $isArchived)
                 ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
                 ->where('files.permit_type', $type)
                 ->where('files.municipality', $municipality)
@@ -261,6 +265,8 @@ class FileController extends Controller
                 'data' => $files,
                 'message' => 'Files retrieved successfully',
             ], 200);
+
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -872,29 +878,7 @@ class FileController extends Controller
 
         }
     }
-    public function GetArchivedFiles($type, $municipality)
-    {
-        try {
-            $files = DB::table('files')
-                ->where('is_archived', true)
-                ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
-                ->where('files.permit_type', $type)
-                ->where('files.municipality', $municipality)
-                ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
-                ->get();
-            return response()->json([
-                'success' => true,
-                'data' => $files,
-                'message' => 'Files retrieved successfully',
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while retrieving files.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
+
 
 
 }
