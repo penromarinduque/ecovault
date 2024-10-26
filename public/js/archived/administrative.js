@@ -1,7 +1,7 @@
 // // // // Table Function
 
 function FetchAndPopulate() {
-    const isArchived = false;
+    const isArchived = true;
     fetch(`/api/files-without-relationships/${record}?isArchived=${isArchived}`)
         .then(response => {
             if (!response.ok) {
@@ -44,7 +44,6 @@ function FetchAndPopulate() {
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
-                                  <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li> 
                             </ul>
                         </div>`
                     ],
@@ -209,9 +208,9 @@ exitButtonEdit.addEventListener("click", (event) => {
             const buttonText = document.getElementById('button-text');
             loadingIcon.classList.remove('hidden');
             buttonText.innerText = 'Uploading...';
-
+            const isArchived = true;
             // Send the form data using fetch
-            fetch('/file-upload', { // Replace with your endpoint
+            fetch(`/file-upload?isArchived=${isArchived}`, {// Replace with your endpoint
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -437,30 +436,3 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         console.error('Fetch error:', error);
     }
 })
-
- async function archiveFile(fileId) {
-    const csrfToken = document.querySelector('input[name="_token"]').value;
-
-    try {
-        const response = await fetch(`/api/file/archived/${fileId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken // CSRF token for security
-            },
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-            //alert('File archived successfully!');
-            // Optionally, update the UI to show the file as archived
-        } else {
-            alert('Failed to archive the file.');
-            console.error(result.message || 'Unknown error');
-        }
-    } catch (error) {
-        console.error('Error archiving the file:', error);
-        alert('An error occurred while archiving the file.');
-    }
-}

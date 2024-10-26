@@ -30,11 +30,13 @@ use PhpOffice\PhpWord\Settings;
 class FileController extends Controller
 {
 
-
     public function StoreFile(Request $request)
     {
+
+        $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
+
         $request->validate([
-            'file' => 'required|file|max:2048|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
+            'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
             'municipality' => 'nullable|string', // Make this field nullable
             'category' => 'nullable|string', // Make this field nullable
@@ -69,7 +71,7 @@ class FileController extends Controller
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'status' => $request->input('status'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
-
+                'is_archived' => $isArchived
             ];
 
             $fileEntry = File::create($formData);
@@ -120,8 +122,6 @@ class FileController extends Controller
             'debug' => $request->all(),
         ]);
     }
-
-
     public function StorePermit(Request $request)
     {
         switch ($request->permit_type) {
@@ -132,6 +132,7 @@ class FileController extends Controller
                     'number_of_trees' => $request->number_of_trees,
                     'location' => $request->location,
                     'date_applied' => $request->date_applied,
+                    'species' => $request->species,
                 ]);
                 break;
 
@@ -163,6 +164,7 @@ class FileController extends Controller
                     'destination' => $request->destination,
                     'date_applied' => $request->date_applied,
                     'date_of_transport' => $request->date_of_transport,
+                    'species' => $request->species,
                 ]);
                 break;
 
@@ -191,62 +193,6 @@ class FileController extends Controller
             'permit' => $request->permit_type
         ]);
     }
-
-    // public function ViewFileById($id)
-    // {
-    //     // Fetch the file by ID
-    //     $file = File::find($id);
-
-    //     // Check if the file exists
-    //     if (!$file) {
-    //         return response()->json(['success' => false, 'message' => 'File not found.'], 404);
-    //     }
-
-    //     // Get the full path to the file
-    //     $filePath = storage_path("app/public/{$file->file_path}");
-
-    //     // Check if the file exists on the server
-    //     if (!file_exists($filePath)) {
-    //         return response()->json(['success' => false, 'message' => 'File not found on the server.'], 404);
-    //     }
-
-    //     // Return the file as a response
-    //     return response()->file($filePath);
-    // }
-
-    // public function ViewFileById($id)
-    // {
-    //     $file = File::findOrFail($id);
-    //     $filePath = storage_path("app/public/{$file->file_path}");
-
-    //     if (!file_exists($filePath)) {
-    //         abort(404);
-    //     }
-
-    //     $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-    //     // Handle .docx and .doc files to be used with Google Docs Viewer
-    //     if ($extension === 'doc' || $extension === 'docx') {
-    //         $fileUrl = url("/storage/{$file->file_path}"); // Publicly accessible URL
-
-    //         // Return the file URL to be used with Google Docs Viewer on the client-side
-    //         return response()->json([
-    //             'file' => $fileUrl,
-    //             'type' => 'google-viewer',
-    //             'ext' => $extension
-    //         ]);
-    //     } else {
-    //         $contentType = 'application/pdf';
-    //         return response()->file($filePath, [
-    //             'Content-Type' => $contentType,
-    //             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
-    //         ]);
-    //     }
-
-
-    //     // Handle PDF files directly in the browser
-
-    // }
     public function ViewFileById($id)
     {
         $file = File::findOrFail($id);
@@ -275,7 +221,6 @@ class FileController extends Controller
             ]);
         }
     }
-
     public function DownloadFileById($id)
     {
         $file = File::findOrFail($id);
@@ -301,12 +246,11 @@ class FileController extends Controller
             'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"', // Change to 'attachment' for download
         ]);
     }
-
-
     public function GetFiles($type, $municipality)
     {
         try {
             $files = DB::table('files')
+                ->where('is_archived', false)
                 ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
                 ->where('files.permit_type', $type)
                 ->where('files.municipality', $municipality)
@@ -357,7 +301,6 @@ class FileController extends Controller
             ->header('Content-Type', $mimeType)
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
-
     public function GetFileById($id)
     {
         try {
@@ -449,7 +392,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
     public function GetOnlyFileById($id)
     {
         try {
@@ -478,7 +420,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
     public function UpdateFileOnlyById(Request $request, $id)
     {
         try {
@@ -515,8 +456,6 @@ class FileController extends Controller
             ], 500);
         }
     }
-
-
     public function Upload(Request $request)
     {
         // Validate the incoming request
@@ -622,7 +561,6 @@ class FileController extends Controller
             throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
         }
     }
-
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -635,8 +573,6 @@ class FileController extends Controller
         }
         rmdir($dir);
     }
-
-
     private function embedQrCodeInDocx($filePath, $qrCodePath)
     {
         // Load the existing DOCX file
@@ -674,13 +610,12 @@ class FileController extends Controller
                 'height' => 40, // Image height in points
                 'wrappingStyle' => 'infront', // Image in front of the text
                 'positioning' => 'absolute', // Absolute positioning for precise placement
-                'posHorizontal' => 'left', // Align to the right side
+                'posHorizontal' => 'right', // Align to the right side
                 'posHorizontalRel' => 'page', // Relative to the entire page width
                 'posVertical' => 'bottom', // Align vertically to the bottom
                 'posVerticalRel' => 'page', // Relative to the entire page height
-                'marginBottom' => 10, // Distance from the bottom of the page
-                'marginLeft' => 460, // Large margin to ensure the right alignment\\
-
+                'marginBottom' => 40, // Distance from the bottom of the page
+                'marginRight' => 40, // Distance from the right of the page
             ]);
         }
 
@@ -691,8 +626,6 @@ class FileController extends Controller
 
         return $fullFilePath; // Return the path of the modified document
     }
-
-
     public function embedQrCodeInPdf($filePath, $qrCodePath)
     {
         // Load the existing PDF file
@@ -747,7 +680,6 @@ class FileController extends Controller
 
         return $fullFilePath;
     }
-
     public function EditFile(Request $request, $fileId)
     {
         try {
@@ -843,38 +775,72 @@ class FileController extends Controller
             ], 500);
         }
     }
-
-    public function GetFilesWithoutRelationships($report)
+    public function GetFilesWithoutRelationships($report, Request $request)
     {
         try {
-            // Fetch files without any relationships
-            $files = File::whereDoesntHave('treeCuttingPermits')
-                ->whereDoesntHave('chainsawRegistrations')
-                ->whereDoesntHave('treePlantationRegistrations')
-                ->whereDoesntHave('transportPermits')
-                ->whereDoesntHave('landTitles')
-                ->where('report_type', $report)
-                ->with('user:id,name')
-                ->get();
 
-            $files = $files->map(function ($file) {
-                return [
-                    'id' => $file->id,
-                    'file_name' => $file->file_name,
-                    'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
-                    'office_source' => $file->office_source,
-                    'user_name' => $file->user_name,
-                    'category' => $file->category,
-                    'classification' => $file->classification,
-                    'status' => $file->status,
-                ];
-            });
+            $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Files retrieved successfully.',
-                'files' => $files
-            ]);
+            if ($isArchived) {
+
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->where('is_archived', true)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            } else {
+                // Fetch files without any relationships
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            }
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -882,9 +848,53 @@ class FileController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-
     }
+    public function ArchivedById($id)
+    {
+        try {
+            $file = File::findOrFail($id);
 
+            $file->archive();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File archived successfully',
+                'files' => $file,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'archive file fail',
+                'error' => $e->getMessage(),
+            ]);
+
+        }
+    }
+    public function GetArchivedFiles($type, $municipality)
+    {
+        try {
+            $files = DB::table('files')
+                ->where('is_archived', true)
+                ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+                ->where('files.permit_type', $type)
+                ->where('files.municipality', $municipality)
+                ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+                ->get();
+            return response()->json([
+                'success' => true,
+                'data' => $files,
+                'message' => 'Files retrieved successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 }

@@ -68,7 +68,7 @@
     <script>
         const record = {!! json_encode($record) !!};
     </script>
-    <script src="{{ asset('js/administrative.js') }}"></script>
+    <script src="{{ asset('js/archived/administrative.js') }}"></script>
 
     <script src="{{ asset('js/file-modal.js') }}"></script>
 @endsection
