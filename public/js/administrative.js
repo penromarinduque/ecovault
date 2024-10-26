@@ -439,28 +439,28 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
 })
 
  async function archiveFile(fileId) {
-                            const csrfToken = document.querySelector('input[name="_token"]').value;
+    const csrfToken = document.querySelector('input[name="_token"]').value;
 
-                            try {
-                                const response = await fetch(`/api/file/archived/${fileId}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': csrfToken // CSRF token for security
-                                    },
-                                });
+    try {
+        const response = await fetch(`/api/file/archived/${fileId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken // CSRF token for security
+            },
+        });
 
-                                const result = await response.json();
+        const result = await response.json();
 
-                                if (response.ok && result.success) {
-                                    //alert('File archived successfully!');
-                                    // Optionally, update the UI to show the file as archived
-                                } else {
-                                    alert('Failed to archive the file.');
-                                    console.error(result.message || 'Unknown error');
-                                }
-                            } catch (error) {
-                                console.error('Error archiving the file:', error);
-                                alert('An error occurred while archiving the file.');
-                            }
-                        }
+        if (response.ok && result.success) {
+            //alert('File archived successfully!');
+            // Optionally, update the UI to show the file as archived
+        } else {
+            alert('Failed to archive the file.');
+            console.error(result.message || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error archiving the file:', error);
+        alert('An error occurred while archiving the file.');
+    }
+}

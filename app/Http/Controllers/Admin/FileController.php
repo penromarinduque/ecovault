@@ -32,6 +32,9 @@ class FileController extends Controller
 
     public function StoreFile(Request $request)
     {
+
+        $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
+
         $request->validate([
             'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
@@ -68,7 +71,7 @@ class FileController extends Controller
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'status' => $request->input('status'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
-
+                'is_archived' => $isArchived
             ];
 
             $fileEntry = File::create($formData);

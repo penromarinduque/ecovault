@@ -208,9 +208,9 @@ exitButtonEdit.addEventListener("click", (event) => {
             const buttonText = document.getElementById('button-text');
             loadingIcon.classList.remove('hidden');
             buttonText.innerText = 'Uploading...';
-
+            const isArchived = true;
             // Send the form data using fetch
-            fetch('/file-upload', { // Replace with your endpoint
+            fetch(`/file-upload?isArchived=${isArchived}`, {// Replace with your endpoint
                 method: 'POST',
                 body: formData,
                 headers: {
