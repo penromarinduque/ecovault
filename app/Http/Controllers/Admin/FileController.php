@@ -132,6 +132,7 @@ class FileController extends Controller
                     'number_of_trees' => $request->number_of_trees,
                     'location' => $request->location,
                     'date_applied' => $request->date_applied,
+                    'species' => $request->species,
                 ]);
                 break;
 
@@ -163,6 +164,7 @@ class FileController extends Controller
                     'destination' => $request->destination,
                     'date_applied' => $request->date_applied,
                     'date_of_transport' => $request->date_of_transport,
+                    'species' => $request->species,
                 ]);
                 break;
 
@@ -307,6 +309,7 @@ class FileController extends Controller
     {
         try {
             $files = DB::table('files')
+                ->where('is_archived', false)
                 ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
                 ->where('files.permit_type', $type)
                 ->where('files.municipality', $municipality)
@@ -881,11 +884,55 @@ class FileController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
-
     }
 
+    public function ArchivedById($id)
+    {
+        try {
+            $file = File::findOrFail($id);
 
+            $file->archive();
 
+            return response()->json([
+                'success' => true,
+                'message' => 'File archived successfully',
+                'files' => $file,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'archive file fail',
+                'error' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function GetArchivedFiles($type, $municipality)
+    {
+        try {
+            $files = DB::table('files')
+                ->where('is_archived', true)
+                ->join('users', 'files.user_id', '=', 'users.id') // Join with users table
+                ->where('files.permit_type', $type)
+                ->where('files.municipality', $municipality)
+                ->select('files.*', 'users.name as user_name') // Select all fields from files and the name from users
+                ->get();
+            return response()->json([
+                'success' => true,
+                'data' => $files,
+                'message' => 'Files retrieved successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving files.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
 
 

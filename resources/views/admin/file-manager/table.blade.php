@@ -92,7 +92,8 @@
                                         <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
+                                        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">File Summary</button></li>  
+                                        <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>            
                                     </ul>
                                 </div>`
                                                 ],
@@ -117,25 +118,25 @@
                                                     },
                                                     template: (options, dom) =>
                                                         @verbatim `<div class='${options.classes.top}'>
-                                ${options.paging && options.perPageSelect ?
-                                    `<div class='${options.classes.dropdown}'>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <select class='${options.classes.selector}'></select> ${options.labels.perPage}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>` : ""}
-                                ${options.searchable ?
-                                    `<div class='${options.classes.search}'>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>` : ""}
-                            </div>
-                            <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-                            <div class='${options.classes.bottom}'>
-                                ${options.paging ? `<div class='${options.classes.info}'></div>` : ""}
-                                <nav class='${options.classes.pagination}'></nav>
-                            </div>`
+${options.paging && options.perPageSelect ?
+`<div class='${options.classes.dropdown}'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <select class='${options.classes.selector}'></select> ${options.labels.perPage}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>` : ""}
+${options.searchable ?
+`<div class='${options.classes.search}'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>` : ""}
+</div>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom}'>
+${options.paging ? `<div class='${options.classes.info}'></div>` : ""}
+<nav class='${options.classes.pagination}'></nav>
+</div>`
                                                 @endverbatim ,
                                                 searchable: true,
-                                                perPageSelect: false,
+                                                perPageSelect: true,
                                                 sortable: true,
                                                 perPage: 5, // set the number of rows per page
                                                 perPageSelect: [5, 10, 20, 50],
@@ -147,19 +148,19 @@
                                                 const dropdownButton = document.getElementById(
                                                     `dropdownLeftButton${file.id}`);
                                                 const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
-                                                // Options with default values for the dropdown
-                                                const options = {
-                                                    placement: 'left',
-                                                    triggerType: 'click',
-                                                    offsetSkidding: 0,
-                                                    offsetDistance: 0,
-                                                    ignoreClickOutsideClass: false,
-                                                };
-
-                                                // Initialize the Dropdown for each file
-                                                new Dropdown(dropdownElement, dropdownButton, options);
+                                                if (dropdownButton && dropdownElement) {
+                                                    const options = {
+                                                        placement: 'left',
+                                                        triggerType: 'click',
+                                                        offsetSkidding: 0,
+                                                        offsetDistance: 0,
+                                                        ignoreClickOutsideClass: false,
+                                                    };
+                                                    new Dropdown(dropdownElement, dropdownButton, options);
+                                                }
                                             });
                                         }
+
 
                                         // Listen to events that indicate table content updates
                                         dataTable.on("datatable.page", initializeDropdowns);
@@ -168,12 +169,6 @@
                                         // Initial call for dropdowns in the first page
                                         initializeDropdowns(data);
                                     }
-                                    // const uploadFileDiv = document.getElementById("upload-file"); document.addEventListener('click',
-                                    //     function(event) {
-                                    //         if (event.target.matches('.edit-button') || event.target.matches('.view-button')) {
-                                    //             uploadFileDiv.classList.add("hidden");
-                                    //         }
-                                    //     });
                                 })
 
 
@@ -182,6 +177,33 @@
                             console.error('There was a problem with the fetch operation:', error);
                         });
                         });
+
+                        async function archiveFile(fileId) {
+                            const csrfToken = document.querySelector('input[name="_token"]').value;
+
+                            try {
+                                const response = await fetch(`/api/file/archived/${fileId}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfToken // CSRF token for security
+                                    },
+                                });
+
+                                const result = await response.json();
+
+                                if (response.ok && result.success) {
+                                    //alert('File archived successfully!');
+                                    // Optionally, update the UI to show the file as archived
+                                } else {
+                                    alert('Failed to archive the file.');
+                                    console.error(result.message || 'Unknown error');
+                                }
+                            } catch (error) {
+                                console.error('Error archiving the file:', error);
+                                alert('An error occurred while archiving the file.');
+                            }
+                        }
                     </script>
 
 
@@ -192,7 +214,7 @@
 
 
 
-            <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none">
+            <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="overflow-auto  rounded-lg bg-white p-5">
                         <table id="minimizeTable" class="">
@@ -230,10 +252,11 @@
                                                         <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400" aria-labelledby="miniBtn${file.id}">
                                                             <li><a href="/api/files/${file.id}" class="block px-4 py-2 hover:bg-gray-100">View</a></li>
                                                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Edit</a></li>
+                                                            <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
                                                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
+                                                            <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">File Summary</button></li> 
+                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Archived</a></li>
                                                         </ul>
                                                     </div>`
                                                 ],
@@ -257,6 +280,7 @@
                                                 labels: {
                                                     perPage: "<span class='text-gray-500 m-3'>Rows</span>", // Custom text for perPage dropdown
                                                     searchTitle: "Search through table data", // Title attribute for the search input
+                                                    loading: "Loading...",
                                                     info: "Showing {end} of {rows} rows" // Pagination info text
                                                 },
                                             });
@@ -292,6 +316,7 @@
                         @include('admin.file-manager.component.upload-file')
                         {{-- this for file edit --}}
                         @include('admin.file-manager.component.edit-file')
+                        @include('admin.file-manager.component.file-summary')
 
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
@@ -704,6 +729,7 @@
 
                                         // Gather values based on form type
                                         if (permit_type === 'tree-cutting-permits') {
+                                            formPermit.append('species', document.getElementById('species').value);
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
                                             formPermit.append('number_of_trees', document.getElementById(
@@ -721,6 +747,7 @@
                                             formPermit.append('date_applied', document.getElementById('date-applied')
                                                 .value);
                                         } else if (permit_type === 'tree-transport-permits') {
+                                            formPermit.append('species', document.getElementById('species').value);
                                             formPermit.append('name_of_client', document.getElementById('name-of-client')
                                                 .value);
                                             formPermit.append('number_of_trees', document.getElementById('number-of-trees')
@@ -805,31 +832,21 @@
 
     </div>
 
-
-
-
-
-
-
-
-
     <script>
-        // Function to handle fading out and in
+        // Function to handle fading out and in sections
         function toggleSections(showFileSection) {
             const mainTable = document.getElementById('mainTable');
             const fileSection = document.getElementById('fileSection');
-            const uploadFileDiv = document.getElementById('upload-file-div'); // Upload section div
-            const editFileDiv = document.getElementById('edit-file-div'); // Edit section div
 
             if (showFileSection) {
                 // Fade out the main table
                 mainTable.classList.remove('opacity-100');
-                mainTable.classList.add('opacity-0', 'order-last');
+                mainTable.classList.add('opacity-0');
 
                 setTimeout(() => {
-                    mainTable.classList.add('pointer-events-none');
+                    mainTable.classList.add('pointer-events-none', 'hidden'); // Add hidden after fade-out is done
                     // Fade in the file section
-                    fileSection.classList.remove('opacity-0', 'pointer-events-none');
+                    fileSection.classList.remove('opacity-0', 'hidden', 'pointer-events-none');
                     fileSection.classList.add('opacity-100');
                 }, 300); // Match this to your CSS transition duration
             } else {
@@ -838,20 +855,30 @@
                 fileSection.classList.add('opacity-0');
 
                 setTimeout(() => {
-                    fileSection.classList.add('pointer-events-none');
-                    mainTable.classList.remove('pointer-events-none', 'opacity-0');
+                    fileSection.classList.add('pointer-events-none', 'hidden'); // Add hidden after fade-out is done
+                    mainTable.classList.remove('pointer-events-none', 'hidden', 'opacity-0');
                     mainTable.classList.add('opacity-100');
-                    mainTable.classList.remove('order-last');
                 }, 300); // Match this to your CSS transition duration
             }
+        }
+
+        // Helper function to show the correct div and hide others
+        function toggleDivVisibility(showDivId) {
+            const sections = ['upload-file-div', 'edit-file-div', 'file-summary-div'];
+            sections.forEach(section => {
+                const sectionDiv = document.getElementById(section);
+                if (section === showDivId) {
+                    sectionDiv.classList.remove('hidden');
+                } else {
+                    sectionDiv.classList.add('hidden');
+                }
+            });
         }
 
         // Event listener for the upload button
         document.getElementById('uploadBtn').addEventListener('click', function() {
             toggleSections(true);
-            // Show the upload-file-div and hide the edit-file-div
-            document.getElementById('upload-file-div').classList.remove('hidden');
-            document.getElementById('edit-file-div').classList.add('hidden');
+            toggleDivVisibility('upload-file-div');
         });
 
         // Event listener for the edit button
@@ -860,17 +887,36 @@
                 toggleSections(true);
                 const fileId = event.target.dataset.fileId; // Get the file ID if needed
                 console.log('Edit button clicked for file ID:', fileId);
-
-                // Show the edit-file-div and hide the upload-file-div
-                document.getElementById('edit-file-div').classList.remove('hidden');
-                document.getElementById('upload-file-div').classList.add('hidden');
+                fetchFileData(fileId);
+                toggleDivVisibility('edit-file-div');
             }
         });
 
-        // Event listener for the close button in the file section
-        // document.getElementById('close-upload-section').addEventListener('click', function() {
-        //     toggleSections(false);
-        // });
+        // Event listener for the file summary button
+        document.body.addEventListener('click', function(event) {
+            if (event.target.matches('.file-summary-button')) {
+                toggleSections(true);
+                const fileId = event.target.dataset.fileId; // Get the file ID from the button
+                console.log('File Summary button clicked for file ID:', fileId);
+                fetchFileDetails(fileId); // Call a function to fetch file summary data
+                toggleDivVisibility('file-summary-div');
+            }
+        });
+
+        // Event listener for the close buttons in the file section
+        document.getElementById('close-upload-btn').addEventListener('click', function() {
+            toggleSections(false);
+        });
+
+        document.getElementById('close-edit-btn').addEventListener('click', function() {
+            toggleSections(false);
+        });
+
+        document.getElementById('close-summary-btn').addEventListener('click', function() {
+            toggleSections(false);
+        });
     </script>
+
+
     <script src="{{ asset('js/file-modal.js') }}"></script>
 @endsection
