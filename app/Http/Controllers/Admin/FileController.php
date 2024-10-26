@@ -772,37 +772,72 @@ class FileController extends Controller
             ], 500);
         }
     }
-    public function GetFilesWithoutRelationships($report)
+    public function GetFilesWithoutRelationships($report, Request $request)
     {
         try {
-            // Fetch files without any relationships
-            $files = File::whereDoesntHave('treeCuttingPermits')
-                ->whereDoesntHave('chainsawRegistrations')
-                ->whereDoesntHave('treePlantationRegistrations')
-                ->whereDoesntHave('transportPermits')
-                ->whereDoesntHave('landTitles')
-                ->where('report_type', $report)
-                ->with('user:id,name')
-                ->get();
 
-            $files = $files->map(function ($file) {
-                return [
-                    'id' => $file->id,
-                    'file_name' => $file->file_name,
-                    'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
-                    'office_source' => $file->office_source,
-                    'user_name' => $file->user_name,
-                    'category' => $file->category,
-                    'classification' => $file->classification,
-                    'status' => $file->status,
-                ];
-            });
+            $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Files retrieved successfully.',
-                'files' => $files
-            ]);
+            if ($isArchived) {
+
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->where('is_archived', true)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            } else {
+                // Fetch files without any relationships
+                $files = File::whereDoesntHave('treeCuttingPermits')
+                    ->whereDoesntHave('chainsawRegistrations')
+                    ->whereDoesntHave('treePlantationRegistrations')
+                    ->whereDoesntHave('transportPermits')
+                    ->whereDoesntHave('landTitles')
+                    ->where('report_type', $report)
+                    ->with('user:id,name')
+                    ->get();
+
+                $files = $files->map(function ($file) {
+                    return [
+                        'id' => $file->id,
+                        'file_name' => $file->file_name,
+                        'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'office_source' => $file->office_source,
+                        'user_name' => $file->user_name,
+                        'category' => $file->category,
+                        'classification' => $file->classification,
+                        'status' => $file->status,
+                    ];
+                });
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Files retrieved successfully.',
+                    'files' => $files
+                ]);
+            }
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
