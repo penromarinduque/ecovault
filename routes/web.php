@@ -10,15 +10,9 @@ use App\Http\Controllers\Admin\AdminController;
 
 use App\Http\Controllers\Auth\AuthController;
 
-use App\Http\Controllers\Admin\MunicipalityController;
-use App\Models\User;
 use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\StorageController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\PasswordReset;
+
 
 Route::get('/', function () {
     return view('welcome');

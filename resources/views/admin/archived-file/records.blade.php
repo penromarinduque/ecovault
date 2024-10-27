@@ -45,6 +45,7 @@
                             ])
                             {{-- this for file edit --}}
                             @include('admin.administrative.component.edit-file')
+                            @include('admin.administrative.component.file-summary')
 
                             <div id="toast"
                                 class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
