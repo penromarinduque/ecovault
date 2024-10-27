@@ -388,12 +388,7 @@
                                 return false;
                             }
 
-                            const maxSize = 5 * 1024 * 1024;
-                            if (file.size > maxSize) {
-                                fileUploadError.textContent = "File size exceeds 2 MB. Please upload a smaller file.";
-                                fileUploadError.classList.remove('invisible');
-                                return false;
-                            }
+
 
 
                             fileUploadError.classList.add('invisible');
