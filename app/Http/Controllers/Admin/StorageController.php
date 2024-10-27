@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\RecentActivity;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use App\Models\File;
+use Illuminate\Database\QueryException;
 class StorageController extends Controller
 {
     public function GetStorageUsage()
@@ -69,6 +71,46 @@ class StorageController extends Controller
             'message' => $data->isEmpty() ? 'No recent uploads found.' : 'Recent uploads retrieved successfully.',
         ]);
     }
+    public function countFilesByExtension()
+    {
+        try {
+            // Count files by their extensions based on the file_path
+            $zipCount = File::where('file_path', 'like', '%.zip')->count();
+            $pdfCount = File::where('file_path', 'like', '%.pdf')->count();
+            $wordCount = File::where(function ($query) {
+                $query->where('file_path', 'like', '%.doc')
+                    ->orWhere('file_path', 'like', '%.docx');
+            })->count();
+            $imageCount = File::where(function ($query) {
+                $query->where('file_path', 'like', '%.jpg')
+                    ->orWhere('file_path', 'like', '%.jpeg')
+                    ->orWhere('file_path', 'like', '%.png')
+                    ->orWhere('file_path', 'like', '%.gif');
+            })->count();
 
+            // Prepare the response
+            $data = [
+                'zip_files' => $zipCount,
+                'pdf_files' => $pdfCount,
+                'word_files' => $wordCount,
+                'image_files' => $imageCount,
+            ];
+
+            // Return a JSON response
+            return response()->json($data, 200); // 200 OK status code
+        } catch (QueryException $e) {
+            // Handle any query-related exceptions
+            return response()->json([
+                'error' => 'Database query error',
+                'message' => $e->getMessage(),
+            ], 500); // 500 Internal Server Error
+        } catch (\Exception $e) {
+            // Handle general exceptions
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage(),
+            ], 500); // 500 Internal Server Error
+        }
+    }
 
 }

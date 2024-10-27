@@ -80,8 +80,9 @@ Route::middleware(['authentication'])->group(function () {
         return view("superuser.test");
     });
 
+    //Home Page
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
-
+    Route::get('/files/count', [StorageController::class, 'countFilesByExtension']);
 
 });
 
