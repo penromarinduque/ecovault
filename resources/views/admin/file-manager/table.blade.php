@@ -46,7 +46,7 @@
 
                     <script>
                         let dataTable; // Declare dataTable globally
-                        let customData
+
                         document.addEventListener("DOMContentLoaded", function() {
                             const permitType = "{{ $type }}"; // Replace with your actual value
                             const municipality = "{{ $municipality }}"; // Replace with your actual value
@@ -67,14 +67,18 @@
                             // Build the query string
                             const queryParams = new URLSearchParams(filteredParams).toString();
 
-                            fetch(`/api/files?${queryParams}`)
-                                .then(response => {
+                            // Initial data fetch
+                            fetchData();
+
+                            // Function to fetch data and initialize or update the DataTable
+                            async function fetchData() {
+                                try {
+                                    const response = await fetch(`/api/files?${queryParams}`);
                                     if (!response.ok) {
                                         throw new Error('Network response was not ok');
                                     }
-                                    return response.json();
-                                })
-                                .then(data => {
+
+                                    const data = await response.json();
                                     const customData = {
                                         headings: [
                                             "Name",
@@ -95,7 +99,6 @@
                                                 file.category,
                                                 file.classification,
                                                 file.status,
-                                                // Ensure the dropdowns are correctly rendered as HTML strings
                                                 `@include('admin.file-manager.component.dropdown')`
                                             ],
                                             attributes: {
@@ -104,7 +107,6 @@
                                         })),
                                     };
 
-                                    // Initialize or update the DataTable
                                     const dataTableElement = document.getElementById("sorting-table");
                                     if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
                                         if (dataTable) {
@@ -134,56 +136,55 @@
                                         // Initialize dropdowns for actions
                                         initializeDropdowns(data);
                                     }
-                                })
-                                .catch(error => {
+                                } catch (error) {
                                     console.error('There was a problem with the fetch operation:', error);
-                                    alert('Failed to fetch data. Please try again.'); // User-friendly message
+                                    alert('Failed to fetch data. Please try again.');
+                                }
+                            }
+
+                            // Function to create dropdowns
+                            function createDropdown(fileId) {
+                                const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
+                                const dropdownElement = document.getElementById(`dropdownLeft${fileId}`);
+                                if (dropdownButton && dropdownElement) {
+                                    const options = {
+                                        placement: 'left',
+                                        triggerType: 'click',
+                                        offsetSkidding: 0,
+                                        offsetDistance: 0,
+                                        ignoreClickOutsideClass: false,
+                                    };
+                                    new Dropdown(dropdownElement, dropdownButton, options);
+                                }
+                            }
+
+                            // Function to initialize dropdowns for each file
+                            function initializeDropdowns(data) {
+                                data.data.forEach((file) => {
+                                    createDropdown(file.id);
                                 });
-                        }
-
-                        // Function to create dropdowns
-                        function createDropdown(fileId) {
-                            const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
-                            const dropdownElement = document.getElementById(`dropdownLeft${fileId}`);
-                            if (dropdownButton && dropdownElement) {
-                                const options = {
-                                    placement: 'left',
-                                    triggerType: 'click',
-                                    offsetSkidding: 0,
-                                    offsetDistance: 0,
-                                    ignoreClickOutsideClass: false,
-                                };
-                                new Dropdown(dropdownElement, dropdownButton, options);
-                            }
-                        }
-
-                        // Function to initialize dropdowns for each file
-                        function initializeDropdowns(data) {
-                            data.data.forEach((file) => {
-                                createDropdown(file.id);
-                            });
-                        }
-
-                        // Initial data fetch
-                        fetchData();
-
-                        // Example of updating data after a CRUD operation
-                        async function updateDataAfterCRUD() {
-                            console.log("Updating data after CRUD operation...");
-
-                            // Check if dataTable exists and has the destroy method
-                            if (dataTable && typeof dataTable.destroy === "function") {
-                                dataTable.destroy(); // Destroy the existing DataTable instance
-                                dataTable = null; // Set dataTable to null after destruction
                             }
 
-                            // Fetch new data
-                            await fetchData(); // This function should reinitialize the DataTable
-                            console.log("DataTable display has been refreshed!");
-                        }
-                        window.updateDataAfterCRUD = updateDataAfterCRUD;
+                            // Example of updating data after a CRUD operation
+                            async function updateDataAfterCRUD() {
+                                console.log("Updating data after CRUD operation...");
+
+                                // Check if dataTable exists and has the destroy method
+                                if (dataTable && typeof dataTable.destroy === "function") {
+                                    dataTable.destroy(); // Destroy the existing DataTable instance
+                                    dataTable = null; // Set dataTable to null after destruction
+                                }
+
+                                // Fetch new data
+                                await fetchData(); // This function should reinitialize the DataTable
+                                console.log("DataTable display has been refreshed!");
+                            }
+
+                            // Make updateDataAfterCRUD globally accessible
+                            window.updateDataAfterCRUD = updateDataAfterCRUD;
+                        }); // Close DOMContentLoaded function
+
                         // Archive file function
-                        });
                         async function archiveFile(fileId) {
                             const csrfToken = document.querySelector('input[name="_token"]').value;
 
@@ -199,9 +200,7 @@
                                 const result = await response.json();
 
                                 if (response.ok && result.success) {
-                                    updateDataAfterCRUD();
-                                    //alert('File archived successfully!');
-                                    // Optionally, update the UI to show the file as archived
+                                    updateDataAfterCRUD(); // Refresh data after archiving
                                 } else {
                                     alert('Failed to archive the file.');
                                     console.error(result.message || 'Unknown error');
@@ -230,7 +229,7 @@
                                 <!-- Minimize table content goes here -->
                             </tbody>
                         </table>
-                        <script>
+                        {{-- <script>
                             document.addEventListener("DOMContentLoaded", function() {
                                 const permitType = "{{ $type }}"; // Replace with your actual value
                                 const municipality = "{{ $municipality }}"; // Replace with your actual value
@@ -330,7 +329,7 @@
                                         console.error('There was a problem with the fetch operation:', error);
                                     });
                             });
-                        </script>
+                        </script> --}}
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
