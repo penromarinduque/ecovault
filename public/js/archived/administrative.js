@@ -1,8 +1,22 @@
 // // // // Table Function
 
 function FetchAndPopulate() {
-    const isArchived = true;
-    fetch(`/api/files-without-relationships/${record}?isArchived=${isArchived}`)
+     const params = {
+        type:  '',
+        municipality:   '',
+        report: record || '',
+        isArchived: true 
+    };
+
+    // Remove empty parameters
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([key, value]) => value !== '')
+    );
+
+    // Build the query string
+    const queryParams = new URLSearchParams(filteredParams).toString();
+
+    fetch(`/api/files?${queryParams}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -39,7 +53,7 @@ function FetchAndPopulate() {
                             <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
                                 <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
                                    onclick="openFileModal(${file.id})">View</a>
-                                <li><a href="/api/file/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+                                <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
                                 <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
@@ -368,7 +382,7 @@ async function  showEditFile(fileId) {
         fileSectionUploadFile.classList.add("hidden");
 
         // Fetch the file data after the section is visible
-        const response = await fetch(`/api/file-only/${fileId}`);
+        const response = await fetch(`/api/files/${fileId}?includePermit=false`);
         const data = await response.json();
 
         if (response.ok) {
@@ -412,7 +426,7 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         formData.append('status', statusInput.value || '');
         
         // Send the form data to your API for updating the file
-        const response = await fetch(`/api/file-only/update/${selectedFileId}`, {
+        const response = await fetch(`/api/files/update/${selectedFileId}?hasPermit=false`, {
             method: 'POST', // or 'PUT' depending on your API design
             body: formData,
             headers: {

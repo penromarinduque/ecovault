@@ -520,7 +520,7 @@
         try {
 
             //await new Promise(resolve => setTimeout(resolve, 1000));
-            const response = await fetch(`/api/file/${fileId}`);
+            const response = await fetch(`/api/files/${fileId}?includePermit=true`);
             const data = await response.json();
             const endTime = performance.now(); // End timing
             console.log(`API call to fetch file data took ${endTime - startTime} ms`);
@@ -652,7 +652,7 @@
 
         try {
             // Send formData as FormData in the request body
-            const response = await fetch(`/api/files/update/${selectedFileId}`, {
+            const response = await fetch(`/api/files/update/${selectedFileId}?hasPermit=true`, {
                 method: 'POST', // or 'PUT' depending on your API design
                 body: formData,
                 headers: {

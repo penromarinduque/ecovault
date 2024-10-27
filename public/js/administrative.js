@@ -1,8 +1,22 @@
 // // // // Table Function
 
 function FetchAndPopulate() {
-    const isArchived = false;
-    fetch(`/api/files-without-relationships/${record}?isArchived=${isArchived}`)
+    const params = {
+        type:  '',
+        municipality:   '',
+        report: record || '',
+        isArchived: false 
+    };
+
+    // Remove empty parameters
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([key, value]) => value !== '')
+    );
+
+    // Build the query string
+    const queryParams = new URLSearchParams(filteredParams).toString();
+
+    fetch(`/api/files?${queryParams}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -39,11 +53,11 @@ function FetchAndPopulate() {
                             <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
                                 <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
                                    onclick="openFileModal(${file.id})">View</a>
-                                <li><a href="/api/file/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+                                <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
                                 <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
+                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
                                   <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li> 
                             </ul>
                         </div>`
@@ -115,7 +129,8 @@ showUpload.addEventListener("click", (event) => {
     // Show the file section and hide the main table
     mainTable.classList.remove("opacity-100");
     mainTable.classList.add("opacity-0");
-
+    fileSectionUploadFile.classList.remove("hidden");
+      
     // Wait for the opacity transition to finish before hiding
     setTimeout(() => {
     mainTable.classList.add("hidden"); // Hide main table
@@ -131,7 +146,8 @@ exitButtonUpload.addEventListener("click", (event) => {
     // FetchAndPopulate();
     fileSection.classList.remove("opacity-100");
     fileSection.classList.add("opacity-0");
-
+    // fileSectionUploadFile.classList.add("hidden");
+   
 
     setTimeout(() => {
     fileSection.classList.add("hidden"); 
@@ -146,7 +162,7 @@ exitButtonEdit.addEventListener("click", (event) => {
     // FetchAndPopulate();
     fileSection.classList.remove("opacity-100");
     fileSection.classList.add("opacity-0");
-
+    fileSectionEditFile.classList.add("hidden");
 
     setTimeout(() => {
     fileSection.classList.add("hidden"); 
@@ -367,9 +383,9 @@ async function  showEditFile(fileId) {
         fileSection.classList.remove("opacity-0");
         fileSection.classList.add("opacity-100");
         fileSectionUploadFile.classList.add("hidden");
-
+        fileSectionFileSummary.classList.add("hidden");
         // Fetch the file data after the section is visible
-        const response = await fetch(`/api/file-only/${fileId}`);
+        const response = await fetch(`/api/files/${fileId}?includePermit=false`);
         const data = await response.json();
 
         if (response.ok) {
@@ -413,7 +429,7 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         formData.append('status', statusInput.value || '');
         
         // Send the form data to your API for updating the file
-        const response = await fetch(`/api/file-only/update/${selectedFileId}`, {
+        const response = await fetch(`/api/files/update/${selectedFileId}?hasPermit=false`, {
             method: 'POST', // or 'PUT' depending on your API design
             body: formData,
             headers: {
@@ -442,7 +458,7 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
     const csrfToken = document.querySelector('input[name="_token"]').value;
 
     try {
-        const response = await fetch(`/api/file/archived/${fileId}`, {
+        const response = await fetch(`/api/files/archived/${fileId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -464,3 +480,60 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         alert('An error occurred while archiving the file.');
     }
 }
+
+const fileSectionFileSummary = document.getElementById("file-summary");
+async function  showFileSummary(fileId) {
+     selectedFileId = fileId;
+    // Assuming you want to perform some actions with the fileId, you can handle it here
+    // e.g., populate the edit form with file data based on fileId
+   
+    mainTable.classList.remove("opacity-100");
+    mainTable.classList.add("opacity-0");
+    fileSectionFileSummary.classList.remove('hidden')
+    
+    
+
+  
+ setTimeout(async () => {
+        mainTable.classList.add("hidden");
+        fileSection.classList.remove("hidden");
+        fileSection.classList.remove("opacity-0");
+        fileSection.classList.add("opacity-100");
+        fileSectionUploadFile.classList.add("hidden");
+      
+        // Fetch the file data after the section is visible
+        const response = await fetch(`/api/files/${fileId}?includePermit=false`);
+        const data = await response.json();
+
+     
+        if (response.ok) {
+            const file = data.file;
+                            
+                // Then set the values
+                document.getElementById('view-office_source').value = file.office_source || '';
+                document.getElementById('view-category').value = file.category || '';
+                document.getElementById('view-classification').value = file.classification || '';
+                document.getElementById('view-status').value = file.status || '';
+        } else {
+            console.error('Error:', data.message); // Handle the error accordingly
+        }
+    }, 300);       
+}
+
+
+const exitButtonFileSummary = document.getElementById("close-file-summary-btn");
+
+exitButtonFileSummary.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent default behavior if it's inside a form
+    // FetchAndPopulate();
+    fileSection.classList.remove("opacity-100");
+    fileSection.classList.add("opacity-0");
+    
+    fileSectionFileSummary.classList.add("hidden");
+    setTimeout(() => {
+    fileSection.classList.add("hidden"); 
+    mainTable.classList.remove("hidden");
+    mainTable.classList.remove("opacity-0");
+    mainTable.classList.add("opacity-100");
+    }, 500);
+});
