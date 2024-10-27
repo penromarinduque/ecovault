@@ -45,18 +45,15 @@
                     </table>
 
                     <script>
-                        let dataTable; // Declare dataTable globally
-
                         document.addEventListener("DOMContentLoaded", function() {
                             const permitType = "{{ $type }}"; // Replace with your actual value
-                            const municipality = "{{ $municipality }}"; // Replace with your actual value
-                            const isArchived = false;
+                            const municipality = "{{ $municipality }}"; // Replace with your actual value                         
 
                             const params = {
                                 type: permitType,
                                 municipality: municipality,
                                 report: '',
-                                isArchived: false
+                                isArchived: true
                             };
 
                             // Remove empty parameters
@@ -67,124 +64,135 @@
                             // Build the query string
                             const queryParams = new URLSearchParams(filteredParams).toString();
 
-                            // Initial data fetch
-                            fetchData();
-
-                            // Function to fetch data and initialize or update the DataTable
-                            async function fetchData() {
-                                try {
-                                    const response = await fetch(`/api/files?${queryParams}`);
+                            fetch(`/api/files?${queryParams}`)
+                                .then(response => {
                                     if (!response.ok) {
                                         throw new Error('Network response was not ok');
                                     }
-
-                                    const data = await response.json();
-                                    const customData = {
-                                        headings: [
-                                            "Name",
-                                            "Office Source",
-                                            "Date Modified",
-                                            "Modified By",
-                                            "Category",
-                                            "Classification",
-                                            "Status",
-                                            "Actions" // Add the Actions column
-                                        ],
-                                        data: data.data.map((file) => ({
-                                            cells: [
-                                                file.file_name,
-                                                file.office_source,
-                                                file.updated_at,
-                                                file.user_name,
-                                                file.category,
-                                                file.classification,
-                                                file.status,
-                                                `@include('admin.file-manager.component.dropdown')`
+                                    return response.json();
+                                })
+                                .then(data => {
+                                        const customData = {
+                                            headings: [
+                                                "Name",
+                                                "Office Source",
+                                                "Date Modified",
+                                                "Modified By",
+                                                "Category",
+                                                "Classification",
+                                                "Status",
+                                                "Actions" // Add the Actions column
                                             ],
-                                            attributes: {
-                                                class: "text-gray-700 text-left hover:bg-gray-100"
-                                            }
-                                        })),
-                                    };
+                                            data: data.data.map((file) => ({
+                                                cells: [
+                                                    file.file_name,
+                                                    file.office_source,
+                                                    file.updated_at,
+                                                    file.user_name,
+                                                    file.category,
+                                                    file.classification,
+                                                    file.status,
+                                                    `<button id="dropdownLeftButton${file.id}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                                <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+                                    <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
+                                        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
+                                            onclick="openFileModal('/api/files/view/${file.id}', ${file.id})">
+                                            View
+                                        </a>
+                                        <li><a href="#" class="block px-4 py-2  hover:bg-gray-100">Download</a></li>
+                                        <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
+                                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+                                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
+                                        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">File Summary</button></li>  
+                                        <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>            
+                                    </ul>
+                                </div>`
+                                                ],
+                                                attributes: {
+                                                    class: "text-gray-700 text-left hover:bg-gray-100"
+                                                }
+                                            })),
+                                        };
 
-                                    const dataTableElement = document.getElementById("sorting-table");
-                                    if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-                                        if (dataTable) {
-                                            // If dataTable already exists, update it
-                                            dataTable.refresh(customData);
-                                        } else {
-                                            // Create a new DataTable instance
-                                            dataTable = new simpleDatatables.DataTable(dataTableElement, {
-                                                classes: {
-                                                    dropdown: "datatable-perPage flex items-center",
-                                                    selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
-                                                    info: "datatable-info text-sm text-gray-500",
-                                                },
-                                                labels: {
-                                                    perPage: "<span class='text-gray-500 m-3'>Rows</span>",
-                                                    searchTitle: "Search through table data",
-                                                },
+                                        // Initialize the DataTable with options
+                                        const dataTableElement = document.getElementById("sorting-table");
+                                        if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+                                            const dataTable = new simpleDatatables.DataTable(dataTableElement, {
+                                                    classes: {
+                                                        dropdown: "datatable-perPage flex items-center", // Container for perPage dropdown
+                                                        selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
+                                                        info: "datatable-info text-sm text-gray-500", // Class for the info text (pagination info)
+                                                    },
+                                                    labels: {
+                                                        perPage: "<span class='text-gray-500 m-3'>Rows</span>", // Custom text for perPage dropdown
+                                                        searchTitle: "Search through table data", // Title attribute for the search input
+                                                    },
+                                                    template: (options, dom) =>
+                                                        @verbatim `<div class='${options.classes.top}'>
+${options.paging && options.perPageSelect ?
+`<div class='${options.classes.dropdown}'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <select class='${options.classes.selector}'></select> ${options.labels.perPage}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>` : ""}
+${options.searchable ?
+`<div class='${options.classes.search}'>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input class='${options.classes.input}' placeholder='${options.labels.placeholder}' type='search' title='${options.labels.searchTitle}'${dom.id ? ` aria-controls="${dom.id}"` : ""}>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>` : ""}
+</div>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom}'>
+${options.paging ? `<div class='${options.classes.info}'></div>` : ""}
+<nav class='${options.classes.pagination}'></nav>
+</div>`
+                                                @endverbatim ,
                                                 searchable: true,
                                                 perPageSelect: true,
                                                 sortable: true,
-                                                perPage: 5, // Set the number of rows per page
+                                                perPage: 5, // set the number of rows per page
                                                 perPageSelect: [5, 10, 20, 50],
                                                 data: customData
                                             });
+
+                                        function initializeDropdowns() {
+                                            data.data.forEach((file) => {
+                                                const dropdownButton = document.getElementById(
+                                                    `dropdownLeftButton${file.id}`);
+                                                const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
+                                                if (dropdownButton && dropdownElement) {
+                                                    const options = {
+                                                        placement: 'left',
+                                                        triggerType: 'click',
+                                                        offsetSkidding: 0,
+                                                        offsetDistance: 0,
+                                                        ignoreClickOutsideClass: false,
+                                                    };
+                                                    new Dropdown(dropdownElement, dropdownButton, options);
+                                                }
+                                            });
                                         }
 
-                                        // Initialize dropdowns for actions
+
+                                        // Listen to events that indicate table content updates
+                                        dataTable.on("datatable.page", initializeDropdowns);
+                                        dataTable.on("datatable.update", initializeDropdowns);
+
+                                        // Initial call for dropdowns in the first page
                                         initializeDropdowns(data);
                                     }
-                                } catch (error) {
-                                    console.error('There was a problem with the fetch operation:', error);
-                                    alert('Failed to fetch data. Please try again.');
-                                }
-                            }
+                                })
 
-                            // Function to create dropdowns
-                            function createDropdown(fileId) {
-                                const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
-                                const dropdownElement = document.getElementById(`dropdownLeft${fileId}`);
-                                if (dropdownButton && dropdownElement) {
-                                    const options = {
-                                        placement: 'left',
-                                        triggerType: 'click',
-                                        offsetSkidding: 0,
-                                        offsetDistance: 0,
-                                        ignoreClickOutsideClass: false,
-                                    };
-                                    new Dropdown(dropdownElement, dropdownButton, options);
-                                }
-                            }
 
-                            // Function to initialize dropdowns for each file
-                            function initializeDropdowns(data) {
-                                data.data.forEach((file) => {
-                                    createDropdown(file.id);
-                                });
-                            }
 
-                            // Example of updating data after a CRUD operation
-                            async function updateDataAfterCRUD() {
-                                console.log("Updating data after CRUD operation...");
+                        .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
+                        });
+                        });
 
-                                // Check if dataTable exists and has the destroy method
-                                if (dataTable && typeof dataTable.destroy === "function") {
-                                    dataTable.destroy(); // Destroy the existing DataTable instance
-                                    dataTable = null; // Set dataTable to null after destruction
-                                }
-
-                                // Fetch new data
-                                await fetchData(); // This function should reinitialize the DataTable
-                                console.log("DataTable display has been refreshed!");
-                            }
-
-                            // Make updateDataAfterCRUD globally accessible
-                            window.updateDataAfterCRUD = updateDataAfterCRUD;
-                        }); // Close DOMContentLoaded function
-
-                        // Archive file function
                         async function archiveFile(fileId) {
                             const csrfToken = document.querySelector('input[name="_token"]').value;
 
@@ -200,7 +208,8 @@
                                 const result = await response.json();
 
                                 if (response.ok && result.success) {
-                                    updateDataAfterCRUD(); // Refresh data after archiving
+                                    //alert('File archived successfully!');
+                                    // Optionally, update the UI to show the file as archived
                                 } else {
                                     alert('Failed to archive the file.');
                                     console.error(result.message || 'Unknown error');
@@ -211,7 +220,6 @@
                             }
                         }
                     </script>
-
 
 
 
@@ -229,15 +237,16 @@
                                 <!-- Minimize table content goes here -->
                             </tbody>
                         </table>
-                        {{-- <script>
+                        <script>
                             document.addEventListener("DOMContentLoaded", function() {
                                 const permitType = "{{ $type }}"; // Replace with your actual value
                                 const municipality = "{{ $municipality }}"; // Replace with your actual value
+
                                 const params = {
                                     type: permitType,
                                     municipality: municipality,
                                     report: '',
-                                    isArchived: false
+                                    isArchived: true
                                 };
 
                                 // Remove empty parameters
@@ -329,7 +338,7 @@
                                         console.error('There was a problem with the fetch operation:', error);
                                     });
                             });
-                        </script> --}}
+                        </script>
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
@@ -810,7 +819,6 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateDataAfterCRUD();
                                                     console.log("Scueeess")
                                                 }
                                             })

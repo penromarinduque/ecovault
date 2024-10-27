@@ -1,29 +1,54 @@
+async function openFileModal(id) {
+    try {
+        // First API call to get file metadata
+        const response = await fetch(`/api/files/${id}?includePermit=false`);
+        const data = await response.json();
 
-async function openFileModal(fileUrl, id) {
-    const response = await fetch(`/api/file-only/${id}`);
-    const data = await response.json();
+        if (response.ok) {
+            setFileName(data.file);  // Set file name as needed
+        } else {
+            console.error('Error in first API response:', data.message);
+            return; // Stop further execution if the first call fails
+        }
+    } catch (error) {
+        console.error('Error fetching the file in first API call:', error);
+        return; // Stop further execution if there's an error
+    }
 
-    if (response.ok) {
-        const file = data.file;
-        
-        setFileName(file);
-        
-        // Get file extension
-        
-        console.log(data.file.file_path)
-        // Check for .doc or .docx files
-        // if (data.type === 'google-viewer') {
-        //         const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(file)}&embedded=true`;
-        //         window.open(viewerUrl, '_blank'); // Open in a new tab
-        
-        // }//// problem for viewer docx
-        //  else {
-        //     // For other files (like PDF), display them in the iframe
-        //     document.getElementById('fileModal').classList.remove('hidden'); // Show modal
-        //     //document.getElementById('fileFrame').src = fileUrl; // Load file into iframe
-        // }
-    } else {
-        console.error('Error:', data.message); // Handle the error accordingly
+    try {
+        // Second API call to get the converted PDF file
+        const res = await fetch(`/api/files/view/${id}`);
+
+        // Check content type returned by the server
+        const contentType = res.headers.get("content-type");
+        console.log('Content-Type:', contentType); // Log the content type for debugging
+
+        if (contentType.includes('application/json')) {
+                // Assuming that if it's JSON, it's a doc/docx file with a viewUrl
+                const fileData = await res.json();
+
+                if (fileData.viewUrl) {
+                    // Microsoft Office Online Viewer URL for .doc/.docx files
+                    const fileFrame = document.getElementById('fileFrame');
+                    fileFrame.src = fileData.viewUrl;  // Set the iframe src to the Microsoft viewer URL
+                    document.getElementById('fileModal').classList.remove('hidden');  // Show the modal
+                } else {
+                    console.error('No viewUrl found in the response:', fileData);
+                }
+            } else if (contentType.includes('application/pdf')) {
+                // Handle PDF as a blob
+                const blob = await res.blob();
+                const fileUrl = URL.createObjectURL(blob);  // Create a URL for the blob
+                
+                // Load the PDF into the iframe
+                const fileFrame = document.getElementById('fileFrame');
+                fileFrame.src = fileUrl;  // Set the iframe src to the blob URL
+                document.getElementById('fileModal').classList.remove('hidden');  // Show the modal
+            }  else {
+            console.error('Error fetching PDF:', res.status, await res.text());
+        }
+    } catch (error) {
+        console.error('Error fetching the file in second API call:', error);
     }
 }
 
@@ -31,8 +56,7 @@ async function openFileModal(fileUrl, id) {
 // Function to close modal and remove blur
 function closeFileModal() {
     document.getElementById('fileModal').classList.add('hidden'); // Hide modal
-    document.getElementById('fileFrame').src = ''; // Clear iframe
-    
+    document.getElementById('fileFrame').src = ''; // Clear iframe    
 }
 
 // Function to print the file from iframe

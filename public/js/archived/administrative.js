@@ -5,7 +5,7 @@ function FetchAndPopulate() {
         type: '',
         municipality: '',
         report: record || '',
-        isArchived: false
+        isArchived: true
     };
 
     // Remove empty parameters
@@ -36,7 +36,7 @@ function refreshDataTable() {
         type: '',
         municipality: '',
         report: record || '',
-        isArchived: false
+        isArchived: true
     };
 
     // Remove empty parameters
@@ -100,7 +100,7 @@ function populateDataTable(data) {
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
-                          <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li> 
+                        
                     </ul>
                 </div>`
             ],
@@ -146,14 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
     FetchAndPopulate();
 });
 
-
 const showUpload = document.getElementById("uploadBtn");
 const exitButtonUpload = document.getElementById("close-upload-btn");
 const exitButtonEdit = document.getElementById("close-edit-btn");
 const mainTable = document.getElementById("mainTable");
 const fileSection = document.getElementById("fileSection");
 const fileSectionUploadFile = document.getElementById("upload-file");
-const fileSectionEditFile = document.getElementById("edit-file");
 // Show upload section
 showUpload.addEventListener("click", (event) => {
     event.preventDefault(); // Prevent default behavior if it's inside a form
@@ -161,8 +159,7 @@ showUpload.addEventListener("click", (event) => {
     // Show the file section and hide the main table
     mainTable.classList.remove("opacity-100");
     mainTable.classList.add("opacity-0");
-    fileSectionUploadFile.classList.remove("hidden");
-      
+
     // Wait for the opacity transition to finish before hiding
     setTimeout(() => {
     mainTable.classList.add("hidden"); // Hide main table
@@ -178,8 +175,8 @@ exitButtonUpload.addEventListener("click", (event) => {
     // FetchAndPopulate();
     fileSection.classList.remove("opacity-100");
     fileSection.classList.add("opacity-0");
-    // fileSectionUploadFile.classList.add("hidden");
-    
+
+
     setTimeout(() => {
     fileSection.classList.add("hidden"); 
     mainTable.classList.remove("hidden");
@@ -193,7 +190,7 @@ exitButtonEdit.addEventListener("click", (event) => {
     // FetchAndPopulate();
     fileSection.classList.remove("opacity-100");
     fileSection.classList.add("opacity-0");
-    fileSectionEditFile.classList.add("hidden");
+    fileSectionEditFile.add("hidden");
 
     setTimeout(() => {
     fileSection.classList.add("hidden"); 
@@ -256,9 +253,9 @@ exitButtonEdit.addEventListener("click", (event) => {
             const buttonText = document.getElementById('button-text');
             loadingIcon.classList.remove('hidden');
             buttonText.innerText = 'Uploading...';
-
+            const isArchived = true;
             // Send the form data using fetch
-            fetch('/file-upload', { // Replace with your endpoint
+            fetch(`/file-upload?isArchived=${isArchived}`, {// Replace with your endpoint
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -276,17 +273,16 @@ exitButtonEdit.addEventListener("click", (event) => {
                 // Handle success (e.g., show a success message)
                 loadingIcon.classList.add('hidden');
                 buttonText.innerText = 'Submit'; 
-             
                 refreshDataTable();
+                // Reset button text
+                
             })
             .catch(error => {
                 console.error('Error:', error);
                 // Handle error (e.g., show an error message)
                 loadingIcon.classList.add('hidden');
                 buttonText.innerText = 'Submit'; // Reset button text
-            }).finally(()=>{
-                
-            });
+            })
            
             
     });
@@ -394,7 +390,7 @@ function updateFileName() {
     }
 }
 
-
+const fileSectionEditFile = document.getElementById("edit-file");
 
 const editOfficeSource = document.getElementById("edit-office_source");
 const editCategory = document.getElementById("edit-category");
@@ -416,7 +412,7 @@ async function  showEditFile(fileId) {
         fileSection.classList.remove("opacity-0");
         fileSection.classList.add("opacity-100");
         fileSectionUploadFile.classList.add("hidden");
-        fileSectionFileSummary.classList.add("hidden");
+
         // Fetch the file data after the section is visible
         const response = await fetch(`/api/files/${fileId}?includePermit=false`);
         const data = await response.json();
@@ -475,8 +471,9 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         if (response.ok) {
             console.log('File updated successfully:', data);
             
-                refreshDataTable();
-            //FetchAndPopulate();
+            
+            refreshDataTable();
+           
          
             // Handle success (e.g., show a success message or refresh the table)
         } else {
@@ -487,35 +484,6 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         console.error('Fetch error:', error);
     }
 })
-
- async function archiveFile(fileId) {
-    const csrfToken = document.querySelector('input[name="_token"]').value;
-
-    try {
-        const response = await fetch(`/api/files/archived/${fileId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken // CSRF token for security
-            },
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-             
-                refreshDataTable();
-            //alert('File archived successfully!');
-            // Optionally, update the UI to show the file as archived
-        } else {
-            alert('Failed to archive the file.');
-            console.error(result.message || 'Unknown error');
-        }
-    } catch (error) {
-        console.error('Error archiving the file:', error);
-        alert('An error occurred while archiving the file.');
-    }
-}
 
 const fileSectionFileSummary = document.getElementById("file-summary");
 async function  showFileSummary(fileId) {
@@ -543,7 +511,8 @@ async function  showFileSummary(fileId) {
 
      
         if (response.ok) {
-            const file = data.file;                            
+            const file = data.file;
+                            
                 // Then set the values
                 document.getElementById('view-office_source').value = file.office_source || '';
                 document.getElementById('view-category').value = file.category || '';
