@@ -1,11 +1,11 @@
-// // // // Table Function
+let dataTable; // Keep a reference to the DataTable instance
 
 function FetchAndPopulate() {
-     const params = {
-        type:  '',
-        municipality:   '',
+    const params = {
+        type: '',
+        municipality: '',
         report: record || '',
-        isArchived: true 
+        isArchived: true
     };
 
     // Remove empty parameters
@@ -24,96 +24,127 @@ function FetchAndPopulate() {
             return response.json();
         })
         .then(data => {
-            const customData = {
-                headings: [
-                    "Name",
-                    "Date Modified",
-                    "Modified By",
-                    "Office Source",
-                    "Category",
-                    "Classification",
-                    "Status",
-                    "Actions"
-                ],
-                data: data.files.map((file) => ({
-                    cells: [
-                        file.file_name,
-                        file.updated_at,
-                        file.user_name,
-                        file.office_source,
-                        file.category,
-                        file.classification,
-                        file.status,
-                        `<button id="dropdownLeftButton${file.id}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                            </svg>
-                        </button>
-                        <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-                            <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                                <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
-                                   onclick="openFileModal(${file.id})">View</a>
-                                <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                                <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">File Summary</a></li>
-                            </ul>
-                        </div>`
-                    ],
-                    attributes: {
-                        class: "text-gray-700 text-left hover:bg-gray-100"
-                    }
-                })),
-            };
-
-            const dataTableElement = document.getElementById("main-table");
-            if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-                const dataTable = new simpleDatatables.DataTable(dataTableElement, {
-                    // DataTable options...
-                    data: customData,
-                    perPage: 5, // Set the number of rows per page
-                    searchable: true,
-                    sortable: true,
-                    perPageSelect: [5, 10, 20, 50],
-                });
-
-                // Function to initialize dropdowns
-                function initializeDropdowns() {
-                    data.files.forEach((file) => {
-                        const dropdownButton = document.getElementById(`dropdownLeftButton${file.id}`);
-                        const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
-                        if (dropdownButton && dropdownElement) {
-                            const options = {
-                                placement: 'left',
-                                triggerType: 'click',
-                                offsetSkidding: 0,
-                                offsetDistance: 0,
-                                ignoreClickOutsideClass: false,
-                            };
-                            new Dropdown(dropdownElement, dropdownButton, options);
-                        }
-                    });
-                }
-
-                // Attach event listeners for pagination and updates
-                dataTable.on("datatable.page", initializeDropdowns);
-                dataTable.on("datatable.update", initializeDropdowns);
-
-                // Initial call for dropdowns in the first page
-                initializeDropdowns();
-            }
+            populateDataTable(data);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
 
+function refreshDataTable() {
+    const params = {
+        type: '',
+        municipality: '',
+        report: record || '',
+        isArchived: true
+    };
 
-    document.addEventListener('DOMContentLoaded', () => {
-        FetchAndPopulate();
+    // Remove empty parameters
+    const filteredParams = Object.fromEntries(
+        Object.entries(params).filter(([key, value]) => value !== '')
+    );
+
+    // Build the query string
+    const queryParams = new URLSearchParams(filteredParams).toString();
+
+    fetch(`/api/files?${queryParams}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (dataTable) {
+                dataTable.destroy();  // Clear the existing table
+            }
+            populateDataTable(data); // Repopulate with updated data
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function populateDataTable(data) {
+    const customData = {
+        headings: [
+            "Name",
+            "Date Modified",
+            "Modified By",
+            "Office Source",
+            "Category",
+            "Classification",
+            "Status",
+            "Actions"
+        ],
+        data: data.files.map((file) => ({
+            cells: [
+                file.file_name,
+                file.updated_at,
+                file.user_name,
+                file.office_source,
+                file.category,
+                file.classification,
+                file.status,
+                `<button id="dropdownLeftButton${file.id}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                    </svg>
+                </button>
+                <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+                    <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
+                        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" 
+                           onclick="openFileModal(${file.id})">View</a>
+                        <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+                        <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
+                        
+                    </ul>
+                </div>`
+            ],
+            attributes: {
+                class: "text-gray-700 text-left hover:bg-gray-100"
+            }
+        })),
+    };
+
+    const dataTableElement = document.getElementById("main-table");
+    if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+        dataTable = new simpleDatatables.DataTable(dataTableElement, {
+            data: customData,
+            perPage: 5,
+            searchable: true,
+            sortable: true,
+            perPageSelect: [5, 10, 20, 50],
+        });
+
+        // Initialize the dropdowns for the first page
+        initializeDropdowns(data);
+    }
+}
+
+function initializeDropdowns(data) {
+    data.files.forEach((file) => {
+        const dropdownButton = document.getElementById(`dropdownLeftButton${file.id}`);
+        const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
+        if (dropdownButton && dropdownElement) {
+            const options = {
+                placement: 'left',
+                triggerType: 'click',
+                offsetSkidding: 0,
+                offsetDistance: 0,
+                ignoreClickOutsideClass: false,
+            };
+            new Dropdown(dropdownElement, dropdownButton, options);
+        }
     });
+}
 
+document.addEventListener('DOMContentLoaded', () => {
+    FetchAndPopulate();
+});
 
 const showUpload = document.getElementById("uploadBtn");
 const exitButtonUpload = document.getElementById("close-upload-btn");
@@ -159,7 +190,7 @@ exitButtonEdit.addEventListener("click", (event) => {
     // FetchAndPopulate();
     fileSection.classList.remove("opacity-100");
     fileSection.classList.add("opacity-0");
-
+    fileSectionEditFile.add("hidden");
 
     setTimeout(() => {
     fileSection.classList.add("hidden"); 
@@ -242,6 +273,7 @@ exitButtonEdit.addEventListener("click", (event) => {
                 // Handle success (e.g., show a success message)
                 loadingIcon.classList.add('hidden');
                 buttonText.innerText = 'Submit'; 
+                refreshDataTable();
                 // Reset button text
                 
             })
@@ -438,8 +470,10 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
 
         if (response.ok) {
             console.log('File updated successfully:', data);
-              
-            //FetchAndPopulate();
+            
+            
+            refreshDataTable();
+           
          
             // Handle success (e.g., show a success message or refresh the table)
         } else {
@@ -450,3 +484,60 @@ document.getElementById('edit-form').addEventListener('submit', async function(e
         console.error('Fetch error:', error);
     }
 })
+
+const fileSectionFileSummary = document.getElementById("file-summary");
+async function  showFileSummary(fileId) {
+     selectedFileId = fileId;
+    // Assuming you want to perform some actions with the fileId, you can handle it here
+    // e.g., populate the edit form with file data based on fileId
+   
+    mainTable.classList.remove("opacity-100");
+    mainTable.classList.add("opacity-0");
+    fileSectionFileSummary.classList.remove('hidden')
+    
+    
+
+  
+ setTimeout(async () => {
+        mainTable.classList.add("hidden");
+        fileSection.classList.remove("hidden");
+        fileSection.classList.remove("opacity-0");
+        fileSection.classList.add("opacity-100");
+        fileSectionUploadFile.classList.add("hidden");
+      
+        // Fetch the file data after the section is visible
+        const response = await fetch(`/api/files/${fileId}?includePermit=false`);
+        const data = await response.json();
+
+     
+        if (response.ok) {
+            const file = data.file;
+                            
+                // Then set the values
+                document.getElementById('view-office_source').value = file.office_source || '';
+                document.getElementById('view-category').value = file.category || '';
+                document.getElementById('view-classification').value = file.classification || '';
+                document.getElementById('view-status').value = file.status || '';
+        } else {
+            console.error('Error:', data.message); // Handle the error accordingly
+        }
+    }, 300);       
+}
+
+
+const exitButtonFileSummary = document.getElementById("close-file-summary-btn");
+
+exitButtonFileSummary.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent default behavior if it's inside a form
+    // FetchAndPopulate();
+    fileSection.classList.remove("opacity-100");
+    fileSection.classList.add("opacity-0");
+    
+    fileSectionFileSummary.classList.add("hidden");
+    setTimeout(() => {
+    fileSection.classList.add("hidden"); 
+    mainTable.classList.remove("hidden");
+    mainTable.classList.remove("opacity-0");
+    mainTable.classList.add("opacity-100");
+    }, 500);
+});
