@@ -57,50 +57,50 @@
                     e.preventDefault()
                 }
 
-                if (e.key === 'Delete' || e.key === 'Backspace') {
+                if (e.key === 'Backspace' || e.key === 'Delete') {
                     const index = inputs.indexOf(e.target);
-                    if (index > 0) {
-                        inputs[index - 1].value = '';
+                    // If current input is empty, move focus to the previous input
+                    if (!e.target.value && index > 0) {
                         inputs[index - 1].focus();
+                    } else {
+                        e.target.value = ''; // Clear current input value
                     }
                 }
             }
 
             const handleInput = (e) => {
-                const {
-                    target
-                } = e
-                const index = inputs.indexOf(target)
+                const target = e.target;
+                const index = inputs.indexOf(target);
                 if (target.value) {
                     if (index < inputs.length - 1) {
-                        inputs[index + 1].focus()
+                        inputs[index + 1].focus();
                     } else {
-                        submit.focus()
+                        submit.focus();
                     }
                 }
             }
 
             const handleFocus = (e) => {
-                e.target.select()
+                e.target.select();
             }
 
             const handlePaste = (e) => {
-                e.preventDefault()
-                const text = e.clipboardData.getData('text')
+                e.preventDefault();
+                const text = e.clipboardData.getData('text');
                 if (!new RegExp(`^[0-9]{${inputs.length}}$`).test(text)) {
-                    return
+                    return;
                 }
-                const digits = text.split('')
-                inputs.forEach((input, index) => input.value = digits[index])
-                submit.focus()
+                const digits = text.split('');
+                inputs.forEach((input, index) => input.value = digits[index]);
+                submit.focus();
             }
 
             inputs.forEach((input) => {
-                input.addEventListener('input', handleInput)
-                input.addEventListener('keydown', handleKeyDown)
-                input.addEventListener('focus', handleFocus)
-                input.addEventListener('paste', handlePaste)
-            })
-        })
+                input.addEventListener('input', handleInput);
+                input.addEventListener('keydown', handleKeyDown);
+                input.addEventListener('focus', handleFocus);
+                input.addEventListener('paste', handlePaste);
+            });
+        });
     </script>
 @endsection
