@@ -11,7 +11,7 @@
             onclick="openFileModal('/api/file/view/${file.id}', ${file.id})">
             View
         </a>
-        <li><a href="#" class="block px-4 py-2  hover:bg-gray-100">Download</a></li>
+        <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
         <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>

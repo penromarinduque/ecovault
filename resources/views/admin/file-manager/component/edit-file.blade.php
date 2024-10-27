@@ -122,9 +122,22 @@
 
                         <!-- No. of Trees / Species Field -->
                         <div>
+                            <label for="edit-species" class="block mb-2 text-sm font-medium text-gray-700">Tree
+                                Species</label>
+                            <input type="text" id="edit-species" name="species"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
+                                required placeholder="Enter tree species">
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid input!</p>
+                        </div>
+
+                        <div>
                             <label for="edit-number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
-                                of
-                                Trees / Species</label>
+                                of Trees</label>
                             <input type="text" id="edit-number_of_trees" name="number_of_trees"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
@@ -134,8 +147,7 @@
                                 required placeholder="Enter number of trees">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
-                                input!
-                            </p>
+                                input!</p>
                         </div>
 
                         <!-- Location Field -->
@@ -317,6 +329,19 @@
                                 input!</p>
                         </div>
 
+                        <div>
+                            <label for="edit-species" class="block mb-2 text-sm font-medium text-gray-700">Tree
+                                Species</label>
+                            <input type="text" id="edit-species" name="species"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
+                                required placeholder="Enter tree species">
+                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                valid input!</p>
+                        </div>
                         <!-- No. of Trees Field -->
                         <div>
                             <label for="edit-number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
@@ -548,6 +573,7 @@
                         document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
                         document.getElementById('edit-location').value = permit.location;
                         document.getElementById('edit-date_applied').value = permit.date_applied;
+                        document.getElementById('edit-species').value = permit.species;
                         break;
                     case 'chainsaw-registration':
                         document.getElementById('edit-client_name').value = permit.name_of_client;
@@ -567,6 +593,7 @@
                         document.getElementById('edit-destination').value = permit.destination;
                         document.getElementById('edit-date_applied').value = permit.date_applied;
                         document.getElementById('edit-date_of_transport').value = permit.date_of_transport;
+                        document.getElementById('edit-species').value = permit.species;
                         break;
                     case 'land-titles':
                         document.getElementById('edit-client_name').value = permit.name_of_client;
@@ -610,6 +637,7 @@
                     .value);
                 formData.append('permit[location]', document.getElementById('edit-location').value);
                 formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
+                formData.append('permit[species]', document.getElementById('edit-species').value);
                 break;
             case 'chainsaw-registration':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
@@ -636,6 +664,7 @@
                 formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
                 formData.append('permit[date_of_transport]', document.getElementById(
                     'edit-date_of_transport').value);
+                formData.append('permit[species]', document.getElementById('edit-species').value);
                 break;
             case 'land-titles':
                 formData.append('permit[name_of_client]', document.getElementById('edit-client_name')

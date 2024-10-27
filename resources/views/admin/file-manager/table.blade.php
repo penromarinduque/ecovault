@@ -229,7 +229,7 @@
                                 <!-- Minimize table content goes here -->
                             </tbody>
                         </table>
-                        {{-- <script>
+                        <script>
                             document.addEventListener("DOMContentLoaded", function() {
                                 const permitType = "{{ $type }}"; // Replace with your actual value
                                 const municipality = "{{ $municipality }}"; // Replace with your actual value
@@ -329,7 +329,7 @@
                                         console.error('There was a problem with the fetch operation:', error);
                                     });
                             });
-                        </script> --}}
+                        </script>
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
@@ -729,7 +729,7 @@
 
                             let fileId;
 
-                            fetch("{{ route('file.post') }}", {
+                            fetch('/file-upload', {
                                     method: 'POST',
                                     body: formData,
                                     headers: {
@@ -799,7 +799,7 @@
                                         }
 
                                         console.log(permit_type);
-                                        fetch("{{ route('permit.post') }}", {
+                                        fetch('/permit-upload', {
                                                 method: 'POST',
                                                 body: formPermit,
                                                 headers: {

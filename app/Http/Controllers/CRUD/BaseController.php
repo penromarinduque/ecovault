@@ -227,6 +227,7 @@ abstract class BaseController extends Controller
                             'number_of_trees' => $permit_data['number_of_trees'] ?? null,
                             'location' => $permit_data['location'] ?? null,
                             'date_applied' => $permit_data['date_applied'] ?? null,
+                            'species' => $permit_data['species'] ?? null,
                         ]);
                         break;
 
@@ -248,13 +249,14 @@ abstract class BaseController extends Controller
                         ]);
                         break;
 
-                    case 'transport-permits':
+                    case 'tree-transport-permits':
                         DB::table('transport_permits')->where('file_id', $id)->update([
                             'name_of_client' => $permit_data['name_of_client'] ?? null,
                             'number_of_trees' => $permit_data['number_of_trees'] ?? null,
                             'destination' => $permit_data['destination'] ?? null,
                             'date_applied' => $permit_data['date_applied'] ?? null,
                             'date_of_transport' => $permit_data['date_of_transport'] ?? null,
+                            'species' => $permit_data['species'] ?? null,
                         ]);
                         break;
 
