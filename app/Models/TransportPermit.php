@@ -17,6 +17,7 @@ class TransportPermit extends Model
         'destination',
         'date_applied',
         'date_of_transport',
+        'species',
     ];
 
     public function file()
