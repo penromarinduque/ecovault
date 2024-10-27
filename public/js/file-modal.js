@@ -1,7 +1,7 @@
 async function openFileModal(id) {
     try {
         // First API call to get file metadata
-        const response = await fetch(`/api/file-only/${id}`);
+        const response = await fetch(`/api/files/${fileId}?includePermit=false`);
         const data = await response.json();
 
         if (response.ok) {
@@ -17,7 +17,7 @@ async function openFileModal(id) {
 
     try {
         // Second API call to get the converted PDF file
-        const res = await fetch(`/api/file/view/${id}`);
+        const res = await fetch(`/api/files/view/${id}`);
 
         // Check content type returned by the server
         const contentType = res.headers.get("content-type");

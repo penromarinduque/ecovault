@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\BaseController;
+use App\Http\Controllers\CRUD\ArchiveController;
+use App\Http\Controllers\CRUD\FileManagerController;
+use App\Http\Controllers\CRUD\UploadController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\AdminController;
@@ -68,28 +72,24 @@ Route::middleware(['authentication'])->group(function () {
 
 
     //API HANDLER 
-    Route::post('/file-upload', [FileController::class, 'StoreFile'])->name('file.post');
-    Route::post('/permit-upload', [FileController::class, 'StorePermit'])->name('permit.post');
-    Route::post('/api/file-upload', [FileController::class, 'StoreFileNoRelation']);
+    Route::post('/file-upload', [UploadController::class, 'StoreFile'])->name('file.post');
+    Route::post('/permit-upload', [FileManagerController::class, 'StorePermit'])->name('permit.post');
+    // Route::post('/api/file-upload', [FileController::class, 'StoreFileNoRelation']);
 
-    Route::get("/api/files/{type}/{municipality}", [FileController::class, 'GetFiles'])->name('file.getAll');
-
-    Route::get("/api/file/{id}", [FileController::class, "GetFileById"])->name("file.get");
-    Route::get("/api/file-only/{id}", [FileController::class, "GetOnlyFileById"]);
-    Route::POST('/api/file-only/update/{id}', [FileController::class, "UpdateFileOnlyById"]);
-    Route::get('/api/file/download/{id}', [FileController::class, 'DownloadFileById'])->name('file.download');
-
-    Route::get('/api/file/view/{id}', [FileController::class, 'ViewFileById']);
-
-    Route::post('/file-upload/test', [FileController::class, 'Upload'])->name('file.upload');
-    Route::get('/api/files-without-relationships/{report}', [FileController::class, 'GetFilesWithoutRelationships']);
+    //Store File
+    Route::get("/api/files", [FileManagerController::class, 'GetFiles'])->name('file.getAll');
+    Route::post('/api/files/update/{id}', [FileManagerController::class, 'UpdateFileById'])->name('file.update');
+    Route::get("/api/files/{id}", [FileManagerController::class, "GetFileById"])->name("file.get");
+    Route::get('/api/files/download/{id}', [FileController::class, 'DownloadFileById'])->name('file.download');
+    Route::get('/api/files/view/{id}', [FileController::class, 'ViewFileById']);
+    Route::post('/api/files/archived/{id}', [ArchiveController::class, 'ArchivedById'])->name('file.archived');
 
     Route::get("/superuser/test", function () {
         return view("superuser.test");
     });
 
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
-    Route::POST('/api/files/update/{fileId}', [FileController::class, 'EditFile'])->name('file.edit');
-    Route::post('/api/file/archived/{id}', [FileController::class, 'ArchivedById'])->name('file.archived');
+
+
 });
 

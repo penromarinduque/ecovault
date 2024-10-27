@@ -124,7 +124,7 @@
             document.getElementById('loading-spinner').classList.remove('hidden');
             document.getElementById('child-file-summary-div').classList.add('hidden');
 
-            const response = await fetch(`/api/file/${fileId}`);
+            const response = await fetch(`/api/files/${fileId}?includePermit=true`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
