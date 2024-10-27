@@ -29,25 +29,26 @@ class FileController extends Controller
             abort(404);
         }
 
-        // Get the file extension
         $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $contentType = 'application/octet-stream'; // Default content type
 
-        if ($extension === 'doc' || $extension === 'docx') {
-            // Generate the public URL for the doc/docx file
-            $publicFilePath = asset('storage/' . $file->file_path);
-            \Log::info('Generated Document URL: ' . $publicFilePath);  // Log the URL
 
-            return response()->json([
-                'viewUrl' => "https://view.officeapps.live.com/op/embed.aspx?src=" . urlencode($publicFilePath)
-            ]);
-        } else {
-            // Handle non-doc/docx files normally (PDFs, etc.)
-            return response()->file($filePath, [
-                'Content-Type' => 'application/pdf', // Set content type as needed
-                'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
-            ]);
-        }
+        if ($extension === 'pdf') {
+            $contentType = 'application/pdf';
+        } elseif ($extension === 'doc') {
+            $contentType = 'application/msword'; // Correct MIME type for DOC files
+        } elseif ($extension === 'docx') {
+            $contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // Correct MIME type for DOCX files
+        }// add zip
+
+        return response()->file($filePath, [
+            'Content-Type' => $contentType,
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        ]);
+
+
     }
+
     public function DownloadFileById($id)
     {
         $file = File::findOrFail($id);

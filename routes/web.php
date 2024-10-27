@@ -63,8 +63,6 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/archived-file/administrative-document', [AdminController::class, 'ShowArchivedAdministrativeDocument'])->name('archived.administrative.show');
     Route::get("/archived-file/administrative-document/{record}", [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('archived.administrative.record.show');
 
-
-
     //API HANDLER 
     Route::post('/file-upload', [UploadController::class, 'StoreFile'])->name('file.post');
     Route::post('/permit-upload', [FileManagerController::class, 'StorePermit'])->name('permit.post');
