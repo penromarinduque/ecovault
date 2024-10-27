@@ -451,7 +451,7 @@
 
             <!-- Submit Button -->
             <div class="text-end">
-                <button type="submit"
+                <button type="submit" id="submit-edit-btn"
                     class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
                     Submit
                 </button>
@@ -662,8 +662,9 @@
 
             const result = await response.json();
             console.log(result);
+
             if (result.success) {
-                alert('File updated successfully!');
+                updateDataAfterCRUD();
             } else {
                 console.error(result.message);
                 alert('Failed to update the file.');
