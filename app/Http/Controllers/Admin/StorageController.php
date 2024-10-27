@@ -12,27 +12,36 @@ class StorageController extends Controller
 {
     public function GetStorageUsage()
     {
-        // Total and available space on the D: drive
-        $totalSpace = disk_total_space('C:') / (1024 * 1024 * 1024); // Convert to GB
-        $freeSpace = disk_free_space('C:') / (1024 * 1024 * 1024);   // Convert to GB
-        $usedSpace = $totalSpace - $freeSpace;
+        try {
+            // Total and available space on the C: drive
+            $totalSpace = disk_total_space('C:') / (1024 * 1024 * 1024); // Convert to GB
+            $freeSpace = disk_free_space('C:') / (1024 * 1024 * 1024);   // Convert to GB
+            $usedSpace = $totalSpace - $freeSpace;
 
-        // Calculate the size of the D:\PENRO directory
-        $penroDirectory = 'C:/PENRO';
-        $penroSize = $this->getDirectorySize($penroDirectory) / (1024 * 1024 * 1024); // Convert to GB
+            // Calculate the size of the C:\PENRO directory
+            $penroDirectory = 'C:/PENRO';
+            $penroSize = $this->getDirectorySize($penroDirectory) / (1024 * 1024 * 1024); // Convert to GB
 
-        // Remaining space used by "Others" (files not in D:\PENRO)
-        $otherSpace = $usedSpace - $penroSize;
+            // Remaining space used by "Others" (files not in C:\PENRO)
+            $otherSpace = $usedSpace - $penroSize;
 
-        // Return the data as JSON
-        return response()->json([
-            'total_space' => $totalSpace,
-            'free_space' => $freeSpace,
-            'used_space' => $usedSpace,
-            'penro_space' => $penroSize,
-            'other_space' => $otherSpace
-        ]);
+            // Return the data as JSON
+            return response()->json([
+                'total_space' => $totalSpace,
+                'free_space' => $freeSpace,
+                'used_space' => $usedSpace,
+                'penro_space' => $penroSize,
+                'other_space' => $otherSpace
+            ]);
+        } catch (\Exception $e) {
+            // Return an error response with the exception message
+            return response()->json([
+                'error' => 'An error occurred while retrieving storage usage.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     // Function to calculate directory size recursively
     private function getDirectorySize($directory)
@@ -114,3 +123,4 @@ class StorageController extends Controller
     }
 
 }
+
