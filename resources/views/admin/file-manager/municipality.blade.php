@@ -77,6 +77,13 @@
                 </a>
             </div>
 
+            <div class="Sta. Cruz">
+                <a href="Sta-Cruz">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
+                    <h1 class="w-[120px]">Sta. Cruz</h1>
+                </a>
+            </div>
+
         </div>
     </div>
 

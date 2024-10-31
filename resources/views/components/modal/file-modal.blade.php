@@ -15,8 +15,7 @@
 
 
         <div class="relative w-full h-[700px] mt-28">
-            <iframe id="fileFrame"
-                class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8/12 h-full border-none"></iframe>
+            <iframe id="fileFrame" class="mx-auto w-8/12 h-full border-none"></iframe>
         </div>
 
 
