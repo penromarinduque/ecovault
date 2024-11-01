@@ -7,9 +7,9 @@ use App\Http\Controllers\CRUD\UploadController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\AdminController;
-
+use App\Http\Controllers\Admin\MunicipalityController;
 use App\Http\Controllers\Auth\AuthController;
-
+use App\Http\Controllers\FileSharing\FileShareController;
 use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\StorageController;
 
@@ -76,6 +76,8 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/api/files/view/{id}', [FileController::class, 'ViewFileById']);
     Route::post('/api/files/archived/{id}', [ArchiveController::class, 'ArchivedById'])->name('file.archived');
 
+    Route::get('/api/municipalities', [MunicipalityController::class, 'GetMunicipalities']);
+
     Route::get("/superuser/test", function () {
         return view("superuser.test");
     });
@@ -84,5 +86,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
     Route::get('/files/count', [StorageController::class, 'countFilesByExtension']);
 
+    //
+    Route::get('/api/share-file/', [FileShareController::class, 'ShareFile']);
 });
 

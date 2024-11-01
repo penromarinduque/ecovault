@@ -16,12 +16,7 @@
                 <p class="text-xl font-bold" id="image-count">0</p> <!-- Placeholder for image count -->
             </div>
 
-            <!-- Card for Word Documents -->
-            <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
-                <img src="{{ asset('images/docs.svg') }}" alt="Word Documents" class="h-16 mb-2">
-                <h2 class="text-lg font-semibold">Word Documents</h2>
-                <p class="text-xl font-bold" id="doc-count">0</p> <!-- Placeholder for document count -->
-            </div>
+
 
             <div class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
                 <img src="{{ asset('images/pdf.svg') }}" alt="PDFs" class="h-16 mb-2">
@@ -52,7 +47,7 @@
             .then(data => {
                 // Update the counts in the HTML
                 document.getElementById("image-count").innerText = data.image_files || 0;
-                document.getElementById("doc-count").innerText = data.word_files || 0;
+
                 document.getElementById("pdf-count").innerText = data.pdf_files || 0;
                 document.getElementById("zip-count").innerText = data.zip_files || 0;
 

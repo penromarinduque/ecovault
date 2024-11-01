@@ -41,50 +41,45 @@
 
 
 
-        <div class="grid grid-cols-4 m-16 space-y-4 ">
-            <div class="">
-                <a href="Buenavista">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Buenavista</h1>
-                </a>
-            </div>
-
-            <div class="">
-                <a href="Boac">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Boac</h1>
-                </a>
-            </div>
-
-            <div class="">
-                <a href="Gasan">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Gasan</h1>
-                </a>
-            </div>
-
-            <div class="">
-                <a href="Mogpog">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Mogpog</h1>
-                </a>
-            </div>
-
-            <div class="">
-                <a href="Torrijos">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Torrijos</h1>
-                </a>
-            </div>
-
-            <div class="Sta. Cruz">
-                <a href="Sta-Cruz">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Sta. Cruz</h1>
-                </a>
-            </div>
+        <div class="grid grid-cols-5 m-16 gap-4" id="municipalities-container">
 
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/api/municipalities')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const container = document.getElementById('municipalities-container');
+
+                        // Clear existing content in case of multiple loads
+                        container.innerHTML = '';
+
+                        // Iterate over each municipality and create HTML
+                        data.locations.forEach(municipality => {
+                            const municipalityDiv = document.createElement('div');
+                            municipalityDiv.classList.add('text-center');
+
+                            municipalityDiv.innerHTML = `
+                        <a href="${encodeURI(municipality.location)}">
+                            <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24 mx-auto">
+                            <h1 class="w-[120px] mx-auto">${municipality.location}</h1>
+                        </a>
+                    `;
+
+                            container.appendChild(municipalityDiv);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching municipalities:', error);
+                    });
+            });
+        </script>
     </div>
 
 

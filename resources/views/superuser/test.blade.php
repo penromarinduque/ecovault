@@ -3,6 +3,9 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <x-modal.file-modal />
-    <script src="{{ asset('js/file-modal.js') }}"></script>
+    <h1>File Sharing</h1>
+
+
+
+
 @endsection

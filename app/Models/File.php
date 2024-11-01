@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\file_access_requests;
+use App\Models\file_shares;
 class File extends Model
 {
     use HasFactory;
@@ -72,4 +73,16 @@ class File extends Model
     {
         return $this->user ? $this->user->name : 'No User'; // Return the user's name or a default value if not found
     }
+
+
+    public function shares()
+    {
+        return $this->hasMany(FileShares::class);
+    }
+
+    public function accessRequests()
+    {
+        return $this->hasMany(FileAccessRequests::class);
+    }
+
 }
