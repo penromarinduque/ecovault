@@ -26,8 +26,9 @@
             </nav>
 
             <div class="my-4 space-x-3">
-                <button class="bg-white px-2 p-1 rounded-md" id="uploadBtn">Upload File</button>
-                <button class="bg-white px-2 p-1 rounded-md">Create a Folder</button>
+                <button class="bg-white text-gray-600 font-medium   px-2 p-1 rounded-md" id="uploadBtn">Upload
+                    File</button>
+                <button class="bg-white px-2 p-1 rounded-md text-gray-600 font-medium">Create a Folder</button>
 
             </div>
         </div>
@@ -36,7 +37,7 @@
 
         <div class="grid gap-60">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
-                <div class="overflow-x-auto bg-white rounded-lg p-5 ">
+                <div class="overflow-x-auto bg-white rounded-lg p-5">
 
                     <table id="sorting-table">
                         <tbody>
@@ -102,7 +103,7 @@
                                                 `@include('admin.file-manager.component.dropdown')`
                                             ],
                                             attributes: {
-                                                class: "text-gray-700 text-left hover:bg-gray-100"
+                                                class: "text-gray-700 text-left font-semibold hover:bg-gray-100"
                                             }
                                         })),
                                     };
@@ -355,7 +356,6 @@
                     <script>
                         const fileInput = document.getElementById('file-upload');
                         const fileUploadName = document.getElementById('file-upload-name');
-                        const fileUploadNameStep2 = document.getElementById('file-upload-name2');
                         const fileUploadError = document.getElementById('file-upload-error');
 
 
@@ -395,92 +395,6 @@
                             return true;
 
                         }
-
-                        document.getElementById('next-step').addEventListener('click', function() {
-                            let isValid = true;
-
-                            if (!validateFile()) {
-                                return
-                            }
-
-                            const officeSourceInput = document.getElementById('office-source');
-                            const officeSourceError = document.getElementById('office-source-error');
-
-
-                            const categorySelect = document.getElementById('category');
-                            const classificationSelect = document.getElementById('classification');
-                            const statusSelect = document.getElementById('status');
-
-
-
-                            officeSourceInput.classList.remove('border-red-500');
-                            officeSourceError.classList.add('invisible');
-                            categorySelect.classList.remove('border-red-500');
-                            classificationSelect.classList.remove('border-red-500');
-                            statusSelect.classList.remove('border-red-500');
-
-                            if (officeSourceInput.value.trim() === '') {
-                                officeSourceInput.classList.add('border-red-500');
-                                officeSourceError.classList.remove('invisible'); // Show error message
-                                isValid = false;
-                            }
-
-                            // Validate 'Category' select
-                            if (categorySelect.value === '') {
-                                categorySelect.classList.add('border-red-500');
-                                isValid = false;
-                            }
-
-                            // Validate 'Classification' select
-                            if (classificationSelect.value === '') {
-                                classificationSelect.classList.add('border-red-500');
-                                isValid = false;
-                            }
-
-                            // Validate 'Status' select
-                            if (statusSelect.value === '') {
-                                statusSelect.classList.add('border-red-500');
-                                isValid = false;
-                            }
-
-                            // Only move to step 2 if all fields are valid
-                            if (isValid) {
-                                document.getElementById('step-1').classList.add('hidden');
-                                document.getElementById('step-2').classList.remove('hidden');
-
-                                const selectedFile = fileInput.files[0]; // Get the selected file
-                                fileUploadNameStep2.textContent = `File: ${selectedFile.name}`;
-                            }
-                        });
-
-                        document.getElementById('office-source').addEventListener('change', function() {
-                            this.classList.remove('border-red-500');
-                            document.getElementById('office-source-error').classList.add('invisible');
-
-                        })
-
-
-                        document.getElementById('category').addEventListener('change', function() {
-                            this.classList.remove('border-red-500');
-                            this.classList.add('text-black')
-
-                        });
-
-                        document.getElementById('classification').addEventListener('change', function() {
-                            this.classList.remove('border-red-500');
-                        });
-
-                        document.getElementById('status').addEventListener('change', function() {
-                            this.classList.remove('border-red-500');
-                        });
-
-                        document.getElementById('back').addEventListener('click', function() {
-
-                            document.getElementById('step-1').classList.remove('hidden');
-                            document.getElementById('step-2')
-                                .classList.add('hidden');
-                        })
-
 
                         fileInput.addEventListener('change', function() {
                             const fileUploadError = document.getElementById('file-upload-error');
@@ -542,157 +456,9 @@
                             };
                         }
 
-                        function toggleDropdown(event, type) {
-                            event.stopPropagation(); // Prevent event bubbling
-                            const button = event.currentTarget; // The button that was clicked
-                            const dropdownId = type === 'main' ? `dropdown-main-${button.getAttribute('data-id')}` :
-                                `dropdown-limited-${button.getAttribute('data-id')}`; // Determine which dropdown to toggle
-                            const dropdown = document.getElementById(dropdownId); // Get the dropdown element
-
-                            // Close any open dropdowns before opening a new one
-                            const existingDropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                            existingDropdowns.forEach(d => {
-                                if (d !== dropdown) {
-                                    d.classList.add('hidden'); // Hide other dropdowns
-                                }
-                            });
-
-                            // Calculate the position for fixed positioning
-                            const rect = button.getBoundingClientRect(); // Get the button's position
-                            const dropdownHeight = dropdown.offsetHeight; // Get the dropdown's height
-                            const viewportHeight = window.innerHeight; // Get the height of the viewport
-
-                            // Check available space below the button
-                            if (rect.bottom + dropdownHeight > viewportHeight) {
-                                // Not enough space below, position it above
-                                dropdown.style.top = `${rect.top - dropdownHeight - 200}px`; // Place above the button
-                            } else {
-                                // Enough space below, place it below the button
-                                dropdown.style.top = `${rect.bottom + 5}px`; // Place below the button
-                            }
-                            dropdown.style.position = 'fixed'; // Use fixed positioning
-                            dropdown.style.left = `${rect.left}px`; // Align with the button
-
-                            // Toggle the dropdown visibility
-                            dropdown.classList.toggle('hidden');
-                        }
-
-                        // Close dropdowns when clicking outside
-                        document.addEventListener('click', function() {
-                            const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                            dropdowns.forEach(dropdown => dropdown.classList.add('hidden')); // Hide all dropdowns
-                        });
-
-
-
-
-                        // Define your action functions
-                        function viewFile(id) {
-                            console.log(`View file with ID: ${id}`);
-                            // Implement the view logic (e.g., open a modal or redirect)
-                        }
-
-                        function moveFile(id) {
-                            console.log(`Move file with ID: ${id}`);
-                            // Implement the move logic (e.g., open a modal or redirect)
-                        }
-
-                        function deleteFile(id) {
-                            if (confirm('Are you sure you want to delete this file?')) {
-                                console.log(`Delete file with ID: ${id}`);
-                                // Implement the delete logic (e.g., make an AJAX call to delete the file)
-                            }
-                        }
 
                         document.getElementById('upload-form').addEventListener('submit', function(e) {
                             e.preventDefault();
-
-                            let isValid = true; // Use 'let' so it can be reassigned
-
-                            let nameOfClient = document.querySelector('.name-of-client');
-                            let nameOfClientError = document.querySelector('.name-of-client-error')
-                            if (nameOfClient && nameOfClient.value === "") {
-                                nameOfClient.classList.add("border-red-500");
-                                nameOfClientError.classList.remove("invisible")
-                                isValid = false; // Reassigning isValid to false if validation fails
-                            }
-
-                            let noOfTreeSpecies = document.querySelector('.no-of-tree-species')
-                            let noOfTreeSpeciesError = document.querySelector('.no-of-tree-species-error')
-                            if (noOfTreeSpecies && noOfTreeSpecies.value === "") {
-                                noOfTreeSpecies.classList.add("border-red-500");
-                                noOfTreeSpeciesError.classList.remove("invisible")
-                                isValid = false;
-                            }
-
-                            let location = document.querySelector('.location');
-                            let locationError = document.querySelector('.location-error');
-                            if (location && location.value === "") {
-                                location.classList.add("border-red-500");
-                                locationError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let dateApplied = document.querySelector('.date-applied');
-                            let dateAppliedError = document.querySelector('.date-applied-error');
-                            if (dateApplied && dateApplied.value === "") {
-                                dateApplied.classList.add("border-red-500");
-                                dateAppliedError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let numberOfTrees = document.querySelector('.number_of_trees, .number-of-trees');
-                            let numberOfTreesError = document.querySelector('.number_of_trees-error, .number-of-trees-error');
-                            if (numberOfTrees && numberOfTrees.value === "") {
-                                numberOfTrees.classList.add("border-red-500");
-                                numberOfTreesError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let destination = document.querySelector('.destination');
-                            let destinationError = document.querySelector('.destination-error');
-                            if (destination && destination.value === "") {
-                                destination.classList.add("border-red-500");
-                                destinationError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let dateOfTransport = document.querySelector('.date-of-transport');
-                            let dateOfTransportError = document.querySelector('.date-of-transport-error');
-                            if (dateOfTransport && dateOfTransport.value === "") {
-                                dateOfTransport.classList.add("border-red-500");
-                                dateOfTransportError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let serialNumber = document.querySelector('.serial-number');
-                            let serialNumberError = document.querySelector('.serial-number-error');
-                            if (serialNumber && serialNumber.value === "") {
-                                serialNumber.classList.add("border-red-500");
-                                serialNumberError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let lotNumber = document.querySelector('.lot-number');
-                            let lotNumberError = document.querySelector('.lot-number-error');
-                            if (lotNumber && lotNumber.value === "") {
-
-                                lotNumber.classList.add("border-red-500");
-                                lotNumberError.classList.remove("invisible");
-                                isValid = false;
-                            }
-
-                            let propertyCategory = document.querySelector('.property-category');
-
-                            if (propertyCategory && propertyCategory.value === "") {
-                                propertyCategory.classList.add("border-red-500");
-                                isValid = false;
-                            }
-
-                            if (!isValid) {
-                                return; // Stop further execution if validation fails
-                            }
-
 
                             const submitButton = document.getElementById('upload-btn');
                             const buttonText = document.getElementById('button-text');
@@ -814,7 +580,7 @@
                                                 showToast(error || 'File upload failed.', false);
                                             });
 
-                                        // fetchFiles();
+
 
                                     } else {
                                         console.log(data);
@@ -829,17 +595,15 @@
 
                                     const fileInput = document.getElementById('file-upload');
                                     const fileUploadName = document.getElementById('file-upload-name');
-                                    const fileUploadNameStep2 = document.getElementById('file-upload-name2');
+
 
                                     fileUploadName.textContent = 'No file chosen';
-                                    fileUploadNameStep2.textContent = 'No file chosen';
+
 
                                     submitButton.disabled = false;
                                     buttonText.classList.remove('hidden'); // Show the button text again
                                     buttonSpinner.classList.add('hidden'); // Hide the spinner
-                                    document.getElementById('step-1').classList.remove('hidden');
-                                    document.getElementById('step-2')
-                                        .classList.add('hidden');
+
                                 });
                         });
                     </script>
