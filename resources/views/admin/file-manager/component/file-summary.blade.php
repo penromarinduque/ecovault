@@ -163,7 +163,7 @@
             // Hide the loading spinner and show the file summary
             document.getElementById('loading-spinner').classList.add('hidden');
             document.getElementById('child-file-summary-div').classList.remove('hidden');
-            updateDataAfterCRUD();
+
         } catch (error) {
             console.error('Fetch error:', error);
 

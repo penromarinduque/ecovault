@@ -41,50 +41,52 @@
 
 
 
-        <div class="grid grid-cols-4 m-16 space-y-4 ">
-            <div class="">
-                <a href="Buenavista">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Buenavista</h1>
+        <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-medium">
+            <!-- Use gap instead of space-y-4 for even spacing -->
+            <div class="flex flex-col items-center"> <!-- Flexbox for centering -->
+                <a href="Buenavista" class="text-center"> <!-- Centering text under image -->
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Buenavista" class="w-24 mb-2">
+                    <!-- Add margin-bottom for spacing -->
+                    <h2 class="w-[120px]">Buenavista</h2> <!-- Changed to h2 for semantic structure -->
                 </a>
             </div>
 
-            <div class="">
-                <a href="Boac">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Boac</h1>
+            <div class="flex flex-col items-center">
+                <a href="Boac" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Boac" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Boac</h2>
                 </a>
             </div>
 
-            <div class="">
-                <a href="Gasan">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Gasan</h1>
+            <div class="flex flex-col items-center">
+                <a href="Gasan" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Gasan" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Gasan</h2>
                 </a>
             </div>
 
-            <div class="">
-                <a href="Mogpog">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Mogpog</h1>
+            <div class="flex flex-col items-center">
+                <a href="Mogpog" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Mogpog" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Mogpog</h2>
                 </a>
             </div>
 
-            <div class="">
-                <a href="Torrijos">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Torrijos</h1>
+            <div class="flex flex-col items-center">
+                <a href="Torrijos" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Torrijos" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Torrijos</h2>
                 </a>
             </div>
 
-            <div class="Sta. Cruz">
-                <a href="Sta-Cruz">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Sta. Cruz</h1>
+            <div class="flex flex-col items-center">
+                <a href="Sta-Cruz" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Sta. Cruz" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Sta. Cruz</h2>
                 </a>
             </div>
-
         </div>
+
     </div>
 
 

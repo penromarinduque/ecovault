@@ -693,7 +693,7 @@
             console.log(result);
 
             if (result.success) {
-                updateDataAfterCRUD();
+                updateDataAfterCRUD()
             } else {
                 console.error(result.message);
                 alert('Failed to update the file.');

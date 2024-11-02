@@ -143,15 +143,14 @@
 
                     <div class="my-4">
                         <label for="no-of-tree-species" class="block mb-2 text-sm font-medium text-gray-700">No. of
-                            Tree /
-                            Species</label>
+                            Trees</label>
                         <input type="number" id="no-of-tree-species" name="no_of_tree_species"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                       block w-full p-2.5 
                       focus:border-green-500 focus:ring-green-500 
                       required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
                       valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter number of trees / species" required>
+                            placeholder="Enter number of trees" required>
                         <p id="no-of-tree-species-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter a valid number of trees and species.
                         </p>
