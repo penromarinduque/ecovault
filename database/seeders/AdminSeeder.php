@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+use App\Models\Municipality;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -23,6 +24,20 @@ class AdminSeeder extends Seeder
                 'isAdmin' => true,
             ]);
 
+
+        }
+
+        $locations = [
+            'Mogpog',
+            'Torrijos',
+            'Boac',
+            'Gasan',
+            'Buenavista',
+            'Sta. Cruz',
+        ];
+
+        foreach ($locations as $location) {
+            Municipality::create(['location' => $location]);
         }
     }
 }

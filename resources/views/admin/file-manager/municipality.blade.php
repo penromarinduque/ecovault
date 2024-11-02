@@ -41,51 +41,48 @@
 
 
 
-        <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-medium">
-            <!-- Use gap instead of space-y-4 for even spacing -->
-            <div class="flex flex-col items-center"> <!-- Flexbox for centering -->
-                <a href="Buenavista" class="text-center"> <!-- Centering text under image -->
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Buenavista" class="w-24 mb-2">
-                    <!-- Add margin-bottom for spacing -->
-                    <h2 class="w-[120px]">Buenavista</h2> <!-- Changed to h2 for semantic structure -->
-                </a>
-            </div>
 
-            <div class="flex flex-col items-center">
-                <a href="Boac" class="text-center">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Boac" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Boac</h2>
-                </a>
-            </div>
 
-            <div class="flex flex-col items-center">
-                <a href="Gasan" class="text-center">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Gasan" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Gasan</h2>
-                </a>
-            </div>
 
-            <div class="flex flex-col items-center">
-                <a href="Mogpog" class="text-center">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Mogpog" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Mogpog</h2>
-                </a>
-            </div>
+        <div class="grid grid-cols-5 m-16 gap-4" id="municipalities-container">
 
-            <div class="flex flex-col items-center">
-                <a href="Torrijos" class="text-center">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Torrijos" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Torrijos</h2>
-                </a>
-            </div>
-
-            <div class="flex flex-col items-center">
-                <a href="Sta-Cruz" class="text-center">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Sta. Cruz" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Sta. Cruz</h2>
-                </a>
-            </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/api/municipalities')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const container = document.getElementById('municipalities-container');
+
+                        // Clear existing content in case of multiple loads
+                        container.innerHTML = '';
+
+                        // Iterate over each municipality and create HTML
+                        data.locations.forEach(municipality => {
+                            const municipalityDiv = document.createElement('div');
+                            municipalityDiv.classList.add('text-center');
+
+                            municipalityDiv.innerHTML = `
+                        <a href="${encodeURI(municipality.location)}">
+                            <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24 mx-auto">
+                            <h1 class="w-[120px] mx-auto">${municipality.location}</h1>
+                        </a>
+                    `;
+
+                            container.appendChild(municipalityDiv);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching municipalities:', error);
+                    });
+            });
+        </script>
 
     </div>
 

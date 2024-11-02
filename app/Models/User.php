@@ -54,4 +54,15 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->hasMany(RecentActivity::class);
     }
+
+    public function sharedFiles()
+    {
+        return $this->hasManyThrough(File::class, FileShares::class, 'shared_with_user_id', 'id', 'id', 'file_id');
+    }
+
+    public function accessRequests()
+    {
+        return $this->hasMany(FileAccessRequests::class, 'requested_by_user_id');
+    }
+
 }
