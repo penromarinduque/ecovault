@@ -12,7 +12,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\FileSharing\FileShareController;
 use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\StorageController;
-
+use App\Http\Controllers\API\StaffController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -87,6 +87,10 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/files/count', [StorageController::class, 'countFilesByExtension']);
 
     //
-    Route::get('/api/share-file/', [FileShareController::class, 'ShareFile']);
+    Route::post('/api/files/share', [FileShareController::class, 'ShareFile']);
+
+    Route::get('/api/users/', [StaffController::class, 'GetEmployees']);
+
+
 });
 

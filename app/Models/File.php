@@ -77,7 +77,13 @@ class File extends Model
 
     public function shares()
     {
-        return $this->hasMany(FileShares::class);
+        return $this->hasMany(FileShares::class, 'file_id');
+    }
+
+    // Check if the file is shared with any user
+    public function getIsSharedAttribute()
+    {
+        return $this->shares()->exists();
     }
 
     public function accessRequests()
@@ -85,4 +91,8 @@ class File extends Model
         return $this->hasMany(FileAccessRequests::class);
     }
 
+    public function fileShares()
+    {
+        return $this->hasMany(FileShares::class);
+    }
 }
