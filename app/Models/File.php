@@ -95,4 +95,10 @@ class File extends Model
     {
         return $this->hasMany(FileShares::class);
     }
+
+    public function sharedUsers()
+    {
+        return $this->belongsToMany(User::class, 'file_shares', 'file_id', 'shared_with_user_id')
+            ->withPivot('shared_by_admin_id', 'permission');
+    }
 }
