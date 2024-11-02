@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\FileSharing;
 
 use App\Models\FileShares;
+use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -46,6 +47,76 @@ class FileShareController extends Controller
             ], 500);
         }
     }
+
+    public function StoreRequest(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'file_id' => 'required|exists:files,id',
+            'requested_permission' => 'required|in:viewer,editor,admin',
+            'remarks' => 'nullable|string|max:255',
+        ]);
+
+        // Check if there is an existing request for the same file by the same user
+        $existingRequest = FileAccessRequests::where('file_id', $request->file_id)
+            ->where('requested_by_user_id', auth()->id())
+            ->first();
+
+        if ($existingRequest) {
+            // If the existing request is still pending, inform the user
+            if ($existingRequest->status === 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already submitted a request for this file. Please wait for admin approval or rejection.',
+                ], 400); // 400 Bad Request
+            } elseif ($existingRequest->status === 'approved') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your request has already been approved.',
+                ], 400);
+            } elseif ($existingRequest->status === 'rejected') {
+                // Optionally, you can allow resubmission if the previous request was rejected
+                // You might want to reset the remarks or permission
+                $existingRequest->update([
+                    'requested_permission' => $request->requested_permission,
+                    'remarks' => $request->remarks,
+                    'status' => 'pending', // Reset status to pending for resubmission
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Your previous request was rejected. A new request has been submitted successfully.',
+                    'data' => $existingRequest,
+                ], 200); // 200 OK
+            }
+        }
+
+        // Create the file access request
+        $fileAccessRequest = FileAccessRequests::create([
+            'file_id' => $request->file_id,
+            'requested_by_user_id' => auth()->id(),
+            'requested_permission' => $request->requested_permission,
+            'remarks' => $request->remarks,
+            'status' => 'pending', // Default status when creating a new request
+        ]);
+
+        // Return a JSON response with the created request data
+        return response()->json([
+            'success' => true,
+            'message' => 'Access request submitted successfully.',
+            'data' => [
+                'id' => $fileAccessRequest->id,
+                'file_id' => $fileAccessRequest->file_id,
+                'requested_by_user_id' => $fileAccessRequest->requested_by_user_id,
+                'requested_permission' => $fileAccessRequest->requested_permission,
+                'remarks' => $fileAccessRequest->remarks,
+                'status' => $fileAccessRequest->status,
+                'created_at' => $fileAccessRequest->created_at,
+                'updated_at' => $fileAccessRequest->updated_at,
+            ],
+        ], 201); // 201 Created status code
+    }
+
 
 
 

@@ -17,8 +17,10 @@
             </nav>
 
             <div class="my-4 space-x-3">
-                <button class="bg-white px-2 p-1 rounded-md" id="uploadBtn">Upload File</button>
-                <button class="bg-white px-2 p-1 rounded-md">Create a Folder</button>
+                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
+                <x-button id="" label="Create a Folder" />
+                <x-button id="" label="Show Request Access" />
+
             </div>
 
             <x-modal.file-modal />
@@ -26,7 +28,7 @@
                 <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                     <x-forms.table />
                 </div>
-
+                @include('admin.administrative.component.file-request')
                 <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 hidden">
                     <div class="grid grid-cols-3 gap-4">
                         <div class="overflow-auto  rounded-lg bg-white p-5">

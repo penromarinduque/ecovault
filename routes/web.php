@@ -89,6 +89,8 @@ Route::middleware(['authentication'])->group(function () {
     //
     Route::post('/api/files/share', [FileShareController::class, 'ShareFile']);
 
+    Route::post('/api/files/request/{id}', [FileShareController::class, 'StoreRequest']);
+
     Route::get('/api/users/', [StaffController::class, 'GetEmployees']);
 
 

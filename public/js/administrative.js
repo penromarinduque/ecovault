@@ -99,18 +99,17 @@ function populateDataTable(data) {
                             file.is_shared 
                                 ? `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${file.id})">View</a>
                                     <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                       
-                                
-                                
-                                
-                                `
-                                : `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="requestAccess(${file.id})">Request Access</a>`
-                        }
-                         <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
+                           <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
                         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
-                        <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li> 
+                        <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>                               
+                                
+                                
+                                `
+                                : `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="requestAccess(${file.id}, '${file.file_name}')">Request Access</a>`
+                        }
+                     
                     </ul>
                 </div>`
             ],
@@ -139,11 +138,7 @@ function populateDataTable(data) {
     }
 }
 
-// Example function to handle access requests
-function requestAccess(fileId) {
-    // This function can be used to open a modal or send a request to the server
-    alert(`Request access for file ID: ${fileId}`);
-}
+
 
 function initializeDropdowns(data) {
     data.files.forEach((file) => {
@@ -592,3 +587,74 @@ exitButtonFileSummary.addEventListener("click", (event) => {
     mainTable.classList.add("opacity-100");
     }, 500);
 });
+
+const fileSectionFileRequest = document.getElementById("file-request");
+
+function requestAccess(fileId, fileName) {
+    
+    const fileNameInput = document.getElementById("file-request_name");
+
+    if (fileSectionFileRequest && fileNameInput) {
+        fileSectionFileRequest.classList.remove("hidden");
+        fileNameInput.value = fileName; 
+        document.getElementById("request-file-id").value = fileId;
+    
+    } else {
+        console.error("Modal or File Name Input not found");
+    }
+}
+
+const exitButtonFileRequest = document.getElementById("close-file-request-btn");
+
+exitButtonFileRequest.addEventListener("click", (event) => {
+    event.preventDefault();    
+   fileSectionFileRequest.classList.add("hidden");
+})
+
+document.getElementById("file-request-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the file ID and user ID
+    const fileId = document.getElementById("request-file-id").value; // Get file ID
+    const userId = document.getElementById("request-user-id").value; // Get user ID from hidden input
+
+    // Get other form values
+    const requestedPermission = document.getElementById("category").value; // Get selected permission
+    const remarks = document.getElementById("remarks").value; // Get remarks
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+        
+    // Create the request payload
+    const requestData = {
+        file_id: fileId,
+        requested_by_user_id: userId, // Current user's ID
+        requested_permission: requestedPermission,
+        remarks: remarks
+    };
+
+    // Make the POST request using Fetch API
+    fetch(`/api/files/request/${fileId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(requestData), // Convert requestData to JSON
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON response
+    })
+    .then(data => {
+        
+        document.getElementById("file-request").classList.add("hidden"); // Hide the modal after success
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    
+    });
+});
+
+
+
