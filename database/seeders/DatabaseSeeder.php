@@ -34,17 +34,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $locations = [
-            'Mogpog',
-            'Torrijos',
-            'Boac',
-            'Gasan',
-            'Buenavista',
-            'Sta. Cruz',
-        ];
+        Municipality::insert([
+            ['location' => 'Mogpog'],
+            ['location' => 'Torrijos'],
+            ['location' => 'Boac'],
+            ['location' => 'Gasan'],
+            ['location' => 'Buenavista'],
+            ['location' => 'Sta. Cruz'],
+        ]);
 
-        foreach ($locations as $location) {
-            Municipality::create(['location' => $location]);
-        }
+
     }
 }
