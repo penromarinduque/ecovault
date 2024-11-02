@@ -75,27 +75,34 @@ abstract class BaseController extends Controller
             }
             // If $type and $municipality are provided, fetch files with join
             elseif (!empty($type) && !empty($municipality)) {
-                $files = DB::table('files')
-                    ->where('files.is_archived', $isArchived)
-                    ->join('users', 'files.user_id', '=', 'users.id') // Join with users table for uploader details
-                    ->leftJoin('file_shares', 'files.id', '=', 'file_shares.file_id') // Join with file_shares table
-                    ->leftJoin('users as shared_users', 'file_shares.user_id', '=', 'shared_users.id') // Join with users table to get shared user details
-                    ->where('files.permit_type', $type)
-                    ->where('files.municipality', $municipality)
-                    ->select(
-                        'files.*',
-                        'users.name as user_name', // The uploader's name
-                        DB::raw("GROUP_CONCAT(shared_users.name) as shared_with") // Names of users with whom the file is shared
-                    )
-                    ->groupBy('files.id') // Group by file ID to aggregate shared user names
-                    ->get();
+                $files = File::where('is_archived', $isArchived)
+                    ->where('permit_type', $type)
+                    ->where('municipality', $municipality)
+                    ->with(['user:id,name', 'sharedUsers:id,name']) // Load uploader and shared users
+                    ->get()
+                    ->map(function ($file) {
+                        return [
+                            'id' => $file->id,
+                            'file_name' => $file->file_name,
+                            'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                            'office_source' => $file->office_source,
+                            'user_name' => $file->user->name, // Uploader's name
+                            'category' => $file->category,
+                            'classification' => $file->classification,
+                            'status' => $file->status,
+                            'shared_with' => $file->sharedUsers->pluck('name')->join(', '), // Concatenate shared users' names
+                        ];
+                    });
 
                 return response()->json([
                     'success' => true,
                     'data' => $files,
                     'message' => 'Files retrieved successfully',
                 ], 200);
+
             }
+
+
 
             return response()->json([
                 'success' => false,
