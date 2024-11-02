@@ -27,17 +27,6 @@ class AdminSeeder extends Seeder
 
         }
 
-        $locations = [
-            'Mogpog',
-            'Torrijos',
-            'Boac',
-            'Gasan',
-            'Buenavista',
-            'Sta. Cruz',
-        ];
 
-        foreach ($locations as $location) {
-            Municipality::create(['location' => $location]);
-        }
     }
 }

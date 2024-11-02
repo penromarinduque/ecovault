@@ -132,6 +132,10 @@ function populateDataTable(data) {
 
         // Initialize the dropdowns for the first page
         initializeDropdowns(data);
+
+       dataTable.on("datatable.page", () =>{
+        initializeDropdowns(data);
+       });
     }
 }
 
