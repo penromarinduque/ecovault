@@ -70,6 +70,7 @@
 
     <script>
         const record = {!! json_encode($record) !!};
+        const isAdmin = @json(auth()->user()->isAdmin);
     </script>
     <script src="{{ asset('js/administrative.js') }}"></script>
 

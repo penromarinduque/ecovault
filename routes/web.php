@@ -90,9 +90,16 @@ Route::middleware(['authentication'])->group(function () {
     Route::post('/api/files/share', [FileShareController::class, 'ShareFile']);
 
     Route::post('/api/files/request/{id}', [FileShareController::class, 'StoreRequest']);
+    Route::get('/api/files/GET/request-access', [FileShareController::class, 'GetFileAccessRequests']);
+
+    //Left behind
+    Route::patch('/api/files/request-access/{id}', [FileShareController::class, 'UpdateRequestStatus']);
+
 
     Route::get('/api/users/', [StaffController::class, 'GetEmployees']);
 
-
+    Route::get('/file-request', function () {
+        return view('admin.file-request.table');
+    });
 });
 

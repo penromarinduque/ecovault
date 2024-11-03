@@ -29,7 +29,7 @@
                 </button>
 
                 <div id="dropdownNotificationContent"
-                    class="border absolute right-10 top-16  bg-white shadow-lg rounded mt-2 w-72">
+                    class="border absolute right-10 top-16 hidden bg-white shadow-lg rounded mt-2 w-72">
                     <div
                         class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50 dark:bg-gray-800 dark:text-white">
                         Notifications

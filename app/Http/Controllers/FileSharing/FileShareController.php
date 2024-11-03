@@ -68,12 +68,12 @@ class FileShareController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'You have already submitted a request for this file. Please wait for admin approval or rejection.',
-                ], 400); // 400 Bad Request
+                ], 200); // 400 Bad Request
             } elseif ($existingRequest->status === 'approved') {
                 return response()->json([
                     'success' => false,
                     'message' => 'Your request has already been approved.',
-                ], 400);
+                ], 200);
             } elseif ($existingRequest->status === 'rejected') {
                 // Optionally, you can allow resubmission if the previous request was rejected
                 // You might want to reset the remarks or permission
@@ -117,7 +117,72 @@ class FileShareController extends Controller
         ], 201); // 201 Created status code
     }
 
+    public function GetFileAccessRequests()
+    {
+        try {
+
+            $requests = FileAccessRequests::with(['requestedBy:id,name', 'handledBy:id,name'])->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File shared successfully!',
+                'requests' => $requests
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sharing file: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function UpdateRequestStatus($id, Request $request)
+    {
+        try {
+            $status = $request->status;
+            if (!in_array($status, ['pending', 'approved', 'rejected'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid status value provided.',
+                ], 400); // 400 Bad Request
+            }
+            $fileAccessRequest = FileAccessRequests::find($id);
+
+            if (!$fileAccessRequest) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File access request not found.',
+                ], 404); // 404 Not Found
+            }
+
+            // Update the status field
+            $fileAccessRequest->status = $status;
+            $fileAccessRequest->handled_by_admin_id = auth()->user()->id;
+            $fileAccessRequest->save();
+
+            //FileShare
+            FileShares::create([
+                'file_id' => $fileAccessRequest->file_id,
+                'shared_with_user_id' => $fileAccessRequest->requested_by_user_id,
+                'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
+                'permission' => $fileAccessRequest->requested_permissionrequested_permission,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File access request status updated successfully!',
+                'data' => $fileAccessRequest
+            ]);
 
 
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating status : ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }
