@@ -38,8 +38,8 @@ abstract class BaseController extends Controller
             $type = $request->query('type');
             $municipality = $request->query('municipality');
             $report = $request->query('report');
-            // Default value for isArchived is false
             $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
+            $currentUserId = auth()->id(); // Get the currently logged-in user's ID
 
             // If $report is provided, fetch files without relationships
             if (!empty($report)) {
@@ -50,10 +50,11 @@ abstract class BaseController extends Controller
                     ->whereDoesntHave('landTitles')
                     ->where('report_type', $report)
                     ->where('is_archived', $isArchived)
-                    ->with(['user:id,name', 'fileShares']) // Load related fileShares to check sharing status
+                    ->with(['user:id,name', 'fileShares']) // Load related fileShares
                     ->get();
 
-                $files = $files->map(function ($file) {
+                $files = $files->map(function ($file) use ($currentUserId) {
+                    $sharedUserIds = $file->fileShares->pluck('shared_with_user_id')->toArray();
                     return [
                         'id' => $file->id,
                         'file_name' => $file->file_name,
@@ -63,7 +64,8 @@ abstract class BaseController extends Controller
                         'category' => $file->category,
                         'classification' => $file->classification,
                         'status' => $file->status,
-                        'is_shared' => $file->fileShares->isNotEmpty(), // Check if there are any fileShares
+                        'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
+                        'shared_users' => $sharedUserIds, // List of user IDs who have access
                     ];
                 });
 
@@ -73,14 +75,16 @@ abstract class BaseController extends Controller
                     'files' => $files
                 ]);
             }
+
             // If $type and $municipality are provided, fetch files with join
             elseif (!empty($type) && !empty($municipality)) {
                 $files = File::where('is_archived', $isArchived)
                     ->where('permit_type', $type)
                     ->where('municipality', $municipality)
-                    ->with(['user:id,name', 'sharedUsers:id,name']) // Load uploader and shared users
+                    ->with(['user:id,name', 'fileShares']) // Load uploader and shared users
                     ->get()
-                    ->map(function ($file) {
+                    ->map(function ($file) use ($currentUserId) {
+                        $sharedUserIds = $file->fileShares->pluck('shared_with_user_id')->toArray();
                         return [
                             'id' => $file->id,
                             'file_name' => $file->file_name,
@@ -90,7 +94,8 @@ abstract class BaseController extends Controller
                             'category' => $file->category,
                             'classification' => $file->classification,
                             'status' => $file->status,
-                            'shared_with' => $file->sharedUsers->pluck('name')->join(', '), // Concatenate shared users' names
+                            'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
+                            'shared_users' => $sharedUserIds, // List of user IDs who have access
                         ];
                     });
 
@@ -99,18 +104,12 @@ abstract class BaseController extends Controller
                     'data' => $files,
                     'message' => 'Files retrieved successfully',
                 ], 200);
-
             }
-
-
 
             return response()->json([
                 'success' => false,
                 'message' => 'No valid parameters provided.',
             ], 400);
-
-
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -119,6 +118,7 @@ abstract class BaseController extends Controller
             ], 500);
         }
     }
+
 
     public function GetFileById(Request $request, $id)
     {

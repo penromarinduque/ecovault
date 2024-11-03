@@ -16,7 +16,7 @@
         <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
             <a href="{{ route('file-manager.show') }}" class="flex  gap-2 items-center">
                 <img src="{{ asset('images/navigation/file-manager.png') }}" alt="" class="w-16">
-                <span class="">File Manager</span>
+                <span class="">Permits And Registration Documents</span>
             </a>
         </li>
 
@@ -30,7 +30,7 @@
         <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
             <a href="{{ route('archived-file.show') }}" class="flex  gap-2 items-center">
                 <img src="{{ asset('images/navigation/archive.png') }}" alt="" class="w-16">
-                <span class="">Archive Files</span>
+                <span class="">Archived Files</span>
             </a>
         </li>
 

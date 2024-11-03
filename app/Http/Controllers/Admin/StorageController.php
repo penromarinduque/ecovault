@@ -122,5 +122,58 @@ class StorageController extends Controller
         }
     }
 
+    public function GetAreaChartData()
+    {
+        try {
+            // Fetch all files
+            $files = File::all();
+
+            // Prepare data structure
+            $data = [
+                'categories' => [],
+                'series' => [
+                    [
+                        'name' => 'Uploads',
+                        'data' => []
+                    ]
+                ]
+            ];
+
+            // Count uploads per date
+            $uploadsByDate = [];
+
+            foreach ($files as $file) {
+                // Format date as needed (e.g., "2024-11-03")
+                $date = $file->created_at->format('Y-m-d');
+
+                // Count occurrences per date
+                if (!isset($uploadsByDate[$date])) {
+                    $uploadsByDate[$date] = 0;
+                }
+                $uploadsByDate[$date]++;
+            }
+
+            // Sort dates in ascending order
+            ksort($uploadsByDate);
+
+            // Populate categories and series data from the uploadsByDate array
+            foreach ($uploadsByDate as $date => $count) {
+                $data['categories'][] = $date;
+                $data['series'][0]['data'][] = [
+                    'x' => $date,
+                    'y' => $count
+                ];
+            }
+
+            return response()->json($data);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'No files found.'], 404);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching data: ' . $e->getMessage()], 500);
+        }
+    }
+
+
 }
 

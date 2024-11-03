@@ -32,7 +32,7 @@
                     class="border absolute right-10 top-16 hidden bg-white shadow-lg rounded mt-2 w-72">
                     <div
                         class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50 dark:bg-gray-800 dark:text-white">
-                        Notifications
+                        Incoming File Request
                     </div>
                     <div class="divide-y divide-gray-100 dark:divide-gray-700">
                         <a href="#" class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -77,7 +77,7 @@
 
 
                 <button class="bg-white px-4 flex items-center py-1 rounded-md" id="adminBtn">
-                    <i class='bx bxs-user-circle bx-md mr-2'></i> Admin
+                    <i class='bx bxs-user-circle bx-md mr-2'></i> {{ auth()->user()->name }}
                     <i class='bx bx-chevron-down'></i>
                 </button>
 

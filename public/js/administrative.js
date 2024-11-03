@@ -93,23 +93,18 @@ function populateDataTable(data) {
                 </button>
                 <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
                     <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                        
-
-                        ${
-                            file.is_shared 
+                    ${
+                        // If the file is shared, show all options to everyone
+                         file.shared_users.includes(currentUserId)  || isAdmin
                                 ? `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${file.id})">View</a>
-                                    <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                           <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
-                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
-                        <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>                               
-                                
-                                
-                                `
+                                  <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+                                  <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
+                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
+                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
+                                  <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>`
                                 : `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="requestAccess(${file.id}, '${file.file_name}')">Request Access</a>`
                         }
-                     
                     </ul>
                 </div>`
             ],
@@ -132,13 +127,11 @@ function populateDataTable(data) {
         // Initialize the dropdowns for the first page
         initializeDropdowns(data);
 
-       dataTable.on("datatable.page", () =>{
-        initializeDropdowns(data);
-       });
+        dataTable.on("datatable.page", () => {
+            initializeDropdowns(data);
+        });
     }
 }
-
-
 
 function initializeDropdowns(data) {
     data.files.forEach((file) => {
@@ -160,6 +153,7 @@ function initializeDropdowns(data) {
 document.addEventListener('DOMContentLoaded', () => {
     FetchAndPopulate();
 });
+
 
 
 const showUpload = document.getElementById("uploadBtn");

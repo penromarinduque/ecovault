@@ -39,6 +39,8 @@ Route::post('/logout', [AuthController::class, 'Logout'])->name('logout.post');
 Route::middleware(['authentication'])->group(function () {
     Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
     Route::get('/staff/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
+    Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);
+
 
     Route::get('/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
     Route::get('/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');

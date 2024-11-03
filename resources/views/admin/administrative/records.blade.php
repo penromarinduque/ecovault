@@ -18,8 +18,7 @@
 
             <div class="my-4 space-x-3">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
-                <x-button id="" label="Create a Folder" />
-                <x-button id="" label="Show Request Access" />
+                <x-button id="" label="Create a Folder" style="secondary" />
 
             </div>
 
@@ -71,6 +70,7 @@
     <script>
         const record = {!! json_encode($record) !!};
         const isAdmin = @json(auth()->user()->isAdmin);
+        const currentUserId = {!! json_encode(auth()->id()) !!};
     </script>
     <script src="{{ asset('js/administrative.js') }}"></script>
 

@@ -30,7 +30,20 @@
                 <p class="text-xl font-bold" id="zip-count">0</p> <!-- Placeholder for ZIP count -->
             </div>
         </div>
-        <x-storage-chart />
+
+        <div class="grid grid-cols-3 gap-4"> <!-- Three-column grid layout for flexible sizing -->
+            <!-- Storage chart spans 1 column -->
+            <div class="col-span-1 h-full">
+                <x-storage-chart />
+            </div>
+
+            <!-- Area chart spans the remaining 2 columns -->
+            <div class="col-span-2 h-full">
+                <x-areaChart />
+            </div>
+        </div>
+
+
 
     </div>
 
