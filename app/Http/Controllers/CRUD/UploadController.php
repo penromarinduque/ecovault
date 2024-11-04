@@ -256,34 +256,35 @@ class UploadController extends Controller
 
         // Import each page
         for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            // Import the current page as a template
             $templateId = $pdf->importPage($pageNo);
+
+            // Add a new page and use the imported template
             $pdf->AddPage();
             $pdf->useTemplate($templateId);
 
-
+            // Get the page dimensions
             $pageWidth = $pdf->GetPageWidth();
             $pageHeight = $pdf->GetPageHeight();
             $marginRight = 10; // Margin from the right edge of the page
-            $marginBottom = 10; // Margin from the bottom edge of the page
+            $marginTop = 10;   // Margin from the top edge of the page
 
-            // Set QR Code size and position (you can adjust these values)
+            // Set QR Code size and position (adjust as needed)
             $qrCodeWidth = 20; // Width in mm
             $qrCodeHeight = 20; // Height in mm
-            $marginLeft = 10; // Margin from the left edge of the page
-            $marginTop = 10; // Margin from the top edge of the page
 
-
+            // Calculate the QR code position at the top-right corner
             $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
-            $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
+            $yPosition = $marginTop;
 
-            // Add the QR Code image
+            // Add the QR Code image, which will appear on top of any existing content
             $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
         }
 
-        // Save the modified PDF to a new file
-
+        // Save the modified PDF to the same file path
         $pdf->Output('F', $fullFilePath);
 
         return $fullFilePath;
     }
+
 }
