@@ -1,7 +1,7 @@
 //love what you are doing
 let dataTable;
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     // Define parameters for the request
     const params = {
@@ -25,18 +25,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Function to fetch data and initialize or update the DataTable
 async function fetchData(queryParams) {
-    console.log("Starting data fetch with parameters:", queryParams); // Log params
-    
+    // Log params
+
     try {
         const response = await fetch(`/api/files?${queryParams}`);
-        
+
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Fetch failed with status: ${response.status} - ${errorText}`);
         }
-        
+
         const data = await response.json();
-        console.log("Fetched data:", data); // Log data to confirm structure
 
         const customData = {
             headings: ["Name", "Office Source", "Date Modified", "Modified By", "Category", "Classification", "Status", "Actions"],
@@ -56,9 +55,9 @@ async function fetchData(queryParams) {
         };
 
         const dataTableElement = document.getElementById("sorting-table");
-        
+
         if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-             dataTable = new simpleDatatables.DataTable(dataTableElement, {
+            dataTable = new simpleDatatables.DataTable(dataTableElement, {
                 classes: {
                     dropdown: "datatable-perPage flex items-center",
                     selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
@@ -75,7 +74,7 @@ async function fetchData(queryParams) {
                 perPageSelect: [5, 10, 20, 50],
                 data: customData
             });
-            
+
             // Initialize dropdowns for the current page
             initializeDropdowns(data);
 
@@ -93,7 +92,7 @@ async function fetchData(queryParams) {
 
 // Generate action buttons for dropdowns
 function generateActionButtons(fileId) {
-    console.log('Function called with fileId:', isAdmin); // Log to see what values are passed
+    // Log to see what values are passed
     // Use the isAdmin variable directly
     return `
         <button id="dropdownLeftButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
@@ -108,7 +107,7 @@ function generateActionButtons(fileId) {
                 <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
                 <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                <li><button id="defaultModalButton${fileId}" data-modal-target="defaultModal${fileId}" data-modal-toggle="defaultModal${fileId}" class="block px-4 py-2 hover:bg-gray-100">Share</button></li>
+                <li><button class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</button></li>
                 <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
                 <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</button></li>
             </ul>
@@ -128,8 +127,8 @@ function generateActionButtons(fileId) {
     `;
 }
 
-function sharinngDropdown(fileId){
-    return   ``
+function sharinngDropdown(fileId) {
+    return ``
 }
 
 
@@ -156,7 +155,7 @@ function initializeDropdowns(data) {
 }
 // Refresh data after CRUD operation
 async function updateDataAfterCRUD() {
-    console.log("Updating data after CRUD operation...");
+
 
     // Define parameters for the request
     const params = {
@@ -182,13 +181,13 @@ async function updateDataAfterCRUD() {
 
     // Fetch new data with the queryParams
     await fetchData(queryParams); // Pass queryParams
-    console.log("DataTable display has been refreshed!");
+
 }
 
 
 
 window.updateDataAfterCRUD = updateDataAfterCRUD;
- // Close DOMContentLoaded function
+// Close DOMContentLoaded function
 // Archive file function
 async function archiveFile(fileId) {
     const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -275,7 +274,7 @@ document.getElementById('close-summary-btn').addEventListener('click', () => tog
 
 
 
-// This script fetches file data when an edit button is clicked
+
 
 
 
