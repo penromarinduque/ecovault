@@ -20,8 +20,8 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-4 md:p-5">
-                    <form class="space-y-8" action="#">
-
+                    <form id="file-share-form" class="space-y-8" action="#">
+                        @csrf
                         <div class="relative">
                             <h1 class="block mb-2 text-md font-medium text-gray-900">Select Employee</h1>
 
@@ -29,7 +29,7 @@
                             <div class="relative">
                                 <!-- Input Container without border and focus styles -->
                                 <div id="input-container"
-                                    class="flex border border-gray-500 bg-gray-50 items-center h-14 rounded-md w-full">
+                                    class="flex border border-gray-500 items-center h-14 rounded-md w-full">
 
                                     <!-- Selected Employee Pill -->
                                     <span id="selected-employee-pill"
@@ -37,16 +37,16 @@
                                         <span id="selected-employee-name"></span>
                                         <button id="clear-selection" class="ml-4 text-red-500 text-lg">✕</button>
                                     </span>
-
+                                    <input class="hidden" id="selected-employee-id" name="employee_id" value="">
                                     <!-- Input Field with Border and Focus Styles -->
                                     <input type="text" id="user-search"
-                                        class="bg-transparent h-full  border-0 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full"
+                                        class="bg-transparent h-full  border-0 text-gray-900 rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full"
                                         placeholder="Search for employees" autocomplete="off" />
                                 </div>
 
                                 <!-- Dropdown for displaying employee search results -->
                                 <div id="search-dropdown"
-                                    class="z-10 mt-1 hidden absolute bg-gray-50 rounded-lg shadow-xl border border-gray-300 w-full">
+                                    class="z-20 mt-1 hidden absolute bg-gray-50 rounded-md shadow-xl border border-gray-500 w-full">
                                     <ul id="user-list" class="pt-2 pb-2 text-md text-gray-700">
                                         <!-- Display employees here -->
                                     </ul>
@@ -56,18 +56,50 @@
 
                         </div>
 
-                        {{-- <div>
-                        <label for="category" class="block mb-2 text-md font-medium text-gray-900">Permission</label>
-                        <select id="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg fous:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
-                            <option disabled selected>Select permissions</option>
-                            <option value="viewer">Viewer</option>
-                            <option value="editor">Editor</option>
-                        </select>
-                    </div> --}}
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label for="category"
+                                    class="block mb-2 text-md font-medium text-gray-900">Permission</label>
+                                <select id="permission"
+                                    class="border border-gray-500 text-gray-900 text-md rounded-md fous:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                    <option disabled selected class="">Select permissions</option>
+                                    <option value="viewer">Viewer</option>
+                                    <option value="editor">Editor</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="category" class="block mb-2 text-md font-medium text-gray-900">Due</label>
+                                <div class="relative pb-0">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <svg class="w-4 h-4 text-gray-500 " aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                        </svg>
+                                    </div>
+                                    <input id="datepicker-format" datepicker datepicker-format="mm-dd-yyyy"
+                                        type="text"
+                                        class=" border border-gray-500 text-gray-900 text-md rounded-md fous:ring-primary-500 focus:border-primary-500 w-full ps-10 p-2.5"
+                                        placeholder="Select date">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- text area-->
+                        <div class="relative">
+                            <textarea type="text" id="file-share-message"
+                                class="resize-none block px-2.5 pb-2.5 pt-4 w-full text-gray-900 bg-transparent rounded-md border-1 border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                placeholder=" "></textarea>
+                            <label for="file-share-message"
+                                class="absolute text-sm text-gray-500 duration-300 transform -translate-y-1 scale-75 top-3 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Message
+                            </label>
+                        </div>
+
+
 
                         <button type="submit"
-                            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-md px-5 py-2.5 text-center">Share</button>
+                            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-md text-md px-5 py-2.5 text-center">Share</button>
                     </form>
                 </div>
             </div>
