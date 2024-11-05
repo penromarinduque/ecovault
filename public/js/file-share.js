@@ -1,4 +1,4 @@
-// file share modal 
+//file share modal 
 async function fileShare(fileId) {
     const fileShareModal = document.getElementById('file-share-modal');
 
@@ -12,23 +12,60 @@ async function fileShare(fileId) {
 
         const data = await response.json();
         if (data && data.file) {
-
             document.getElementById('share-file-name').textContent = data.file.file_name;
-          
+            document.getElementById('file_id').value = fileId;
+            // Set shareFileId to the fileId instead of using .value
+
 
             fileShareModal.classList.remove('hidden');
         } else {
             console.error('Invalid data structure:', data);
-
         }
     } catch (error) {
         console.error('Error fetching file name:', error);
-
     }
-
 }
 
 
+document.getElementById('file-share-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const csrfToken = formData.get('_token');
+    const formDataObj = Object.fromEntries(formData.entries());
+
+    const sharedWithUserId = formData.get('shared_with_user_id');
+
+    if (!sharedWithUserId) {
+        return;
+    }
+
+    console.log(JSON.stringify(formDataObj, null, 2));
+    try {
+        const response = await fetch('/api/files/share', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken // Set CSRF token in the headers
+            },
+            body: formData,
+
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            event.target.reset();
+            clearSelection();
+            closeFileShare();
+        } else {
+            alert('Failed to share file: ' + data.message);
+        }
+
+
+    } catch (error) {
+        console.error('Error sharing file:', error);
+        alert('An error occurred while sharing the file.');
+    }
+});
 
 // file share
 // DOM Elements
@@ -40,7 +77,7 @@ const selectedEmployeePill = document.getElementById('selected-employee-pill');
 const selectedEmployeeName = document.getElementById('selected-employee-name');
 const clearSelectionButton = document.getElementById('clear-selection');
 const closeModalButton = fileShareModal.querySelector('button[type="button"]');
-const selectedEmployeeIdInput = document.getElementById('selected-employee-id');
+const selectedEmployeeIdInput = document.getElementById('shared_with_user_id');
 
 // Fetch Controller and Selection State
 let fetchController = null;
