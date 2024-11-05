@@ -5,7 +5,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
-
+    @include('admin.file-manager.component.share-file')
     <div class="bg-slate-300 overflow-auto rounded-md text-black p-4">
 
         <div>
@@ -442,16 +442,5 @@
         </div>
 
     </div>
-
-
-    <script>
-        const isAdmin = {!! json_encode(auth()->check() && auth()->user()->isAdmin) !!};
-        // Function to handle fading out and in sections
-        const type = {!! json_encode($type) !!};
-        const municipality = {!! json_encode($municipality) !!};
-        const isArchived = false; // Define any other variables here if needed
-    </script>
-    <script src="{{ asset('js/file-manager/file-manager.js') }}"></script>
-
-    <script src="{{ asset('js/file-modal.js') }}"></script>
+    @include('admin.file-manager.component.js')
 @endsection

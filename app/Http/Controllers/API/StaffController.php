@@ -8,23 +8,34 @@ use App\Models\User;
 class StaffController extends Controller
 {
 
-    public function GetEmployees()
+    public function GetEmployees(Request $request)
     {
         try {
-            $employees = User::where('isAdmin', false)->get();
+
+            $search = $request->input('search');
+
+            $query = User::where('isAdmin', false);
+
+            if ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            }
+            $employees = $query->get();
             return response()->json([
                 'success' => true,
-                'message' => 'Employee retrieved successfully.',
+                'message' => 'Employees retrieved successfully.',
                 'employees' => $employees
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while retrieving the file.',
+                'message' => 'fail retrieve of employees',
                 'error' => $e->getMessage()
             ], 500);
+
+
         }
     }
+
 
 }
