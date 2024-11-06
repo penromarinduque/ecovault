@@ -401,7 +401,7 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateDataAfterCRUD();
+                                                    updateDataAfterCRUD()
                                                     console.log("Scueeess")
                                                 }
                                             })
@@ -420,7 +420,7 @@
                                 .catch(error => {
                                     console.log(error);
                                 }).finally(() => {
-
+                                    updateDataAfterCRUD()
                                     this.reset();
 
                                     const fileInput = document.getElementById('file-upload');

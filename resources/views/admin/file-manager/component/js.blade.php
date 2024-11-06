@@ -1,5 +1,6 @@
  <script>
      const isAdmin = {!! json_encode(auth()->check() && auth()->user()->isAdmin) !!};
+
      // Function to handle fading out and in sections
      const type = {!! json_encode($type) !!};
      const municipality = {!! json_encode($municipality) !!};

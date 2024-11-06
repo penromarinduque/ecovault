@@ -48,7 +48,7 @@ async function fetchData(queryParams) {
                     file.category,
                     file.classification,
                     file.status,
-                    generateActionButtons(file.id)
+                    generateKebab(file.id)
                 ],
                 attributes: { class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize" }
             }))
@@ -82,6 +82,9 @@ async function fetchData(queryParams) {
             dataTable.on("datatable.page", () => {
                 initializeDropdowns(data); // Re-initialize dropdowns on page change
             });
+            dataTable.on('datatable.search:after', () => {
+     initializeDropdowns(data);
+});
         }
     } catch (error) {
         console.error('Fetch operation error:', error.message || error);
@@ -91,44 +94,39 @@ async function fetchData(queryParams) {
 
 
 // Generate action buttons for dropdowns
-function generateActionButtons(fileId) {
-    // Log to see what values are passed
-    // Use the isAdmin variable directly
+function generateKebab(fileId) {
+    const commonActions = `
+        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
+        <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
+        <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
+    `;
+
+    const adminActions = `
+        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
+        <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+        <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
+        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+        <li><button class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</button></li>
+        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
+        <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</button></li>
+    `;
+
+    // Choose the correct actions based on isAdmin
+  const actions = isAdmin ? adminActions : commonActions;
+
     return `
         <button id="dropdownLeftButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
         </button>
-        ${isAdmin ? `
         <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
             <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-                <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                <li><button class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</button></li>
-                 <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
-                <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</button></li>
+                ${actions}
             </ul>
         </div>
-        ` : `
-        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-            <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-                <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Request Access</a></li>
-                <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
-                <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</button></li>
-            </ul>
-        </div>
-        `}
     `;
-}
-
-function sharinngDropdown(fileId) {
-    return ``
 }
 
 
