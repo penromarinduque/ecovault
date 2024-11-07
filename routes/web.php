@@ -80,7 +80,7 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/api/municipalities', [MunicipalityController::class, 'GetMunicipalities']);
 
-    Route::get("/superuser/test", function () {
+    Route::get('/superuser/test', function () {
         return view("superuser.test");
     });
 

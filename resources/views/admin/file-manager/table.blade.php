@@ -38,14 +38,14 @@
         <div class="grid gap-60">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
-
-                    <table id="sorting-table">
-                        <tbody>
-
-                        </tbody>
-                    </table>
-
-
+                    <!-- load the table-->
+                    @component('components.forms.table', [
+                        'type' => $type,
+                        'municipality' => $municipality,
+                        'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                    ])
+                        <!--add something to use in the table updated by harvs-->
+                    @endcomponent
                 </div>
 
             </div>
@@ -329,8 +329,8 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    console.log(document.getElementById('name-of-client')
-                                        .value);
+                                    document.getElementById('name-of-client')
+                                        .value;
                                     if (data.success) {
                                         showToast(data.message, true);
                                         fileId = data.fileId;
@@ -389,7 +389,7 @@
                                                 .value);
                                         }
 
-                                        console.log(permit_type);
+
                                         fetch('/permit-upload', {
                                                 method: 'POST',
                                                 body: formPermit,
@@ -401,8 +401,7 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateDataAfterCRUD()
-                                                    console.log("Scueeess")
+                                                    updateTable()
                                                 }
                                             })
                                             .catch((error) => {
@@ -413,14 +412,14 @@
 
 
                                     } else {
-                                        console.log(data);
+
                                         showToast(data.message || 'File upload failed.', false);
                                     }
                                 })
                                 .catch(error => {
-                                    console.log(error);
+                                    console.error(error);
                                 }).finally(() => {
-                                    updateDataAfterCRUD()
+
                                     this.reset();
 
                                     const fileInput = document.getElementById('file-upload');
