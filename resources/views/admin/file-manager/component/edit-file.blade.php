@@ -690,7 +690,7 @@
             const result = await response.json();
 
             if (result.success) {
-                updateTable()
+                fetchData();
             } else {
                 console.error(result.message);
                 alert('Failed to update the file.');

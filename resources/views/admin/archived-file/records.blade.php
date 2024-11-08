@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <div class="bg-slate-300  rounded-md text-black p-4 ">
+    <div class="bg-slate-200  rounded-md text-black p-4 ">
         <div>
             <nav aria-label="Breadcrumb">
                 <ol class="flex space-x-2 text-sm text-gray-600">

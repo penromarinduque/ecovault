@@ -5,11 +5,11 @@
 @section('content')
 
 
-    <div class="bg-slate-300  rounded-md text-black p-4 ">
+    <div class="bg-slate-200  rounded-md text-black p-4 ">
         <div>
             <nav aria-label="Breadcrumb">
                 <ol class="flex space-x-2 text-sm text-gray-600">
-                    <li><a href="{{ route('file-manager.show') }}"><span class="">Administrative Reports </span></a>
+                    <li><a href="{{ route('file-manager.show') }}"><span class="">Administrative Reports</span></a>
                     </li>
                     <li><span class="text-gray-400"> &gt; </span></li>
                     <li><a class="font-bold">{{ $record }}</a></li>
@@ -25,7 +25,17 @@
             <x-modal.file-modal />
             <div class="grid">
                 <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
-                    <x-forms.table />
+                    <div class="overflow-x-auto bg-white rounded-lg p-5">
+                        @component('components.forms.table', [
+                            'record' => $record,
+                            'type' => '',
+                            'municipality' => '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                        ])
+                            <!--add something to use in the table updated by harvs-->
+                        @endcomponent
+                    </div>
                 </div>
                 @include('admin.administrative.component.file-request')
                 <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 hidden">
@@ -67,12 +77,7 @@
         </div>
     </div>
 
-    <script>
-        const record = {!! json_encode($record) !!};
-        const isAdmin = @json(auth()->user()->isAdmin);
-        const currentUserId = {!! json_encode(auth()->id()) !!};
-    </script>
-    <script src="{{ asset('js/administrative.js') }}"></script>
+    {{-- <script src="{{ asset('js/administrative.js') }}"></script> --}}
 
     <script src="{{ asset('js/file-modal.js') }}"></script>
 @endsection

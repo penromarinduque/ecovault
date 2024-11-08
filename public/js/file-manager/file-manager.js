@@ -14,14 +14,13 @@ async function archiveFile(fileId) {
         });
         const result = await response.json();
         if (response.ok && result.success) {
-            updateTable()
+            fetchData()
+            showSuccessAlert(result.message || "Operation completed successfully!");
         } else {
-            alert('Failed to archive the file.');
-            console.error(result.message || 'Unknown error');
+            showErrorAlert(result.message || 'Unknown error');
         }
     } catch (error) {
-        console.error('Error archiving the file:', error);
-        alert('An error occurred while archiving the file.');
+        showErrorAlert(error.message || 'An unexpected error occurred');
     }
 }
 

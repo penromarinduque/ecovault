@@ -1,4 +1,4 @@
-let dataTable; // Keep a reference to the DataTable instance
+let DataTable; // Keep a reference to the DataTable instance
 
 function FetchAndPopulate() {
     const params = {
@@ -43,7 +43,7 @@ function refreshDataTable() {
     const filteredParams = Object.fromEntries(
         Object.entries(params).filter(([key, value]) => value !== '')
     );
-
+console.log(filteredParams)
     // Build the query string
     const queryParams = new URLSearchParams(filteredParams).toString();
 
@@ -55,8 +55,8 @@ function refreshDataTable() {
             return response.json();
         })
         .then(data => {
-            if (dataTable) {
-                dataTable.destroy();  // Clear the existing table
+            if (DataTable) {
+                DataTable.destroy();  // Clear the existing table
             }
             populateDataTable(data); // Repopulate with updated data
         })
@@ -114,9 +114,9 @@ function populateDataTable(data) {
         })),
     };
 
-    const dataTableElement = document.getElementById("main-table");
-    if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-        dataTable = new simpleDatatables.DataTable(dataTableElement, {
+    const DataTableElement = document.getElementById("wrong-table");
+    if (DataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+        DataTable = new simpleDatatables.DataTable(DataTableElement, {
             data: customData,
             perPage: 5,
             searchable: true,
@@ -127,7 +127,7 @@ function populateDataTable(data) {
         // Initialize the dropdowns for the first page
         initializeDropdowns(data);
 
-        dataTable.on("datatable.page", () => {
+        DataTable.on("datatable.page", () => {
             initializeDropdowns(data);
         });
     }
@@ -151,7 +151,7 @@ function initializeDropdowns(data) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    FetchAndPopulate();
+    // FetchAndPopulate();
 });
 
 

@@ -6,7 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
     @include('admin.file-manager.component.share-file')
-    <div class="bg-slate-300 overflow-auto rounded-md text-black p-4">
+    <div class="bg-slate-200 overflow-auto rounded-md text-black p-4">
 
         <div>
             <nav aria-label="Breadcrumb">
@@ -26,16 +26,15 @@
             </nav>
 
             <div class="my-4 space-x-3">
-                <button class="bg-white text-gray-600 font-medium   px-2 p-1 rounded-md" id="uploadBtn">Upload
-                    File</button>
-                <button class="bg-white px-2 p-1 rounded-md text-gray-600 font-medium">Create a Folder</button>
+                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
+                <x-button id="" label="Create a Folder" style="secondary" />
 
             </div>
         </div>
 
         <x-modal.file-modal />
 
-        <div class="grid gap-60">
+        <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     <!-- load the table-->
@@ -43,6 +42,7 @@
                         'type' => $type,
                         'municipality' => $municipality,
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                        'isArchived' => false,
                     ])
                         <!--add something to use in the table updated by harvs-->
                     @endcomponent
@@ -401,11 +401,11 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateTable()
+                                                    showSuccessAlert(data.success || "Operation completed successfully!");
+                                                    fetchData()
                                                 }
                                             })
                                             .catch((error) => {
-
                                                 showToast(error || 'File upload failed.', false);
                                             });
 

@@ -6,19 +6,25 @@
 <script>
     //love what you are doing
     let dataTable;
-    const isAdmin = {!! json_encode($isAdmin) !!};
+
+    let report = {!! json_encode($record ?? []) !!};
+
+    let isAdmin = {!! json_encode($isAdmin) !!};
     let type = {!! json_encode($type) !!};
     let municipality = {!! json_encode($municipality) !!};
-    let isArchived = false;
+    let isArchived = {!! json_encode($isArchived) !!};
+
     document.addEventListener("DOMContentLoaded", function() {
-
         // Define parameters for the request
+        fetchData();
 
+    });
 
+    async function fetchData() {
         const params = {
             type: type,
             municipality: municipality,
-            report: '',
+            report: report || '',
             isArchived: isArchived
         };
 
@@ -29,14 +35,7 @@
 
         // Build the query string
         const queryParams = new URLSearchParams(filteredParams).toString();
-
-        // Initial data fetch
-        fetchData(queryParams);
-
-    });
-
-    // Function to fetch data and initialize or update the DataTable
-    async function fetchData(queryParams) {
+        console.log(queryParams)
         try {
             const response = await fetch(`/api/files?${queryParams}`);
 
@@ -44,68 +43,117 @@
                 const errorText = await response.text();
                 throw new Error(`Fetch failed with status: ${response.status} - ${errorText}`);
             }
-
             const data = await response.json();
-            if (dataTable) {
-                dataTable.destroy(); // Clear the existing table
-            }
-            const customData = {
-                headings: ["Name", "Office Source", "Date Modified", "Modified By", "Category",
-                    "Classification", "Status", "Actions"
-                ],
-                data: data.data.map((file) => ({
-                    cells: [
-                        file.file_name,
-                        file.office_source,
-                        file.updated_at,
-                        file.user_name,
-                        file.category,
-                        file.classification,
-                        file.status,
-                        generateKebab(file.id)
-                    ],
-                    attributes: {
-                        class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
-                    }
-                }))
-            };
 
-            const dataTableElement = document.getElementById("main-table");
+            initializeTable(data);
 
-            if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-                // Recreate the DataTable instance with the new data
-                dataTable = new simpleDatatables.DataTable(dataTableElement, {
-                    classes: {
-                        dropdown: "datatable-perPage flex items-center",
-                        selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
-                        info: "datatable-info text-sm text-gray-500",
-                    },
-                    labels: {
-                        perPage: "<span class='text-gray-500 m-3'>Rows</span>",
-                        searchTitle: "Search through table data",
-                    },
-                    searchable: true,
-                    perPageSelect: true,
-                    sortable: true,
-                    perPage: 5,
-                    perPageSelect: [5, 10, 20, 50],
-                    data: customData
-                });
-
-                // Initialize dropdowns for the current page
-                initializeDropdowns(data);
-
-                // Listen for pagination events
-                dataTable.on("datatable.page", () => {
-                    initializeDropdowns(data); // Re-initialize dropdowns on page change
-                });
-            }
         } catch (error) {
             console.error('Fetch operation error:', error.message || error);
             alert('Failed to fetch data. Please try again.');
         }
     }
 
+    function initializeTable(data) {
+        if (dataTable) {
+            dataTable.destroy();
+        }
+        const customData = formData(data.data);
+        const dataTableElement = document.getElementById("main-table");
+
+        if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+            dataTable = new simpleDatatables.DataTable(dataTableElement, {
+                classes: {
+                    loading: "datatable-loading text-sm",
+                    dropdown: "datatable-perPage flex items-center",
+                    selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
+                    ellipsis: "datatable-ellipsis text-lg",
+                    info: "datatable-info text-sm text-gray-500",
+                    // pagination: "datatable-pagination",
+                    // paginationList: "datatable-pagination-list",
+                    search: "datatable-search",
+                    input: "datatable-input",
+                    top: "datatable-top",
+                    bottom: "datatable-bottom",
+                },
+                data: customData,
+                paging: true,
+                nextPrev: true, // Enable previous and next buttons
+                pagerDelta: -6, // Show only one page number on each side of the current page
+                perPageSelect: [5, 10, 20, 50],
+                perPage: 5,
+                sortable: true,
+                searchable: true,
+                ellipsisText: '...',
+                labels: {
+                    perPage: "<span class='text-gray-500 m-3'>Rows</span>",
+                    searchTitle: "Search through table data",
+                    placeholder: "Search...",
+                },
+            });
+
+            tableEvents(data); // Custom function for handling events if required
+        }
+    }
+
+    // function limitPaginationDisplay(dataTable) {
+    //     const maxDisplay = 3; // Number of pages to show at a time
+    //     const paginationList = document.querySelector('.datatable-pagination-list');
+
+    //     if (paginationList) {
+    //         const pageButtons = Array.from(paginationList.querySelectorAll('li'));
+
+    //         pageButtons.forEach((btn, index) => {
+    //             // Always show the first (Prev) and last (Next) buttons
+    //             if (index === 0 || index === pageButtons.length - 1) {
+    //                 btn.style.display = "";
+    //             } else {
+    //                 // Get current page, start, and end indexes to display
+    //                 const currentPage = dataTable.currentPage + 1;
+    //                 const start = Math.max(1, currentPage - Math.floor(maxDisplay / 2));
+    //                 const end = start + maxDisplay - 1;
+
+    //                 // Show only the buttons within range
+    //                 const pageNum = parseInt(btn.innerText);
+    //                 btn.style.display = (pageNum >= start && pageNum <= end) ? "" : "none";
+    //             }
+    //         });
+    //     }
+    // }
+
+    function tableEvents(data) {
+        const events = ["init", "refresh", "page", "perpage", "update"];
+        events.forEach(event => {
+            dataTable.on(`datatable.${event}`, () => {
+                initializeDropdowns(data);
+            });
+        });
+    }
+
+    function formData(data) {
+        return {
+            headings: ["Name", "Office Source", "Date Modified", "Modified By", "Category",
+                "Classification", "Status",
+                "Actions"
+            ],
+            data: data.map(file => ({
+                cells: [
+                    file.file_name.length > 15 ?
+                    file.file_name.substring(0, 15) + '...' :
+                    file.file_name, // Truncate file name if longer than 15 characters
+                    file.office_source,
+                    file.updated_at,
+                    file.user_name,
+                    file.category,
+                    file.classification,
+                    file.status,
+                    generateKebab(file.id)
+                ],
+                attributes: {
+                    class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
+                }
+            }))
+        };
+    }
 
     // Generate action buttons for dropdowns
     function generateKebab(fileId) {
@@ -143,8 +191,6 @@
     `;
     }
 
-
-
     // Create dropdown for each file
     function createDropdown(fileId) {
         const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
@@ -165,34 +211,4 @@
             createDropdown(file.id);
         });
     }
-    // Refresh data after CRUD operation
-    function updateTable() {
-        // Define parameters for the request
-        const params = {
-            type: type,
-            municipality: municipality,
-            report: '',
-            isArchived: isArchived
-        };
-
-        // Remove empty parameters
-        const filteredParams = Object.fromEntries(
-            Object.entries(params).filter(([key, value]) => value !== '')
-        );
-
-        // Build the query string
-        const newParams = new URLSearchParams(filteredParams).toString();
-
-        // Destroy the existing DataTable instance if it exists
-        if (dataTable && typeof dataTable.destroy === "function") {
-            dataTable.destroy();
-            dataTable = null;
-
-        }
-
-        // Fetch new data with the queryParams
-        fetchData(newParams);
-    }
-
-    window.updateTable = updateTable;
 </script>

@@ -17,15 +17,21 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 </head>
 
-<body class="bg-[#F4F2F2]">
+<body class="">
     <!-- Header section -->
-    @include('layouts.admin.partials.navigation')
-    @include('layouts.admin.partials.sidebar')
-    <!-- Main content section -->
-    <div class="content ml-64 p-4 mt-20">
-        @yield('content')
-    </div>
+    <div class="antialiased">
+        <x-alerts.alert-message />
+        @include('layouts.admin.partials.navigation')
+        @include('layouts.admin.partials.sidebar')
 
+
+        <!-- Main content section -->
+        <main class="p-4 h-auto pt-20">
+            @yield('content')
+
+        </main>
+
+    </div>
 
 
 </body>
