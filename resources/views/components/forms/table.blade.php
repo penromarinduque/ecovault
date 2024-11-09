@@ -163,15 +163,14 @@
         <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
         <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
     `;
-
         const adminActions = `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
         <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-        <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
+        <li><button class="w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-        <li><button class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</button></li>
-        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
-        <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</button></li>
+        <li><a class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</a></li>
+        <li><button class="w-full text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
+        <li><a onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</a></li>
     `;
 
         // Choose the correct actions based on isAdmin

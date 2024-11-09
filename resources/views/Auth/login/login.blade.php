@@ -4,27 +4,24 @@
 
 @section('content')
 
-    <section class="bg-gray-50 ">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
-            <div class="w-screen bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0  ">
+    <section class="bg-gray-50 flex items-center">
+        <div class="flex flex-col items-center justify-center w-full px-6 py-8 mx-auto lg:py-0">
+            <div class="w-screen bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                         Login
                     </h1>
                     <form class="space-y-4 md:space-y-6" action="{{ route('login.post') }}" method="POST">
                         @csrf
                         <div class="mb-5">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your
-                                email</label>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
                             <input type="email" id="email" name="email"
                                 class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="user@gmail.com" required />
                         </div>
 
-
                         <div class="mb-5 relative">
-                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your
-                                password</label>
+                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your password</label>
                             <input type="password" id="password" name="password"
                                 class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="••••••••" required />
@@ -40,7 +37,6 @@
                                         d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 </svg>
 
-
                                 <!-- Eye Slash SVG (Hidden Password) -->
                                 <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" class="size-6 hidden text-gray-600"
                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -50,23 +46,22 @@
                             </span>
                         </div>
 
-                        <div class="flex justify-between  items-start mb-5">
+                        <div class="flex justify-between items-start mb-5">
                             <div class="flex">
                                 <div class="flex items-center h-5">
                                     <input id="terms" type="checkbox" name="remember"
                                         class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300" />
-
                                 </div>
-                                <label for="terms" class="ms-2 text-sm font-medium text-gray-900 ">
-                                    <a href="#" class="text-blue-600 hover:underline ">
-                                        Remember me
-                                    </a></label>
+                                <label for="terms" class="ms-2 text-sm font-medium text-gray-900">
+                                    <a href="#" class="text-blue-600 hover:underline">Remember me</a>
+                                </label>
                             </div>
                             <div>
-                                <label for="terms" class="ms-2 text-sm font-medium text-gray-900 ">
-                                    <a href="{{ route('password.request') }}" class="text-gray-600 hover:underline ">
+                                <label for="terms" class="ms-2 text-sm font-medium text-gray-900">
+                                    <a href="{{ route('password.request') }}" class="text-gray-600 hover:underline">
                                         Forgot Password
-                                    </a></label>
+                                    </a>
+                                </label>
                             </div>
                         </div>
 
@@ -83,6 +78,7 @@
             </div>
         </div>
     </section>
+
 
     <script>
         const togglePassword = document.querySelector("#togglePassword");
