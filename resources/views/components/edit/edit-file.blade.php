@@ -1,3 +1,5 @@
+<!-- An unexamined life is not worth living. - Socrates -->
+
 <div id="edit-file-div" class="items-center justify-center">
     <div id="child-edit-file-div" class="w-full max-w-3xl hidden">
         <!-- Heading for Edit File -->
@@ -527,9 +529,6 @@
     </div>
 
 </div>
-
-
-
 <script>
     let selectedFileId;
     let permitType;

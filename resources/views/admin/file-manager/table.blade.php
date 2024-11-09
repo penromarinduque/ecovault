@@ -5,7 +5,6 @@
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
-    @include('admin.file-manager.component.share-file')
     <div class="bg-slate-200 overflow-auto rounded-md text-black p-4">
 
         <div>
@@ -28,11 +27,11 @@
             <div class="my-4 space-x-3">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
-
             </div>
         </div>
 
         <x-modal.file-modal />
+        <x-file-share.file-share :includePermit="true" />
 
         <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
@@ -66,10 +65,11 @@
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
                         {{-- this for upload --}}
                         @include('admin.file-manager.component.upload-file')
-                        {{-- this for file edit --}}
-                        @include('admin.file-manager.component.edit-file')
-                        @include('admin.file-manager.component.file-summary')
+
                         <x-move.moveFile />
+                        <x-edit.edit-file :type="$type" :municipality="$municipality" />
+                        <x-file-summary.file-summary :type="$type" :municipality="$municipality" />
+
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
                             <div class="flex justify-between items-center">

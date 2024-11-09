@@ -23,6 +23,8 @@
             </div>
 
             <x-modal.file-modal />
+            <x-file-share.file-share :includePermit="false" />
+
             <div class="grid">
                 <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                     <div class="overflow-x-auto bg-white rounded-lg p-5">
@@ -76,8 +78,93 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("file-request-form").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the default form submission
 
-    <script src="{{ asset('js/administrative.js') }}"></script>
+                // Get the file ID and user ID
+                const fileId = document.getElementById("request-file-id").value; // Get file ID
+                const userId = document.getElementById("request-user-id")
+                    .value; // Get user ID from hidden input
 
+                // Get other form values
+                const requestedPermission = document.getElementById("category")
+                    .value; // Get selected permission
+                const remarks = document.getElementById("remarks").value; // Get remarks
+                const csrfToken = document.querySelector('input[name="_token"]').value;
+
+                // Create the request payload
+                const requestData = {
+                    file_id: fileId,
+                    requested_by_user_id: userId, // Current user's ID
+                    requested_permission: requestedPermission,
+                    remarks: remarks
+                };
+
+                // Make the POST request using Fetch API
+                fetch(`/api/files/request/${fileId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify(requestData), // Convert requestData to JSON
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json(); // Parse the JSON response
+                    })
+                    .then(data => {
+                        // Hide the modal after a successful request
+                        document.getElementById("file-request").classList.add("hidden");
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+
+        function requestAccess(fileId, fileName) {
+
+            const fileNameInput = document.getElementById("file-request_name");
+
+            if (fileSectionFileRequest && fileNameInput) {
+                fileSectionFileRequest.classList.remove("hidden");
+                fileNameInput.value = fileName;
+                document.getElementById("request-file-id").value = fileId;
+
+            } else {
+                console.error("Modal or File Name Input not found");
+            }
+        }
+        const fileSectionFileRequest = document.getElementById("file-request");
+
+        function requestAccess(fileId, fileName) {
+
+            const fileNameInput = document.getElementById("file-request_name");
+
+            if (fileSectionFileRequest && fileNameInput) {
+                fileSectionFileRequest.classList.remove("hidden");
+                fileNameInput.value = fileName;
+                document.getElementById("request-file-id").value = fileId;
+
+            } else {
+                console.error("Modal or File Name Input not found");
+            }
+        }
+
+        const exitButtonFileRequest = document.getElementById("close-file-request-btn");
+
+        exitButtonFileRequest.addEventListener("click", (event) => {
+            event.preventDefault();
+            fileSectionFileRequest.classList.add("hidden");
+        })
+    </script>
+
+    {{-- <script src="{{ asset('js/administrative.js') }}"></script> --}}
+    <script src="{{ asset('js/file-share.js') }}"></script>
     <script src="{{ asset('js/file-modal.js') }}"></script>
 @endsection
