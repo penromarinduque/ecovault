@@ -1,3 +1,8 @@
+<!-- Waste no more time arguing what a good man should be, be one. - Marcus Aurelius -->
+<!-- When there is no desire, all things are at peace. - Laozi -->
+
+<!-- When there is no desire, all things are at peace. - Laozi -->
+
 <div id="file-summary-div" class="p-4 overflow-hidden">
     <div id="child-file-summary-div">
         <div class="flex justify-between items-center mb-2">
@@ -113,7 +118,6 @@
         </div>
     </div>
 </div>
-
 
 
 

@@ -1,3 +1,4 @@
+<!-- Do what you can, with what you have, where you are. - Theodore Roosevelt -->
 <div id="file-share-modal" class="hidden">
     <div class=" fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
         <div id="usersContainer"></div>
@@ -111,3 +112,7 @@
         </div>
     </div>
 </div>
+<script>
+    const includePermit = @json($includePermit);
+    console.log(includePermit); // This should log true or false as a JavaScript boolean
+</script>

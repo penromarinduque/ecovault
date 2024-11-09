@@ -35,7 +35,7 @@
 
         // Build the query string
         const queryParams = new URLSearchParams(filteredParams).toString();
-        console.log(queryParams)
+
         try {
             const response = await fetch(`/api/files?${queryParams}`);
 
@@ -146,7 +146,7 @@
                     file.category,
                     file.classification,
                     file.status,
-                    generateKebab(file.id)
+                    generateKebab(file.id, file.shared_users, file.name),
                 ],
                 attributes: {
                     class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
@@ -156,25 +156,31 @@
     }
 
     // Generate action buttons for dropdowns
-    function generateKebab(fileId) {
-        const commonActions = `
+    function generateKebab(fileId, fileShared, fileName) {
+        const employeeActions = `
+        ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
+        ? `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
         <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
         <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
-        <li><button onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
+        `
+        : `
+        <li><button onclick="requestAccess(${fileId}, '${fileName}')" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
+        `}
     `;
+
         const adminActions = `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
         <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
         <li><button class="w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
-        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-        <li><a class="block px-4 py-2 hover:bg-gray-100" onclick="fileShare(${fileId})">Share</a></li>
-        <li><button class="w-full text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
-        <li><a onclick="archiveFile(${fileId})" class="block px-4 py-2 hover:bg-gray-100">Archive</a></li>
+        <li><a class="block cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div" data-file-id="${fileId}">Move</a></li>
+        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 share-file-link" data-file-id="${fileId}">Share</a></li>
+        <li><a class="w-full cursor-pointer text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</a></li>
+        <li><a onclick="archiveFile(${fileId})" class="block px-4 py-2 cursor-pointer hover:bg-gray-100">Archive</a></li>
     `;
 
         // Choose the correct actions based on isAdmin
-        const actions = isAdmin ? adminActions : commonActions;
+        const actions = isAdmin ? adminActions : employeeActions;
 
         return `
         <button id="dropdownLeftButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
@@ -189,6 +195,7 @@
         </div>
     `;
     }
+
 
     // Create dropdown for each file
     function createDropdown(fileId) {

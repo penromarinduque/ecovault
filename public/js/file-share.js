@@ -1,9 +1,20 @@
 //file share modal 
+document.addEventListener('click', (event) => {
+    // Check if the clicked element has the class 'share-file-link'
+    if (event.target.matches('.share-file-link')) {
+        event.preventDefault(); // Prevent default link behavior
+        const fileId = event.target.dataset.fileId;
+        fileShare(fileId); // Call the async function with the fileId
+    }
+});
+
 async function fileShare(fileId) {
     const fileShareModal = document.getElementById('file-share-modal');
 
     try {
-        const response = await fetch(`/api/files/${fileId}?includePermit=true`);
+        // Use the dynamically set `includePermit` value directly in the URL
+        const response = await fetch(`/api/files/${fileId}?includePermit=${includePermit}`);
+        console.log('this shots', includePermit);  // Will log true or false
 
         // Check if the response is ok (status in the range 200-299)
         if (!response.ok) {
@@ -14,9 +25,6 @@ async function fileShare(fileId) {
         if (data && data.file) {
             document.getElementById('share-file-name').textContent = data.file.file_name;
             document.getElementById('file_id').value = fileId;
-            // Set shareFileId to the fileId instead of using .value
-
-
             fileShareModal.classList.remove('hidden');
         } else {
             console.error('Invalid data structure:', data);

@@ -47,7 +47,7 @@ function toggleSections(showFileSection) {
 
 // Show/hide div sections
 function toggleDivVisibility(showDivId) {
-    const sections = ['upload-file-div', 'edit-file-div', 'file-summary-div'];
+    const sections = ['upload-file-div', 'edit-file-div', 'file-summary-div', 'move-file-div'];
     sections.forEach(section => {
         const sectionDiv = document.getElementById(section);
         sectionDiv.classList.toggle('hidden', section !== showDivId);
@@ -55,6 +55,16 @@ function toggleDivVisibility(showDivId) {
 }
 
 // Event listeners for buttons
+
+document.body.addEventListener('click', (event) => {
+    if (event.target.matches('.move-file-div')) {
+        toggleSections(true);
+        const fileId = event.target.dataset.fileId;
+        fetchFileData(fileId);
+        toggleDivVisibility('move-file-div');
+    }
+});
+
 document.getElementById('uploadBtn').addEventListener('click', () => {
     toggleSections(true);
     toggleDivVisibility('upload-file-div');
