@@ -19,8 +19,24 @@ class StorageController extends Controller
             $usedSpace = $totalSpace - $freeSpace;
 
             // Calculate the size of the C:\PENRO directory
-            $penroDirectory = 'C:/PENRO';
+            $penroDirectory = storage_path('app/public/PENRO');
+
+            if (!is_dir($penroDirectory)) {
+                return response()->json([
+                    'error' => 'Directory does not exist.',
+                    'message' => "The directory {$penroDirectory} does not exist."
+                ], 404);
+            }
+
             $penroSize = $this->getDirectorySize($penroDirectory) / (1024 * 1024 * 1024); // Convert to GB
+
+            // Ensure penroSize is a valid number
+            if (!is_numeric($penroSize)) {
+                return response()->json([
+                    'error' => 'Error calculating PENRO directory size.',
+                    'message' => 'The directory size could not be calculated.'
+                ], 500);
+            }
 
             // Remaining space used by "Others" (files not in C:\PENRO)
             $otherSpace = $usedSpace - $penroSize;
@@ -34,6 +50,9 @@ class StorageController extends Controller
                 'other_space' => $otherSpace
             ]);
         } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error calculating storage usage: ' . $e->getMessage());
+
             // Return an error response with the exception message
             return response()->json([
                 'error' => 'An error occurred while retrieving storage usage.',
@@ -43,15 +62,25 @@ class StorageController extends Controller
     }
 
 
-    // Function to calculate directory size recursively
+
     private function getDirectorySize($directory)
     {
         $size = 0;
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
-            $size += $file->getSize();
+        try {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+            foreach ($iterator as $file) {
+                if ($file->isFile()) {
+                    $size += $file->getSize();
+                }
+            }
+        } catch (\Exception $e) {
+            // Log the error or handle it appropriately
+            Log::error('Error calculating directory size: ' . $e->getMessage());
+            return 0;  // Return 0 if there's an error
         }
         return $size;
     }
+
 
     public function getRecentUploads()
     {
@@ -128,6 +157,10 @@ class StorageController extends Controller
             // Fetch all files
             $files = File::all();
 
+            // Get the current date and previous date (to separate current from previous uploads)
+            $currentDate = now()->format('Y-m-d');
+            $previousDate = now()->subDays(1)->format('Y-m-d'); // Adjust if needed
+
             // Prepare data structure
             $data = [
                 'categories' => [],
@@ -153,17 +186,26 @@ class StorageController extends Controller
                 $uploadsByDate[$date]++;
             }
 
-            // Sort dates in ascending order
-            ksort($uploadsByDate);
+            // Separate the current uploads and previous uploads
+            $currentUploads = isset($uploadsByDate[$currentDate]) ? $uploadsByDate[$currentDate] : 0;
+            $previousUploads = isset($uploadsByDate[$previousDate]) ? $uploadsByDate[$previousDate] : 0;
 
-            // Populate categories and series data from the uploadsByDate array
-            foreach ($uploadsByDate as $date => $count) {
-                $data['categories'][] = $date;
-                $data['series'][0]['data'][] = [
-                    'x' => $date,
-                    'y' => $count
-                ];
+            // Calculate percentage change
+            $percentageChange = 0;
+            if ($previousUploads > 0) {
+                $percentageChange = (($currentUploads - $previousUploads) / $previousUploads) * 100;
             }
+
+            // Calculate total uploads
+            $totalUploads = array_sum($uploadsByDate);
+
+            // Prepare the final data
+            $data['totalUploads'] = $totalUploads;
+            $data['percentageChange'] = $percentageChange;
+            $data['categories'] = array_keys($uploadsByDate);
+            $data['series'][0]['data'] = array_map(function ($date) use ($uploadsByDate) {
+                return ['x' => $date, 'y' => $uploadsByDate[$date]];
+            }, array_keys($uploadsByDate));
 
             return response()->json($data);
 
@@ -173,6 +215,10 @@ class StorageController extends Controller
             return response()->json(['error' => 'An error occurred while fetching data: ' . $e->getMessage()], 500);
         }
     }
+
+
+
+
 
 
 }

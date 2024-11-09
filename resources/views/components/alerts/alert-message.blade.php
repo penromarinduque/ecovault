@@ -61,6 +61,37 @@
 </div>
 
 <script>
+    function ShowAlert(message, success = true) {
+
+        if (success) {
+            const alert = document.getElementById('alert-success');
+            const alertMessage = document.getElementById('success-alert-message');
+
+            alertMessage.innerText = message;
+
+            // Remove the 'hidden' class to display the alert
+            alert.classList.remove('hidden');
+
+            // Optionally, hide the alert after 5 seconds
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        } else {
+            const alert = document.getElementById('alert-error');
+            const alertMessage = document.getElementById('error-alert-message');
+
+            alertMessage.innerText = message; // Set the error message
+
+            alert.classList.remove('hidden'); // Show the alert
+
+            // Hide the alert after 5 seconds
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+    }
+
     function showErrorAlert(message) {
         const alert = document.getElementById('alert-error');
         const alertMessage = document.getElementById('error-alert-message');

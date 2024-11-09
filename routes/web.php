@@ -106,7 +106,7 @@ Route::middleware(['authentication'])->group(function () {
 
     //backup
 
-    Route::get("/backup-and-recovery", [AdminController::class, 'ShowBackupAndRecover']);
+    Route::get("/backup-and-recovery", [AdminController::class, 'ShowBackupAndRecover'])->name('ShowBackupAndRecovery');
 
     //Api for backup and recovery
 

@@ -3,19 +3,36 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <h1>PENRO Archiving System Backup and Restore</h1>
+    <div class="bg-white px-4">
+        <div class="space-y-6 max-w-lg">
+            <!-- Backup and Restore Form -->
+            <form id="restoreForm" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="backupSelect" class="block text-sm font-medium text-gray-700">Select Backup to
+                        Restore:</label>
+                    <select id="backupSelect"
+                        class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" disabled selected>Select a backup file</option>
+                        {{-- Populate with available backup files from the server --}}
+                    </select>
+                </div>
 
-    <form id="restoreForm">
-        @csrf
-        <label for="backupSelect">Select Backup to Restore:</label>
-        <select id="backupSelect" class="p-2 border-2 border-black">
-            <option value="" disabled selected>Select a backup file</option>
-            {{-- Populate with available backup files from the server --}}
-        </select>
-        <button id="recover" class="p-4 border-2 border-black mt-2" onclick="RecoverFiles()">Restore Selected Backup</button>
-    </form>
+                <div class="flex justify-center">
+                    <button id="recover" type="button" onclick="RecoverFiles()"
+                        class="w-full px-6 py-3 text-white bg-green-500 hover:bg-green-600 rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400">Restore
+                        Selected Backup</button>
+                </div>
+            </form>
 
-    <button id="backup" class="p-4 border-2 border-black mt-4" onclick="BackupFiles()">Create New Backup</button>
+            <!-- Create Backup Button -->
+            <div class="flex justify-center">
+                <button id="backup" type="button" onclick="BackupFiles()"
+                    class="w-full px-6 py-3 text-white bg-gray-600 hover:bg-gray-700 rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400">Create
+                    New Backup</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -51,6 +68,13 @@
         document.addEventListener('DOMContentLoaded', fetchBackupFiles);
 
         function BackupFiles() {
+            const backupButton = document.getElementById('backup');
+            const recoverButton = document.getElementById('recover');
+
+            // Disable buttons
+            backupButton.disabled = true;
+            recoverButton.disabled = true;
+
             fetch('/api/files/backup', {
                     method: 'POST',
                     headers: {
@@ -60,20 +84,32 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.success || data.error);
+                    ShowAlert(data.success);
                     fetchBackupFiles(); // Refresh backup list after creating a new backup
                 })
                 .catch(error => {
-                    console.error('Backup failed:', error);
+                    ShowAlert(error, false);
+                })
+                .finally(() => {
+                    // Re-enable buttons
+                    backupButton.disabled = false;
+                    recoverButton.disabled = false;
                 });
         }
 
         function RecoverFiles() {
+            const backupButton = document.getElementById('backup');
+            const recoverButton = document.getElementById('recover');
+
             const selectedFile = document.getElementById('backupSelect').value;
             if (!selectedFile) {
                 alert('Please select a backup file to restore.');
                 return;
             }
+
+            // Disable buttons
+            backupButton.disabled = true;
+            recoverButton.disabled = true;
 
             fetch('/api/files/restore', {
                     method: 'POST',
@@ -87,10 +123,15 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.success || data.error);
+                    ShowAlert(data.success);
                 })
                 .catch(error => {
-                    console.error('Recovery failed:', error);
+                    ShowAlert(error, false);
+                })
+                .finally(() => {
+                    // Re-enable buttons
+                    backupButton.disabled = false;
+                    recoverButton.disabled = false;
                 });
         }
     </script>

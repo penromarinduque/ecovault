@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>

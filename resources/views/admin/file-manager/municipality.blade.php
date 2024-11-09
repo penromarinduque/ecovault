@@ -67,7 +67,7 @@
                         data.locations.forEach(municipality => {
                             const municipalityDiv = document.createElement('div');
                             municipalityDiv.classList.add('flex', 'flex-col', 'items-center',
-                                'text-center');
+                                'text-center', 'mx-auto');
 
                             municipalityDiv.innerHTML = `
                         <a href="${encodeURI(municipality.location)}" class="text-center">
