@@ -1,47 +1,57 @@
-<aside class="w-64 bg-[#363557] h-full  fixed top-20  py-4">
+<!-- Sidebar -->
 
-    <div class="flex justify-center  mt-8 ">
-        <button class="bg-white px-4 py-2 rounded-md">Hide Menu</button>
+<aside
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0  "
+    aria-label="Sidenav" id="drawer-navigation">
+    <div class="overflow-y-auto py-5 px-3 h-full bg-[#363557]">
+
+        <ul class="space-y-2">
+            <!-- List Item -->
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('admin.home.show') }}" class="flex items-center gap-4">
+                    <img src="{{ asset('images/navigation/dashboard.png') }}" alt="Home" class="w-16">
+                    <span class="text-lg font-semibold text-gray-200">Home</span>
+                </a>
+            </li>
+
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('file-manager.show') }}" class="flex items-center gap-4">
+                    <img src="{{ asset('images/navigation/file-manager.png') }}"
+                        alt="Permits and Registration Documents" class="w-16">
+                    <span class="text-lg font-semibold text-gray-200">Permits and Registration Documents</span>
+                </a>
+            </li>
+
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('administrative.show') }}" class="flex items-center gap-4">
+                    <img src="{{ asset('images/navigation/reports.png') }}" alt="Administrative Documents"
+                        class="w-16">
+                    <span class="text-lg font-semibold text-gray-200">Administrative Documents</span>
+                </a>
+            </li>
+
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('archived-file.show') }}" class="flex items-center gap-4">
+                    <img src="{{ asset('images/navigation/archive.png') }}" alt="Archived Files" class="w-16">
+                    <span class="text-lg font-semibold text-gray-200">Archived Files</span>
+                </a>
+            </li>
+
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="#" class="flex items-center gap-4">
+                    <img src="{{ asset('images/navigation/backup-and-recovery.png') }}" alt="Backup and Recovery"
+                        class="w-16">
+                    <span class="text-lg font-semibold text-gray-200">Backup and Recovery</span>
+                </a>
+            </li>
+        </ul>
+
+
     </div>
-
-    <ul class="mx-4 flex flex-col space-y-8 mt-8 text-white">
-        <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
-            <a href="{{ route('admin.home.show') }}" class="flex  gap-2 items-center">
-                <img src="{{ asset('images/navigation/dashboard.png') }}" alt="" class="w-16">
-                <span class="pb-4">Home</span>
-            </a>
-        </li>
-
-
-        <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
-            <a href="{{ route('file-manager.show') }}" class="flex  gap-2 items-center">
-                <img src="{{ asset('images/navigation/file-manager.png') }}" alt="" class="w-16">
-                <span class="">Permits And Registration Documents</span>
-            </a>
-        </li>
-
-        <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
-            <a href="{{ route('administrative.show') }}" class="flex  gap-2 items-center">
-                <img src="{{ asset('images/navigation/reports.png') }}" alt="" class="w-16">
-                <span class="">Administrive Documents</span>
-            </a>
-        </li>
-
-        <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
-            <a href="{{ route('archived-file.show') }}" class="flex  gap-2 items-center">
-                <img src="{{ asset('images/navigation/archive.png') }}" alt="" class="w-16">
-                <span class="">Archived Files</span>
-            </a>
-        </li>
-
-        <li class="flex items-center space-x-2 hover:bg-[#47476e] rounded-md">
-            <a href="#" class="flex  gap-2 items-center">
-                <img src="{{ asset('images/navigation/backup-and-recovery.png') }}" alt="" class="w-16">
-                <span class="w-8/12">Back up and Recovery</span>
-            </a>
-        </li>
-    </ul>
-
-
 
 </aside>

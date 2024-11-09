@@ -537,7 +537,7 @@
 
     // This script fetches file data when an edit button is clicked
     async function fetchFileData(fileId) {
-        const startTime = performance.now(); // Start timing
+
 
         // Show loading screen
         document.getElementById('loading').classList.remove('hidden');
@@ -547,8 +547,6 @@
             //await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await fetch(`/api/files/${fileId}?includePermit=true`);
             const data = await response.json();
-            const endTime = performance.now(); // End timing
-            console.log(`API call to fetch file data took ${endTime - startTime} ms`);
 
             if (data.success) {
                 const file = data.file; // File data
@@ -604,7 +602,7 @@
                     default:
                         console.error('Unknown permit type:', file.permit_type);
                 }
-                console.log(file.permit_type);
+
             } else {
                 console.error(data.message);
             }
@@ -675,9 +673,9 @@
                     'edit-property_category').value);
                 break;
             default:
-                console.error('Unknown permit type:', permitType);
+
         }
-        console.log(formData);
+
 
         try {
             // Send formData as FormData in the request body
@@ -690,10 +688,9 @@
             });
 
             const result = await response.json();
-            console.log(result);
 
             if (result.success) {
-                updateDataAfterCRUD()
+                fetchData();
             } else {
                 console.error(result.message);
                 alert('Failed to update the file.');

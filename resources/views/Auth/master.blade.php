@@ -10,12 +10,14 @@
 </head>
 
 <body class="bg-gray-50">
-    <div class="h-full w-full">
-        <a href="#" class="flex items-center justify-center text-2xl font-semibold text-gray-900">
-            <img class="bg-auto" src="{{ asset('images/logo.png') }}" alt="logo">
-        </a>
-        @yield('content')
-    </div>
+
+
+
+    <img class="bg-auto w-36  left-0 right-0 mx-auto my-8 z-[60] text-red-800 rounded-full max-w-md"
+        src="{{ asset('images/logo.png') }}" alt="logo">
+
+    @yield('content')
+
 </body>
 
 </html>

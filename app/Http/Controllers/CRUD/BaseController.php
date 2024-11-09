@@ -17,7 +17,7 @@ abstract class BaseController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'File archived successfully',
+                'message' => 'Archived successfully',
                 'files' => $file,
             ]);
 
@@ -25,7 +25,7 @@ abstract class BaseController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'archive file fail',
+                'message' => 'Archiving the file failed',
                 'error' => $e->getMessage(),
             ]);
 
@@ -72,7 +72,7 @@ abstract class BaseController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Files retrieved successfully.',
-                    'files' => $files
+                    'data' => $files
                 ]);
             }
 

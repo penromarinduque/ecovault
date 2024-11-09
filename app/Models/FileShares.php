@@ -11,6 +11,9 @@ class FileShares extends Model
     protected $fillable = [
         'file_id',
         'shared_with_user_id',
-        'shared_by_admin_id'
+        'shared_by_admin_id',
+        'remarks',
+        'expiration_date'
+
     ];
 }

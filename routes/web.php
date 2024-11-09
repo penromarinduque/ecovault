@@ -34,7 +34,7 @@ Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
 Route::post('/login/auth', [AuthController::class, 'Authenticate'])->name('login.post');
 Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verification.show');
 Route::post('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
-Route::post('/logout', [AuthController::class, 'Logout'])->name('logout.post');
+Route::get('/logout', [AuthController::class, 'Logout'])->name('logout.post');
 
 Route::middleware(['authentication'])->group(function () {
     Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
@@ -80,7 +80,7 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/api/municipalities', [MunicipalityController::class, 'GetMunicipalities']);
 
-    Route::get("/superuser/test", function () {
+    Route::get('/superuser/test', function () {
         return view("superuser.test");
     });
 

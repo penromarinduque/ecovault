@@ -17,6 +17,8 @@ class FileShareController extends Controller
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
             'permission' => 'required|in:viewer,editor,admin',
+            'remarks' => 'required',
+            'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
         ]);
 
         // Create the file share record
@@ -32,6 +34,8 @@ class FileShareController extends Controller
                 'shared_with_user_id' => $validated['shared_with_user_id'],
                 'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
                 'permission' => $validated['permission'],
+                'remarks' => $validated['remarks'],
+                'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
             ]);
 
 

@@ -6,7 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
     @include('admin.file-manager.component.share-file')
-    <div class="bg-slate-300 overflow-auto rounded-md text-black p-4">
+    <div class="bg-slate-200 overflow-auto rounded-md text-black p-4">
 
         <div>
             <nav aria-label="Breadcrumb">
@@ -26,26 +26,26 @@
             </nav>
 
             <div class="my-4 space-x-3">
-                <button class="bg-white text-gray-600 font-medium   px-2 p-1 rounded-md" id="uploadBtn">Upload
-                    File</button>
-                <button class="bg-white px-2 p-1 rounded-md text-gray-600 font-medium">Create a Folder</button>
+                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
+                <x-button id="" label="Create a Folder" style="secondary" />
 
             </div>
         </div>
 
         <x-modal.file-modal />
 
-        <div class="grid gap-60">
+        <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
-
-                    <table id="sorting-table">
-                        <tbody>
-
-                        </tbody>
-                    </table>
-
-
+                    <!-- load the table-->
+                    @component('components.forms.table', [
+                        'type' => $type,
+                        'municipality' => $municipality,
+                        'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                        'isArchived' => false,
+                    ])
+                        <!--add something to use in the table updated by harvs-->
+                    @endcomponent
                 </div>
 
             </div>
@@ -60,107 +60,7 @@
                                 <!-- Minimize table content goes here -->
                             </tbody>
                         </table>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                const permitType = "{{ $type }}"; // Replace with your actual value
-                                const municipality = "{{ $municipality }}"; // Replace with your actual value
-                                const params = {
-                                    type: permitType,
-                                    municipality: municipality,
-                                    report: '',
-                                    isArchived: false
-                                };
-
-                                // Remove empty parameters
-                                const filteredParams = Object.fromEntries(
-                                    Object.entries(params).filter(([key, value]) => value !== '')
-                                );
-
-                                // Build the query string
-                                const queryParams = new URLSearchParams(filteredParams).toString();
-
-                                fetch(`/api/files?${queryParams}`)
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('Network response was not ok');
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
-                                        const customData = {
-                                            headings: [
-                                                "Name",
-                                                "Actions"
-                                            ],
-                                            data: data.data.map((file) => ({
-                                                cells: [
-                                                    file.file_name,
-                                                    `<button id="miniBtn${file.id}" data-dropdown-toggle="miniDropdown${file.id}" data-dropdown-placement="left" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        </svg>
-                                                    </button>
-                                                    <div id="miniDropdown${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">
-                                                        <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400" aria-labelledby="miniBtn${file.id}">
-                                                            <li><a href="/api/files/${file.id}" class="block px-4 py-2 hover:bg-gray-100">View</a></li>
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                                                            <li><button class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">Edit</button></li>
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                                            <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}">File Summary</button></li> 
-                                                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Archived</a></li>
-                                                        </ul>
-                                                    </div>`
-                                                ],
-                                                attributes: {
-                                                    class: "text-black text-left hover:bg-gray-100"
-                                                }
-                                            })),
-                                        };
-
-                                        // Initialize the DataTable with options
-                                        const dataTableElement = document.getElementById("minimizeTable");
-                                        if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-                                            const dataTable = new simpleDatatables.DataTable(dataTableElement, {
-                                                searchable: false,
-                                                sortable: false,
-                                                paging: true, // Enable pagination
-                                                perPage: 5, // Show 5 entries per page
-                                                perPageSelect: false, // Disable per-page selection dropdown
-                                                info: false, // Enable showing "Showing X to Y of Z entries"
-                                                data: customData, // Pass the full data
-                                                labels: {
-                                                    perPage: "<span class='text-gray-500 m-3'>Rows</span>", // Custom text for perPage dropdown
-                                                    searchTitle: "Search through table data", // Title attribute for the search input
-                                                    loading: "Loading...",
-                                                    info: "Showing {end} of {rows} rows" // Pagination info text
-                                                },
-                                            });
-
-                                            // Initialize dropdowns for the current rows
-                                            function initializeDropdowns() {
-                                                data.data.forEach((file) => {
-                                                    const dropdownButton = document.getElementById(`miniBtn${file.id}`);
-                                                    const dropdownElement = document.getElementById(
-                                                        `miniDropdown${file.id}`);
-
-                                                    if (dropdownButton && dropdownElement) {
-                                                        new Dropdown(dropdownElement, dropdownButton);
-                                                    }
-                                                });
-                                            }
-
-                                            // Listen to events that indicate table content updates
-                                            dataTable.on("datatable.page", initializeDropdowns);
-                                            dataTable.on("datatable.update", initializeDropdowns);
-                                            initializeDropdowns(); // Initial call for dropdowns in the first page
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('There was a problem with the fetch operation:', error);
-                                    });
-                            });
-                        </script>
+                        <!-- minimize table here-->
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
@@ -169,7 +69,7 @@
                         {{-- this for file edit --}}
                         @include('admin.file-manager.component.edit-file')
                         @include('admin.file-manager.component.file-summary')
-
+                        <x-move.moveFile />
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
                             <div class="flex justify-between items-center">
@@ -329,8 +229,8 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    console.log(document.getElementById('name-of-client')
-                                        .value);
+                                    document.getElementById('name-of-client')
+                                        .value;
                                     if (data.success) {
                                         showToast(data.message, true);
                                         fileId = data.fileId;
@@ -389,7 +289,7 @@
                                                 .value);
                                         }
 
-                                        console.log(permit_type);
+
                                         fetch('/permit-upload', {
                                                 method: 'POST',
                                                 body: formPermit,
@@ -401,24 +301,23 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    updateDataAfterCRUD();
-                                                    console.log("Scueeess")
+                                                    showSuccessAlert(data.success || "Operation completed successfully!");
+                                                    fetchData()
                                                 }
                                             })
                                             .catch((error) => {
-
                                                 showToast(error || 'File upload failed.', false);
                                             });
 
 
 
                                     } else {
-                                        console.log(data);
+
                                         showToast(data.message || 'File upload failed.', false);
                                     }
                                 })
                                 .catch(error => {
-                                    console.log(error);
+                                    console.error(error);
                                 }).finally(() => {
 
                                     this.reset();

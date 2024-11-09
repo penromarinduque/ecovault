@@ -3,7 +3,7 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="bg-slate-300 h-[600px] rounded-md text-black p-4 ">
+    <div class="bg-slate-200 h-[600px] rounded-md text-black p-4 ">
 
         <h1 class="font-bold text-2xl">Environmental Permits and Land Records Folder</h1>
         <div class="grid grid-cols-4 m-16 ">

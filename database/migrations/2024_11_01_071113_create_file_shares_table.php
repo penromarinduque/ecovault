@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->foreignId('shared_with_user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('shared_by_admin_id')->constrained('users')->onDelete('cascade');
             $table->enum('permission', ['viewer', 'editor', 'admin'])->default('viewer');
+            $table->string('remarks')->nullable();
+            $table->timestamp('expiration_date')->nullable();
             $table->timestamps();
         });
     }

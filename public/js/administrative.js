@@ -1,158 +1,158 @@
-let dataTable; // Keep a reference to the DataTable instance
+let DataTable; // Keep a reference to the DataTable instance
 
-function FetchAndPopulate() {
-    const params = {
-        type: '',
-        municipality: '',
-        report: record || '',
-        isArchived: false
-    };
+// function FetchAndPopulate() {
+//     const params = {
+//         type: '',
+//         municipality: '',
+//         report: record || '',
+//         isArchived: false
+//     };
 
-    // Remove empty parameters
-    const filteredParams = Object.fromEntries(
-        Object.entries(params).filter(([key, value]) => value !== '')
-    );
+//     // Remove empty parameters
+//     const filteredParams = Object.fromEntries(
+//         Object.entries(params).filter(([key, value]) => value !== '')
+//     );
 
-    // Build the query string
-    const queryParams = new URLSearchParams(filteredParams).toString();
+//     // Build the query string
+//     const queryParams = new URLSearchParams(filteredParams).toString();
 
-    fetch(`/api/files?${queryParams}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            populateDataTable(data);
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
+//     fetch(`/api/files?${queryParams}`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             populateDataTable(data);
+//         })
+//         .catch(error => {
+//             console.error('There was a problem with the fetch operation:', error);
+//         });
+// }
 
-function refreshDataTable() {
-    const params = {
-        type: '',
-        municipality: '',
-        report: record || '',
-        isArchived: false
-    };
+// function refreshDataTable() {
+//     const params = {
+//         type: '',
+//         municipality: '',
+//         report: record || '',
+//         isArchived: false
+//     };
 
-    // Remove empty parameters
-    const filteredParams = Object.fromEntries(
-        Object.entries(params).filter(([key, value]) => value !== '')
-    );
+//     // Remove empty parameters
+//     const filteredParams = Object.fromEntries(
+//         Object.entries(params).filter(([key, value]) => value !== '')
+//     );
+// console.log(filteredParams)
+//     // Build the query string
+//     const queryParams = new URLSearchParams(filteredParams).toString();
 
-    // Build the query string
-    const queryParams = new URLSearchParams(filteredParams).toString();
+//     fetch(`/api/files?${queryParams}`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             if (DataTable) {
+//                 DataTable.destroy();  // Clear the existing table
+//             }
+//             populateDataTable(data); // Repopulate with updated data
+//         })
+//         .catch(error => {
+//             console.error('There was a problem with the fetch operation:', error);
+//         });
+// }
 
-    fetch(`/api/files?${queryParams}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (dataTable) {
-                dataTable.destroy();  // Clear the existing table
-            }
-            populateDataTable(data); // Repopulate with updated data
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
+// function populateDataTable(data) {
+//     const customData = {
+//         headings: [
+//             "Name",
+//             "Date Modified",
+//             "Modified By",
+//             "Office Source",
+//             "Category",
+//             "Classification",
+//             "Status",
+//             "Actions"
+//         ],
+//         data: data.files.map((file) => ({
+//             cells: [
+//                 file.file_name,
+//                 file.updated_at,
+//                 file.user_name,
+//                 file.office_source,
+//                 file.category,
+//                 file.classification,
+//                 file.status,
+//                 `<button id="dropdownLeftButton${file.id}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+//                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+//                         <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+//                     </svg>
+//                 </button>
+//                 <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+//                     <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
+//                     ${
+//                         // If the file is shared, show all options to everyone
+//                          file.shared_users.includes(currentUserId)  || isAdmin
+//                                 ? `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${file.id})">View</a>
+//                                   <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+//                                   <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
+//                                   <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
+//                                   <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
+//                                   <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
+//                                   <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>`
+//                                 : `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="requestAccess(${file.id}, '${file.file_name}')">Request Access</a>`
+//                         }
+//                     </ul>
+//                 </div>`
+//             ],
+//             attributes: {
+//                 class: "text-gray-700 text-left hover:bg-gray-100"
+//             }
+//         })),
+//     };
 
-function populateDataTable(data) {
-    const customData = {
-        headings: [
-            "Name",
-            "Date Modified",
-            "Modified By",
-            "Office Source",
-            "Category",
-            "Classification",
-            "Status",
-            "Actions"
-        ],
-        data: data.files.map((file) => ({
-            cells: [
-                file.file_name,
-                file.updated_at,
-                file.user_name,
-                file.office_source,
-                file.category,
-                file.classification,
-                file.status,
-                `<button id="dropdownLeftButton${file.id}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
-                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                    </svg>
-                </button>
-                <div id="dropdownLeft${file.id}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-                    <ul class="text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
-                    ${
-                        // If the file is shared, show all options to everyone
-                         file.shared_users.includes(currentUserId)  || isAdmin
-                                ? `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${file.id})">View</a>
-                                  <li><a href="/api/files/download/${file.id}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-                                  <a href="#" class="edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${file.id}" onclick="showEditFile('${file.id}')">Edit</a>
-                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Move</a></li>
-                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Share</a></li>
-                                  <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showFileSummary('${file.id}')">File Summary</a></li>
-                                  <li><button onclick="archiveFile(${file.id})" class="block px-4 py-2 hover:bg-gray-100">Archived</button></li>`
-                                : `<a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="requestAccess(${file.id}, '${file.file_name}')">Request Access</a>`
-                        }
-                    </ul>
-                </div>`
-            ],
-            attributes: {
-                class: "text-gray-700 text-left hover:bg-gray-100"
-            }
-        })),
-    };
+//     const DataTableElement = document.getElementById("wrong-table");
+//     if (DataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+//         DataTable = new simpleDatatables.DataTable(DataTableElement, {
+//             data: customData,
+//             perPage: 5,
+//             searchable: true,
+//             sortable: true,
+//             perPageSelect: [5, 10, 20, 50],
+//         });
 
-    const dataTableElement = document.getElementById("main-table");
-    if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-        dataTable = new simpleDatatables.DataTable(dataTableElement, {
-            data: customData,
-            perPage: 5,
-            searchable: true,
-            sortable: true,
-            perPageSelect: [5, 10, 20, 50],
-        });
+//         // Initialize the dropdowns for the first page
+//         initializeDropdowns(data);
 
-        // Initialize the dropdowns for the first page
-        initializeDropdowns(data);
+//         DataTable.on("datatable.page", () => {
+//             initializeDropdowns(data);
+//         });
+//     }
+// }
 
-        dataTable.on("datatable.page", () => {
-            initializeDropdowns(data);
-        });
-    }
-}
+// function initializeDropdowns(data) {
+//     data.files.forEach((file) => {
+//         const dropdownButton = document.getElementById(`dropdownLeftButton${file.id}`);
+//         const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
+//         if (dropdownButton && dropdownElement) {
+//             const options = {
+//                 placement: 'left',
+//                 triggerType: 'click',
+//                 offsetSkidding: 0,
+//                 offsetDistance: 0,
+//                 ignoreClickOutsideClass: false,
+//             };
+//             new Dropdown(dropdownElement, dropdownButton, options);
+//         }
+//     });
+// }
 
-function initializeDropdowns(data) {
-    data.files.forEach((file) => {
-        const dropdownButton = document.getElementById(`dropdownLeftButton${file.id}`);
-        const dropdownElement = document.getElementById(`dropdownLeft${file.id}`);
-        if (dropdownButton && dropdownElement) {
-            const options = {
-                placement: 'left',
-                triggerType: 'click',
-                offsetSkidding: 0,
-                offsetDistance: 0,
-                ignoreClickOutsideClass: false,
-            };
-            new Dropdown(dropdownElement, dropdownButton, options);
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    FetchAndPopulate();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     // FetchAndPopulate();
+// });
 
 
 
