@@ -32,7 +32,7 @@ abstract class BaseController extends Controller
         }
     }
     //Error in Administrative Document
-    public function GetFiles(Request $request, $type = null, $municipality = null, $report = null)
+    public function GetFiles(Request $request)
     {
         try {
             $type = $request->query('type');
