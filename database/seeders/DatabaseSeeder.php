@@ -10,6 +10,7 @@ use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Models\Config;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $faker = Faker::create();
         $this->call(AdminSeeder::class);
-        $this->call(AdminSeeder::class);
+
         User::factory(count: 10)->create();
 
         User::factory()->create([
@@ -43,6 +44,13 @@ class DatabaseSeeder extends Seeder
             ['location' => 'Sta. Cruz'],
         ]);
 
-
+        Config::create([
+            'Drive' => 'D:',
+            'BackDirSQL' => '/backup/sql',
+            'BackDirFiles' => '/backup/files',
+            'StorePath' => 'app/public/PENRO',
+            'MySqlDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe',
+            'MySqlDumpDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysqldump.exe'
+        ]);
     }
 }

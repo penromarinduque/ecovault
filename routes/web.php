@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\API\StaffController;
 use App\Http\Controllers\Backup\BackupController;
+use App\Http\Controllers\CRUD\SettingController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -114,5 +115,11 @@ Route::middleware(['authentication'])->group(function () {
     Route::post('/api/files/restore', [BackupController::class, "Restore"]);
     Route::get('/api/list-backups', [BackupController::class, "listBackups"]);
 
+
+    Route::post('/api/config', [SettingController::class, 'UpdateConfig']);
+    Route::get('api/getconfig/', [SettingController::class, 'GetConfig']);
+
+
+    Route::get('/setting', [AdminController::class, 'ShowSetting'])->name("show.setting");
 });
 

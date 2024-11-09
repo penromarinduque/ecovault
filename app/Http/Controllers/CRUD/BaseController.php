@@ -120,8 +120,11 @@ abstract class BaseController extends Controller
     }
 
 
+
     public function GetFileById(Request $request, $id)
     {
+
+
         try {
             // Retrieve the 'includePermit' query parameter (default to true if not provided)
             $includePermit = filter_var($request->query('includePermit', false), FILTER_VALIDATE_BOOLEAN);

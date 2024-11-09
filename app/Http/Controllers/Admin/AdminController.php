@@ -98,4 +98,9 @@ class AdminController extends Controller
     {
         return view('backup.backup');
     }
+
+    function ShowSetting()
+    {
+        return view("settings");
+    }
 }

@@ -224,13 +224,10 @@
                     <span class="block text-md text-gray-700 truncate">{{ Auth::user()->email }}</span>
                 </div>
                 <ul class="py-1 text-gray-700 " aria-labelledby="dropdown">
+
                     <li>
-                        <a href="#" class="block py-2 px-4  hover:bg-gray-100  ">My
-                            profile</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block py-2 px-4  hover:bg-gray-100  ">Account
-                            settings</a>
+                        <a href="{{ route('show.setting') }}" class="block py-2 px-4  hover:bg-gray-100  ">
+                            Settings</a>
                     </li>
                 </ul>
 
