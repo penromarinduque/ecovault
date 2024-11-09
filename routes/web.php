@@ -13,7 +13,7 @@ use App\Http\Controllers\FileSharing\FileShareController;
 use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\API\StaffController;
-
+use App\Http\Controllers\Backup\BackupController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -103,5 +103,16 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/file-request', function () {
         return view('admin.file-request.table');
     });
+
+    //backup
+
+    Route::get("/backup-and-recovery", [AdminController::class, 'ShowBackupAndRecover']);
+
+    //Api for backup and recovery
+
+    Route::post('/api/files/backup', [BackupController::class, "Backup"]);
+    Route::post('/api/files/restore', [BackupController::class, "Restore"]);
+    Route::get('/api/list-backups', [BackupController::class, "listBackups"]);
+
 });
 

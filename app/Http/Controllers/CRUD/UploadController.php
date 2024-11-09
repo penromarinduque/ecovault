@@ -28,7 +28,7 @@ class UploadController extends Controller
         $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
 
         $request->validate([
-            'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png,zip',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
             'municipality' => 'nullable|string', // Make this field nullable
             'category' => 'nullable|string', // Make this field nullable
@@ -43,7 +43,9 @@ class UploadController extends Controller
             $sanitizedFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $originalFileName);
             $extension = $file->getClientOriginalExtension();
 
+            //file manager na folder
             $uploadDir = "PENRO/uploads/{$request->input('permit_type')}/{$request->input('municipality')}";
+            //PENRO/uploads/{$request->input('report_type')}
 
             $filePath = $request->file('file')->storeAs("{$uploadDir}", $sanitizedFileName, 'public');
             // Get the relative path to store in the database
@@ -67,7 +69,7 @@ class UploadController extends Controller
             ];
 
             $fileEntry = File::create($formData);
-            $url = url("/download/{$fileEntry->id}");
+            $url = url("/download/{$fileEntry->id}"); //previw page
             $result = Builder::create()
                 ->writer(new PngWriter())
                 ->data($url)
@@ -76,13 +78,11 @@ class UploadController extends Controller
                 ->build();
 
             // Save QR code to storage
-            $qrCodeFilePath = "qrcodes/qrcode_{$fileEntry->id}.png";
+            $qrCodeFilePath = "PENRO/qrcodes/qrcode_{$fileEntry->id}.png";
             Storage::disk('public')->put($qrCodeFilePath, $result->getString());
             // Log file and QR code paths
 
-            if ($extension === 'docx') {
-                $filePath = $this->embedQrCodeInDocx($filePath, $qrCodeFilePath);
-            } elseif ($extension === 'pdf') {
+            if ($extension === 'pdf') {
                 $filePath = $this->embedQrCodeInPdf($filePath, $qrCodeFilePath);
             } elseif ($extension === 'zip') {
                 // Process the ZIP file
@@ -137,9 +137,7 @@ class UploadController extends Controller
             // Loop through extracted files and process them
             $files = scandir($tempDir);
             foreach ($files as $file) {
-                if (pathinfo($file, PATHINFO_EXTENSION) === 'docx') {
-                    $this->embedQrCodeInDocx("uploads/temp/{$file}", $qrCodePath);
-                } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
+                if (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
                     $this->embedQrCodeInPdf("uploads/temp/{$file}", $qrCodePath);
                 }
             }
@@ -179,59 +177,6 @@ class UploadController extends Controller
         }
         rmdir($dir);
     }
-    private function embedQrCodeInDocx($filePath, $qrCodePath)
-    {
-        // Load the existing DOCX file
-        $fullFilePath = storage_path("app/public/{$filePath}");
-
-        // Check if the DOCX file exists
-        if (!file_exists($fullFilePath)) {
-            throw new \Exception("DOCX file not found at: {$fullFilePath}");
-        }
-
-        // Create a new PHPWord object
-        $phpWord = \PhpOffice\PhpWord\IOFactory::load($fullFilePath);
-
-
-        // Add a new section to the document
-        $section = $phpWord->addSection();
-
-        // Add existing content to the new section if needed
-        // You may want to read the original sections and add them here
-        $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
-        if (!file_exists($qrCodeFullPath)) {
-            throw new \Exception("QR Code not found at: {$qrCodeFullPath}");
-        }
-
-        // // Add the QR Code Image
-
-
-        $section = $phpWord->getSections()[0];
-
-        // Add the QR Code image to the footer at the bottom right corner
-        foreach ($phpWord->getSections() as $section) {
-            $footer = $section->addFooter();
-            $footer->addImage($qrCodeFullPath, [
-                'width' => 40, // Image width in points
-                'height' => 40, // Image height in points
-                'wrappingStyle' => 'infront', // Image in front of the text
-                'positioning' => 'absolute', // Absolute positioning for precise placement
-                'posHorizontal' => 'right', // Align to the right side
-                'posHorizontalRel' => 'page', // Relative to the entire page width
-                'posVertical' => 'bottom', // Align vertically to the bottom
-                'posVerticalRel' => 'page', // Relative to the entire page height
-                'marginBottom' => 40, // Distance from the bottom of the page
-                'marginRight' => 40, // Distance from the right of the page
-            ]);
-        }
-
-        // Save the modified document
-        // $newFilePath = storage_path("app/public/uploads/") . uniqid() . '_modified.docx';
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save($fullFilePath);
-
-        return $fullFilePath; // Return the path of the modified document
-    }
     public function embedQrCodeInPdf($filePath, $qrCodePath)
     {
         // Load the existing PDF file
@@ -267,19 +212,20 @@ class UploadController extends Controller
             $pageWidth = $pdf->GetPageWidth();
             $pageHeight = $pdf->GetPageHeight();
             $marginRight = 10; // Margin from the right edge of the page
-            $marginTop = 10;   // Margin from the top edge of the page
+            $marginBottom = 10; // Margin from the bottom edge of the page
 
             // Set QR Code size and position (adjust as needed)
             $qrCodeWidth = 20; // Width in mm
             $qrCodeHeight = 20; // Height in mm
 
-            // Calculate the QR code position at the top-right corner
+            // Calculate the QR code position at the bottom-right corner
             $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
-            $yPosition = $marginTop;
+            $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
 
             // Add the QR Code image, which will appear on top of any existing content
             $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
         }
+
 
         // Save the modified PDF to the same file path
         $pdf->Output('F', $fullFilePath);

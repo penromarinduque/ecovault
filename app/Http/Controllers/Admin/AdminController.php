@@ -93,4 +93,9 @@ class AdminController extends Controller
     {
         return view('admin.archived-file.records', compact('record'));
     }
+
+    function ShowBackupAndRecover()
+    {
+        return view('backup.backup');
+    }
 }
