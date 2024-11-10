@@ -37,8 +37,8 @@ class FileAccessRequestNotification extends Notification
     {
         return (new MailMessage)
             ->line('You have a new file access request.')
-            ->line('File: ' . $this->request->file->name)
-            ->line('Requested by: ' . $this->request->requestedByUser->name)
+            ->line('File: ' . $this->request->file_name)
+            ->line('Requested by: ' . $this->request->requestedByUser)
             ->line('Requested Permission: ' . $this->request->requested_permission)
             ->action('View Request', url('/file-request'));
     }

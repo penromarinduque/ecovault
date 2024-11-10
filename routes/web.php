@@ -123,8 +123,7 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/setting', [AdminController::class, 'ShowSetting'])->name("show.setting");
 
-    Route::get('notifications', [NotificationController::class, 'GetAllNotifications']); // Get all notifications for a user
-    Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']); // Mark as read
-    Route::post('notifications', [NotificationController::class, 'store']); // Create a new notification
+    Route::get('/api/notifications', [NotificationController::class, 'getNotifications']); // Get all notifications for a user
+
 });
 

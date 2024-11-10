@@ -26,8 +26,6 @@
             </section>
         </div>
         <div class="flex items-center lg:order-2">
-            <i
-                class='bx bx-qr-scan bx-sm text-gray-500 p-2 hover:text-gray-900 hover:bg-gray-100 rounded-lg cursor-pointer '></i>
             <!-- toggle side bar-->
             <button type="button" data-drawer-toggle="drawer-navigation" aria-controls="drawer-navigation"
                 class="p-2 mr-1 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 ">
@@ -57,34 +55,10 @@
                 <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 ">
                     Notifications
                 </div>
-                <div>
-                    {{-- @foreach ($notifications as $notification)
-                        <a href="{{ url('/file-access' . $notification->data['file_id']) }}"
-                            class="flex py-3 px-4 border-b hover:bg-gray-100">
-                            <div class="flex-shrink-0">
-                                <img class="w-11 h-11 rounded-full" src="{{ $notification->data['avatar'] }}"
-                                    alt="{{ $notification->data['sender_name'] }} avatar" />
-                                <div
-                                    class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white {{ $notification->data['status_color'] }}">
-                                    <svg aria-hidden="true" class="w-3 h-3 text-white" fill="currentColor"
-                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="{{ $notification->data['icon_path'] }}"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="pl-3 w-full">
-                                <div class="text-gray-500 font-normal text-sm mb-1.5">
-                                    {!! $notification->data['message'] !!}
-                                </div>
-                                <div class="text-xs font-medium text-primary-600">
-                                    {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach --}}
+                <div id="notifications-list">
+                    <!-- Notifications will be dynamically loaded here -->
                 </div>
-
-                <a href="{{ route('ShowFileRequest') }}"
+                <a href="#"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">
                     <div class="inline-flex items-center">
                         <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 " fill="currentColor"
@@ -132,4 +106,62 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Function to fetch notifications and render them
+        async function loadNotifications() {
+            try {
+                // Make a fetch request to your backend API
+                const response = await fetch('/api/notifications');
+
+                // Check if the response is successful (status 200)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                // Parse the JSON data
+                const notifications = await response.json();
+
+                // Get the notifications container
+                const notificationsList = document.getElementById('notifications-list');
+
+                // Clear any existing notifications before rendering new ones
+                notificationsList.innerHTML = '';
+
+                // Loop through each notification and create the HTML structure
+                notifications.forEach(notification => {
+                    const notificationElement = document.createElement('a');
+                    notificationElement.href = "#";
+                    notificationElement.classList.add('flex', 'py-3', 'px-4', 'border-b', 'hover:bg-gray-100');
+
+                    // Create the content inside the notification
+                    notificationElement.innerHTML = `
+                    <div class="flex-shrink-0 relative">
+                        <!-- Avatar Image -->
+                        <img class="w-11 h-11 rounded-full" src="${notification.avatar}" alt="${notification.senderName} Avatar" />
+                        <div class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 ${notification.indicatorClass} rounded-full border border-white">
+                            ${notification.indicatorIcon}
+                        </div>
+                    </div>
+                    <div class="pl-3 w-full">
+                        <div class="text-gray-500 font-normal text-sm mb-1.5">
+                            ${notification.message}
+                        </div>
+                        <div class="text-xs font-medium text-primary-600">
+                            ${notification.time}
+                        </div>
+                    </div>
+                `;
+
+                    // Append the notification to the list
+                    notificationsList.appendChild(notificationElement);
+                });
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        }
+
+        // Load notifications when the page loads
+        window.onload = loadNotifications;
+    </script>
 </nav>
