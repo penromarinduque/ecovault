@@ -146,7 +146,7 @@
                     file.category,
                     file.classification,
                     file.status,
-                    generateKebab(file.id, file.shared_users, file.name),
+                    generateKebab(file.id, file.shared_users, file.file_name),
                 ],
                 attributes: {
                     class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"

@@ -30,11 +30,19 @@
                 <x-button id="" label="Create a Folder" style="secondary" />
             </div>
         </div>
-
+        <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-        <x-file-share.file-share :includePermit="true" />
+        <!-- file sharing-->
+        @component('components.file-share.file-share', [
+            'includePermit' => true,
+        ])
+        @endcomponent
+        @component('components.file-request.file-request', [
+            //Enter here for passing variable(future purposes)
+        ])
+        @endcomponent
 
-        <div class="grid gap-60">
+        <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     <!-- load the table-->
@@ -61,11 +69,27 @@
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
-                        {{-- this for upload --}}
-                        @include('admin.file-manager.component.upload-file')
-                        <x-move.moveFile />
-                        <x-edit.edit-file :type="$type" :municipality="$municipality" />
-                        <x-file-summary.file-summary :type="$type" :municipality="$municipality" />
+
+                        @component('components.move.move-file', [])
+                        @endcomponent
+                        @component('components.file-upload.file-upload', [
+                            'type' => $type,
+                            'municipality' => $municipality,
+                            'record' => '',
+                        ])
+                        @endcomponent
+                        @component('components.edit.edit-file', [
+                            'type' => $type,
+                            'municipality' => $municipality,
+                            'record' => '',
+                        ])
+                        @endcomponent
+                        @component('components.file-summary.file-summary', [
+                            'type' => $type,
+                            'municipality' => $municipality,
+                            'record' => '',
+                        ])
+                        @endcomponent
 
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
@@ -79,8 +103,6 @@
                         </div>
 
                     </div>
-
-
                 </div>
             </div>
         </div>
