@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 class NotificationController extends Controller
 {
     public function getNotifications()
     {
-        // Get unread notifications for the authenticated user
-        $notifications = auth()->user()->unreadNotifications;
 
-        // Return notifications as JSON
+
+        $user = User::first();
+        $notifications = $user()->user->unreadNotifications;
         return response()->json($notifications);
+
     }
 }

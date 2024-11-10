@@ -42,7 +42,7 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
     Route::get('/staff/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
     Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);
-
+    Route::get('/staff/scan/qrcode', [AdminController::class, 'ShowQR'])->name('show.qr');
 
     Route::get('/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
     Route::get('/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
@@ -124,6 +124,9 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/setting', [AdminController::class, 'ShowSetting'])->name("show.setting");
 
     Route::get('/api/notifications', [NotificationController::class, 'getNotifications']); // Get all notifications for a user
+
+
+
 
 });
 

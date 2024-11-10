@@ -103,4 +103,9 @@ class AdminController extends Controller
     {
         return view("settings");
     }
+
+    function ShowQR()
+    {
+        return view('admin.scanQr');
+    }
 }
