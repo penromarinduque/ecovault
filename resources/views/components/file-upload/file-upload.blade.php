@@ -35,63 +35,23 @@
                 <div class="my-4">
                     <label for="office-source" class="block mb-2 text-sm font-medium text-gray-700">Office
                         Source</label>
-                    <input type="text" id="office-source" name="office_source"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-            block w-full p-2.5 
-            focus:border-green-500 focus:ring-green-500 
-            required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-            valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                        placeholder="Enter office source" required>
+                    <input type="text" id="office-source" name="office_source" placeholder="Enter office source"
+                        required>
                     <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden">
                         <span class="font-medium">Please!</span> Enter valid input!
                     </p>
                 </div>
 
-                <div class="my-4 hidden">
-                    <label for="category" class="block mb-2 text-sm font-medium text-gray-700">Category</label>
-                    <select id="category" name="category"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-            block w-full p-2.5 
-            focus:border-green-500 focus:ring-green-500 
-            required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-            valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                        required>
-                        <option value="removed">Select a Category</option>
-                        <option value="incoming">Incoming</option>
-                        <option value="outgoing">Outgoing</option>
-                    </select>
-                </div>
-
                 <div class="my-4">
                     <label for="classification"
                         class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                    <select id="classification" name="classification"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-            block w-full p-2.5 
-            focus:border-green-500 focus:ring-green-500 
-            required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-            valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                        required>
+                    <select id="classification" name="classification" required>
                         <option value="" disabled selected>Select a Classification</option>
                         <option value="highly-technical">Highly Technical</option>
                         <option value="simple">Simple</option>
                     </select>
                 </div>
 
-                <div class="my-4 hidden">
-                    <label for="status" class="block mb-2 text-sm font-medium text-gray-700">Status</label>
-                    <select id="status" name="status"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-            block w-full p-2.5 
-            focus:border-green-500 focus:ring-green-500 
-            required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-            valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                        required>
-                        <option value="REMOVED">Select a Status</option>
-                        <option value="received">Received</option>
-                        <option value="outgoing">Outgoing</option>
-                    </select>
-                </div>
                 <input type="hidden" id="permit_type" value="{{ $type }}" name="permit-type">
                 @if (!isset($category))
                     <input type="hidden" id="land_category" value="" name="land_category">
@@ -111,178 +71,70 @@
 
             <!-- step 2 -->
             <div class="font-medium">
+                <div class="my-4">
+                    <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                        Client</label>
+                    <input type="text" id="name-of-client" name="name_of_client" placeholder="Enter Value" required>
+                    <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
+                        <span class="font-medium">Please!</span> Enter a valid name for the client!
+                    </p>
+                </div>
 
-                @if ($type == 'tree-cutting-permits')
+                @if ($type != 'tree-transport-permits')
+                    <!-- Only show location if not tree-transport-permits -->
                     <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Value" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid name for the client!
+                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location" placeholder="Enter Value" required>
+                        <p id="location-error" class="mt-2 text-sm text-red-600 hidden">
+                            <span class="font-medium">Please!</span> Enter a valid location.
                         </p>
                     </div>
+                @endif
 
+                @if ($type == 'tree-cutting-permits' || $type == 'tree-transport-permits')
+                    <!-- Show species for tree-cutting-permits, tree-transport-permits, and tree-plantation -->
                     <div class="my-4">
                         <label for="species" class="block mb-2 text-sm font-medium text-gray-700">Species</label>
-                        <input type="text" id="species" name="species"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Value" required>
+                        <input type="text" id="species" name="species" placeholder="Enter Species" required>
                         <p id="species-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid species!
+                            <span class="font-medium">Please!</span> Enter a valid species.
                         </p>
                     </div>
+                @endif
 
+                <div class="my-4">
+                    <label for="date-applied" class="block mb-2 text-sm font-medium text-gray-700">Date Applied</label>
+                    <input type="date" id="date-applied" name="date_applied" required>
+                    <p id="date-applied-error" class="mt-2 text-sm text-red-600 hidden">
+                        <span class="font-medium">Please!</span> Enter a valid date.
+                    </p>
+                </div>
+
+                @if ($type == 'tree-cutting-permits')
                     <div class="my-4">
                         <label for="no-of-tree-species" class="block mb-2 text-sm font-medium text-gray-700">No. of
                             Trees</label>
                         <input type="number" id="no-of-tree-species" name="no_of_tree_species"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                             placeholder="Enter number of trees" required>
                         <p id="no-of-tree-species-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter a valid number of trees and species.
                         </p>
                     </div>
-
-                    <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Value" required>
-                        <p id="location-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid location.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
-                        <label for="date-applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date-applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
-                        <p id="date-applied-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid date.
-                        </p>
-                    </div>
                 @elseif ($type == 'tree-plantation')
-                    <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Value" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter the name of the client.
-                        </p>
-                    </div>
-
                     <div class="my-4">
                         <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No. of Trees
                             Planted</label>
                         <input type="number" id="number_of_trees" name="number_of_trees"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                             placeholder="Enter number of trees" required>
                         <p id="number_of_trees-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter a valid number of trees.
                         </p>
                     </div>
-
-                    <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Value" required>
-                        <p id="location-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid location.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
-                        <label for="date-applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date-applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
-                        <p id="date-applied-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid date.
-                        </p>
-                    </div>
                 @elseif ($type == 'tree-transport-permits')
-                    <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Client's Name" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter the name of the client.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
-                        <label for="species" class="block mb-2 text-sm font-medium text-gray-700">Species</label>
-                        <input type="text" id="species" name="species"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Species" required>
-                        <p id="species-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid species.
-                        </p>
-                    </div>
-
                     <div class="my-4">
                         <label for="number-of-trees" class="block mb-2 text-sm font-medium text-gray-700">Number of
                             Trees</label>
                         <input type="number" id="number-of-trees" name="number_of_trees"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                             placeholder="Enter Number of Trees" required>
                         <p id="number-of-trees-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter the number of trees.
@@ -292,146 +144,37 @@
                     <div class="my-4">
                         <label for="destination"
                             class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
-                        <input type="text" id="destination" name="destination"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Destination" required>
+                        <input type="text" id="destination" name="destination" placeholder="Enter Destination"
+                            required>
                         <p id="destination-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter a valid destination.
                         </p>
                     </div>
 
                     <div class="my-4">
-                        <label for="date-applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date-applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
-                        <p id="date-applied-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid date.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
                         <label for="date-of-transport" class="block mb-2 text-sm font-medium text-gray-700">Date of
                             Transport</label>
-                        <input type="date" id="date-of-transport" name="date_of_transport"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
+                        <input type="date" id="date-of-transport" name="date_of_transport" required>
                         <p id="date-of-transport-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter a valid date for transport.
                         </p>
                     </div>
                 @elseif ($type == 'chainsaw-registration')
                     <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Client's Name" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter the name of the client.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Location" required>
-                        <p id="location-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid location.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
                         <label for="serial-number" class="block mb-2 text-sm font-medium text-gray-700">Serial
                             Number</label>
                         <input type="text" id="serial-number" name="serial_number"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                             placeholder="Enter Serial Number" required>
                         <p id="serial-number-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter the serial number.
                         </p>
                     </div>
-
-                    <div class="my-4">
-                        <label for="date-applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date-applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
-                        <p id="date-applied-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid date.
-                        </p>
-                    </div>
                 @elseif ($type == 'land-titles')
-                    <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Client's Name" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter the name of the client.
-                        </p>
-                    </div>
-
-                    <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Location" required>
-                        <p id="location-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid location.
-                        </p>
-                    </div>
-
                     <div class="my-4">
                         <label for="lot-number" class="block mb-2 text-sm font-medium text-gray-700">Lot
                             Number</label>
-                        <input type="text" id="lot-number" name="lot_number"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                      block w-full p-2.5 
-                      focus:border-green-500 focus:ring-green-500 
-                      required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                      valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            placeholder="Enter Lot Number" required>
+                        <input type="text" id="lot-number" name="lot_number" placeholder="Enter Lot Number"
+                            required>
                         <p id="lot-number-error" class="mt-2 text-sm text-red-600 hidden">
                             <span class="font-medium">Please!</span> Enter the lot number.
                         </p>
@@ -440,12 +183,7 @@
                     <div class="my-4">
                         <label for="property-category" class="block mb-2 text-sm font-medium text-gray-700">Property
                             Category</label>
-                        <select id="property-category" name="property_category"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 text-sm rounded-lg block w-full p-2.5 
-                       focus:border-green-500 focus:ring-green-500 
-                       required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
-                       valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                            required>
+                        <select id="property-category" name="property_category" required>
                             <option value="" disabled selected>Select Property Category</option>
                             <option value="residential">Residential</option>
                             <option value="agricultural">Agricultural</option>
@@ -456,6 +194,8 @@
                         </p>
                     </div>
                 @endif
+
+
 
             </div>
             <div class="mt-4 flex justify-end gap-4 col-span-2">
@@ -483,3 +223,176 @@
         </div>
     </form>
 </div>
+
+<script>
+    const fileInput = document.getElementById('file-upload');
+    const fileUploadName = document.getElementById('file-upload-name');
+    const fileUploadError = document.getElementById('file-upload-error');
+
+
+    function validateFile() {
+        const file = fileInput.files[0];
+
+
+        if (fileInput.files.length === 0) {
+            fileUploadError.textContent = "Please upload a file.";
+            fileUploadError.classList.remove('invisible');
+            return false;
+        }
+
+
+        const allowedTypes = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+            'application/zip',
+            'application/x-zip-compressed', // Some browsers may use this
+            'multipart/x-zip' // Occasionally used
+        ];
+
+
+        if (!allowedTypes.includes(file.type)) {
+            fileUploadError.textContent = "Invalid file type. Please upload a PDF, image, or ZIP file.";
+            fileUploadError.classList.remove('invisible');
+            return false;
+        }
+
+
+
+
+        fileUploadError.classList.add('invisible');
+        return true;
+
+    }
+
+    fileInput.addEventListener('change', function() {
+        const fileUploadError = document.getElementById('file-upload-error');
+
+        if (fileInput.files.length > 0) {
+            const selectedFile = fileInput.files[0];
+            fileUploadName.textContent = selectedFile.name; // Update Step 1
+            fileUploadError.classList.add('invisible'); // Hide error if file is chosen
+        } else {
+            fileUploadName.textContent = 'No file chosen'; // Reset if no file is chosen
+            fileUploadError.classList.remove('invisible'); // Show error if no file is chosen
+        }
+    });
+
+    function showToast(message, isSuccess) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const toastClose = document.getElementById('toast-close');
+        const toastTimer = document.getElementById('toast-timer');
+
+        toastMessage.textContent = message;
+        toast.classList.remove('hidden');
+
+
+        if (isSuccess) {
+            toast.classList.add('bg-green-500');
+            toast.classList.remove('bg-red-500');
+            toastTimer.classList.remove('bg-red-300');
+            toastTimer.classList.add('bg-green-300');
+        } else {
+            toast.classList.add('bg-red-500');
+            toast.classList.remove('bg-green-500');
+            toastTimer.classList.remove('bg-green-300');
+            toastTimer.classList.add('bg-red-300');
+        }
+
+        let timerDuration = 3000;
+        let timerWidth = 100;
+
+
+        toastTimer.style.width = '100%';
+
+
+        const timerInterval = setInterval(() => {
+            timerWidth -= (100 / (timerDuration / 100));
+            toastTimer.style.width = `${timerWidth}%`;
+        }, 100);
+
+
+        setTimeout(() => {
+            clearInterval(timerInterval);
+            toast.classList.add('hidden');
+        }, timerDuration);
+
+
+        toastClose.onclick = function() {
+            clearInterval(timerInterval);
+            toast.classList.add('hidden');
+        };
+    }
+
+    let fileId;
+
+    fetch('/file-upload', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('name-of-client')
+                .value;
+            if (data.success) {
+                showToast(data.message, true);
+                fileId = data.fileId;
+
+                let formPermit = new FormData();
+                formPermit.append('file_id', fileId);
+                formPermit.append('permit_type', permit_type);
+
+                // Gather values based on form type
+
+
+
+                fetch('/permit-upload', {
+                        method: 'POST',
+                        body: formPermit,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showSuccessAlert(data.success || "Operation completed successfully!");
+                            fetchData()
+                        }
+                    })
+                    .catch((error) => {
+                        showToast(error || 'File upload failed.', false);
+                    });
+
+
+
+            } else {
+
+                showToast(data.message || 'File upload failed.', false);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        }).finally(() => {
+
+            this.reset();
+
+            const fileInput = document.getElementById('file-upload');
+            const fileUploadName = document.getElementById('file-upload-name');
+
+
+            fileUploadName.textContent = 'No file chosen';
+
+
+            submitButton.disabled = false;
+            buttonText.classList.remove('hidden'); // Show the button text again
+            buttonSpinner.classList.add('hidden'); // Hide the spinner
+
+        });
+</script>

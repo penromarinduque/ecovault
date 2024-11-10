@@ -131,8 +131,8 @@
 
     function formData(data) {
         return {
-            headings: ["Name", "Office Source", "Date Modified", "Modified By", "Category",
-                "Classification", "Status",
+            headings: ["Name", "Office Source", "Date Modified", "Modified By",
+                "Classification",
                 "Actions"
             ],
             data: data.map(file => ({
@@ -143,9 +143,7 @@
                     file.office_source,
                     file.updated_at,
                     file.user_name,
-                    file.category,
                     file.classification,
-                    file.status,
                     generateKebab(file.id, file.shared_users, file.file_name),
                 ],
                 attributes: {

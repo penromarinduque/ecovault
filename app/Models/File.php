@@ -18,9 +18,7 @@ class File extends Model
         'file_name',
         'file_path',
         'office_source',
-        'category',
         'classification',
-        'status',
         'user_id',
         'is_archived',
         'archived_at'

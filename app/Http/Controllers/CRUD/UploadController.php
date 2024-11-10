@@ -31,9 +31,7 @@ class UploadController extends Controller
             'file' => 'required|file|mimes:pdf,jpg,jpeg,png,zip',
             'permit_type' => 'nullable|string', // Make this field nullable
             'municipality' => 'nullable|string', // Make this field nullable
-            'category' => 'nullable|string', // Make this field nullable
             'classification' => 'required|string',
-            'status' => 'required|string',
         ]);
 
         if ($request->file('file')->isValid()) {
@@ -61,9 +59,7 @@ class UploadController extends Controller
                 'file_name' => $originalFileName,
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
-                'category' => $request->input('category'), // Ensure this is present in the request
                 'classification' => $request->input('classification'), // Ensure this is present in the request
-                'status' => $request->input('status'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
                 'is_archived' => $isArchived
             ];
