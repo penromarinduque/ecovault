@@ -28,8 +28,15 @@ return new class extends Migration {
 
         Schema::create('tree_cutting_permits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
+            $table->foreignId('file_id')->constrained('files')->onDelete('cascade'); // Connect to files table
             $table->string('name_of_client');
+            $table->timestamps();
+        });
+
+        // Tree cutting permit details table
+        Schema::create('tree_cutting_permit_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('tree_cutting_permit_id')->constrained('tree_cutting_permits')->onDelete('cascade');
             $table->integer('number_of_trees');
             $table->string('species');
             $table->string('location');
@@ -87,6 +94,7 @@ return new class extends Migration {
     {
         Schema::dropIfExists('land_titles');
         Schema::dropIfExists('transport_permits');
+        Schema::dropIfExists('tree_cutting_permit_details');
         Schema::dropIfExists('tree_plantation_registration');
         Schema::dropIfExists('chainsaw_registrations');
         Schema::dropIfExists('tree_cutting_permits');

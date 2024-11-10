@@ -18,14 +18,32 @@ class FileManagerController extends BaseController
     {
         switch ($request->permit_type) {
             case 'tree-cutting-permits':
-                TreeCuttingPermit::create([
+                $treeCuttingPermit = TreeCuttingPermit::create([
                     'file_id' => $request->file_id,
                     'name_of_client' => $request->name_of_client,
-                    'number_of_trees' => $request->number_of_trees,
-                    'location' => $request->location,
-                    'date_applied' => $request->date_applied,
-                    'species' => $request->species,
+                    // 'number_of_trees' => $request->number_of_trees,
+                    // 'location' => $request->location,
+                    // 'date_applied' => $request->date_applied,
+                    // 'species' => $request->species,
                 ]);
+
+                $treeCuttingPermit->id;
+                //json 
+
+                // Step 2: Add multiple details using createMany
+                $detailsData = $request->details;
+
+                // Validate and insert details if provided
+                if (!empty($detailsData)) {
+                    $treeCuttingPermit->details()->createMany($detailsData);
+                }
+
+                return response()->json([
+                    'message' => 'Tree Cutting Permit created successfully!',
+                    'tree_cutting_permit' => $treeCuttingPermit,
+                    'details' => $treeCuttingPermit->details,
+                ]);
+
                 break;
 
             case 'chainsaw-registration':
