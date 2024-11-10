@@ -25,7 +25,14 @@ class StoreAccountRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'employee_id' => 'nullable|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[A-Z]/',                // At least one uppercase letter
+                'regex:/[!@#$%^&*(),.?":{}|<>]/', // At least one special character
+            ],
         ];
     }
 
@@ -40,6 +47,10 @@ class StoreAccountRequest extends FormRequest
             'password.required' => 'The password field is required.',
             'password.min' => 'The password must be at least 8 characters.',
             'password.confirmed' => 'The password confirmation does not match.',
+            'password.regex' => [
+                'regex:/[A-Z]/' => 'The password must contain at least one uppercase letter.',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/' => 'The password must contain at least one special character.',
+            ]
         ];
     }
 }
