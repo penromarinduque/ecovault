@@ -6,7 +6,8 @@ use App\Models\FileShares;
 use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\User;
+use App\Notifications\FileAccessRequestNotification;
 class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
@@ -61,6 +62,7 @@ class FileShareController extends Controller
             'remarks' => 'nullable|string|max:255',
         ]);
 
+
         // Check if there is an existing request for the same file by the same user
         $existingRequest = FileAccessRequests::where('file_id', $request->file_id)
             ->where('requested_by_user_id', auth()->id())
@@ -103,6 +105,9 @@ class FileShareController extends Controller
             'remarks' => $request->remarks,
             'status' => 'pending', // Default status when creating a new request
         ]);
+
+        $admin = User::where('isAdmin', 'true')->first(); // Or find the appropriate admin
+        $admin->notify(new FileAccessRequestNotification($fileAccessRequest));
 
         // Return a JSON response with the created request data
         return response()->json([

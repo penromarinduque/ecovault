@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\API\StaffController;
 use App\Http\Controllers\Backup\BackupController;
 use App\Http\Controllers\CRUD\SettingController;
+use App\Http\Controllers\NotificationController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -121,5 +122,9 @@ Route::middleware(['authentication'])->group(function () {
 
 
     Route::get('/setting', [AdminController::class, 'ShowSetting'])->name("show.setting");
+
+    Route::get('notifications', [NotificationController::class, 'GetAllNotifications']); // Get all notifications for a user
+    Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']); // Mark as read
+    Route::post('notifications', [NotificationController::class, 'store']); // Create a new notification
 });
 
