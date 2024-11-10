@@ -4,15 +4,11 @@
             <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">32.4k</h5>
             <p class="text-base font-normal text-gray-500 dark:text-gray-400">Upload File this week</p>
         </div>
-        <div
-            class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500 dark:text-green-500 text-center">
+        <div id="percentage-container" class="flex items-center px-2.5 py-0.5 text-base font-semibold text-center">
             <h1 id="percentage">1%</h1>
-            <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 10 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg>
+
         </div>
+
     </div>
     <div id="area-chart"></div>
 
@@ -29,8 +25,7 @@
             }
             const data = await response.json();
 
-            // Log the percentageChange received
-            console.log('Percentage Change:', data.percentageChange);
+
 
             // Extract categories and series data
             const categories = data.categories;
@@ -44,16 +39,32 @@
 
             // Calculate the percentage change for uploads (e.g., "12%")
             const percentageChange = data.percentageChange;
-            const percentageFormatted = percentageChange >= 0 ?
-                `+${percentageChange}%` :
-                `${percentageChange}%`;
+            const percentageFormatted = percentageChange >= 0 ? `+${percentageChange}%` : `${percentageChange}%`;
 
             // Log the final percentage to be displayed
             console.log('Formatted Percentage Change:', percentageFormatted);
 
-            // Display the percentage change (e.g., "+12%")
+            // Update the percentage text
             document.getElementById('percentage').innerText = `Uploads this week: ${percentageFormatted}`;
 
+            // Change text color and SVG based on the percentage change
+            const percentageContainer = document.getElementById('percentage-container');
+            const percentageText = document.getElementById('percentage');
+
+
+            if (percentageChange < 0) {
+                // Negative percentage: Red color and downward arrow
+                percentageContainer.classList.remove('text-green-500');
+                percentageContainer.classList.add('text-red-500');
+
+
+            } else {
+                // Positive percentage: Green color and upward arrow
+                percentageContainer.classList.remove('text-red-500');
+                percentageContainer.classList.add('text-green-500');
+
+
+            }
             // Prepare the chart options
             const options = {
                 chart: {

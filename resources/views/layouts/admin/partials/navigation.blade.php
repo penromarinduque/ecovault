@@ -26,6 +26,8 @@
             </section>
         </div>
         <div class="flex items-center lg:order-2">
+            <i
+                class='bx bx-qr-scan bx-sm text-gray-500 p-2 hover:text-gray-900 hover:bg-gray-100 rounded-lg cursor-pointer '></i>
             <!-- toggle side bar-->
             <button type="button" data-drawer-toggle="drawer-navigation" aria-controls="drawer-navigation"
                 class="p-2 mr-1 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 ">
