@@ -1,3 +1,4 @@
+<!-- Life is available only in the present moment. - Thich Nhat Hanh -->
 <div id="upload-file-div" class="items-center justify-center">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-lg font-bold text-gray-700">Upload File</h2> {{-- add summary --}}
@@ -46,7 +47,7 @@
                     </p>
                 </div>
 
-                <div class="my-4">
+                <div class="my-4 hidden">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-700">Category</label>
                     <select id="category" name="category"
                         class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
@@ -55,7 +56,7 @@
             required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
             valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                         required>
-                        <option value="" disabled selected>Select a Category</option>
+                        <option value="removed">Select a Category</option>
                         <option value="incoming">Incoming</option>
                         <option value="outgoing">Outgoing</option>
                     </select>
@@ -77,7 +78,7 @@
                     </select>
                 </div>
 
-                <div class="my-4">
+                <div class="my-4 hidden">
                     <label for="status" class="block mb-2 text-sm font-medium text-gray-700">Status</label>
                     <select id="status" name="status"
                         class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
@@ -86,7 +87,7 @@
             required:border-red-500 required:ring-red-500 required:text-red-500 required:placeholder:text-red-500
             valid:border-green-500 valid:ring-green-500 valid:text-green-500"
                         required>
-                        <option value="" disabled selected>Select a Status</option>
+                        <option value="REMOVED">Select a Status</option>
                         <option value="received">Received</option>
                         <option value="outgoing">Outgoing</option>
                     </select>
@@ -480,7 +481,5 @@
                 </button>
             </div>
         </div>
-
     </form>
-
 </div>

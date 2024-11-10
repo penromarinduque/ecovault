@@ -59,8 +59,8 @@ function toggleDivVisibility(showDivId) {
 document.body.addEventListener('click', (event) => {
     if (event.target.matches('.move-file-div')) {
         toggleSections(true);
-        const fileId = event.target.dataset.fileId;
-        fetchFileData(fileId);
+        // const fileId = event.target.dataset.fileId;
+        // fetchFileData(fileId);
         toggleDivVisibility('move-file-div');
     }
 });
