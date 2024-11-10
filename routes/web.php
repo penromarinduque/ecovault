@@ -103,7 +103,7 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/file-request', function () {
         return view('admin.file-request.table');
-    });
+    })->name(("ShowFileRequest"));
 
     //backup
 

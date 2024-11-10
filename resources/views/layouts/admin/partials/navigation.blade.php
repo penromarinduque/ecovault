@@ -195,7 +195,7 @@
                         </div>
                     </a>
                 </div>
-                <a href="#"
+                <a href="{{ route('ShowFileRequest') }}"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">
                     <div class="inline-flex items-center">
                         <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 " fill="currentColor"
