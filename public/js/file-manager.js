@@ -14,7 +14,9 @@ async function archiveFile(fileId) {
         });
         const result = await response.json();
         if (response.ok && result.success) {
+            console.log('succccc')
             fetchData()
+            
             showSuccessAlert(result.message || "Operation completed successfully!");
         } else {
             showErrorAlert(result.message || 'Unknown error');

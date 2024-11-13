@@ -1,152 +1,35 @@
-@extends('layouts.admin.master')
+@extends('layouts.user.master')
 
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <h1>File Sharing</h1>
+    <img src="{{ asset('images/denr-home.jpg') }}" class="fixed inset-0 bg-cover w-full h-full -z-10" alt="Background Image">
+    <section class="bg-transparent p-10">
+        <div class="grid max-w-screen-xl mx-auto lg:gap-8 xl:gap-8 lg:py-16 lg:grid-cols-12">
 
-    <!-- File Sharing Form -->
-    <h2>Share File</h2>
-    <form id="fileShareForm">
-        @csrf
-        <label for="file_id">File ID:</label>
-        <input type="text" id="file_id" name="file_id" required placeholder="Enter file ID" />
+            <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                <img src="{{ asset('images/logo.png') }}" class="" alt="PENRO-logo">
+            </div>
 
-        <label for="shared_with_user_id">Select User:</label>
-        <select id="shared_with_user_id" name="shared_with_user_id" required>
-            <option value="" disabled selected>Select a user</option>
-        </select>
+            <div class="mr-auto place-self-center lg:col-span-7">
+                <h1 class="max-w-2xl text-white mb-4 text-5xl font-extrabold tracking-tight leading-none">
+                    Welcome to Document Security and Digital Archiving System.</h1>
+                <h1 class="max-w-2xl text-slate-300 mb-4 text-4xl font-extrabold tracking-tight leading-none">
+                    PENRO-Boac Marinduque</h1>
+                <p class="max-w-2xl mb-6 font-md text-gray-300 lg:mb-8 md:text-lg lg:text-xl">
+                    Efficient document management system provides tailored solutions, enhancing workflow seamlessly</p>
+                <a href="#"
+                    class="transition ease-in-out delay-150 hover:scale-110  hover:-translate-y-1 inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white border bg-primary-700 border-gray-300 rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-gray-100">
+                    Get started
+                    <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </a>
 
-
-        <label for="permission">Permissions:</label>
-        <select id="permission" name="permission" required>
-            <option value="" disabled selected>Select permissions</option>
-            <option value="viewer">Viewer</option>
-            <option value="editor">Editor</option>
-            {{-- <option value="admin">Admin</option> --}}
-        </select>
-
-
-
-        <button type="submit">Share File</button>
-    </form>
-
-    <h1>File List</h1>
-    <table id="files-table">
-        <thead>
-            <tr class="mx-4">
-                <th>ID</th>
-                <th>File Name</th>
-                <th>Updated At</th>
-                <th>Office Source</th>
-                <th>User Name</th>
-                <th>Category</th>
-                <th>Classification</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
-    </table>
-
-    <script>
-        async function loadFiles() {
-            try {
-                const response = await fetch('/api/files?report=memoranda');
-                if (!response.ok) throw new Error('Failed to fetch files');
-                const data = await response.json();
-                if (!data.success) {
-                    console.error('Error:', data.message);
-                    alert(data.message);
-                    return;
-                }
-
-                const tableBody = document.getElementById('files-table').querySelector('tbody');
-                tableBody.innerHTML = ''; // Clear previous data
-
-                data.files.forEach(file => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="mx-4">${file.id}</td>
-                        <td class="mx-4">${file.file_name}</td>
-                        <td class="mx-4">${file.updated_at}</td>
-                        <td class="mx-4">${file.office_source}</td>
-                        <td class="mx-4">${file.user_name}</td>
-                        <td class="mx-4">${file.category}</td>
-                        <td class="mx-4">${file.classification}</td>
-                        <td class="mx-4">${file.status}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error loading files:', error);
-                alert('An error occurred while loading files.');
-            }
-        }
-
-        async function fetchEmployees() {
-            try {
-                const response = await fetch('/api/users');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                if (data.success) {
-                    const users = data.employees; // Assuming the API returns employee list in employees key
-                    const userSelect = document.getElementById('shared_with_user_id');
-
-                    users.forEach(employee => {
-                        const option = document.createElement('option');
-                        option.value = employee.id;
-                        option.textContent = employee.name; // Display employee name
-                        userSelect.appendChild(option);
-                    });
-                } else {
-                    console.error('Failed to retrieve employees:', data.message);
-                }
-            } catch (error) {
-                console.error('Error fetching employees:', error);
-            }
-        }
-
-        // Share file function
-        document.getElementById('fileShareForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const csrfToken = formData.get('_token');
-            const formDataObj = Object.fromEntries(formData.entries());
-
-            console.log(JSON.stringify(formDataObj, null, 2));
-            try {
-                const response = await fetch('/api/files/share', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken // Set CSRF token in the headers
-                    },
-                    body: formData,
-
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('File shared successfully!');
-                    event.target.reset(); // Reset the form after submission
-                } else {
-                    alert('Failed to share file: ' + data.message);
-                }
-            } catch (error) {
-                console.error('Error sharing file:', error);
-                alert('An error occurred while sharing the file.');
-            }
-        });
-
-        // Load files and employees when the page loads
-        window.addEventListener('load', () => {
-            loadFiles();
-            fetchEmployees();
-        });
-    </script>
-
+            </div>
+        </div>
+    </section>
 @endsection

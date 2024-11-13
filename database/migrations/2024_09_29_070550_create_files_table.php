@@ -44,6 +44,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+
         Schema::create('chainsaw_registrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
@@ -68,11 +69,18 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to the files table
             $table->string('name_of_client');  // Name of the client
-            $table->integer('number_of_trees');  // Number of trees
+            $table->timestamps();
+        });
+
+        // tree_transport_details
+        Schema::create('tree_transport_permit_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transport_permit_id')->constrained('transport_permits')->onDelete('cascade');
+            $table->integer('number_of_trees');
             $table->string('species');
             $table->string('destination');
-            $table->date('date_applied');  // Date of application
             $table->date('date_of_transport');  // Date of transport
+            $table->date('date_applied');
             $table->timestamps();
         });
 
@@ -93,6 +101,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('land_titles');
+        Schema::dropIfExists('tree_transport_permit_details');
         Schema::dropIfExists('transport_permits');
         Schema::dropIfExists('tree_cutting_permit_details');
         Schema::dropIfExists('tree_plantation_registration');

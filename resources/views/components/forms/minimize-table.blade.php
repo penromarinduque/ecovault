@@ -1,31 +1,32 @@
-<table id="main-table">
+<!-- When there is no desire, all things are at peace. - Laozi -->
+<table id="minimize-table">
     <!-- Table Headers will be dynamically generated -->
 </table>
 
 
 <script>
     //love what you are doing
-    let dataTable;
+    let minidataTable;
 
-    let report = {!! json_encode($record ?? []) !!};
+    let reports = {!! json_encode($record ?? []) !!};
 
-    let isAdmin = {!! json_encode($isAdmin) !!};
-    let type = {!! json_encode($type) !!};
-    let municipality = {!! json_encode($municipality) !!};
-    let isArchived = {!! json_encode($isArchived) !!};
+    let isAdmins = {!! json_encode($isAdmin) !!};
+    let types = {!! json_encode($type) !!};
+    let municipalities = {!! json_encode($municipality) !!};
+    let isArchives = {!! json_encode($isArchived) !!};
 
     document.addEventListener("DOMContentLoaded", function() {
         // Define parameters for the request
-        fetchData();
+        fetchDatas();
 
     });
 
-    async function fetchData() {
+    async function fetchDatas() {
         const params = {
-            type: type,
-            municipality: municipality,
-            report: report || '',
-            isArchived: isArchived
+            type: types,
+            municipality: municipalities,
+            report: reports || '',
+            isArchived: isArchives
         };
 
         // Remove empty parameters
@@ -45,7 +46,7 @@
             }
             const data = await response.json();
 
-            initializeTable(data);
+            initializeTables(data);
 
         } catch (error) {
             console.error('Fetch operation error:', error.message || error);
@@ -53,15 +54,15 @@
         }
     }
 
-    function initializeTable(data) {
-        if (dataTable) {
-            dataTable.destroy();
+    function initializeTables(data) {
+        if (minidataTable) {
+            minidataTable.destroy();
         }
-        const customData = formData(data.data);
-        const dataTableElement = document.getElementById("main-table");
+        const customData = formDatas(data.data);
+        const dataTableElement = document.getElementById("minimize-table");
 
         if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
-            dataTable = new simpleDatatables.DataTable(dataTableElement, {
+            minidataTable = new simpleDatatables.DataTable(dataTableElement, {
                 classes: {
                     loading: "datatable-loading text-sm",
                     dropdown: "datatable-perPage flex items-center",
@@ -91,36 +92,28 @@
                 },
             });
 
-            tableEvents(data); // Custom function for handling events if required
+            tableEvent(data); // Custom function for handling events if required
         }
     }
 
-
-    function tableEvents(data) {
+    function tableEvent(data) {
         const events = ["init", "refresh", "page", "perpage", "update"];
         events.forEach(event => {
-            dataTable.on(`datatable.${event}`, () => {
-                initializeDropdowns(data);
+            minidataTable.on(`datatable.${event}`, () => {
+                initializeDropdown(data);
             });
         });
     }
 
-    function formData(data) {
+    function formDatas(data) {
         return {
-            headings: ["Name", "Office Source", "Date Modified", "Modified By",
-                "Classification",
-                "Actions"
-            ],
+            headings: ["Name", "Actions"],
             data: data.map(file => ({
                 cells: [
                     file.file_name.length > 15 ?
                     file.file_name.substring(0, 15) + '...' :
-                    file.file_name, // Truncate file name if longer than 15 characters
-                    file.office_source,
-                    file.updated_at,
-                    file.user_name,
-                    file.classification,
-                    generateKebab(file.id, file.shared_users, file.file_name),
+                    file.file_name, // Truncate file name if longer than 15 character
+                    generateKebabs(file.id, file.shared_users, file.file_name),
                 ],
                 attributes: {
                     class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
@@ -130,7 +123,7 @@
     }
 
     // Generate action buttons for dropdowns
-    function generateKebab(fileId, fileShared, fileName) {
+    function generateKebabs(fileId, fileShared, fileName) {
         const employeeActions = `
         ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
         ? `
@@ -157,12 +150,12 @@
         const actions = isAdmin ? adminActions : employeeActions;
 
         return `
-        <button id="dropdownLeftButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+        <button id="dropdownRightButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
         </button>
-        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
+        <div id="dropdownRight${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
             <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
                 ${actions}
             </ul>
@@ -172,9 +165,9 @@
 
 
     // Create dropdown for each file
-    function createDropdown(fileId) {
-        const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
-        const dropdownElement = document.getElementById(`dropdownLeft${fileId}`);
+    function createDropdowns(fileId) {
+        const dropdownButton = document.getElementById(`dropdownRightButton${fileId}`);
+        const dropdownElement = document.getElementById(`dropdownRight${fileId}`);
         if (dropdownButton && dropdownElement) {
             new Dropdown(dropdownElement, dropdownButton, {
                 placement: 'left',
@@ -186,9 +179,9 @@
         }
     }
 
-    function initializeDropdowns(data) {
+    function initializeDropdown(data) {
         data.data.forEach((file) => {
-            createDropdown(file.id);
+            createDropdowns(file.id);
         });
     }
 </script>

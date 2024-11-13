@@ -3,25 +3,33 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="grid grid-flow-col m-14 gap-5">
+    {{-- <img src="{{ asset('images/denr-home.jpg') }}" class="fixed inset-0 bg-cover w-full h-full -z-10" alt="Background Image"> --}}
+    <section class="bg-transparent mt-14 ">
+        <div class="grid max-w-screen-xl mx-auto lg:gap-8 xl:gap-8 lg:py-16 lg:grid-cols-12">
 
-        <div>
-            <div class=""><img src="{{ asset('images/denr-home.jpg') }}"
-                    class="w-[720px] h-[380px] drop-shadow-md rounded-lg " alt="" srcset=""></div>
-        </div>
-
-        <div class="space-y-3 m-4 mt-20">
-            <h1 class="font-bold text-3xl w-10/12">Welcome to Document Security and Digital Archiving System</h1>
-            <p class="text-xl font-medium">PENRO-Boac Marinduque</p>
-            <p class="w-9/12">Efficient document management system provides tailored solutions, enhancing workflow seamlessly
-            </p>
-            <div>
-                <a href="{{ route('login.show') }}"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get
-                    Started</a>
+            <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                <img src="{{ asset('images/denrhome.jpg') }}" class="rounded-3xl w-full" alt="PENRO-logo">
             </div>
 
-        </div>
+            <div class="mr-auto place-self-center lg:col-span-7">
+                <h1 class="max-w-2xl text-gray-800 mb-4 text-5xl font-extrabold tracking-tight leading-none">
+                    Welcome to Document Security and Digital Archiving System.</h1>
+                <h1 class="max-w-2xl text-slate-700 mb-4 text-4xl font-extrabold tracking-tight leading-none">
+                    PENRO-Boac Marinduque</h1>
+                <p class="max-w-2xl mb-6 font-md text-gray-600 lg:mb-8 md:text-lg lg:text-xl">
+                    Efficient document management system provides tailored solutions, enhancing workflow seamlessly</p>
+                <a href="{{ route('login.show') }}"
+                    class="transition ease-in-out delay-150 hover:scale-110  hover:-translate-y-1 inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white border bg-primary-700 border-gray-300 rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-gray-100">
+                    Get started
+                    <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </a>
 
-    </div>
+            </div>
+        </div>
+    </section>
 @endsection
