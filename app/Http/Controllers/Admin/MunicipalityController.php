@@ -27,4 +27,9 @@ class MunicipalityController extends Controller
         }
     }
 
+    public function GetVillage()
+    {
+
+    }
+
 }

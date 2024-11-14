@@ -63,12 +63,17 @@
 
                         @component('components.move.move-file', [])
                         @endcomponent
+                        <!--uploading files-->
                         @component('components.file-upload.file-upload', [
                             'type' => '',
                             'municipality' => '',
                             'record' => $record,
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                            'category' => '',
                         ])
                         @endcomponent
+
                         @component('components.edit.edit-file', [
                             'type' => '',
                             'municipality' => '',

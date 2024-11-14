@@ -11,7 +11,7 @@
 
                 <a href="{{ route('archived-file.file-manager.show') }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Archived Fle Manager</h1>
+                    <h1 class="w-[120px]">Archived File Manager</h1>
                 </a>
             </div>
 

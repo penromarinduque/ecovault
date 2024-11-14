@@ -25,6 +25,11 @@ class UploadController extends Controller
 {
     public function StoreFile(Request $request)
     {
+        $type = $request->query('type');
+        $municipality = $request->query('municipality');
+        $report = $request->query('report');
+        $category = $request->query('category');
+        $currentUserId = auth()->id();
         $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
 
         $request->validate([
@@ -52,17 +57,21 @@ class UploadController extends Controller
 
             // Create the form data to store in your database
             $formData = [
-                'permit_type' => $request->input('permit_type'),  // Ensure this is present in the request
-                'land_category' => $request->input('land_category'), // This can be null
-                'municipality' => $request->input('municipality'), // Ensure this is present in the request
-                'report_type' => $request->input('report_type'),
+                'permit_type' => $type,  // Ensure this is present in the request
+                'land_category' => $category, // This can be null
+                'municipality' => $municipality, // Ensure this is present in the request
+                'report_type' => $report,
                 'file_name' => $originalFileName,
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
-                'is_archived' => $isArchived
+                'is_archived' => $isArchived,
             ];
+
+            if ($isArchived) {
+                $formData['archived_at'] = now();
+            }
 
             $fileEntry = File::create($formData);
             $url = url("/download/{$fileEntry->id}"); //previw page
