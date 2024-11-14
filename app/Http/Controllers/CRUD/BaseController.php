@@ -15,7 +15,7 @@ abstract class BaseController extends Controller
 
             $file->archive();
 
-            return response()->json([
+            return response()->json(data: [
                 'success' => true,
                 'message' => 'Archived successfully',
                 'files' => $file,
@@ -40,6 +40,7 @@ abstract class BaseController extends Controller
             $report = $request->query('report');
             $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
             $currentUserId = auth()->id(); // Get the currently logged-in user's ID
+            $category = $request->query('category');
 
             // If $report is provided, fetch files without relationships
             if (!empty($report)) {
@@ -81,6 +82,7 @@ abstract class BaseController extends Controller
                 $files = File::where('is_archived', $isArchived)
                     ->where('permit_type', $type)
                     ->where('municipality', $municipality)
+                    ->where('land_category', $category)
                     ->with(['user:id,name', 'fileShares']) // Load uploader and shared users
                     ->get()
                     ->map(function ($file) use ($currentUserId) {

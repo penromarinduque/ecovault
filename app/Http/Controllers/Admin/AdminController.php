@@ -84,6 +84,12 @@ class AdminController extends Controller
         return view('admin.archived-file.table', compact('type', 'municipality'));
     }
 
+    function ShowArchivedFileManagerTableWithCategory($type, $municipality, $category)
+    {
+
+        return view('admin.archived-file.table', compact('type', 'municipality', 'category'));
+    }
+
     function ShowArchivedAdministrativeDocument()
     {
         return view('admin.archived-file.administrative-documents');

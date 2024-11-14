@@ -12,6 +12,7 @@
     let isAdmin = {!! json_encode($isAdmin) !!};
     let type = {!! json_encode($type) !!};
     let municipality = {!! json_encode($municipality) !!};
+    let category = {!! json_encode($category ?? []) !!};
     let isArchived = {!! json_encode($isArchived) !!};
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -21,13 +22,18 @@
     });
 
     async function fetchData() {
+
         const params = {
             type: type,
             municipality: municipality,
             report: report || '',
+            category: category || '',
             isArchived: isArchived
         };
-
+        console.log("Initial Values");
+        console.log("Type:", type);
+        console.log("Municipality:", municipality);
+        console.log("Category:", category);
         // Remove empty parameters
         const filteredParams = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value !== '')
@@ -35,7 +41,7 @@
 
         // Build the query string
         const queryParams = new URLSearchParams(filteredParams).toString();
-
+        console.log('this is', queryParams);
         try {
             const response = await fetch(`/api/files?${queryParams}`);
 

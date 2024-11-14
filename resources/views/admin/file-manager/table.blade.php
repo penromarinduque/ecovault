@@ -48,6 +48,7 @@
                         'municipality' => $municipality,
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                         'isArchived' => false,
+                        'category' => $category ?? '',
                     ])
                         <!--add something to use in the table updated by harvs-->
                     @endcomponent
@@ -72,18 +73,24 @@
                         {{-- this for upload --}}
                         @component('components.move.move-file', [])
                         @endcomponent
+
                         @component('components.file-upload.file-upload', [
                             'type' => $type,
                             'municipality' => $municipality,
                             'record' => '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                            'category' => $category ?? '',
                         ])
                         @endcomponent
+
                         @component('components.edit.edit-file', [
                             'type' => $type,
                             'municipality' => $municipality,
                             'record' => '',
                         ])
                         @endcomponent
+
                         @component('components.file-summary.file-summary', [
                             'type' => $type,
                             'municipality' => $municipality,

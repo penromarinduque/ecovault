@@ -4,17 +4,17 @@
 
 @section('content')
     {{-- <img src="{{ asset('images/denr-home.jpg') }}" class="fixed inset-0 bg-cover w-full h-full -z-10" alt="Background Image"> --}}
-    <section class="bg-transparent mt-14 ">
+    <section class="bg-transparent mt-40   ">
         <div class="grid max-w-screen-xl mx-auto lg:gap-8 xl:gap-8 lg:py-16 lg:grid-cols-12">
 
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                <img src="{{ asset('images/denrhome.jpg') }}" class="rounded-3xl w-full" alt="PENRO-logo">
+                <img src="{{ asset('images/denrhome.jpg') }}" class="rounded-3xl h-80  w-full" alt="PENRO-logo">
             </div>
 
             <div class="mr-auto place-self-center lg:col-span-7">
-                <h1 class="max-w-2xl text-gray-800 mb-4 text-5xl font-extrabold tracking-tight leading-none">
+                <h1 class="max-w-2xl text-gray-800 mb-4 text-4xl font-extrabold tracking-tight leading-none">
                     Welcome to Document Security and Digital Archiving System.</h1>
-                <h1 class="max-w-2xl text-slate-700 mb-4 text-4xl font-extrabold tracking-tight leading-none">
+                <h1 class="max-w-2xl text-slate-700 mb-4 text-3xl font-extrabold tracking-tight leading-none">
                     PENRO-Boac Marinduque</h1>
                 <p class="max-w-2xl mb-6 font-md text-gray-600 lg:mb-8 md:text-lg lg:text-xl">
                     Efficient document management system provides tailored solutions, enhancing workflow seamlessly</p>
