@@ -60,6 +60,7 @@
                         // Clear existing content in case of multiple loads
                         container.innerHTML = '';
 
+
                         // Iterate over each municipality and create HTML
                         data.locations.forEach(municipality => {
                             const municipalityDiv = document.createElement('div');
