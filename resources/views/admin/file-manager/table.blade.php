@@ -56,12 +56,15 @@
             </div>
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="overflow-auto  rounded-lg bg-white p-5">
-                        <table id="minimizeTable" class="">
-                            <tbody>
-                                <!-- Minimize table content goes here -->
-                            </tbody>
-                        </table>
+                    <div class="max-h-1/2 overflow-y-auto rounded-lg bg-white p-5">
+                        @component('components.forms.minimize-table', [
+                            'type' => $type,
+                            'municipality' => $municipality,
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                        ])
+                            <!--add something to use in the table updated by harvs-->
+                        @endcomponent
                         <!-- minimize table here-->
                     </div>
 
@@ -87,6 +90,7 @@
                             'record' => '',
                         ])
                         @endcomponent
+                        <!-- for showing the specification details-->
 
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">

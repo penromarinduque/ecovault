@@ -105,6 +105,7 @@
 
                 <div class="flex-1 space-y-4">
                     <!-- Name of Client Field -->
+
                     @if ($type == 'tree-cutting-permits')
                         <div>
                             <label for="edit-client_name" class="block mb-2 text-sm font-medium text-gray-700">Client
@@ -113,9 +114,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter client name">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!
@@ -130,9 +131,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter tree species">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter tree species">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid input!</p>
                         </div>
@@ -144,9 +145,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter number of trees">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter number of trees">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -160,9 +161,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter Location">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter Location">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!
@@ -177,9 +178,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required>
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!
@@ -194,9 +195,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter client name">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -210,9 +211,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter location">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter location">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -227,9 +228,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter serial number">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter serial number">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -243,9 +244,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required>
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -259,9 +260,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter client name">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -275,9 +276,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter number of trees">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter number of trees">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -291,9 +292,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter location">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter location">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -307,9 +308,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required>
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -323,9 +324,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter client name">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -338,9 +339,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter tree species">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter tree species">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid input!</p>
                         </div>
@@ -352,9 +353,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter number of trees">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter number of trees">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -368,9 +369,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter destination">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter destination">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -384,9 +385,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required>
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -395,14 +396,15 @@
                         <!-- Date of Transport Field -->
                         <div>
                             <label for="edit-date_of_transport"
-                                class="block mb-2 text-sm font-medium text-gray-700">Date of Transport</label>
+                                class="block mb-2 text-sm font-medium text-gray-700">Date of
+                                Transport</label>
                             <input type="date" id="edit-date_of_transport" name="date_of_transport"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required>
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -416,9 +418,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter client name">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter client name">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -432,9 +434,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter location">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter location">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -448,9 +450,9 @@
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter lot number">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter lot number">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>
@@ -459,14 +461,15 @@
                         <!-- Property Category Field -->
                         <div>
                             <label for="edit-property_category"
-                                class="block mb-2 text-sm font-medium text-gray-700">Property Category</label>
+                                class="block mb-2 text-sm font-medium text-gray-700">Property
+                                Category</label>
                             <input type="text" id="edit-property_category" name="property_category"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-500"
-                                required placeholder="Enter property category">
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required placeholder="Enter property category">
                             <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
                                 valid
                                 input!</p>

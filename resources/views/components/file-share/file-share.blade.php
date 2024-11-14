@@ -114,5 +114,4 @@
 </div>
 <script>
     const includePermit = @json($includePermit);
-    console.log(includePermit); // This should log true or false as a JavaScript boolean
 </script>

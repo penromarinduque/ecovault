@@ -12,14 +12,21 @@ class TreeCuttingPermit extends Model
     protected $fillable = [
         'file_id',
         'name_of_client',
-        'number_of_trees',
-        'species',
-        'location',
-        'date_applied',
     ];
 
+    /**
+     * Get the file associated with the permit.
+     */
     public function file()
     {
         return $this->belongsTo(File::class);
+    }
+
+    /**
+     * Get the tree cutting details associated with the permit.
+     */
+    public function details()
+    {
+        return $this->hasMany(TreeCuttingPermitDetail::class);
     }
 }

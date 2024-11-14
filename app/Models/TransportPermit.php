@@ -13,15 +13,15 @@ class TransportPermit extends Model
     protected $fillable = [
         'file_id',
         'name_of_client',
-        'number_of_trees',
-        'destination',
-        'date_applied',
-        'date_of_transport',
-        'species',
     ];
 
     public function file()
     {
         return $this->belongsTo(File::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(TreeTransportPermitDetails::class);
     }
 }
