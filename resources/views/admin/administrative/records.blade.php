@@ -34,8 +34,8 @@
                 <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                     @component('components.forms.table', [
                         'record' => $record,
-                        'type' => $type ?? '',
-                        'municipality' => $municipality ?? '',
+                        'type' => '',
+                        'municipality' => '',
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                         'isArchived' => false,
                     ])

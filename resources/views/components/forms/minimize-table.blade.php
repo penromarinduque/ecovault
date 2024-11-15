@@ -23,8 +23,8 @@
 
     async function fetchDatas() {
         const params = {
-            type: types,
-            municipality: municipalities,
+            type: types || '',
+            municipality: municipalities || '',
             report: reports || '',
             isArchived: isArchives
         };

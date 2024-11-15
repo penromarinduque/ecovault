@@ -7,12 +7,12 @@
     //love what you are doing
     let dataTable;
 
-    let report = {!! json_encode($record ?? []) !!};
+    let report = {!! json_encode($record ?? '') !!};
 
     let isAdmin = {!! json_encode($isAdmin) !!};
-    let type = {!! json_encode($type) !!};
-    let municipality = {!! json_encode($municipality) !!};
-    let category = {!! json_encode($category ?? []) !!};
+    let type = {!! json_encode($type ?? '') !!};
+    let municipality = {!! json_encode($municipality ?? '') !!};
+    let category = {!! json_encode($category ?? '') !!};
     let isArchived = {!! json_encode($isArchived) !!};
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -26,8 +26,8 @@
         const params = {
             type: type,
             municipality: municipality,
-            report: report || '',
-            category: category || '',
+            report: report,
+            category: category,
             isArchived: isArchived
         };
         console.log("Initial Values");
@@ -141,7 +141,7 @@
         ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
         ? `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-        <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+        <li><a href="/api/files/download/${fileId}" target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
         <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
         `
         : `
@@ -151,7 +151,7 @@
 
         const adminActions = `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-        <li><a href="/api/files/download/${fileId}" class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
+        <li><a href="/api/files/download/${fileId}"  target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
         <li><button class="w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
         <li><a class="block cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div" data-file-id="${fileId}">Move</a></li>
         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 share-file-link" data-file-id="${fileId}">Share</a></li>

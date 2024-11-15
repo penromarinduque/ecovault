@@ -15,7 +15,7 @@
                     <label for="file-upload" class="block mt-2">
                         <input type="file" name="file" class="hidden" id="file-upload">
                         <span
-                            class="inline-block bg-green-500 text-white rounded-md px-8 py-2 cursor-pointer hover:bg-green-600 transition duration-200">
+                            class="inline-block bg-green-500 text-white rounded-md px-8 py-2 cursor-pointer hover:bg-green-800 transition duration-200">
                             <i class='bx bx-cloud-upload'></i> Choose File
                         </span>
                     </label>
@@ -247,7 +247,7 @@
             @include('components.file-upload.specification-section')
             <div class="mt-4 flex justify-end gap-4 col-span-2">
                 <button id="upload-btn" type="submit"
-                    class="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 transition duration-200">
+                    class="w-36 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                     <span id="button-spinner" class="hidden">
                         <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin"
                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -366,8 +366,11 @@
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const uploadButton = document.getElementById('upload-btn');
+        const buttonText = document.getElementById('button-text');
+        const buttonSpinner = document.getElementById('button-spinner');
         uploadButton.disabled = true;
-
+        buttonText.classList.add('hidden');
+        buttonSpinner.classList.remove('hidden');
 
         let report = {!! json_encode($record ?? []) !!};
         let isAdmin = {!! json_encode($isAdmin) !!};
@@ -431,6 +434,10 @@
             }
 
             console.log("File uploaded successfully");
+            buttonText.classList.remove('hidden');
+            buttonSpinner.classList.add('hidden');
+            document.getElementById('file-upload-name').textContent = 'No file chosen';
+
             this.reset();
         } catch (error) {
             console.error('Error uploading file or permit:', error);

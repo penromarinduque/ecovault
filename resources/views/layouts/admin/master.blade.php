@@ -57,6 +57,19 @@
             window.addEventListener("beforeunload", function() {
                 document.getElementById("loading-container").classList.remove("hidden");
             });
+
+            document.querySelectorAll('.download-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    // Show the spinner
+                    const loadingContainer = document.getElementById("loading-container");
+                    loadingContainer.classList.remove("hidden");
+
+                    // Use a short delay to hide the spinner after initiating download
+                    setTimeout(() => {
+                        loadingContainer.classList.add("hidden");
+                    }, 2000); // Adjust timing if needed
+                });
+            });
         </script>
 
     </div>
