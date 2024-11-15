@@ -75,7 +75,8 @@ document.body.addEventListener('click', (event) => {
     if (event.target.matches('.edit-button')) {
         toggleSections(true);
         const fileId = event.target.dataset.fileId;
-        fetchFileData(fileId);
+        //fetchFileData(fileId);
+        fetchFileDetails(fileId);
         toggleDivVisibility('edit-file-div');
     }
 });

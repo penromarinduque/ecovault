@@ -1,9 +1,7 @@
 @extends('layouts.admin.master')
 
 @section('title', 'PENRO Archiving System')
-<link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+
 @section('content')
 
     @component('components.bread-crumb.file-manager-bread-crumb', [
@@ -16,7 +14,7 @@
     <div class="overflow-auto rounded-md text-black p-4">
 
         <div class="w-full">
-            <div class="my-4 space-x-3">
+            <div class="space-x-3 mb-4">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
             </div>
@@ -35,7 +33,7 @@
         @endcomponent
         <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
-                <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 ">
+                <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 h-[calc(80vh-100px)]">
                     <!-- load the table-->
                     @component('components.forms.table', [
                         'type' => $type ?? '',
@@ -71,7 +69,7 @@
                         @component('components.file-upload.file-upload', [
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
-                            'record' => $type ?? '',
+                            'record' => $record ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
                             'category' => $category ?? '',

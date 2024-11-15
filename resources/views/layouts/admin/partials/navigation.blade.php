@@ -62,7 +62,6 @@
 
                     <!-- Notifications will be dynamically loaded here -->
                 </div>
-
                 <a href="#"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">
                     <div class="inline-flex items-center">
