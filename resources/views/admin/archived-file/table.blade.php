@@ -6,7 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
 
-    <div class="bg-slate-200 overflow-auto rounded-md text-black p-4">
+    <div class="overflow-auto rounded-md text-black p-4">
 
         <div>
             <nav aria-label="Breadcrumb">
@@ -62,11 +62,15 @@
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="overflow-auto  rounded-lg bg-white p-5">
-                        <table id="minimizeTable" class="">
-                            <tbody>
-                                <!-- Minimize table content goes here -->
-                            </tbody>
-                        </table>
+                        @component('components.forms.minimize-table', [
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => true,
+                            'category' => $category ?? '',
+                        ])
+                            <!--add something to use in the table updated by harvs-->
+                        @endcomponent
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">

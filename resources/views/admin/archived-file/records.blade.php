@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <div class="bg-slate-200  rounded-md text-black p-4 ">
+    <div class=" rounded-md text-black p-4 ">
         <div>
             <nav aria-label="Breadcrumb">
                 <ol class="flex space-x-2 text-sm text-gray-600">
@@ -52,11 +52,16 @@
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 hidden">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="overflow-auto  rounded-lg bg-white p-5">
-                        <table id="minimizeTable" class="">
-                            <tbody>
-                                <!-- Minimize table content goes here -->
-                            </tbody>
-                        </table>
+                        @component('components.forms.minimize-table', [
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => true,
+                            'category' => $category ?? '',
+                        ])
+                            <!--add something to use in the table updated by harvs-->
+                        @endcomponent
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">

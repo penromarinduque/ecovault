@@ -3,28 +3,31 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="bg-slate-200 h-[600px] rounded-md text-black p-4 ">
+    @component('components.bread-crumb.archive-bread-crumb', [])
+    @endcomponent
+    <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">
+        <!-- Header -->
+        <h1 class="font-medium  text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
 
-        <h1 class="font-bold text-2xl">Environmental Permits and Land Records Folder</h1>
-        <div class="grid grid-cols-4 m-16 ">
-            <div class="my-4">
-
-                <a href="{{ route('archived-file.file-manager.show') }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Archived File Manager</h1>
+        <!-- Grid Container -->
+        <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
+            <!-- Archived File Manager -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived-file.file-manager.show') }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Archived File Manager" class="w-24 mb-2">
+                    <h2 class="w-[120px] text-gray-700">Archived File Manager</h2>
                 </a>
             </div>
 
-            {{-- {{ route('archive.administrative-report.show', ['archiveType' => 'administrative']) }} --}}
-            <div class="my-4">
-                <a href="{{ route('archived.administrative.show') }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Archived Administrative Documents</h1>
+            <!-- Archived Administrative Documents -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived.administrative.show') }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Archived Administrative Documents"
+                        class="w-24 mb-2">
+                    <h2 class="w-[120px] text-gray-700">Archived Administrative</h2>
                 </a>
             </div>
-
-
-
         </div>
     </div>
+
 @endsection
