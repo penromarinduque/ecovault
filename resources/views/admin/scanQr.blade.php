@@ -12,7 +12,7 @@
             <select id="camera-select" class="w-full p-2 border border-gray-300 rounded mb-4"></select>
 
             <!-- QR Reader area with indicator -->
-            <div id="qr-reader" class="w-full  border border-gray-300 rounded mb-4 relative">
+            <div id="qr-reader" class="w-full border border-gray-300 rounded mb-4 relative">
                 <div id="qr-indicator" class="absolute inset-0 border-4 border-transparent rounded transition-all rounded-md">
                 </div>
             </div>
@@ -25,14 +25,20 @@
             <!-- Start and Stop buttons -->
             <div class="flex justify-between mt-4">
                 <button id="start-button"
-                    class="bg-green-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-green-600  mr-2">
+                    class="bg-green-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-green-600 mr-2">
                     Start Scanner
                 </button>
                 <button id="stop-button"
-                    class="bg-red-500  w-full text-white font-bold py-2 px-4 rounded hover:bg-red-600  ml-2 hidden">
+                    class="bg-red-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-red-600 ml-2 hidden">
                     Stop Scanner
                 </button>
             </div>
+
+            <!-- Go to URL button (hidden by default) -->
+            <button id="go-to-url-button"
+                class="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-blue-600 mt-4 hidden">
+                Go to URL
+            </button>
         </div>
     </div>
 
@@ -50,9 +56,11 @@
         const startButton = document.getElementById('start-button');
         const stopButton = document.getElementById('stop-button');
         const qrIndicator = document.getElementById('qr-indicator');
+        const goToUrlButton = document.getElementById('go-to-url-button');
+
         let html5QrCode;
         let isScanning = false;
-        let isPressed = false;
+
         // Function to start scanning
         function startScanning(cameraId) {
             html5QrCode = new Html5Qrcode("qr-reader");
@@ -67,10 +75,18 @@
                 (decodedText) => {
                     // Display the scanned result
                     output.innerText = decodedText;
-                    qrIndicator.classList.add("success"); // Add green border when QR code is detected
+                    qrIndicator.classList.add("success");
+
+                    // Show "Go to URL" button with link to scanned URL
+                    goToUrlButton.classList.remove("hidden");
+                    goToUrlButton.onclick = () => {
+                        // window.location.href = decodedText;
+                        window.open(decodedText);
+                    };
+
                     setTimeout(() => {
-                        qrIndicator.classList.remove("success"); // Remove after a short delay
-                    }, 500); // Adjust delay as needed
+                        qrIndicator.classList.remove("success");
+                    }, 500);
                 },
                 (errorMessage) => {
                     console.log("Scanning error:", errorMessage);
@@ -92,7 +108,8 @@
                     isScanning = false;
                     startButton.classList.remove("hidden");
                     stopButton.classList.add("hidden");
-                    qrIndicator.classList.remove("success"); // Remove green border when stopped
+                    goToUrlButton.classList.add("hidden"); // Hide "Go to URL" button when stopped
+                    qrIndicator.classList.remove("success");
                 }).catch((err) => {
                     console.error("Failed to stop the scanner:", err);
                 });
@@ -102,7 +119,6 @@
         // Fetch the camera list and populate the dropdown
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
-                // Populate camera dropdown
                 devices.forEach((device, index) => {
                     const option = document.createElement("option");
                     option.value = device.id;
