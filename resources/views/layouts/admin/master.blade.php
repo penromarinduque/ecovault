@@ -27,7 +27,7 @@
 
 
         <!-- Main content section -->
-        <main class="p-4 h-auto pt-20">
+        <main class="p-4 h-auto pt-20 ">
             <div role="status" id="loading-container"
                 class="fixed inset-0 flex justify-center items-center bg-white/15 bg-opacity-50 z-50 hidden">
                 <svg aria-hidden="true"
