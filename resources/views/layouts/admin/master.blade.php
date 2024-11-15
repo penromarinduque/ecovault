@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 </head>
 
-<body class="">
+<body class="bg-gray-100">
     <!-- Header section -->
     <div class="antialiased">
         <x-alerts.alert-message />

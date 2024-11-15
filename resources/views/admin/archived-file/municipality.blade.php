@@ -3,7 +3,7 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="bg-slate-200 h-[600px] rounded-md text-black p-4 ">
+    <div class="h-[600px] rounded-md text-black p-4 ">
 
 
         <nav aria-label="Breadcrumb">

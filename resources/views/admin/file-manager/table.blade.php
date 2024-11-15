@@ -5,29 +5,23 @@
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 @section('content')
-    <div class="bg-slate-200 overflow-auto rounded-md text-black p-4">
-        <div>
-            <nav aria-label="Breadcrumb">
-                <ol class="flex space-x-2 text-sm text-gray-600">
-                    <li><a href="{{ route('file-manager.show') }}"><span class=""> File Manager </span></a></li>
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a>{{ ucwords(str_replace('-', ' ', $type)) }}</a></li>
-                    @if (isset($category))
-                        <li><span class="text-gray-400"> &gt; </span></li>
-                        <li><a>{{ ucwords(str_replace('-', ' ', $category)) }}</a></li>
-                    @endif
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a href="{{ route('file-manager.municipality.show', $type) }}">Municipality</a></li>
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a class="font-bold">{{ $municipality }}</a></li>
-                </ol>
-            </nav>
 
+    @component('components.bread-crumb.file-manager-bread-crumb', [
+        'type' => $type ?? '',
+        'municipality' => $municipality ?? '',
+        'category' => $category ?? '',
+    ])
+    @endcomponent
+
+    <div class="overflow-auto rounded-md text-black p-4">
+
+        <div class="w-full">
             <div class="my-4 space-x-3">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
             </div>
         </div>
+
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
         <!-- file sharing-->
@@ -40,8 +34,8 @@
         ])
         @endcomponent
         <div class="grid">
-            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
-                <div class="overflow-x-auto bg-white rounded-lg p-5">
+            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
+                <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 ">
                     <!-- load the table-->
                     @component('components.forms.table', [
                         'type' => $type ?? '',
@@ -53,23 +47,23 @@
                         <!--add something to use in the table updated by harvs-->
                     @endcomponent
                 </div>
-
             </div>
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="max-h-1/2 overflow-y-auto rounded-lg bg-white p-5">
+                <div class="grid grid-cols-3 gap-4 bg-greem-100">
+                    <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
+                            'category' => $category ?? '',
                         ])
                             <!--add something to use in the table updated by harvs-->
                         @endcomponent
                         <!-- minimize table here-->
                     </div>
 
-                    <div class=" p-4 col-span-2 bg-white rounded-md ">
+                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
                         {{-- this for upload --}}
                         @component('components.move.move-file', [])
                         @endcomponent

@@ -3,43 +3,16 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="bg-slate-200 h-[600px] rounded-md text-black p-4">
 
 
-        <nav aria-label="Breadcrumb">
-            <ol class="flex space-x-2 text-sm text-gray-600">
-                <!-- Always show the type -->
-                <li>
-                    <span class=""> Permits and Registration Documents </span>
-                </li>
-                <li>
-                    <span class="text-gray-400"> &gt; </span>
-                </li>
-                <li>
-                    <a>{{ ucwords(str_replace('-', ' ', $type)) }}</a>
-                </li>
-
-                <!-- Show the category if it exists -->
-                @if (isset($category))
-                    <li>
-                        <span class="text-gray-400"> &gt; </span>
-                    </li>
-                    <li>
-                        <a>{{ ucwords(str_replace('-', ' ', $category)) }}</a>
-                    </li>
-                @endif
-
-                <!-- Municipality is always the last breadcrumb item -->
-                <li>
-                    <span class="text-gray-400"> &gt; </span>
-                </li>
-                <li>
-                    <a class="font-bold">Municipality</a>
-                </li>
-            </ol>
-        </nav>
-
-        <h1 class="font-medium  text-2xl text-gray-700">Environmental Permits and Land Records Folder</h1>
+    @component('components.bread-crumb.file-manager-bread-crumb', [
+        'type' => $type ?? '',
+        'municipality' => $municipality ?? '',
+        'category' => $category ?? '',
+    ])
+    @endcomponent
+    <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">
+        <h1 class="font-medium  text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
 
         <!-- Dynamic Grid Container for JavaScript to populate -->
         <div id="municipalities-container" class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
