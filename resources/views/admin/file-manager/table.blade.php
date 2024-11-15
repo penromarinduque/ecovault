@@ -69,7 +69,7 @@
                         @component('components.file-upload.file-upload', [
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
-                            'record' => $type ?? '',
+                            'record' => $record ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
                             'category' => $category ?? '',

@@ -151,7 +151,7 @@
                     <div class="my-4">
                         <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
                             of Trees</label>
-                        <input type="text" id="number_of_trees" name="number_of_trees"
+                        <input type="number" id="number_of_trees" name="number_of_trees"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
@@ -365,9 +365,6 @@
 
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
-        const uploadButton = document.getElementById('upload-btn');
-        uploadButton.disabled = true;
-
 
         let report = {!! json_encode($record ?? []) !!};
         let isAdmin = {!! json_encode($isAdmin) !!};

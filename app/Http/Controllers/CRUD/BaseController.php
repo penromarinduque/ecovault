@@ -62,9 +62,7 @@ abstract class BaseController extends Controller
                         'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
                         'office_source' => $file->office_source,
                         'user_name' => $file->user->name,
-                        'category' => $file->category,
                         'classification' => $file->classification,
-                        'status' => $file->status,
                         'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
                         'shared_users' => $sharedUserIds, // List of user IDs who have access
                     ];
@@ -93,9 +91,7 @@ abstract class BaseController extends Controller
                             'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
                             'office_source' => $file->office_source,
                             'user_name' => $file->user->name, // Uploader's name
-                            'category' => $file->category,
                             'classification' => $file->classification,
-                            'status' => $file->status,
                             'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
                             'shared_users' => $sharedUserIds, // List of user IDs who have access
                         ];
@@ -231,9 +227,7 @@ abstract class BaseController extends Controller
             // Update the file's data
             DB::table('files')->where('id', $id)->update([
                 'office_source' => $request->input('office_source'),
-                'category' => $request->input('category'),
                 'classification' => $request->input('classification'),
-                'status' => $request->input('status'),
                 'updated_at' => now(), // Set the update timestamp
             ]);
 
