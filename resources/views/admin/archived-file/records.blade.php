@@ -19,7 +19,6 @@
             <div class="my-4 space-x-3">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
-
             </div>
         </div>
         <!--call other popup here-->
@@ -39,11 +38,11 @@
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     @component('components.forms.table', [
-                        'record' => $record,
-                        'type' => '',
-                        'municipality' => '',
+                        'record' => $record ?? '',
+                        'type' => $type ?? '',
+                        'municipality' => $municipality ?? '',
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
-                        'isArchived' => false,
+                        'isArchived' => true,
                     ])
                         <!--add something to use in the table updated by harvs-->
                     @endcomponent
@@ -66,20 +65,23 @@
                         @component('components.move.move-file', [])
                         @endcomponent
                         @component('components.file-upload.file-upload', [
-                            'type' => '',
-                            'municipality' => '',
-                            'record' => $record,
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => true,
+                            'category' => $category ?? '',
                         ])
                         @endcomponent
                         @component('components.edit.edit-file', [
-                            'type' => '',
-                            'municipality' => '',
-                            'record' => $record,
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [
-                            'type' => '',
-                            'municipality' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
                             'record' => $record,
                         ])
                         @endcomponent

@@ -47,8 +47,8 @@
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     <!-- load the table-->
                     @component('components.forms.table', [
-                        'type' => $type,
-                        'municipality' => $municipality,
+                        'type' => $type ?? '',
+                        'municipality' => $municipality ?? '',
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                         'isArchived' => true,
                         'category' => $category ?? '',
@@ -75,9 +75,9 @@
                         @endcomponent
 
                         @component('components.file-upload.file-upload', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => true,
                             'category' => $category ?? '',
@@ -85,15 +85,15 @@
                         @endcomponent
 
                         @component('components.edit.edit-file', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
 

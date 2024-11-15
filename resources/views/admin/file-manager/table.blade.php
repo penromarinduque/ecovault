@@ -44,8 +44,8 @@
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     <!-- load the table-->
                     @component('components.forms.table', [
-                        'type' => $type,
-                        'municipality' => $municipality,
+                        'type' => $type ?? '',
+                        'municipality' => $municipality ?? '',
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                         'isArchived' => false,
                         'category' => $category ?? '',
@@ -59,8 +59,8 @@
                 <div class="grid grid-cols-3 gap-4">
                     <div class="max-h-1/2 overflow-y-auto rounded-lg bg-white p-5">
                         @component('components.forms.minimize-table', [
-                            'type' => $type,
-                            'municipality' => $municipality,
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
                         ])
@@ -75,9 +75,9 @@
                         @endcomponent
 
                         @component('components.file-upload.file-upload', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $type ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
                             'category' => $category ?? '',
@@ -85,16 +85,16 @@
                         @endcomponent
 
                         @component('components.edit.edit-file', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
 
                         @component('components.file-summary.file-summary', [
-                            'type' => $type,
-                            'municipality' => $municipality,
-                            'record' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
                         <!-- for showing the specification details-->

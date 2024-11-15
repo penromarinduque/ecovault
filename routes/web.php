@@ -125,8 +125,5 @@ Route::middleware(['authentication'])->group(function () {
 
     Route::get('/api/notifications', [NotificationController::class, 'getNotifications']); // Get all notifications for a user
 
-
-
-
 });
 

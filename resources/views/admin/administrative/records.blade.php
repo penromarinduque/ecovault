@@ -38,8 +38,8 @@
                 <div class="overflow-x-auto bg-white rounded-lg p-5">
                     @component('components.forms.table', [
                         'record' => $record,
-                        'type' => '',
-                        'municipality' => '',
+                        'type' => $type ?? '',
+                        'municipality' => $municipality ?? '',
                         'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                         'isArchived' => false,
                     ])
@@ -65,24 +65,24 @@
                         @endcomponent
                         <!--uploading files-->
                         @component('components.file-upload.file-upload', [
-                            'type' => '',
-                            'municipality' => '',
-                            'record' => $record,
+                            'type' => $type ?? '',
+                            'municipality' => $municiplaity ?? '',
+                            'record' => $record ?? '',
                             'isAdmin' => auth()->check() && auth()->user()->isAdmin,
                             'isArchived' => false,
-                            'category' => '',
+                            'category' => $category ?? '',
                         ])
                         @endcomponent
 
                         @component('components.edit.edit-file', [
-                            'type' => '',
-                            'municipality' => '',
-                            'record' => $record,
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
+                            'record' => $record ?? '',
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [
-                            'type' => '',
-                            'municipality' => '',
+                            'type' => $type ?? '',
+                            'municipality' => $municipality ?? '',
                             'record' => $record,
                         ])
                         @endcomponent
@@ -102,7 +102,5 @@
             </div>
         </div>
     </div>
-
-
     @include('admin.file-manager.component.js')
 @endsection
