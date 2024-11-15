@@ -41,6 +41,23 @@
             </a>
         </li>
 
+
+        @if ($type == 'hdfhdhf')
+            <li>
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                    <a href="{{ $municipality ? route('file-manager.municipality.show', $type) : 'javascript:void(0);' }}"
+                        class="{{ Route::is('file-manager.municipality.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}
+                        {{ !$municipality && !Route::is('file-manager.municipality.show') ? 'pointer-events-none cursor-not-allowed' : 'text-blue-600' }}">
+                        {{ ucwords(str_replace('-', ' ', $municipality ?: 'Municipality')) }}
+                    </a>
+                </div>
+            </li>
+        @endif
         <li>
             <div class="flex items-center">
                 <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400" aria-hidden="true"

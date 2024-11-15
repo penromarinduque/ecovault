@@ -9,13 +9,13 @@
     @endcomponent
     <div class="overflow-auto rounded-md text-black p-4">
 
-
         <div class="w-full">
-            <div class="my-4 space-x-3">
+            <div class="space-x-3 mb-4">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
             </div>
         </div>
+
         <!--call other popup here-->
         <x-modal.file-modal />
 
@@ -31,7 +31,7 @@
 
         <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
-                <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
+                <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 h-[calc(80vh-100px)]">
                     @component('components.forms.table', [
                         'record' => $record,
                         'type' => $type ?? '',
