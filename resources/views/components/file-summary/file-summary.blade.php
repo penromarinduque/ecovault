@@ -102,6 +102,56 @@
             </div>
         @endif
 
+
+
+
+        <div class="relative overflow-x-auto sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
+                    Tree Specifications
+                </caption>
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Product name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Color
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Category
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Price
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            Apple MacBook Pro 17"
+                        </th>
+                        <td class="px-6 py-4">
+                            Silver
+                        </td>
+                        <td class="px-6 py-4">
+                            Laptop
+                        </td>
+                        <td class="px-6 py-4">
+                            $2999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
     <div id="loading-spinner" class="relative overflow-hidden flex justify-center items-center h-full">
         <div role="status" class="absolute">

@@ -59,14 +59,13 @@ class AdminController extends Controller
         return view('admin.archived-file.archive-type');
     }
 
-    function ShowArchivedFileManager()
+    function ShowArchivedFileManager($archivedType)
     {
-        return view('admin.archived-file.file-manager');
+        return view('admin.archived-file.file-manager', compact('archivedType'));
     }
-
-    function ShowArchivedMunicipality($type)
+    function ShowArchivedMunicipality($archivedType, $type)
     {
-        return view('admin.archived-file.municipality', compact('type'));
+        return view('admin.archived-file.municipality', compact('archivedType', 'type'));
     }
 
     function ShowArchivedandTitlesOrPatentedLots($type)
@@ -89,9 +88,9 @@ class AdminController extends Controller
         return view('admin.archived-file.table', compact('type', 'municipality', 'category'));
     }
 
-    function ShowArchivedAdministrativeDocument()
+    function ShowArchivedAdministrativeDocument($archivedType)
     {
-        return view('admin.archived-file.administrative-documents');
+        return view('admin.archived-file.administrative-documents', compact('archivedType'));
     }
 
     function ShowArchivedAdministrativeDocumentRecord($record)

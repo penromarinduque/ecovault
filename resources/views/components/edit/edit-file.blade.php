@@ -2,7 +2,7 @@
 <div id="edit-file-div" class="items-center justify-center mx-10">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-lg font-bold text-gray-700">Edit File</h2> {{-- add summary --}}
-        <button type="button" id="close-edit-btn"
+        <button type="button" id="close-edit-button"
             class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
             <i class='bx bx-x bx-md'></i>
         </button>

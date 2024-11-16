@@ -7,8 +7,8 @@
 
     @component('components.bread-crumb.file-manager-bread-crumb', [
         'type' => $type ?? '',
-        'municipality' => $municipality ?? '',
         'category' => $category ?? '',
+        'municipality' => $municipality ?? '',
     ])
     @endcomponent
     <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">

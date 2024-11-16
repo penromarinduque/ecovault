@@ -7,11 +7,11 @@
         <li><a class="font-bold">{{ $record }}</a></li>
     </ol>
 </nav> --}}
-<nav class="w-max flex px-5 p-2 text-gray-700 rounded-lg" aria-label="Breadcrumb">
-    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+<nav class="w-max flex py-2 text-gray-700 rounded-lg" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
         <li class="inline-flex items-center">
             <a href="{{ route('administrative.show') }}"
-                class="{{ Route::is('administrative.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}">
+                class="{{ Route::is('administrative.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600' : ' inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                     <path fill-rule="evenodd"
                         d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z"

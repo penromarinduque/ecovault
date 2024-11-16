@@ -13,7 +13,8 @@
         <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
             <!-- Archived File Manager -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived-file.file-manager.show') }}" class="text-center">
+                <a href="{{ route('archived-file.file-manager.show', ['archivedType' => 'file-manager']) }}"
+                    class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Archived File Manager" class="w-24 mb-2">
                     <h2 class="w-[120px] text-gray-700">Archived File Manager</h2>
                 </a>
@@ -21,7 +22,8 @@
 
             <!-- Archived Administrative Documents -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.administrative.show') }}" class="text-center">
+                <a href="{{ route('archived.administrative.show', ['archivedType' => 'administrative-document']) }}"
+                    class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Archived Administrative Documents"
                         class="w-24 mb-2">
                     <h2 class="w-[120px] text-gray-700">Archived Administrative</h2>

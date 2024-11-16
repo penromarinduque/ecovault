@@ -57,15 +57,15 @@ Route::middleware(['authentication'])->group(function () {
 
     //ARCHIVED FILE MANAGER 
     Route::get('/archived-file', [AdminController::class, 'ShowArchivedFiles'])->name('archived-file.show');
-    Route::get('/archived-file/file-manager', [AdminController::class, 'ShowArchivedFileManager'])->name('archived-file.file-manager.show');
-    Route::get('/archived-file/file-manager/{type}/municipality', [AdminController::class, 'ShowArchivedMunicipality'])->name('archived.file-manager.municipality.show');
+    Route::get('/archived-file/{archivedType}', [AdminController::class, 'ShowArchivedFileManager'])->name('archived-file.file-manager.show');
+    Route::get('/archived-file/{archivedType}/{type}/municipality', [AdminController::class, 'ShowArchivedMunicipality'])->name('archived.file-manager.municipality.show');
     Route::get('/archived-file/file-manager/{type}/categories', [AdminController::class, 'ShowArchivedandTitlesOrPatentedLots'])->name('archived.file-manager.land-title.show');
     Route::get('/archived-file/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowArchivedMunicipalityWithCategory'])->name('archived.file-manager.municipality.with-category.show');
     Route::get('/archived-file/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTableWithCategory'])->name('archived.file-manager.table.with-category.show');
     Route::get('/archived-file/file-manager/{type}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTable'])->name('archived.file-manager.table.show');
 
-    Route::get('/archived-file/administrative-document', [AdminController::class, 'ShowArchivedAdministrativeDocument'])->name('archived.administrative.show');
-    Route::get("/archived-file/administrative-document/{record}", [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('archived.administrative.record.show');
+    Route::get('/archived-file/{archivedType}/records', [AdminController::class, 'ShowArchivedAdministrativeDocument'])->name('archived.administrative.show');
+    Route::get("/archived-file/{archivedType}/{record}", [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('archived.administrative.record.show');
 
     //API HANDLER 
     Route::post('/file-upload', [UploadController::class, 'StoreFile'])->name('file.post');

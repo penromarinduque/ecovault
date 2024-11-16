@@ -89,10 +89,18 @@ document.body.addEventListener('click', (event) => {
     }
 });
 
-// Close buttons in the file section
-document.getElementById('close-upload-btn').addEventListener('click', () => toggleSections(false));
-document.getElementById('close-edit-btn').addEventListener('click', () => toggleSections(false));
-document.getElementById('close-summary-btn').addEventListener('click', () => toggleSections(false));
+document.addEventListener('DOMContentLoaded', () => {
+    const closeEditBtn = document.getElementById('close-edit-btn');
+    if (closeEditBtn) {
+        closeEditBtn.addEventListener('click', () => toggleSections(false));
+    }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    
+    document.getElementById('close-upload-btn').addEventListener('click', () => toggleSections(false));
+    document.getElementById('close-summary-btn').addEventListener('click', () => toggleSections(false));
+    document.getElementById('close-edit-button').addEventListener('click', () => toggleSections(false));
+});
 
 
 
