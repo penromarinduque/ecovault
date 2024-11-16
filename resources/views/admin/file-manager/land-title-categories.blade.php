@@ -23,7 +23,7 @@
                 <a
                     href="{{ route('file-manager.municipality.with-category.show', ['type' => $type, 'category' => 'agricultural']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Agricultural Folder" class="w-24 mb-2">
-                    <h1 class="w-[120px] text-center">Agricultural here</h1>
+                    <h1 class="w-[120px] text-center">Agricultural</h1>
                 </a>
             </div>
 
