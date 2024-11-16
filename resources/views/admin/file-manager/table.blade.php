@@ -4,13 +4,6 @@
 
 @section('content')
 
-    @component('components.bread-crumb.file-manager-bread-crumb', [
-        'type' => $type ?? '',
-        'municipality' => $municipality ?? '',
-        'category' => $category ?? '',
-    ])
-    @endcomponent
-
     <div class="overflow-auto rounded-md text-black p-4">
 
         <div class="w-full">

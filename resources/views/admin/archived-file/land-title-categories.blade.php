@@ -9,7 +9,7 @@
         <div class="grid grid-cols-3 m-16 ">
             <div class="">
                 <a
-                    href="{{ route('archived.file-manager.municipality.with-category.show', ['type' => $type, 'category' => 'agricultural']) }}">
+                    href="{{ route('archived.file-manager.municipality.with-category.show', ['archivedType' => $archivedType, 'type' => $type, 'category' => 'agricultural']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
                     <h1 class="w-[120px]">Agricultural</h1>
                 </a>
@@ -17,7 +17,7 @@
 
             <div class="">
                 <a
-                    href="{{ route('archived.file-manager.municipality.with-category.show', ['type' => $type, 'category' => 'residential']) }}">
+                    href="{{ route('archived.file-manager.municipality.with-category.show', ['archivedType' => $archivedType, 'type' => $type, 'category' => 'residential']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
                     <h1 class="w-[120px]">Residential</h1>
                 </a>
@@ -25,7 +25,7 @@
 
             <div class="">
                 <a
-                    href="{{ route('archived.file-manager.municipality.with-category.show', ['type' => $type, 'category' => 'special']) }}">
+                    href="{{ route('archived.file-manager.municipality.with-category.show', ['archivedType' => $archivedType, 'type' => $type, 'category' => 'special']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
                     <h1 class="w-[120px]">Special</h1>
                 </a>

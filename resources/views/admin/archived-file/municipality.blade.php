@@ -6,38 +6,6 @@
     <div class="h-[600px] rounded-md text-black p-4 ">
 
 
-        <nav aria-label="Breadcrumb">
-            <ol class="flex space-x-2 text-sm text-gray-600">
-                <!-- Always show the type -->
-                <li>
-                    <span class=""> File Manager </span>
-                </li>
-                <li>
-                    <span class="text-gray-400"> &gt; </span>
-                </li>
-                <li>
-                    <a>{{ ucwords(str_replace('-', ' ', $type)) }}</a>
-                </li>
-
-                <!-- Show the category if it exists -->
-                @if (isset($category))
-                    <li>
-                        <span class="text-gray-400"> &gt; </span>
-                    </li>
-                    <li>
-                        <a>{{ ucwords(str_replace('-', ' ', $category)) }}</a>
-                    </li>
-                @endif
-
-                <!-- Municipality is always the last breadcrumb item -->
-                <li>
-                    <span class="text-gray-400"> &gt; </span>
-                </li>
-                <li>
-                    <a class="font-bold">Municipality</a>
-                </li>
-            </ol>
-        </nav>
 
 
 

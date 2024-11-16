@@ -3,10 +3,7 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    @component('components.bread-crumb.administrative-bread-crumb', [
-        'record' => $record ?? '',
-    ])
-    @endcomponent
+
     <div class="overflow-auto rounded-md text-black p-4">
 
         <div class="w-full">

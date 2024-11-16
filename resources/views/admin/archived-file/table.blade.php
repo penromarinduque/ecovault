@@ -9,21 +9,7 @@
     <div class="overflow-auto rounded-md text-black p-4">
 
         <div>
-            <nav aria-label="Breadcrumb">
-                <ol class="flex space-x-2 text-sm text-gray-600">
-                    <li><a href="{{ route('file-manager.show') }}"><span class=""> File Manager </span></a></li>
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a>{{ ucwords(str_replace('-', ' ', $type)) }}</a></li>
-                    @if (isset($category))
-                        <li><span class="text-gray-400"> &gt; </span></li>
-                        <li><a>{{ ucwords(str_replace('-', ' ', $category)) }}</a></li>
-                    @endif
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a href="{{ route('file-manager.municipality.show', $type) }}">Municipality</a></li>
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a class="font-bold">{{ $municipality }}</a></li>
-                </ol>
-            </nav>
+
 
             <div class="my-4 space-x-3">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />

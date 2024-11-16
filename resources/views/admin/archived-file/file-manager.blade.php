@@ -3,8 +3,7 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    @component('components.bread-crumb.archive-bread-crumb', [])
-    @endcomponent
+
     <div class="h-[600px] rounded-md text-black p-4">
         <h1 class="font-bold text-2xl text-center">Environmental Permits and Land Records Folder</h1>
 

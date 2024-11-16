@@ -68,24 +68,24 @@ class AdminController extends Controller
         return view('admin.archived-file.municipality', compact('archivedType', 'type'));
     }
 
-    function ShowArchivedandTitlesOrPatentedLots($type)
+    function ShowArchivedandTitlesOrPatentedLots($archivedType, $type)
     {
-        return view('admin.archived-file.land-title-categories', compact('type'));
+        return view('admin.archived-file.land-title-categories', compact('archivedType', 'type'));
     }
-    function ShowArchivedMunicipalityWithCategory($type, $category)
+    function ShowArchivedMunicipalityWithCategory($archivedType, $type, $category)
     {
-        return view('admin.archived-file.municipality', compact('type', 'category'));
-    }
-
-    function ShowArchivedFileManagerTable($type, $municipality)
-    {
-
-        return view('admin.archived-file.table', compact('type', 'municipality'));
+        return view('admin.archived-file.municipality', compact('archivedType', 'type', 'category'));
     }
 
-    function ShowArchivedFileManagerTableWithCategory($type, $category, $municipality)
+    function ShowArchivedFileManagerTable($archivedType, $type, $municipality)
     {
-        return view('admin.archived-file.table', compact('type', 'municipality', 'category'));
+
+        return view('admin.archived-file.table', compact('archivedType', 'type', 'municipality'));
+    }
+
+    function ShowArchivedFileManagerTableWithCategory($archivedType, $type, $category, $municipality)
+    {
+        return view('admin.archived-file.table', compact('archivedType', 'type', 'municipality', 'category'));
     }
 
     function ShowArchivedAdministrativeDocument($archivedType)
@@ -93,9 +93,9 @@ class AdminController extends Controller
         return view('admin.archived-file.administrative-documents', compact('archivedType'));
     }
 
-    function ShowArchivedAdministrativeDocumentRecord($record)
+    function ShowArchivedAdministrativeDocumentRecord($archivedType, $record)
     {
-        return view('admin.archived-file.records', compact('record'));
+        return view('admin.archived-file.records', compact('archivedType', 'record'));
     }
 
     function ShowBackupAndRecover()

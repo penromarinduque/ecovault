@@ -31,7 +31,11 @@
 
             <x-loading />
             <x-alerts.alert-message />
+            <x-breadcrumb.breadcrumb :type="$type ?? ''" :category="$category ?? ''" :municipality="$municipality ?? ''" :record="$record ?? ''"
+                :archivedType="$archivedType ?? ''" />
             @yield('content')
+
+
 
         </main>
 

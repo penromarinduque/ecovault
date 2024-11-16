@@ -6,21 +6,7 @@
 
 
     <div class=" rounded-md text-black p-4 ">
-        <div>
-            <nav aria-label="Breadcrumb">
-                <ol class="flex space-x-2 text-sm text-gray-600">
-                    <li><a href="{{ route('file-manager.show') }}"><span class="">Administrative Reports</span></a>
-                    </li>
-                    <li><span class="text-gray-400"> &gt; </span></li>
-                    <li><a class="font-bold">{{ $record }}</a></li>
-                </ol>
-            </nav>
 
-            <div class="my-4 space-x-3">
-                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
-                <x-button id="" label="Create a Folder" style="secondary" />
-            </div>
-        </div>
         <!--call other popup here-->
         <x-modal.file-modal />
 
