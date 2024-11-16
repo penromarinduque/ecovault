@@ -30,10 +30,7 @@
             category: category,
             isArchived: isArchived
         };
-        console.log("Initial Values");
-        console.log("Type:", type);
-        console.log("Municipality:", municipality);
-        console.log("Category:", category);
+
         // Remove empty parameters
         const filteredParams = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value !== '')
@@ -41,7 +38,7 @@
 
         // Build the query string
         const queryParams = new URLSearchParams(filteredParams).toString();
-        console.log('this is', queryParams);
+
         try {
             const response = await fetch(`/api/files?${queryParams}`);
 

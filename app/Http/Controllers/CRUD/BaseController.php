@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\TreeTransportPermitDetails;
+use App\Models\TreeCuttingPermit;
 abstract class BaseController extends Controller
 {
     public function ArchivedById($id)
@@ -121,8 +123,6 @@ abstract class BaseController extends Controller
 
     public function GetFileById(Request $request, $id)
     {
-
-
         try {
             // Retrieve the 'includePermit' query parameter (default to true if not provided)
             $includePermit = filter_var($request->query('includePermit', false), FILTER_VALIDATE_BOOLEAN);
@@ -148,9 +148,15 @@ abstract class BaseController extends Controller
 
                 switch ($permit_type) {
                     case 'tree-cutting-permits':
-                        $permit_details = DB::table('tree_cutting_permits')
+                        $permit = TreeCuttingPermit::with('details')
                             ->where('file_id', $id)
                             ->first();
+
+                        if ($permit) {
+                            $permit_details = $permit->details; // Access related details
+                        } else {
+                            $permit_details = []; // Handle case where no permit is found
+                        }
                         break;
 
                     case 'chainsaw-registration':

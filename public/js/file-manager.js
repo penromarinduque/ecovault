@@ -1,5 +1,13 @@
 //love what you are doing
 
+
+//Refresh Table In every activity upload/edit/archiving/etc
+function refreshTable(){
+    fetchData();
+    fetchDatas();
+}
+
+
 // Archive file function
 async function archiveFile(fileId) {
     const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -75,11 +83,12 @@ document.body.addEventListener('click', (event) => {
     if (event.target.matches('.edit-button')) {
         toggleSections(true);
         const fileId = event.target.dataset.fileId;
-        //fetchFileData(fileId);
-        fetchFileDetails(fileId);
+        fetchFileData(fileId);
+        // fetchFileDetails(fileId);
         toggleDivVisibility('edit-file-div');
     }
 });
+
 document.body.addEventListener('click', (event) => {
     if (event.target.matches('.file-summary-button')) {
         toggleSections(true);

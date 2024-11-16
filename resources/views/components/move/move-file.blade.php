@@ -11,6 +11,7 @@
         </div>
 
         <form>
+            @csrf
             <div class="mx-20 grid gap-6 grid-cols-3 items-center">
                 <!-- Origin Section -->
                 <div>
@@ -43,7 +44,7 @@
                     <h1 class="text-center sm:text-left">Destination</h1>
                     <div class="grid grid-rows-2 gap-6">
                         <!-- Municipality Field -->
-                        <div class="relative z-0 w-full mb-5 group">
+                        {{-- <div class="relative z-0 w-full mb-5 group">
                             <select
                                 class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                                 <option selected>Choose a country</option>
@@ -53,10 +54,10 @@
                                 <option value="DE">Germany</option>
                             </select>
 
-                        </div>
+                        </div> --}}
 
                         <!-- Permit Type Field -->
-                        <div class="relative z-0 w-full mb-5 group">
+                        {{-- <div class="relative z-0 w-full mb-5 group">
                             <select
                                 class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                                 <option selected>Choose a country</option>
@@ -66,7 +67,7 @@
                                 <option value="DE">Germany</option>
                             </select>
 
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 

@@ -4,13 +4,13 @@
         <div class="overflow-y-auto overflow-x-hidden">
 
             <div class="bg-transparent">
-                <div id="file-specification-container" class="grid grid-cols-2 gap-y-10 gap-x-10">
-                    <template id="file-specification-template">
+                <div id="edit-specification-container" class="grid grid-cols-2 gap-y-10 gap-x-10">
+                    <template id="edit-specification-template">
                         <div class="file-specification-box col-span-1 border border-gray-500 rounded-md">
                             <div class="flex items-center justify-between">
                                 <h2 id="box-number" class="text-lg font-bold text-gray-700 m-2">Specification 1
                                 </h2>
-                                <button type="button" id="close-specification"
+                                <button type="button" id="edit-close-specification"
                                     class="end-2.5 m-2 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
                                     <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 14 14">
@@ -105,21 +105,21 @@
     </section>
 
     <script>
-        let idNameChanger = 0;
-        const maxEditSpecifications = 20;
+        let editIdChanger = 0;
+        const maxSpecifications = 20; // Set the limit for the number of clones
 
-        document.getElementById('add-file-specification').addEventListener('click', function() {
-            const clone = document.getElementById('file-specification-template').content.cloneNode(true);
-            const inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
+        document.getElementById('add-edit-specification').addEventListener('click', function() {
+            const existingSpecifications = document.querySelectorAll('.file-specification-box').length;
 
-            const existingEditSpecifications = document.querySelectorAll('.file-specification-box').length;
-
-            if (existingEditSpecifications >= maxEditSpecifications) {
+            if (existingSpecifications >= maxSpecifications) {
                 alert(`You can only add up to ${maxSpecifications} specifications.`);
                 return;
             }
 
-            idNameChanger++;
+            const clone = document.getElementById('edit-specification-template').content.cloneNode(true);
+            const inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
+
+            editIdChanger++;
 
             // Assign IDs and names to each input element dynamically
             inputs.forEach(inputId => {
@@ -128,7 +128,7 @@
                     `#label-${inputId}`); // Select label by prefixed ID
 
                 if (inputElement && labelElement) {
-                    const uniqueId = `${inputId}-${idNameChanger}`;
+                    const uniqueId = `${inputId}-${editIdChanger}`;
 
                     inputElement.id = uniqueId;
                     //inputElement.name = uniqueId;
@@ -139,20 +139,20 @@
 
             // Set the dynamic ID for the specification container
             const specificationDiv = clone.querySelector('.file-specification-box');
-            specificationDiv.id = `file-specification-box-${idNameChanger}`;
+            specificationDiv.id = `file-specification-box-${editIdChanger}`;
 
             // Display the current number of specifications in the label
             const boxNumber = clone.querySelector('#box-number');
             if (boxNumber) {
-                boxNumber.id = `box-number-${idNameChanger}`;
+                boxNumber.id = `box-number-${editIdChanger}`;
                 boxNumber.innerText =
-                    `Specification ${document.querySelectorAll('.file-specification-box').length + 1}`;
+                    `Specification ${existingSpecifications + 1}`;
             }
 
             // Close button logic to remove and renumber remaining specifications
-            const closeBtn = clone.querySelector('#close-specification');
+            const closeBtn = clone.querySelector('#edit-close-specification');
             if (closeBtn) {
-                closeBtn.id = `close-specification-${idNameChanger}`;
+                closeBtn.id = `edit-close-specification-${editIdChanger}`;
                 closeBtn.addEventListener('click', function() {
                     specificationDiv.remove();
                     renumberSpecifications();
@@ -160,7 +160,7 @@
             }
 
             // Append the cloned template to the container
-            document.getElementById('file-specification-container').appendChild(clone);
+            document.getElementById('edit-specification-container').appendChild(clone);
         });
 
         // Function to renumber specifications after deletion
@@ -174,4 +174,5 @@
             });
         }
     </script>
+
 @endif
