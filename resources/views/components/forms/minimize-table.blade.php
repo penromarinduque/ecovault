@@ -8,7 +8,7 @@
     //love what you are doing
     let minidataTable;
 
-    let reports = {!! json_encode($record ?? []) !!};
+    let reports = {!! json_encode($record ?? '') !!};
 
     let isAdmins = {!! json_encode($isAdmin) !!};
     let types = {!! json_encode($type) !!};

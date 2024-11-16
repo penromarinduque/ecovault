@@ -10,25 +10,6 @@
     <form id="edit-file-form" class="space-y-4">
         @csrf
         <div class="grid grid-cols-2 gap-x-10">
-            {{-- <div class="col-span-2 ">
-                <div class="flex items-center space-x-4">
-                    <label for="file-upload" class="block mt-2">
-                        <input type="file" name="file" class="hidden" id="file-upload">
-                        <span
-                            class="inline-block bg-green-500 text-white rounded-md px-8 py-2 cursor-pointer hover:bg-green-600 transition duration-200">
-                            <i class='bx bx-cloud-upload'></i> Choose File
-                        </span>
-                    </label>
-
-                    <p id="file-upload-name" class="mt-2 inline-block bg-green-500 text-white rounded-md px-8 py-2">
-                        No file chosen
-                    </p>
-
-                </div>
-
-                <p id="file-upload-error" class="text-red-500  min-h-[1.5rem] invisible mt-2 ml-32">
-                    Please choose a file to upload.</p>
-            </div> --}}
             <!-- step 1 -->
             <div class="font-medium ">
                 @if (!$record)
@@ -85,7 +66,7 @@
                     <div class="my-4">
                         <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree
                             Specification</h2>
-                        <button type="button" id="add-file-specification"
+                        <button type="button" id="add-edit-specification"
                             class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
                             <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -244,7 +225,7 @@
                     <!-- Property Category Field -->
                 @endif
             </div>
-            @include('components.file-upload.specification-section')
+            @include('components.edit.specification-section')
             <div class="mt-4 flex justify-end gap-4 col-span-2">
                 <button id="upload-btn" type="submit"
                     class="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 transition duration-200">
@@ -266,168 +247,23 @@
         </div>
     </form>
 </div>
+
 <script>
-    let selectedFileId;
-    let permitType;
-    const csrfToken = document.querySelector('input[name="_token"]').value;
+    let selectedFileId; // Dynamically store the file ID
+    // Dynamically store the permit type
 
-    // This script fetches file data when an edit button is clicked
-    async function fetchFileData(fileId) {
+    // Fetches file data dynamically
+    async function fetchFileData(fileId) { // Replace with the actual file ID
 
-
-        // Show loading screen
-        // document.getElementById('loading').classList.remove('hidden');
-        // document.getElementById('child-edit-file-div').classList.add('hidden');
+        const url = `/api/files/${fileId}?includePermit=true`;
         try {
-
-            //await new Promise(resolve => setTimeout(resolve, 1000));
-            const response = await fetch(`/api/files/${fileId}?includePermit=true`);
+            const response = await fetch(url);
             const data = await response.json();
+            console.log(data);
 
-            if (data.success) {
-                const file = data.file; // File data
-                const permit = data.permit; // Permit details
+        } catch {
 
-                // Store the fileId and permit_type in global variables
-                selectedFileId = fileId;
-                permitType = file.permit_type;
-
-                // Common fields for all permits
-                document.getElementById('edit-office_source').value = file.office_source;
-                document.getElementById('edit-classification').value = file.classification;
-                // Check the permit type and populate fields accordingly
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('child-edit-file-div').classList.remove('hidden');
-                switch (file.permit_type) {
-                    case 'tree-cutting-permits':
-                        document.getElementById('edit-client_name').value = permit.name_of_client;
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
-                        document.getElementById('edit-location').value = permit.location;
-                        document.getElementById('edit-date_applied').value = permit.date_applied;
-                        document.getElementById('edit-species').value = permit.species;
-                        break;
-                    case 'chainsaw-registration':
-                        document.getElementById('edit-client_name').value = permit.name_of_client;
-                        document.getElementById('edit-location').value = permit.location;
-                        document.getElementById('edit-serial_number').value = permit.serial_number;
-                        document.getElementById('edit-date_applied').value = permit.date_applied;
-                        break;
-                    case 'tree-plantation':
-                        document.getElementById('edit-client_name').value = permit.name_of_client;
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
-                        document.getElementById('edit-location').value = permit.location;
-                        document.getElementById('edit-date_applied').value = permit.date_applied;
-                        break;
-                    case 'tree-transport-permits':
-                        document.getElementById('edit-client_name').value = permit.name_of_client;
-                        document.getElementById('edit-number_of_trees').value = permit.number_of_trees;
-                        document.getElementById('edit-destination').value = permit.destination;
-                        document.getElementById('edit-date_applied').value = permit.date_applied;
-                        document.getElementById('edit-date_of_transport').value = permit.date_of_transport;
-                        document.getElementById('edit-species').value = permit.species;
-                        break;
-                    case 'land-titles':
-                        document.getElementById('edit-client_name').value = permit.name_of_client;
-                        document.getElementById('edit-location').value = permit.location;
-                        document.getElementById('edit-lot_number').value = permit.lot_number;
-                        document.getElementById('edit-property_category').value = permit.property_category;
-                        break;
-                    default:
-                        console.error('Unknown permit type:', file.permit_type);
-                }
-
-            } else {
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Fetch error:', error);
-        } finally {
-            // Hide loading screen after processing
-            // document.getElementById('loading').classList.add('hidden');
         }
+
     }
-
-    document.getElementById('edit-file-form').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Prevent form from submitting normally
-        const csrfToken = document.querySelector('input[name="_token"]').value;
-
-        // Initialize FormData object to hold the form data
-        const formData = new FormData();
-        formData.append('office_source', document.getElementById('edit-office_source').value);
-        formData.append('classification', document.getElementById('edit-classification').value);
-        formData.append('permit_type', permitType); // Store the permit type
-
-        // Populate permit fields based on the permit type
-        switch (permitType) {
-            case 'tree-cutting-permits':
-                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
-                    .value);
-                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
-                    .value);
-                formData.append('permit[location]', document.getElementById('edit-location').value);
-                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
-                formData.append('permit[species]', document.getElementById('edit-species').value);
-                break;
-            case 'chainsaw-registration':
-                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
-                    .value);
-                formData.append('permit[location]', document.getElementById('edit-location').value);
-                formData.append('permit[serial_number]', document.getElementById('edit-serial_number')
-                    .value);
-                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
-                break;
-            case 'tree-plantation':
-                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
-                    .value);
-                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
-                    .value);
-                formData.append('permit[location]', document.getElementById('edit-location').value);
-                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
-                break;
-            case 'tree-transport-permits':
-                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
-                    .value);
-                formData.append('permit[number_of_trees]', document.getElementById('edit-number_of_trees')
-                    .value);
-                formData.append('permit[destination]', document.getElementById('edit-destination').value);
-                formData.append('permit[date_applied]', document.getElementById('edit-date_applied').value);
-                formData.append('permit[date_of_transport]', document.getElementById(
-                    'edit-date_of_transport').value);
-                formData.append('permit[species]', document.getElementById('edit-species').value);
-                break;
-            case 'land-titles':
-                formData.append('permit[name_of_client]', document.getElementById('edit-client_name')
-                    .value);
-                formData.append('permit[location]', document.getElementById('edit-location').value);
-                formData.append('permit[lot_number]', document.getElementById('edit-lot_number').value);
-                formData.append('permit[property_category]', document.getElementById(
-                    'edit-property_category').value);
-                break;
-            default:
-
-        }
-
-
-        try {
-            // Send formData as FormData in the request body
-            const response = await fetch(`/api/files/update/${selectedFileId}?hasPermit=true`, {
-                method: 'POST', // or 'PUT' depending on your API design
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                fetchData();
-            } else {
-                console.error(result.message);
-                alert('Failed to update the file.');
-            }
-        } catch (error) {
-            console.error('Error updating the file:', error);
-        }
-    });
 </script>

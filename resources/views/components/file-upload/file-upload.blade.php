@@ -292,7 +292,7 @@
             'multipart/x-zip' // Occasionally used
         ];
         if (!allowedTypes.includes(file.type)) {
-            fileUploadError.textContent = "Invalid file type. Please upload a PDF, image, or ZIP file.";
+            fileUploadError.textContent = "Invalid file type. Please upload a PDF, image, or validateFileZIP file.";
             fileUploadError.classList.remove('invisible');
             return false;
         }
@@ -362,21 +362,22 @@
 
     let fileId;
 
-
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
+
+        const csrfToken = "{{ csrf_token() }}";
+        console.log(csrfToken)
         const uploadButton = document.getElementById('upload-btn');
         const buttonText = document.getElementById('button-text');
         const buttonSpinner = document.getElementById('button-spinner');
-        uploadButton.disabled = true;
+
         buttonText.classList.add('hidden');
         buttonSpinner.classList.remove('hidden');
-
-        let report = {!! json_encode($record ?? []) !!};
+        let report = {!! json_encode($record ?? '') !!};
         let isAdmin = {!! json_encode($isAdmin) !!};
         let type = {!! json_encode($type) !!};
         let municipality = {!! json_encode($municipality) !!};
-        let category = {!! json_encode($category ?? []) !!};
+        let category = {!! json_encode($category ?? '') !!};
         let isArchived = {!! json_encode($isArchived) !!};
 
         const params = {
@@ -390,15 +391,13 @@
         const filteredParams = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value !== '')
         );
-        console.log("Params Before Filtering:", params);
+        // console.log("Params Before Filtering:", params);
         // Build the query string
         const queryParams = new URLSearchParams(filteredParams).toString();
 
         //console.log('this', queryParams);
         const formData = new FormData(this);
-        console.log("Type:", type);
-        console.log("Municipality:", municipality);
-        console.log("Category:", category);
+
         try {
             // File upload
             const fileUploadResponse = await fetch(`/file-upload?${queryParams}`, {
@@ -414,7 +413,7 @@
 
             const fileResponseData = await fileUploadResponse.json();
             const fileId = fileResponseData.fileId; // Ensure `fileId` is in the response
-
+            refreshTable();
             // Check if permit data exists before proceeding
             if (type !== undefined && type !== null && type !== '') {
                 const permitData = new FormData(this);
@@ -430,6 +429,7 @@
 
                 if (!permitUploadResponse.ok) throw new Error("Permit upload failed");
 
+                refreshTable();
                 console.log(`${type} permit uploaded successfully`);
             }
 
@@ -443,75 +443,4 @@
             console.error('Error uploading file or permit:', error);
         }
     });
-
-
-
-
-    // fetch('/file-upload', {
-    //         method: 'POST',
-    //         body: formData,
-    //         headers: {
-    //             // 'X-CSRF-TOKEN': csrfToken
-    //         }
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         document.getElementById('name-of-client')
-    //             .value;
-    //         if (data.success) {
-    //             showToast(data.message, true);
-    //             fileId = data.fileId;
-
-    //              let formPermit = new FormData();
-    //             formPermit.append('file_id', fileId);
-    //             formPermit.append('permit_type', permit_type);
-
-    //             // Gather values based on form type
-
-
-
-    //             fetch('/permit-upload', {
-    //                     method: 'POST',
-    //                     body: formPermit,
-    //                     headers: {
-    //                         'X-CSRF-TOKEN': csrfToken
-    //                     }
-
-    //                 })
-    //                 .then(response => response.json())
-    //                 .then(data => {
-    //                     if (data.success) {
-    //                         showSuccessAlert(data.success || "Operation completed successfully!");
-    //                         fetchData()
-    //                     }
-    //                 })
-    //                 .catch((error) => {
-    //                     showToast(error || 'File upload failed.', false);
-    //                 });
-
-
-
-    //         } else {
-
-    //             showToast(data.message || 'File upload failed.', false);
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     }).finally(() => {
-
-    //         this.reset();
-
-    //         const fileInput = document.getElementById('file-upload');
-    //         const fileUploadName = document.getElementById('file-upload-name');
-
-
-    //         fileUploadName.textContent = 'No file chosen';
-
-
-    //         submitButton.disabled = false;
-    //         buttonText.classList.remove('hidden'); // Show the button text again
-    //         buttonSpinner.classList.add('hidden'); // Hide the spinner
-
-    //     });
 </script>
