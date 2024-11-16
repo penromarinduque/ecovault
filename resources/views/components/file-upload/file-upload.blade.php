@@ -313,52 +313,7 @@
         }
     });
 
-    function showToast(message, isSuccess) {
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-        const toastClose = document.getElementById('toast-close');
-        const toastTimer = document.getElementById('toast-timer');
 
-        toastMessage.textContent = message;
-        toast.classList.remove('hidden');
-
-
-        if (isSuccess) {
-            toast.classList.add('bg-green-500');
-            toast.classList.remove('bg-red-500');
-            toastTimer.classList.remove('bg-red-300');
-            toastTimer.classList.add('bg-green-300');
-        } else {
-            toast.classList.add('bg-red-500');
-            toast.classList.remove('bg-green-500');
-            toastTimer.classList.remove('bg-green-300');
-            toastTimer.classList.add('bg-red-300');
-        }
-
-        let timerDuration = 3000;
-        let timerWidth = 100;
-
-
-        toastTimer.style.width = '100%';
-
-
-        const timerInterval = setInterval(() => {
-            timerWidth -= (100 / (timerDuration / 100));
-            toastTimer.style.width = `${timerWidth}%`;
-        }, 100);
-
-
-        setTimeout(() => {
-            clearInterval(timerInterval);
-            toast.classList.add('hidden');
-        }, timerDuration);
-
-
-        toastClose.onclick = function() {
-            clearInterval(timerInterval);
-            toast.classList.add('hidden');
-        };
-    }
 
     let fileId;
 
@@ -432,7 +387,7 @@
 
                 console.log(`${type} permit uploaded successfully`);
             }
-
+            showToast("File uploaded successfully", 'top-right', 'success')
             console.log("File uploaded successfully");
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
@@ -440,7 +395,7 @@
 
             this.reset();
         } catch (error) {
-            console.error('Error uploading file or permit:', error);
+            showToast(error.message, 'top-right', 'danger')
         }
     });
 
