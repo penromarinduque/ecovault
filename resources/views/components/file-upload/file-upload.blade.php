@@ -385,10 +385,9 @@
                 if (!permitUploadResponse.ok) throw new Error("Permit upload failed");
 
                 refreshTable();
-                console.log(`${type} permit uploaded successfully`);
             }
             showToast("File uploaded successfully", 'top-right', 'success')
-            console.log("File uploaded successfully");
+
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
             document.getElementById('file-upload-name').textContent = 'No file chosen';

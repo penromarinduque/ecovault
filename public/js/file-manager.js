@@ -23,14 +23,15 @@ async function archiveFile(fileId) {
         const result = await response.json();
         if (response.ok && result.success) {
             console.log('succccc')
-            fetchData()
             
-            showSuccessAlert(result.message || "Operation completed successfully!");
+            refreshTable();
+            
+            showToast(result.message, 'top-right', 'success');
         } else {
-            showErrorAlert(result.message || 'Unknown error');
+            showToast(result.message, 'top-right', 'success');
         }
     } catch (error) {
-        showErrorAlert(error.message || 'An unexpected error occurred');
+        showToast(error.message, 'top-right', 'danger');
     }
 }
 
