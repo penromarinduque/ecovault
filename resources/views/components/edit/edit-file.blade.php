@@ -249,18 +249,23 @@
 </div>
 
 <script>
-    let selectedFileId; // Dynamically store the file ID
-    // Dynamically store the permit type
-
     // Fetches file data dynamically
     async function fetchFileData(fileId) { // Replace with the actual file ID
 
         const url = `/api/files/${fileId}?includePermit=true`;
         try {
             const response = await fetch(url);
+
+            if (!response.ok) throw new Error("You failed to fetch the data and permit")
+
             const data = await response.json();
             console.log(data);
-
+            if (data.success) {
+                object.entries(data.file).forEach(([key, value]) => {
+                    const input = document.getElementById(key.replace('_', '-'));
+                    if (input) input.value = value;
+                });
+            }
         } catch {
 
         }
