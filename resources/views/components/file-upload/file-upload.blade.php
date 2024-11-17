@@ -103,16 +103,18 @@
                     <!-- Location Field -->
                     <div class="my-4">
                         <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
+                        <select id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter location">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
+                            required>
+                            <option value="" disabled selected>Loading barangays...</option>
+                        </select>
+                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
+                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
+                        </p>
                     </div>
 
                     <!-- Serial Number Field -->
@@ -166,16 +168,18 @@
                     <!-- Location Field -->
                     <div class="my-4">
                         <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
+                        <select id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter location">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
+                            required>
+                            <option value="" disabled selected>Loading barangays...</option>
+                        </select>
+                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
+                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
+                        </p>
                     </div>
 
                     <!-- Date Applied Field -->
@@ -213,16 +217,18 @@
                     <!-- Location Field -->
                     <div class="my-4">
                         <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
+                        <select id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter location">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
+                            required>
+                            <option value="" disabled selected>Loading barangays...</option>
+                        </select>
+                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
+                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
+                        </p>
                     </div>
 
                     <!-- Lot Number Field -->
@@ -399,4 +405,70 @@
             showToast(error.message, 'top-right', 'danger')
         }
     });
+
+
+    if (type != "tree-cutting-permits" || report != null) {
+        document.addEventListener('DOMContentLoaded', async function() {
+            const locationSelect = document.getElementById('location');
+            const errorMessage = document.getElementById('error-message');
+            const currentPath = window.location.pathname;
+            const currentMunicipality = currentPath.split('/').pop();
+
+            try {
+                // Fetch all municipalities
+                const municipalityResponse = await fetch(
+                    'https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
+                if (!municipalityResponse.ok) {
+                    throw new Error('Failed to fetch municipalities');
+                }
+
+                const municipalities = await municipalityResponse.json();
+
+                // Ensure the response is an array
+                if (!Array.isArray(municipalities)) {
+                    throw new Error('Municipalities API did not return an array');
+                }
+
+                // Match the current municipality by name
+                const matchedMunicipality = municipalities.find(
+                    (municipality) => municipality.name.toLowerCase() === currentMunicipality
+                    .toLowerCase()
+                );
+
+                if (!matchedMunicipality) {
+                    throw new Error(`Municipality "${currentMunicipality}" not found`);
+                }
+
+                console.log(`Matched Municipality:`, matchedMunicipality);
+
+                // Use the `code` to fetch barangays
+                const barangayResponse = await fetch(
+                    `https://psgc.gitlab.io/api/municipalities/${matchedMunicipality.code}/barangays/`
+
+                );
+                if (!barangayResponse.ok) {
+                    throw new Error('Failed to fetch barangays');
+                }
+
+                const barangays = await barangayResponse.json();
+
+                // Populate the barangay dropdown
+                locationSelect.innerHTML = '<option value="" disabled selected>Select a barangay</option>';
+                barangays.forEach(barangay => {
+                    const option = document.createElement('option');
+                    option.value = barangay.id || barangay.name; // Adjust based on API structure
+                    option.textContent = barangay.name;
+                    locationSelect.appendChild(option);
+                });
+
+                errorMessage.classList.add('hidden');
+            } catch (error) {
+                console.error('Error:', error);
+
+                errorMessage.classList.remove('hidden');
+                locationSelect.innerHTML =
+                    '<option value="" disabled selected>Error loading options</option>';
+            }
+        });
+    }
 </script>

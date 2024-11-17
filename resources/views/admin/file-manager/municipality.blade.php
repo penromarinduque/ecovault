@@ -14,33 +14,33 @@
             <!-- JavaScript will populate this container -->
         </div>
 
-
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const container = document.getElementById('municipalities-container');
 
-                // Loading indicator
+                // Show a loading message
                 container.innerHTML = '<p class="col-span-4 text-center text-gray-600">Loading municipalities...</p>';
 
-                fetch('/api/municipalities')
+                // Fetch municipalities for Marinduque
+                fetch('https://psgc.gitlab.io/api/provinces/174000000/municipalities/')
                     .then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
+                        if (!response.ok) throw new Error('Failed to fetch municipalities.');
                         return response.json();
                     })
-                    .then(data => {
-                        // Clear container before adding fetched items
+                    .then(municipalities => {
+                        // Clear the container
                         container.innerHTML = '';
 
-                        // Populate with fetched municipalities
-                        data.locations.forEach(municipality => {
+                        // Populate the municipalities dynamically
+                        municipalities.forEach(municipality => {
                             const municipalityDiv = document.createElement('div');
-                            municipalityDiv.classList.add('flex', 'flex-col', 'items-center',
-                                'text-center', 'mx-auto');
+                            municipalityDiv.classList.add('flex', 'flex-col', 'items-center', 'text-center',
+                                'mx-auto');
 
                             municipalityDiv.innerHTML = `
-                        <a href="${encodeURI(municipality.location)}" class="text-center">
-                            <img src="{{ asset('images/admin/folder.png') }}" alt="Municipality Folder" class="w-24 mb-2">
-                            <h2 class="w-[120px]">${municipality.location}</h2>
+                        <a href="${municipality.name}" class="text-center">
+                            <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
+                            <h2 class="w-[120px] truncate">${municipality.name}</h2>
                         </a>
                     `;
 
@@ -54,6 +54,8 @@
                     });
             });
         </script>
+
+
 
     </div>
 
