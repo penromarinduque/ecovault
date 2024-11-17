@@ -27,7 +27,19 @@
         @endcomponent
 
         <div class="grid">
-            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
+
+
+            @component('components.file-view', [
+                'record' => $record,
+                'type' => '',
+                'municipality' => '',
+                'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                'isArchived' => false,
+            ])
+                <!--add something to use in the table updated by harvs-->
+            @endcomponent
+
+            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 hidden ">
                 <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 h-[calc(80vh-100px)]">
                     @component('components.forms.table', [
                         'record' => $record,

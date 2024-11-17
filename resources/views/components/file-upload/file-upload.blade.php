@@ -326,6 +326,8 @@
         const buttonText = document.getElementById('button-text');
         const buttonSpinner = document.getElementById('button-spinner');
 
+
+        uploadButton.disabled = true;
         buttonText.classList.add('hidden');
         buttonSpinner.classList.remove('hidden');
         let report = {!! json_encode($record ?? '') !!};
@@ -391,7 +393,7 @@
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
             document.getElementById('file-upload-name').textContent = 'No file chosen';
-
+            uploadButton.disabled = false;
             this.reset();
         } catch (error) {
             showToast(error.message, 'top-right', 'danger')
