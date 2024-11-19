@@ -73,13 +73,15 @@
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'authId' => Auth::user()->id,
+                            'includePermit' => true,
                         ])
                         @endcomponent
 
                         @component('components.file-summary.file-summary', [
                             'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'includePermit' => true,
                         ])
                         @endcomponent
                         <!-- for showing the specification details-->

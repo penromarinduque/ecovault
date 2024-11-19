@@ -14,8 +14,7 @@ async function fileShare(fileId) {
     try {
         // Use the dynamically set `includePermit` value directly in the URL
         const response = await fetch(`/api/files/${fileId}?includePermit=${includePermit}`);
-        console.log('this shots', includePermit);  // Will log true or false
-
+        
         // Check if the response is ok (status in the range 200-299)
         if (!response.ok) {
             throw new Error('Network response was not ok');

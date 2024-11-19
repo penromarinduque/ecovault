@@ -60,7 +60,7 @@
                                 @else
                                     <!--destination and date of for transport permits-->
                                     <div class="my-4">
-                                        <label for="date_of_transport"
+                                        <label for="date_of_transport" id="label-date_of_transport"
                                             class="block mb-2 text-sm font-medium text-gray-700">Date of
                                             Transport</label>
                                         <input type="date" id="date_of_transport" name="date_of_transport[]"
@@ -72,7 +72,7 @@
                                             autocomplete="off" required>
                                     </div>
                                     <div class="my-4">
-                                        <label for="destination"
+                                        <label for="destination" id="label-destination"
                                             class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
                                         <input type="text" id="destination" name="destination"
                                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
@@ -108,61 +108,78 @@
         let idNameChanger = 0;
         const maxEditSpecifications = 20;
 
-        document.getElementById('add-file-specification').addEventListener('click', function() {
-            const clone = document.getElementById('file-specification-template').content.cloneNode(true);
-            const inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
-
-            const existingEditSpecifications = document.querySelectorAll('.file-specification-box').length;
-
-            if (existingEditSpecifications >= maxEditSpecifications) {
-                alert(`You can only add up to ${maxSpecifications} specifications.`);
-                return;
-            }
-
-            idNameChanger++;
-
-            // Assign IDs and names to each input element dynamically
-            inputs.forEach(inputId => {
-                const inputElement = clone.querySelector(`#${inputId}`);
-                const labelElement = clone.querySelector(
-                    `#label-${inputId}`); // Select label by prefixed ID
-
-                if (inputElement && labelElement) {
-                    const uniqueId = `${inputId}-${idNameChanger}`;
-
-                    inputElement.id = uniqueId;
-                    //inputElement.name = uniqueId;
-                    labelElement.htmlFor = uniqueId;
-                    labelElement.id = `label-${uniqueId}`;
-                }
-            });
-
-            // Set the dynamic ID for the specification container
-            const specificationDiv = clone.querySelector('.file-specification-box');
-            specificationDiv.id = `file-specification-box-${idNameChanger}`;
-
-            // Display the current number of specifications in the label
-            const boxNumber = clone.querySelector('#box-number');
-            if (boxNumber) {
-                boxNumber.id = `box-number-${idNameChanger}`;
-                boxNumber.innerText =
-                    `Specification ${document.querySelectorAll('.file-specification-box').length + 1}`;
-            }
-
-            // Close button logic to remove and renumber remaining specifications
-            const closeBtn = clone.querySelector('#close-specification');
-            if (closeBtn) {
-                closeBtn.id = `close-specification-${idNameChanger}`;
-                closeBtn.addEventListener('click', function() {
-                    specificationDiv.remove();
-                    renumberSpecifications();
-                });
-            }
-
-            // Append the cloned template to the container
-            document.getElementById('file-specification-container').appendChild(clone);
+        document.addEventListener('DOMContentLoaded', function() {
+            uploadSpecification();
         });
 
+        console.log(type);
+
+        function uploadSpecification() {
+            document.getElementById('add-file-specification').addEventListener('click', function() {
+                const clone = document.getElementById('file-specification-template').content.cloneNode(true);
+                const existingEditSpecifications = document.querySelectorAll('.file-specification-box').length;
+                let inputs;
+
+                if (type === 'tree-cutting-permits') {
+                    inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
+                } else if (type === 'tree-transport-permits') {
+                    inputs = ['species', 'number_of_trees', 'destination', 'date_applied', 'date_of_transport'];
+                } else {
+                    // Default type or fallback, can be empty or another set of fields
+                    alert("Error! try reloading the page.");
+                }
+                console.log(inputs);
+
+
+                if (existingEditSpecifications >= maxEditSpecifications) {
+                    alert(`You can only add up to ${maxSpecifications} specifications.`);
+                    return;
+                }
+
+                idNameChanger++;
+
+                // Assign IDs and names to each input element dynamically
+                inputs.forEach(inputId => {
+                    const inputElement = clone.querySelector(`#${inputId}`);
+                    const labelElement = clone.querySelector(
+                        `#label-${inputId}`); // Select label by prefixed ID
+
+                    if (inputElement && labelElement) {
+                        const uniqueId = `${inputId}-${idNameChanger}`;
+
+                        inputElement.id = uniqueId;
+                        //inputElement.name = uniqueId;
+                        labelElement.htmlFor = uniqueId;
+                        labelElement.id = `label-${uniqueId}`;
+                    }
+                });
+                // Set the dynamic ID for the specification container
+                const specificationDiv = clone.querySelector('.file-specification-box');
+                specificationDiv.id = `file-specification-box-${idNameChanger}`;
+
+                // Display the current number of specifications in the label
+                const boxNumber = clone.querySelector('#box-number');
+                if (boxNumber) {
+                    boxNumber.id = `box-number-${idNameChanger}`;
+                    boxNumber.innerText =
+                        `Specification ${document.querySelectorAll('.file-specification-box').length + 1}`;
+                }
+
+                // Close button logic to remove and renumber remaining specifications
+                const closeBtn = clone.querySelector('#close-specification');
+                if (closeBtn) {
+                    closeBtn.id = `close-specification-${idNameChanger}`;
+                    closeBtn.addEventListener('click', function() {
+                        specificationDiv.remove();
+                        renumberSpecifications();
+                    });
+                }
+
+                // Append the cloned template to the container
+                document.getElementById('file-specification-container').appendChild(clone);
+            });
+
+        }
         // Function to renumber specifications after deletion
         function renumberSpecifications() {
             const specifications = document.querySelectorAll('.file-specification-box');

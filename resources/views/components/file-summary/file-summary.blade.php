@@ -1,8 +1,6 @@
 <!-- Waste no more time arguing what a good man should be, be one. - Marcus Aurelius -->
 <!-- When there is no desire, all things are at peace. - Laozi -->
 
-<!-- When there is no desire, all things are at peace. - Laozi -->
-
 <div id="file-summary-div" class="p-4 overflow-hidden">
     <div id="child-file-summary-div">
         <div class="flex justify-between items-center mb-2">
@@ -153,7 +151,7 @@
 
 
     </div>
-    <div id="loading-spinner" class="relative overflow-hidden flex justify-center items-center h-full">
+    <div id="summary-loading" class="relative overflow-hidden flex justify-center items-center h-full">
         <div role="status" class="absolute">
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101"
                 fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,57 +170,91 @@
 
 
 <script>
+    // Fetches file data dynamically
     async function fetchFileDetails(fileId) {
-        try {
-            // Show the loading spinner and hide the file summary
-            document.getElementById('loading-spinner').classList.remove('hidden');
-            document.getElementById('child-file-summary-div').classList.add('hidden');
 
-            const response = await fetch(`/api/files/${fileId}?includePermit=true`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+
+        let includePermit = {!! json_encode($includePermit ?? '') !!};
+
+        //includePermit boolean if file have permit Y/N
+
+        const url = `/api/files/${fileId}?includePermit=${includePermit}`;
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) throw new Error("You failed to fetch the data and permit");
 
             const data = await response.json();
 
-            // Populate the data into respective fields
-            document.getElementById('summary-file-name').textContent = data.file.file_name;
-            document.getElementById('summary-client-name').textContent = data.permit.name_of_client;
-            document.getElementById('summary-location').textContent = data.permit.location;
 
-            // Handle conditional fields
-            if (data.file.permit_type === 'tree-cutting-permits' || data.file.permit_type === 'tree-plantation' ||
-                data.file.permit_type === 'tree-transport-permits') {
-                document.getElementById('summary-number-of-trees').textContent = data.permit.number_of_trees;
+            if (data.success) {
+
+                const editForm = document.getElementById('edit-file-form');
+                editForm.dataset.fileId = fileId; // Set fileId in data-file-id
+                // Handle `file` properties
+                Object.entries(data.file).forEach(([key, value]) => {
+
+                    const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
+                    // Select all elements with the corresponding class and update their value
+                    const span = document.getElementById(`summary-${idSelector}`);
+                    if (span) {
+                        span.innerHTML = value;
+                    }
+                });
+
+                // Handle `permit` properties (if it exists)
+                if (data.permit) {
+                    Object.entries(data.permit).forEach(([key, value]) => {
+                        const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
+                        // Select all elements with the corresponding class and update their value
+                        const input = document.getElementById(`edit-${idSelector}`);
+
+                        if (input) {
+                            input.value = value;
+                        }
+                    });
+
+                    if (data.permit.details) {
+                        const details = data.permit.details;
+
+                        for (let index = 0; index < details.length; index++) {
+                            const detail = details[index];
+                            editSpecification();
+
+                            // Find the newly cloned delete button
+
+
+                            Object.entries(detail).forEach(([key, value]) => {
+                                // Get the delete button based on the data-detail-id
+                                const deleteBtn = document.querySelector(
+                                    `[data-detail-id="${key}[${index}]"]`);
+
+                                // Get the input based on the id
+                                const input = document.querySelector(`[id="${key}[${index}]"]`);
+
+                                // If the input and deleteBtn exist, set their values
+                                if (input) {
+                                    input.value = value; // Set value for the input
+                                }
+
+                                if (deleteBtn) {
+
+                                    deleteBtn.setAttribute('data-detail-id',
+                                        value);
+                                }
+                            });
+
+                        }
+                    }
+                }
+            } else {
+                console.error('API Error:', data.message); // Log the error if the API call failed
             }
-
-            if (data.file.permit_type === 'chainsaw-registration') {
-                document.getElementById('summary-serial-number').textContent = data.serialNumber;
-            }
-
-            if (data.file.permit_type === 'tree-transport-permits') {
-                document.getElementById('summary-species').textContent = data.species;
-                document.getElementById('summary-destination').textContent = data.destination;
-            }
-
-            if (data.file.permit_type === 'land-titles') {
-                document.getElementById('summary-lot-number').textContent = data.lotNumber;
-                document.getElementById('summary-property-category').textContent = data.propertyCategory;
-            }
-
-            if (data.file.permit_type !== 'land-titles') {
-                document.getElementById('summary-date-applied').textContent = data.permit.date_applied;
-            }
-
-            // Hide the loading spinner and show the file summary
-            document.getElementById('loading-spinner').classList.add('hidden');
-            document.getElementById('child-file-summary-div').classList.remove('hidden');
-
         } catch (error) {
-            console.error('Fetch error:', error);
-
+            console.error("Error fetching data:", error); // Log any errors that occur
         } finally {
-            document.getElementById('loading-spinner').classList.add('hidden');
+
         }
+
     }
 </script>

@@ -74,6 +74,8 @@
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'includePermit' => false,
+                            'authId' => Auth::user()->id,
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [
