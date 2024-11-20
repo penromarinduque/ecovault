@@ -9,35 +9,37 @@
 
 
 
-        <div class="grid grid-cols-5 m-16 gap-4" id="municipalities-container">
-
+        <div id="municipalities-container" class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
+            <!-- JavaScript will populate this container -->
         </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                fetch('/api/municipalities')
+                const container = document.getElementById('municipalities-container');
+
+                // Show a loading message
+                container.innerHTML = '<p class="col-span-4 text-center text-gray-600">Loading municipalities...</p>';
+
+                // Fetch municipalities for Marinduque
+                fetch('https://psgc.gitlab.io/api/provinces/174000000/municipalities/')
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
+                        if (!response.ok) throw new Error('Failed to fetch municipalities.');
                         return response.json();
                     })
-                    .then(data => {
-                        const container = document.getElementById('municipalities-container');
-
-                        // Clear existing content in case of multiple loads
+                    .then(municipalities => {
+                        // Clear the container
                         container.innerHTML = '';
 
-
-                        // Iterate over each municipality and create HTML
-                        data.locations.forEach(municipality => {
+                        // Populate the municipalities dynamically
+                        municipalities.forEach(municipality => {
                             const municipalityDiv = document.createElement('div');
-                            municipalityDiv.classList.add('text-center');
+                            municipalityDiv.classList.add('flex', 'flex-col', 'items-center', 'text-center',
+                                'mx-auto');
 
                             municipalityDiv.innerHTML = `
-                        <a href="${encodeURI(municipality.location)}">
-                            <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24 mx-auto">
-                            <h1 class="w-[120px] mx-auto">${municipality.location}</h1>
+                        <a href="${municipality.name}" class="text-center">
+                            <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
+                            <h2 class="w-[120px] truncate">${municipality.name}</h2>
                         </a>
                     `;
 
@@ -46,9 +48,12 @@
                     })
                     .catch(error => {
                         console.error('Error fetching municipalities:', error);
+                        container.innerHTML =
+                            '<p class="col-span-4 text-center text-red-600">Error loading municipalities. Please try again later.</p>';
                     });
             });
         </script>
+
     </div>
 
 

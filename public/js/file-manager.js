@@ -88,6 +88,7 @@ document.body.addEventListener('click', (event) => {
         // fetchFileDetails(fileId);
         toggleDivVisibility('edit-file-div');
     }
+    
 });
 
 document.body.addEventListener('click', (event) => {

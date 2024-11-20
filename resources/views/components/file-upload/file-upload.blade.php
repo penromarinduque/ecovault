@@ -407,7 +407,8 @@
     });
 
 
-    if (type != "tree-cutting-permits" || report != null) {
+    if (type !== "tree-cutting-permits" || report == null) {
+
         document.addEventListener('DOMContentLoaded', async function() {
             const locationSelect = document.getElementById('location');
             const errorMessage = document.getElementById('error-message');
@@ -426,7 +427,7 @@
 
                 // Ensure the response is an array
                 if (!Array.isArray(municipalities)) {
-                    throw new Error('Municipalities API did not return an array');
+
                 }
 
                 // Match the current municipality by name
@@ -436,10 +437,12 @@
                 );
 
                 if (!matchedMunicipality) {
-                    throw new Error(`Municipality "${currentMunicipality}" not found`);
+                    return;
                 }
 
                 console.log(`Matched Municipality:`, matchedMunicipality);
+
+
 
                 // Use the `code` to fetch barangays
                 const barangayResponse = await fetch(
@@ -465,9 +468,12 @@
             } catch (error) {
                 console.error('Error:', error);
 
-                errorMessage.classList.remove('hidden');
-                locationSelect.innerHTML =
-                    '<option value="" disabled selected>Error loading options</option>';
+                if (errorMessage) {
+                    errorMessage.classList.remove('hidden');
+                    locationSelect.innerHTML =
+                        '<option value="" disabled selected>Error loading options</option>';
+                }
+
             }
         });
     }

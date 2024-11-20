@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Config;
+use App\Models\FileType;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -34,6 +35,17 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        $fileTypes = [
+            ['type_name' => 'Tree Cutting Permit'],
+            ['type_name' => 'Chainsaw Registration'],
+            ['type_name' => 'Tree Plantation Registration'],
+            ['type_name' => 'Transport Permit'],
+            ['type_name' => 'Land Title'],
+        ];
+
+        foreach ($fileTypes as $fileType) {
+            FileType::updateOrCreate(['type_name' => $fileType['type_name']]);
+        }
 
         Municipality::insert([
             ['location' => 'Mogpog'],
