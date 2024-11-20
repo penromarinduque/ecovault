@@ -3,8 +3,11 @@
 
 <div id="file-summary-div" class="p-4 overflow-hidden">
     <div id="child-file-summary-div">
-        <div class="flex justify-between items-center mb-2">
-            <h2 class="text-lg font-bold text-gray-700">File Summary</h2> {{-- add summary --}}
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-700">File Summary <span
+                    class="font-medium text-slate-600 pl-6">({{ ucwords(str_replace('-', ' ', $type ?: $record)) }})</span>
+            </h2>
+            {{-- add summary --}}
             <button type="button" id="close-summary-btn"
                 class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
                 <i class='bx bx-x bx-md'></i>
@@ -13,142 +16,120 @@
 
         <div class="relative z-0 w-full mb-5 group">
             <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">File Name:</span>
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">File Name:</span>
                 <span id="summary-file-name" class="text-gray-600 font-semibold pl-4 "> </span>
             </div>
         </div>
-
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Name of Client:</span>
-                <span id="summary-client-name" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-            </div>
-        </div>
-
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-sm font-medium text-gray-900">Location:</span>
-                <span id="summary-location" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-            </div>
-        </div>
-
-        <!-- Conditional fields based on permit type -->
-        @if (in_array($type, ['tree-cutting-permits', 'tree-plantation', 'tree-transport-permits']))
+        @if (!$record)
             <div class="relative z-0 w-full mb-5 group">
                 <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Number of Trees:</span>
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Name of Client:</span>
+                    <span id="summary-name-of-client" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @elseif($record)
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Office Source:</span>
+                    <span id="summary-office-source" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Classification:</span>
+                    <span id="summary-classification" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @endif
+        @if ($type == 'tree-plantation')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Number of Trees:</span>
                     <span id="summary-number-of-trees" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
+        @if (in_array($type, ['chainsaw-registration', 'tree-plantation', 'land-titles']))
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Location:</span>
+                    <span id="summary-location" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @endif
+        @if ($type == 'chainsaw-registration' || $type == 'tree-plantation')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Date Applied:</span>
+                    <span id="summary-date-applied" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                </div>
+            </div>
+        @endif
+        <!-- Conditional fields based on permit type -->
 
         @if ($type == 'chainsaw-registration')
             <div class="relative z-0 w-full mb-5 group">
                 <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Serial Number:</span>
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Serial Number:</span>
                     <span id="summary-serial-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
 
-        @if ($type == 'tree-transport-permits')
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Species:</span>
-                    <span id="summary-species" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Destination:</span>
-                    <span id="summary-destination" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
-        @endif
 
         @if ($type == 'land-titles')
             <div class="relative z-0 w-full mb-5 group">
                 <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Lot Number:</span>
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Lot Number:</span>
                     <span id="summary-lot-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
             <div class="relative z-0 w-full mb-5 group">
                 <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Property Category:</span>
-                    <span id="summary-property-category" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Property Category:</span>
+                    <span id="summary-property-category" class="text-gray-600 capitalize font-semibold pl-4 ">
+                    </span>
                 </div>
             </div>
         @endif
+        @if (in_array($type, ['tree-cutting-permits', 'tree-transport-permits']))
+            <div class="relative overflow-x-auto mt-12">
+                <table class="w-full text-lg text-left text-gray-600 border border-gray-400">
+                    {{-- <caption class="p-5 text-lg font-semibold text-left text-gray-800 border border-gray-400">
+        Tree Specifications
+    </caption> --}}
+                    <thead class="text-xs text-gray-700 uppercase">
+                        <tr class="border border-gray-400">
+                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                                Species
+                            </th>
+                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                                Number
+                            </th>
+                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                                Location
+                            </th>
+                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                                Date Applied
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="">
 
-        @if ($type != 'land-titles')
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-sm font-medium text-gray-900">Date Applied:</span>
-                    <span id="summary-date-applied" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-                </div>
+                    </tbody>
+                </table>
             </div>
         @endif
-
-
-
-
-        <div class="relative overflow-x-auto sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
-                    Tree Specifications
-                </caption>
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Product name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Color
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Category
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Price
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Apple MacBook Pro 17"
-                        </th>
-                        <td class="px-6 py-4">
-                            Silver
-                        </td>
-                        <td class="px-6 py-4">
-                            Laptop
-                        </td>
-                        <td class="px-6 py-4">
-                            $2999
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-
-
-                </tbody>
-            </table>
-        </div>
-
 
     </div>
     <div id="summary-loading" class="relative overflow-hidden flex justify-center items-center h-full">
@@ -206,45 +187,32 @@
                 if (data.permit) {
                     Object.entries(data.permit).forEach(([key, value]) => {
                         const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
+
                         // Select all elements with the corresponding class and update their value
-                        const input = document.getElementById(`edit-${idSelector}`);
+                        const input = document.getElementById(`summary-${idSelector}`);
 
                         if (input) {
-                            input.value = value;
+                            input.innerHTML = value;
                         }
                     });
 
                     if (data.permit.details) {
                         const details = data.permit.details;
+                        const tableBody = document.getElementById("table-body");
+                        details.forEach((detail) => {
+                            const row = document.createElement("tr");
+                            row.classList.add("bg-white", "border");
 
-                        for (let index = 0; index < details.length; index++) {
-                            const detail = details[index];
-                            editSpecification();
+                            row.innerHTML = `
+                                    <td class="px-6 py-4 border border-gray-400">${detail.species}</td>
+                                    <td class="px-6 py-4 border border-gray-400">${detail.number_of_trees}</td>
+                                    <td class="px-6 py-4 border border-gray-400">${detail.location}</td>
+                                    <td class="px-6 py-4 border border-gray-400">${detail.date_applied}</td>
+                                `;
 
-                            // Find the newly cloned delete button
-
-
-                            Object.entries(detail).forEach(([key, value]) => {
-                                // Get the delete button based on the data-detail-id
-                                const deleteBtn = document.querySelector(
-                                    `[data-detail-id="${key}[${index}]"]`);
-
-                                // Get the input based on the id
-                                const input = document.querySelector(`[id="${key}[${index}]"]`);
-
-                                // If the input and deleteBtn exist, set their values
-                                if (input) {
-                                    input.value = value; // Set value for the input
-                                }
-
-                                if (deleteBtn) {
-
-                                    deleteBtn.setAttribute('data-detail-id',
-                                        value);
-                                }
-                            });
-
-                        }
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+                        });
                     }
                 }
             } else {

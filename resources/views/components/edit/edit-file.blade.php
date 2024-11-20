@@ -329,7 +329,7 @@
                                 // Get the delete button based on the data-detail-id
                                 // Get the input based on the id
                                 const input = document.querySelector(`[id="${key}[${index}]"]`);
-                                console.log(input);
+
                                 // If the input and deleteBtn exist, set their values
                                 if (input) {
                                     input.value = value; // Set value for the input
@@ -412,8 +412,18 @@
     function deleteDetail(id) {
         const csrfToken = "{{ csrf_token() }}"; // Laravel CSRF token
 
-        console.log(id);
-        fetch(`/api/delete/details/${id}`, {
+        let type = {!! json_encode($type ?? '') !!};
+        const params = {
+            type: type
+        };
+
+        // Filter and build query string
+        const filteredParams = Object.fromEntries(
+            Object.entries(params).filter(([key, value]) => value !== '')
+        );
+        const queryParams = new URLSearchParams(filteredParams).toString();
+
+        fetch(`/api/delete/details/${id}?${queryParams}`, {
                 method: 'DELETE', // Use DELETE method, not POST
                 headers: {
                     'Content-Type': 'application/json',
@@ -423,11 +433,11 @@
             .then((response) => response.json())
             .then((data) => {
                 console.log('Success:', data);
-                alert(data.message || 'Detail successfully deleted!');
+
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+
             });
     }
 </script>

@@ -298,14 +298,48 @@ abstract class BaseController extends Controller
                         break;
 
                     case 'tree-transport-permits':
-                        DB::table('transport_permits')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'number_of_trees' => $permit_data['number_of_trees'] ?? null,
-                            'destination' => $permit_data['destination'] ?? null,
-                            'date_applied' => $permit_data['date_applied'] ?? null,
-                            'date_of_transport' => $permit_data['date_of_transport'] ?? null,
-                            'species' => $permit_data['species'] ?? null,
+                        // Step 1: Update the TreeCuttingPermit (main data)
+                        $treeTransportPermit = TransportPermit::where('file_id', $id)->first();
+
+                        if (!$treeTransportPermit) {
+                            return response()->json(['success' => false, 'message' => 'Tree Cutting Permit not found.'], 404);
+                        }
+
+                        // Update the TreeCuttingPermit (main data)
+                        $treeTransportPermit->update([
+                            'name_of_client' => $request->input('name_of_client'), // Update the client name
                         ]);
+                        // Get the arrays from the request
+                        $detailIds = $request->input('id'); // e.g. [1, 2]
+                        $species = $request->input('species'); // e.g. ['Oak', 'Pine']
+                        $numberOfTrees = $request->input('number_of_trees'); // e.g. [10, 20]
+                        $destination = $request->input('destination'); // e.g. ['Area 1', 'Area 2']
+                        $dateApplied = $request->input('date_applied'); // e.g. ['2024-01-01', '2024-02-01']
+                        $dateOfransport = $request->input('date_of_transport');
+                        // Loop through the detail ids to update or create the details
+
+                        foreach ($detailIds as $index => $detailId) {
+                            $detailData = [
+                                'transport_permit_id' => $treeTransportPermit->id,
+                                'species' => $species[$index] ?? null,
+                                'number_of_trees' => $numberOfTrees[$index] ?? null,
+                                'destination' => $destination[$index] ?? null,
+                                'date_applied' => $dateApplied[$index] ?? null,
+                                'date_of_transport' => $dateOfransport[$index] ?? null,
+                            ];
+
+                            // If the detail_id exists, update the corresponding record
+                            if ($detailId) {
+                                $detail = TreeTransportPermitDetails::find($detailId);
+                                if ($detail) {
+                                    // Update the existing detail record
+                                    $detail->update($detailData);
+                                }
+                            } else {
+                                // If no detail_id, create a new detail record
+                                $treeTransportPermit->details()->create($detailData);
+                            }
+                        }
                         break;
 
                     case 'land-titles':
@@ -342,9 +376,16 @@ abstract class BaseController extends Controller
     }
 
 
-    public function DeletePermitSpecification($id)
+    public function DeletePermitSpecification(Request $request, $id)
     {
-        $specification = TreeCuttingPermitDetail::find($id);
+        $type = $request->query('type');
+        $specification = null;
+        if ($type === 'tree-cutting-permits') {
+            $specification = TreeCuttingPermitDetail::find($id);
+        } elseif ($type === 'tree-transport-permits') {
+            $specification = TreeTransportPermitDetails::find($id);
+        }
+
 
         if ($specification) {
             $specification->delete();

@@ -112,7 +112,6 @@
             uploadSpecification();
         });
 
-        console.log(type);
 
         function uploadSpecification() {
             document.getElementById('add-file-specification').addEventListener('click', function() {

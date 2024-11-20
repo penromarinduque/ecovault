@@ -74,11 +74,11 @@
                                 @else
                                     <!--destination and date of for transport permits-->
                                     <div class="my-4">
-                                        <label for="date_of_tran[]"
+                                        <label for="date_of_transport[]"
                                             class="block mb-2 text-sm font-medium text-gray-700">Date of
                                             Transport</label>
-                                        <input type="date" id="date_of_tran[]" data-edit="date_of_tran[]"sport
-                                            name="date_of_transport[]"
+                                        <input type="date" id="date_of_transport[]"
+                                            data-edit="date_of_transport[]"sport name="date_of_transport[]"
                                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                         block w-full p-2.5 
                                         focus:border-green-500 focus:ring-green-500 
