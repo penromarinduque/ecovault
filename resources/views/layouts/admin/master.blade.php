@@ -18,7 +18,7 @@
 
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-slate-100">
     <!-- Header section -->
     <div class="antialiased">
 
@@ -28,7 +28,7 @@
 
 
         <!-- Main content section -->
-        <main class="p-4 h-auto pt-20 ">
+        <main class="p-4 h-auto pt-20">
 
             <x-loading />
             <x-alerts.alert-message />

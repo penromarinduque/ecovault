@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\TreeTransportPermitDetails;
 use App\Models\TreeCuttingPermit;
+use App\Models\TransportPermit;
+use App\Models\TreeCuttingPermitDetail;
 abstract class BaseController extends Controller
 {
     public function ArchivedById($id)
@@ -139,8 +141,9 @@ abstract class BaseController extends Controller
                 ], 404);
             }
 
-            // Initialize permit details as null
-            $permit_details = null;
+
+            //$permit = null;
+            // $permit_details = null;
 
             // If 'includePermit' is true, fetch permit details based on the permit type
             if ($includePermit) {
@@ -152,33 +155,31 @@ abstract class BaseController extends Controller
                             ->where('file_id', $id)
                             ->first();
 
-                        if ($permit) {
-                            $permit_details = $permit->details; // Access related details
-                        } else {
-                            $permit_details = []; // Handle case where no permit is found
-                        }
+                        $permit ? $permit->details : [];
                         break;
 
                     case 'chainsaw-registration':
-                        $permit_details = DB::table('chainsaw_registrations')
+                        $permit = DB::table('chainsaw_registrations')
                             ->where('file_id', $id)
                             ->first();
                         break;
 
                     case 'tree-plantation':
-                        $permit_details = DB::table('tree_plantation_registration')
+                        $permit = DB::table('tree_plantation_registration')
                             ->where('file_id', $id)
                             ->first();
                         break;
 
                     case 'tree-transport-permits':
-                        $permit_details = DB::table('transport_permits')
+                        $permit = TransportPermit::with('details')
                             ->where('file_id', $id)
                             ->first();
+
+                        $permit ? $permit->details : [];
                         break;
 
                     case 'land-titles':
-                        $permit_details = DB::table('land_titles')
+                        $permit = DB::table('land_titles')
                             ->where('file_id', $id)
                             ->first();
                         break;
@@ -192,7 +193,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check if permit details were found
-                if (!$permit_details) {
+                if (!$includePermit && !$permit) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Permit details not found for the provided file ID.',
@@ -201,13 +202,15 @@ abstract class BaseController extends Controller
             }
 
             // Return response based on whether permit details were included
-            return response()->json([
+            $response = [
                 'success' => true,
                 'message' => 'File retrieved successfully.',
                 'file' => $file,
-                'permit' => $includePermit ? $permit_details : null
-            ], 200);
-
+            ];
+            if (isset($permit)) {
+                $response['permit'] = $permit;
+            }
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -220,6 +223,8 @@ abstract class BaseController extends Controller
     public function UpdateFileById(Request $request, $id)
     {
         try {
+
+            $type = $request->query('type');
             // Retrieve the file by ID
             $file = DB::table('files')->where('id', $id)->first();
 
@@ -238,29 +243,49 @@ abstract class BaseController extends Controller
             ]);
 
             // Check if permit data is provided
-            if ($request->has('permit')) {
-                $permit_type = $file->permit_type;
-                $permit_data = $request->input('permit');
-
-                // Update the related permit details based on permit type
-                switch ($permit_type) {
+            if ($type) {
+                switch ($type) {
                     case 'tree-cutting-permits':
-                        DB::table('tree_cutting_permits')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'number_of_trees' => $permit_data['number_of_trees'] ?? null,
-                            'location' => $permit_data['location'] ?? null,
-                            'date_applied' => $permit_data['date_applied'] ?? null,
-                            'species' => $permit_data['species'] ?? null,
-                        ]);
-                        break;
+                        // Step 1: Update the TreeCuttingPermit (main data)
+                        $treeCuttingPermit = TreeCuttingPermit::where('file_id', $id)->first();
 
-                    case 'chainsaw-registration':
-                        DB::table('chainsaw_registrations')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'location' => $permit_data['location'] ?? null,
-                            'serial_number' => $permit_data['serial_number'] ?? null,
-                            'date_applied' => $permit_data['date_applied'] ?? null,
+                        if (!$treeCuttingPermit) {
+                            return response()->json(['success' => false, 'message' => 'Tree Cutting Permit not found.'], 404);
+                        }
+
+                        // Update the TreeCuttingPermit (main data)
+                        $treeCuttingPermit->update([
+                            'name_of_client' => $request->input('name_of_client'), // Update the client name
                         ]);
+                        // Get the arrays from the request
+                        $detailIds = $request->input('id'); // e.g. [1, 2]
+                        $species = $request->input('species'); // e.g. ['Oak', 'Pine']
+                        $numberOfTrees = $request->input('number_of_trees'); // e.g. [10, 20]
+                        $locations = $request->input('location'); // e.g. ['Area 1', 'Area 2']
+                        $dateApplied = $request->input('date_applied'); // e.g. ['2024-01-01', '2024-02-01']
+
+                        // Loop through the detail ids to update or create the details
+                        foreach ($detailIds as $index => $detailId) {
+                            $detailData = [
+                                'tree_cutting_permit_id' => $treeCuttingPermit->id,
+                                'species' => $species[$index] ?? null,
+                                'number_of_trees' => $numberOfTrees[$index] ?? null,
+                                'location' => $locations[$index] ?? null,
+                                'date_applied' => $dateApplied[$index] ?? null,
+                            ];
+
+                            // If the detail_id exists, update the corresponding record
+                            if ($detailId) {
+                                $detail = TreeCuttingPermitDetail::find($detailId);
+                                if ($detail) {
+                                    // Update the existing detail record
+                                    $detail->update($detailData);
+                                }
+                            } else {
+                                // If no detail_id, create a new detail record
+                                $treeCuttingPermit->details()->create($detailData);
+                            }
+                        }
                         break;
 
                     case 'tree-plantation':
@@ -273,14 +298,48 @@ abstract class BaseController extends Controller
                         break;
 
                     case 'tree-transport-permits':
-                        DB::table('transport_permits')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'number_of_trees' => $permit_data['number_of_trees'] ?? null,
-                            'destination' => $permit_data['destination'] ?? null,
-                            'date_applied' => $permit_data['date_applied'] ?? null,
-                            'date_of_transport' => $permit_data['date_of_transport'] ?? null,
-                            'species' => $permit_data['species'] ?? null,
+                        // Step 1: Update the TreeCuttingPermit (main data)
+                        $treeTransportPermit = TransportPermit::where('file_id', $id)->first();
+
+                        if (!$treeTransportPermit) {
+                            return response()->json(['success' => false, 'message' => 'Tree Cutting Permit not found.'], 404);
+                        }
+
+                        // Update the TreeCuttingPermit (main data)
+                        $treeTransportPermit->update([
+                            'name_of_client' => $request->input('name_of_client'), // Update the client name
                         ]);
+                        // Get the arrays from the request
+                        $detailIds = $request->input('id'); // e.g. [1, 2]
+                        $species = $request->input('species'); // e.g. ['Oak', 'Pine']
+                        $numberOfTrees = $request->input('number_of_trees'); // e.g. [10, 20]
+                        $destination = $request->input('destination'); // e.g. ['Area 1', 'Area 2']
+                        $dateApplied = $request->input('date_applied'); // e.g. ['2024-01-01', '2024-02-01']
+                        $dateOfransport = $request->input('date_of_transport');
+                        // Loop through the detail ids to update or create the details
+
+                        foreach ($detailIds as $index => $detailId) {
+                            $detailData = [
+                                'transport_permit_id' => $treeTransportPermit->id,
+                                'species' => $species[$index] ?? null,
+                                'number_of_trees' => $numberOfTrees[$index] ?? null,
+                                'destination' => $destination[$index] ?? null,
+                                'date_applied' => $dateApplied[$index] ?? null,
+                                'date_of_transport' => $dateOfransport[$index] ?? null,
+                            ];
+
+                            // If the detail_id exists, update the corresponding record
+                            if ($detailId) {
+                                $detail = TreeTransportPermitDetails::find($detailId);
+                                if ($detail) {
+                                    // Update the existing detail record
+                                    $detail->update($detailData);
+                                }
+                            } else {
+                                // If no detail_id, create a new detail record
+                                $treeTransportPermit->details()->create($detailData);
+                            }
+                        }
                         break;
 
                     case 'land-titles':
@@ -317,4 +376,22 @@ abstract class BaseController extends Controller
     }
 
 
+    public function DeletePermitSpecification(Request $request, $id)
+    {
+        $type = $request->query('type');
+        $specification = null;
+        if ($type === 'tree-cutting-permits') {
+            $specification = TreeCuttingPermitDetail::find($id);
+        } elseif ($type === 'tree-transport-permits') {
+            $specification = TreeTransportPermitDetails::find($id);
+        }
+
+
+        if ($specification) {
+            $specification->delete();
+            return response()->json(['message' => 'Detail successfully deleted!']);
+        }
+
+        return response()->json(['message' => 'Specification not found.'], 404);
+    }
 }

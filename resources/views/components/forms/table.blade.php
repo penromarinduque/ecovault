@@ -8,7 +8,6 @@
     let dataTable;
 
     let report = {!! json_encode($record ?? '') !!};
-
     let isAdmin = {!! json_encode($isAdmin) !!};
     let type = {!! json_encode($type ?? '') !!};
     let municipality = {!! json_encode($municipality ?? '') !!};

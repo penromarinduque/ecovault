@@ -26,7 +26,8 @@
         @endcomponent
         <div class="grid">
             <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
-                <div class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 h-[calc(80vh-100px)]">
+                <div
+                    class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->
                     @component('components.forms.table', [
                         'type' => $type ?? '',
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
-                <div class="grid grid-cols-3 gap-4 bg-greem-100">
+                <div class="grid grid-cols-3 gap-4">
                     <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
                             'type' => $type ?? '',
@@ -73,13 +74,15 @@
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'authId' => Auth::user()->id,
+                            'includePermit' => true,
                         ])
                         @endcomponent
 
                         @component('components.file-summary.file-summary', [
                             'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'includePermit' => true,
                         ])
                         @endcomponent
                         <!-- for showing the specification details-->

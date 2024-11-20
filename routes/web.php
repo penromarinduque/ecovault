@@ -79,7 +79,8 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/api/files/download/{id}', [FileController::class, 'DownloadFileById'])->name('file.download');
     Route::get('/api/files/view/{id}', [FileController::class, 'ViewFileById']);
     Route::post('/api/files/archived/{id}', [ArchiveController::class, 'ArchivedById'])->name('file.archived');
-
+    //edit delete detail function
+    Route::delete('/api/delete/details/{id}', [FileManagerController::class, "DeletePermitSpecification"])->name('delete.permit.detail');
     Route::get('/api/municipalities', [MunicipalityController::class, 'GetMunicipalities']);
 
     Route::get('/superuser/test', function () {

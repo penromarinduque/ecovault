@@ -112,6 +112,3 @@
         </div>
     </div>
 </div>
-<script>
-    const includePermit = @json($includePermit);
-</script>

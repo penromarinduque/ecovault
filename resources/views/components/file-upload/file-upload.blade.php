@@ -327,7 +327,6 @@
         event.preventDefault();
 
         const csrfToken = "{{ csrf_token() }}";
-        console.log(csrfToken)
         const uploadButton = document.getElementById('upload-btn');
         const buttonText = document.getElementById('button-text');
         const buttonSpinner = document.getElementById('button-spinner');
