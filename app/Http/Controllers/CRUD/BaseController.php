@@ -223,8 +223,7 @@ abstract class BaseController extends Controller
     public function UpdateFileById(Request $request, $id)
     {
         try {
-            $deletedDetailIds = $request->input('deleted_details');
-            $deletedDetailIdsArray = array_filter(explode(',', $deletedDetailIds));
+
             $type = $request->query('type');
             // Retrieve the file by ID
             $file = DB::table('files')->where('id', $id)->first();
@@ -258,11 +257,6 @@ abstract class BaseController extends Controller
                         $treeCuttingPermit->update([
                             'name_of_client' => $request->input('name_of_client'), // Update the client name
                         ]);
-
-                        if ($deletedDetailIds) {
-                            $deletedDetailIdsArray = explode(',', $deletedDetailIds); // Convert to array
-                            TreeCuttingPermitDetail::whereIn('id', $deletedDetailIdsArray)->delete();
-                        }
                         // Get the arrays from the request
                         $detailIds = $request->input('id'); // e.g. [1, 2]
                         $species = $request->input('species'); // e.g. ['Oak', 'Pine']
@@ -348,4 +342,15 @@ abstract class BaseController extends Controller
     }
 
 
+    public function DeletePermitSpecification($id)
+    {
+        $specification = TreeCuttingPermitDetail::find($id);
+
+        if ($specification) {
+            $specification->delete();
+            return response()->json(['message' => 'Detail successfully deleted!']);
+        }
+
+        return response()->json(['message' => 'Specification not found.'], 404);
+    }
 }

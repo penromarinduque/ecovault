@@ -3,11 +3,10 @@
         <!-- Main modal -->
         <div class="overflow-y-auto overflow-x-hidden">
             <div class="bg-transparent">
-                <div id="edit-specification-container" class="grid grid-cols-2 gap-y-10 gap-x-10">
-                    <input type="hidden" id="deleted_ids" name="deleted_details" value="">
+                <div id="edit-specification-container" class="grid grid-cols-1 gap-y-10 gap-x-10">
                     <template id="edit-specification-template" class="hidden">
                         <div class="file-specification-box col-span-1 border border-gray-500 rounded-md">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between p-3">
                                 <h2 id="box-number" class="text-lg font-bold text-gray-700 m-2">Specification 1
                                 </h2>
                                 <button type="button" id="close-edit-specification"
@@ -20,7 +19,7 @@
                                     <span class="sr-only">Close modal</span>
                                 </button>
                                 <button type="button" id="delete-specification"
-                                    class="inline-flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mt-2">
+                                    class="hidden inline-flex items-center text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mt-2">
                                     <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
@@ -126,7 +125,9 @@
         let editIdChanger = 0;
         const maxSpecifications = 20; // Set the limit for the number of clones
 
-        document.getElementById('add-edit-specification').addEventListener('click', editSpecification);
+        document.getElementById('add-edit-specification').addEventListener('click', function() {
+            editSpecification();
+        });
 
         function editSpecification() {
             const existingSpecifications = document.querySelectorAll('.file-specification-box').length;
@@ -135,7 +136,7 @@
                 alert(`You can only add up to ${maxSpecifications} specifications.`);
                 return;
             }
-
+            let id = null;
             createAndAppendClones(existingSpecifications);
         }
 
@@ -177,16 +178,16 @@
                     renumberSpecifications();
                 });
             }
-            // // Add event listener for the close button
-            // const deleteBtn = clone.querySelector('#delete-specification');
-            // if (deleteBtn) {
-            //     deleteBtn.setAttribute('data-detail-id', `id[${editIdChanger}]`);
-            //     deleteBtn.id = `close-specification-${editIdChanger}`;
-            //     deleteBtn.addEventListener('click', function() {
-            //         specificationDiv.remove();
-            //         renumberSpecifications();
-            //     });
-            // }
+            // Add event listener for the close button
+            const deleteBtn = clone.querySelector('#delete-specification');
+            if (deleteBtn) {
+                // deleteBtn.setAttribute('data-detail-id', `id[${editIdChanger}]`);
+                deleteBtn.id = `delete-specification-${editIdChanger}`;
+                deleteBtn.addEventListener('click', function() {
+                    specificationDiv.remove();
+                    renumberSpecifications();
+                });
+            }
 
             // Append the cloned template to the container
             document.getElementById('edit-specification-container').appendChild(clone);
@@ -204,37 +205,6 @@
                 }
             });
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            document.addEventListener("click", function(event) {
-                if (event.target && event.target.hasAttribute('data-detail-id')) {
-                    const detailId = event.target.id;
-                    deleteDetail(detailId);
-                }
-            });
-
-            function deleteDetail(detailId) {
-                if (detailId) {
-                    const deleteSpecification = document.getElementById('deleted_ids');
-                    if (!deleteSpecification) {
-                        console.error('Hidden input for deleted details not found!');
-                        return;
-                    }
-
-                    let groupDeletedSpec = deleteSpecification.value ?
-                        deleteSpecification.value.split(',').filter(Boolean) // Ensure no empty values
-                        :
-                        [];
-
-                    if (!groupDeletedSpec.includes(detailId)) {
-                        groupDeletedSpec.push(detailId);
-                    }
-
-                    deleteSpecification.value = groupDeletedSpec.join(','); // Set updated value
-                    console.log('Updated deleted_ids:', deleteSpecification.value); // Debug
-                }
-            }
-        });
     </script>
 
 @endif

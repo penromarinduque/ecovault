@@ -320,29 +320,37 @@
                             const detail = details[index];
                             editSpecification();
 
+                            const deleteBtn = document.querySelector(`#delete-specification-${index}`);
+                            const closeBtn = document.querySelector(`#close-specification-${index}`);
+
+
                             // Find the newly cloned delete button
-
-
                             Object.entries(detail).forEach(([key, value]) => {
                                 // Get the delete button based on the data-detail-id
-                                const deleteBtn = document.querySelector(
-                                    `[data-detail-id="${key}[${index}]"]`);
-
                                 // Get the input based on the id
                                 const input = document.querySelector(`[id="${key}[${index}]"]`);
-
+                                console.log(input);
                                 // If the input and deleteBtn exist, set their values
                                 if (input) {
                                     input.value = value; // Set value for the input
                                 }
-
-                                if (deleteBtn) {
-
-                                    deleteBtn.setAttribute('data-detail-id',
-                                        value);
+                                if (closeBtn) {
+                                    closeBtn.classList.add("hidden");
                                 }
+                                // Set the delete button's action and show it
+
                             });
 
+                            if (deleteBtn) {
+                                deleteBtn.classList.remove('hidden');
+
+                                deleteBtn.addEventListener("click", function() {
+                                    const detailId = detail.id;
+                                    deleteDetail(detailId);
+                                    console.log("Deleting specification with ID: ", detail.id);
+                                });
+
+                            }
                         }
                     }
                 }
@@ -400,4 +408,26 @@
             console.error("Error:", error);
         }
     });
+
+    function deleteDetail(id) {
+        const csrfToken = "{{ csrf_token() }}"; // Laravel CSRF token
+
+        console.log(id);
+        fetch(`/api/delete/details/${id}`, {
+                method: 'DELETE', // Use DELETE method, not POST
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken, // Include CSRF token for security
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                alert(data.message || 'Detail successfully deleted!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+    }
 </script>
