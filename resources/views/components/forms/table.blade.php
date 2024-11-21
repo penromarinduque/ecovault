@@ -67,7 +67,7 @@
                 classes: {
                     loading: "datatable-loading text-sm",
                     dropdown: "datatable-perPage flex items-center",
-                    selector: "per-page-selector px-2 py-1 border rounded text-gray-600",
+                    selector: "per-page-selector px-2 py-1 border rounded border-gray-300 text-gray-600",
                     ellipsis: "datatable-ellipsis text-lg",
                     info: "datatable-info text-sm text-gray-500",
                     // pagination: "datatable-pagination",

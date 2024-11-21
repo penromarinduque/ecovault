@@ -78,6 +78,7 @@
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'authId' => Auth::user()->id,
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [
