@@ -70,9 +70,11 @@ function toggleDivVisibility(showDivId) {
 document.body.addEventListener('click', (event) => {
     if (event.target.matches('.move-file-div')) {
         toggleSections(true);
-        // const fileId = event.target.dataset.fileId;
+        
+         const fileId = event.target.dataset.fileId;
         // fetchFileData(fileId);
-        toggleDivVisibility('move-file-div');
+         fetchFileDataMove(fileId)
+         toggleDivVisibility('move-file-div');
     }
 });
 
@@ -85,6 +87,7 @@ document.body.addEventListener('click', (event) => {
         toggleSections(true);
         const fileId = event.target.dataset.fileId;
         fetchFileData(fileId);
+        
         // fetchFileDetails(fileId);
         toggleDivVisibility('edit-file-div');
     }

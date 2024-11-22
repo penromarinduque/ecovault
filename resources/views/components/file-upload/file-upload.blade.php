@@ -332,6 +332,7 @@
         const buttonSpinner = document.getElementById('button-spinner');
 
 
+
         uploadButton.disabled = true;
         buttonText.classList.add('hidden');
         buttonSpinner.classList.remove('hidden');

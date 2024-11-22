@@ -12,7 +12,7 @@ use App\Models\TransportPermit;
 use App\Models\LandTitle;
 use App\Models\TreeCuttingPermitDetail;
 use App\Models\TreeTransportPermitDetails;
-
+use App\Models\FileType;
 class FileManagerController extends BaseController
 {
 
@@ -129,6 +129,33 @@ class FileManagerController extends BaseController
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function GetFileTypeByClassification(Request $request)
+    {
+        $classification = (int) $request->query('classification');
+
+        if (!$classification) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Classification parameter is required.'
+            ], 400);
+        }
+
+
+        $fileTypes = FileType::where('classification_id', $classification)->get();
+
+        if ($fileTypes->count() < 1) {
+            return response()->json([
+                'success' => true,
+                'message' => "No File Types Found",
+            ], 200);
+        }
+        // Return the file types as a JSON response
+        return response()->json([
+            'success' => true,
+            'file_types' => $fileTypes,
+        ], 200);
     }
 
 

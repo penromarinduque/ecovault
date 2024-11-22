@@ -61,7 +61,14 @@
 
                     <div class=" p-4 col-span-2 bg-white rounded-md ">
 
-                        @component('components.move.move-file', [])
+                        @component('components.move.move-file', [
+                            'type' => $type ?? '',
+                            'municipality' => $municiplaity ?? '',
+                            'record' => $record ?? '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                            'category' => $category ?? '',
+                        ])
                         @endcomponent
 
                         @component('components.file-upload.file-upload', [
@@ -78,6 +85,8 @@
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
                             'record' => $record ?? '',
+                            'authId' => Auth::user()->id,
+                            'includePermit' => true,
                         ])
                         @endcomponent
                         @component('components.file-summary.file-summary', [

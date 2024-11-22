@@ -34,18 +34,26 @@ class DatabaseSeeder extends Seeder
             'otp' => random_int(100000, 999999),
             'password' => Hash::make('password'),
         ]);
-
         $fileTypes = [
-            ['type_name' => 'Tree Cutting Permit'],
-            ['type_name' => 'Chainsaw Registration'],
-            ['type_name' => 'Tree Plantation Registration'],
-            ['type_name' => 'Transport Permit'],
-            ['type_name' => 'Land Title'],
+            ['type_name' => 'tree-cutting-permit', 'classification_id' => 1],
+            ['type_name' => 'chainsaw-registration', 'classification_id' => 1],
+            ['type_name' => 'tree-plantation-registration', 'classification_id' => 1],
+            ['type_name' => 'transport-permit', 'classification_id' => 1],
+            ['type_name' => 'land-title', 'classification_id' => 1],
+            ['type_name' => 'memoranda', 'classification_id' => 2],
+            ['type_name' => 'letters', 'classification_id' => 2],
+            ['type_name' => 'special-orders', 'classification_id' => 2],
+            ['type_name' => 'reports', 'classification_id' => 2],
         ];
 
+
         foreach ($fileTypes as $fileType) {
-            FileType::updateOrCreate(['type_name' => $fileType['type_name']]);
+            FileType::updateOrCreate(
+                ['type_name' => $fileType['type_name']], // Find by type_name
+                ['classification_id' => $fileType['classification_id']] // Set classification_id
+            );
         }
+
 
         Municipality::insert([
             ['location' => 'Mogpog'],

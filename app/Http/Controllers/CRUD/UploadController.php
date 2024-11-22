@@ -20,6 +20,7 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use App\Models\RecentActivity;
 use App\Models\File;
+use Exception;
 
 class UploadController extends Controller
 {
@@ -47,7 +48,13 @@ class UploadController extends Controller
             $extension = $file->getClientOriginalExtension();
 
             //file manager na folder
-            $uploadDir = "PENRO/uploads/{$request->input('permit_type')}/{$request->input('municipality')}";
+            if ($type) {
+                $uploadDir = "PENRO/uploads/{$request->input('type')}/{$request->input('municipality')}";
+            } else {
+                $uploadDir = "PENRO/uploads/{$report}";
+            }
+
+
             //PENRO/uploads/{$request->input('report_type')}
 
             $filePath = $request->file('file')->storeAs("{$uploadDir}", $sanitizedFileName, 'public');
@@ -125,7 +132,7 @@ class UploadController extends Controller
         $fullFilePath = storage_path("app/public/{$filePath}");
         // Check if the ZIP file exists
         if (!file_exists($fullFilePath)) {
-            throw new \Exception("ZIP file not found at: {$fullFilePath}");
+            throw new Exception("ZIP file not found at: {$fullFilePath}");
         }
         $zip = new \ZipArchive();
         if ($zip->open($fullFilePath) === TRUE) {
@@ -150,7 +157,7 @@ class UploadController extends Controller
             // Overwrite the original ZIP file without changing its name
             $newZip = new \ZipArchive();
             if ($newZip->open($fullFilePath, \ZipArchive::OVERWRITE) !== TRUE) {
-                throw new \Exception("Could not overwrite the ZIP file");
+                throw new Exception("Could not overwrite the ZIP file");
             }
 
             // Add the modified files back into the original ZIP file
@@ -167,7 +174,7 @@ class UploadController extends Controller
 
             return $filePath; // Return the original file path
         } else {
-            throw new \Exception("Could not open ZIP file at: {$fullFilePath}");
+            throw new Exception("Could not open ZIP file at: {$fullFilePath}");
         }
     }
     private function deleteDir($dir)
@@ -178,7 +185,7 @@ class UploadController extends Controller
 
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? deleteDir("$dir/$file") : unlink("$dir/$file");
+            (is_dir("$dir/$file")) ? $this->deleteDir("$dir/$file") : unlink("$dir/$file");
         }
         rmdir($dir);
     }
@@ -189,13 +196,13 @@ class UploadController extends Controller
 
         // Check if the PDF file exists
         if (!file_exists($fullFilePath)) {
-            throw new \Exception("PDF file not found at: {$fullFilePath}");
+            throw new Exception("PDF file not found at: {$fullFilePath}");
         }
 
         // Load the QR Code image
         $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
         if (!file_exists($qrCodeFullPath)) {
-            throw new \Exception("QR Code not found at: {$qrCodeFullPath}");
+            throw new Exception("QR Code not found at: {$qrCodeFullPath}");
         }
 
         // Create a new FPDI object
@@ -237,5 +244,44 @@ class UploadController extends Controller
 
         return $fullFilePath;
     }
+
+    public function MoveFileById(Request $request, $id)
+    {
+        try {
+
+            $file = File::findOrFail($id);
+
+            if (!$file) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "File  doesn't exist",
+
+                ], 200);
+            }
+
+            if ($file->permit_type) {
+                $destinationMunicipality = $request->input('move_to_municipality');
+                $file->update(['municipality' => $destinationMunicipality]);
+            } else {
+                $destinationReportType = $request->input('move_to_report_type');
+                $file->update(['report_type' => $destinationReportType]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'test',
+                'file' => $file,
+
+            ], 200);
+        } catch (Exception $ex) {
+            return response()->json([
+                'success' => false,
+                'message' => 'test',
+                404
+
+            ]);
+        }
+    }
+
 
 }

@@ -69,7 +69,14 @@
                     </div>
 
                     <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
-                        @component('components.move.move-file', [])
+                        @component('components.move.move-file', [
+                            'type' => $type ?? '',
+                            'municipality' => $municiplaity ?? '',
+                            'record' => $record ?? '',
+                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                            'isArchived' => false,
+                            'category' => $category ?? '',
+                        ])
                         @endcomponent
                         <!--uploading files-->
                         @component('components.file-upload.file-upload', [

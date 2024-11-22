@@ -18,8 +18,6 @@ use App\Models\RecentActivity;
 
 class FileController extends Controller
 {
-
-
     public function ViewFileById($id)
     {
         $file = File::findOrFail($id);
