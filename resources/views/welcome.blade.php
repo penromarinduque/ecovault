@@ -20,7 +20,7 @@
                     PENRO-Boac Marinduque</h1>
                 <p class="max-w-2xl mb-6 font-md text-gray-300 lg:mb-8 md:text-lg lg:text-xl">
                     Efficient document management system provides tailored solutions, enhancing workflow seamlessly</p>
-                <a href="#"
+                <a href="{{ route('login.show') }}"
                     class="transition ease-in-out delay-150 hover:scale-110  hover:-translate-y-1 inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white border bg-primary-700 border-gray-300 rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-gray-100">
                     Get started
                     <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"

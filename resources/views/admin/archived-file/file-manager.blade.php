@@ -4,49 +4,47 @@
 
 @section('content')
 
-    <div class="h-[600px] rounded-md text-black p-4">
-        <h1 class="font-bold text-2xl text-center">Environmental Permits and Land Records Folder</h1>
+    <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-gray-300 mt-2">
+        <h1 class="font-medium text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
 
-        <div class="grid grid-cols-4 gap-4 m-4"> <!-- Use gap for consistent spacing -->
-            <!-- Each folder item -->
-            <div class="my-4 flex flex-col items-center"> <!-- Center items -->
+        <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold"> <!-- Use gap for consistent spacing -->
+            <div class="flex flex-col items-center"> <!-- Flexbox for centering -->
                 <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-cutting-permits']) }}"
-                    class="text-center">
+                    class="text-center"> <!-- Centering text under image -->
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Cutting Permits" class="w-24 mb-2">
-                    <!-- Added margin-bottom for spacing -->
-                    <h2 class="w-[120px]">Tree Cutting Permits</h2>
+                    <h2 class="w-[120px] text-center">Tree Cutting Permits</h2>
                 </a>
             </div>
 
-            <div class="my-4 flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-plantation']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Tree Plantation</h2>
+                    <h2 class="w-[120px] text-center">Tree Plantation</h2>
                 </a>
             </div>
 
-            <div class="my-4 flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-transport-permits']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Transport Permits" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Tree Transport Permits</h2>
+                    <h2 class="w-[120px] text-center">Tree Transport Permits</h2>
                 </a>
             </div>
 
-            <div class="my-4 flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'chainsaw-registration']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Chainsaw Registration" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Chainsaw Registration</h2>
+                    <h2 class="w-[120px] text-center">Chainsaw Registration</h2>
                 </a>
             </div>
 
-            <div class="my-4 flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <a href="{{ route('archived.file-manager.land-title.show', ['archivedType' => $archivedType, 'type' => 'land-titles']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles/ Patented Lots" class="w-24 mb-2">
-                    <h2 class="w-[120px]">Land Titles/ Patented Lots</h2>
+                    <h2 class="w-[120px] text-center">Land Titles/ Patented Lots</h2>
                 </a>
             </div>
         </div>

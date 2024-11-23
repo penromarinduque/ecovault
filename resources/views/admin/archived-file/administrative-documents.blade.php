@@ -3,43 +3,49 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="h-[600px] rounded-md text-black p-4 ">
 
-        <h1 class="font-bold text-2xl">Environmental Permits and Land Records Folder</h1>
-        <div class="grid grid-cols-4 m-16 ">
-            <div class="my-4">
-                <a
-                    href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'memoranda']) }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Memoranda</h1>
+    <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-gray-300 mt-2">
+        <!-- Header -->
+        <h1 class="font-medium text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
+
+        <!-- Grid Container -->
+        <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
+            <!-- Memoranda Folder -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'memoranda']) }}"
+                    class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Memoranda Folder" class="w-24 mb-2">
+                    <h2 class="w-[120px] truncate">Memoranda</h2>
                 </a>
             </div>
 
-            <div class="my-4">
-                <a
-                    href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'letters']) }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Letters</h1>
+            <!-- Letters Folder -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'letters']) }}"
+                    class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Letters Folder" class="w-24 mb-2">
+                    <h2 class="w-[120px] truncate">Letters</h2>
                 </a>
             </div>
 
-            <div class="my-4">
-                <a
-                    href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'special-orders']) }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Special Orders</h1>
+            <!-- Special Orders Folder -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'special-orders']) }}"
+                    class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Special Orders Folder" class="w-24 mb-2">
+                    <h2 class="w-[120px] truncate">Special Orders</h2>
                 </a>
             </div>
 
-            <div class="my-4 items-center fkex">
-                <a
-                    href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'reports']) }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="" class="w-24">
-                    <h1 class="w-[120px]">Reports</h1>
+            <!-- Reports Folder -->
+            <div class="flex flex-col items-center">
+                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'reports']) }}"
+                    class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Reports Folder" class="w-24 mb-2">
+                    <h2 class="w-[120px] truncate">Reports</h2>
                 </a>
             </div>
-
-
         </div>
     </div>
+
 @endsection

@@ -392,6 +392,6 @@ abstract class BaseController extends Controller
             return response()->json(['message' => 'Detail successfully deleted!']);
         }
 
-        return response()->json(['message' => 'Specification not found.'], 404);
+        return response()->json(['message' => 'Specification not found.'], 200);
     }
 }
