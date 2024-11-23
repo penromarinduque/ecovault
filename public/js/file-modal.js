@@ -33,17 +33,17 @@ async function openFileModal(id) {
         }
 
         // Check if the content type is compatible for iframe display
-        const compatibleTypes = ['application/pdf'];
+        const compatibleTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp', 'image/tiff'];
 
         if (compatibleTypes.includes(contentType)) {
-            const fileUrl = `/api/files/view/${id}`; // Adjust as needed
-            document.getElementById('fileModal').classList.remove('hidden'); 
+            const fileUrl = `/api/files/view/${id}`;
+            document.getElementById('fileModal').classList.remove('hidden');
             document.getElementById('fileFrame').src = fileUrl; 
-        } else
-        {
+        } else {
             // If it's a ZIP file, open it for download
             window.location.href = `/api/files/view/${id}`; // Redirect to download ZIP file
-        } 
+        }
+
     
     } catch (error) {
         console.error('Error fetching the file in the second API call:', error);
