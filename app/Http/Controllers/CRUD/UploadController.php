@@ -247,38 +247,52 @@ class UploadController extends Controller
 
     public function MoveFileById(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
-
             $file = File::findOrFail($id);
+            $type = $file->permit_type;
 
             if (!$file) {
                 return response()->json([
                     'success' => true,
                     'message' => "File  doesn't exist",
-
                 ], 200);
+            }
+
+            $currentFilePath = $file->file_path; // Assuming file_path is stored without 'public/' prefix
+            if (!Storage::disk('public')->exists($currentFilePath)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File does not exist on the server.',
+
+                ], 404);
             }
 
             if ($file->permit_type) {
                 $destinationMunicipality = $request->input('move_to_municipality');
+                $newFilePath = "PENRO/uploads/{$file->permit_type}/{$destinationMunicipality}";
+
+                Storage::disk('public')->move($currentFilePath, $newFilePath);
+
                 $file->update(['municipality' => $destinationMunicipality]);
             } else {
                 $destinationReportType = $request->input('move_to_report_type');
                 $file->update(['report_type' => $destinationReportType]);
             }
-
+            DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'test',
                 'file' => $file,
+                'file-path' => $currentFilePath
 
             ], 200);
         } catch (Exception $ex) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'test',
                 404
-
             ]);
         }
     }

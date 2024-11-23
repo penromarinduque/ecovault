@@ -118,7 +118,7 @@
         let includePermit = {!! json_encode($includePermit ?? false) !!};
 
 
-        // Fetch municipalities from the API
+        // Fetch munic  ipalities from the API
         const fetchMunicipalities = async () => {
             const response = await fetch('https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
             if (!response.ok) {
@@ -169,7 +169,7 @@
 
                 // Add all municipalities except the current one
                 municipalities.forEach(municipality => {
-                    if (municipality.name.toLowerCase() !== currentMunicipality.textContent()) {
+                    if (municipality.name.toLowerCase() !== currentMunicipality.toLowerCase()) {
                         const option = document.createElement("option");
                         option.value = municipality.name;
                         option.textContent = municipality.name;

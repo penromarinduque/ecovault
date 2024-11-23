@@ -85,9 +85,6 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/api/municipalities', [MunicipalityController::class, 'GetMunicipalities']);//currently not use!
     Route::get('/api/file-types', [FileManagerController::class, 'GetFileTypeByClassification']);
 
-
-
-
     Route::post('/api/files/move/{id}', [UploadController::class, "MoveFileById"]);
     Route::get('/superuser/test', function () {
         return view("superuser.test");
