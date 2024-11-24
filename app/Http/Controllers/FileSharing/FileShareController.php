@@ -1,37 +1,62 @@
 <?php
 
 namespace App\Http\Controllers\FileSharing;
-
+use App\Events\SimpleEvent;
 use App\Models\FileShares;
 use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Notifications\FileShareNotification;
-
 class FileShareController extends Controller
 {
-    public function shareFile(Request $request)
+    public function ShareFile(Request $request)
     {
+
+
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
-            'remarks' => 'required|string',
+            'remarks' => 'required',
+            'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
         ]);
 
-        $fileId = $validated['file_id'];
-        $userId = $validated['shared_with_user_id'];
-        $sharedBy = auth()->id();
-        $message = $validated['remarks'];
+        // Create the file share record
 
-        // Notify the recipient
-        $user = User::findOrFail($userId);
-        $user->notify(new FileShareNotification($fileId, $userId, $sharedBy, $message));
+        try {
 
-        return response()->json([
-            'success' => true,
-            'message' => 'File shared and notification sent!',
-        ]);
+            $adminId = auth()->id();
+
+            $fileId = $validated['file_id'];
+            $userId = $validated['shared_with_user_id'];
+            $sharedBy = $adminId;  // Assuming the admin is the one sharing the file
+            $remarks = $validated['remarks'];  // Use the remarks field for the message
+            //$expirationDate = $validated['expiration_date'];
+
+
+            FileShares::create([
+                'file_id' => $validated['file_id'],
+                'shared_with_user_id' => $validated['shared_with_user_id'],
+                'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
+                'remarks' => $validated['remarks'],
+                'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
+            ]);
+            $user = User::findOrFail($userId);
+            $info = 'Shared a File';
+            $user->notify(new FileShareNotification($fileId, $userId, $sharedBy, $remarks, $info));
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File shared successfully!',
+                'userId' => $userId,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sharing file: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function StoreRequest(Request $request)

@@ -2,26 +2,25 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\PrivateChannel;
 
 class FileShareNotification extends Notification implements ShouldBroadcast
 {
-    use Queueable;
-
     public $fileId;
     public $userId;
     public $sharedBy;
-    public $message;
-
-    public function __construct(int $fileId, int $userId, int $sharedBy, string $message)
+    public $remarks;
+    public $info;
+    public function __construct(int $fileId, int $userId, int $sharedBy, string $remarks, string $info)
     {
         $this->fileId = $fileId;
         $this->userId = $userId;
         $this->sharedBy = $sharedBy;
-        $this->message = $message;
+        $this->remarks = $remarks;
+        $this->info = $info;
+
     }
 
     public function via($notifiable): array
@@ -36,11 +35,13 @@ class FileShareNotification extends Notification implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
+
         return [
             'fileId' => $this->fileId,
             'userId' => $this->userId,
             'sharedBy' => $this->sharedBy,
-            'message' => $this->message,
+            'message' => $this->remarks,
+            'info' => $this->info,
         ];
     }
 
@@ -50,7 +51,8 @@ class FileShareNotification extends Notification implements ShouldBroadcast
             'fileId' => $this->fileId,
             'userId' => $this->userId,
             'sharedBy' => $this->sharedBy,
-            'message' => $this->message,
+            'message' => $this->remarks,
+            'info' => $this->info
         ];
     }
 }
