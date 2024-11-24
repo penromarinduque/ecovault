@@ -115,9 +115,7 @@
             ],
             data: data.map(file => ({
                 cells: [
-                    file.file_name.length > 15 ?
-                    file.file_name.substring(0, 15) + '...' :
-                    file.file_name, // Truncate file name if longer than 15 characters
+                    truncateFilename(file.file_name, 20),
                     file.office_source,
                     file.updated_at,
                     file.user_name,

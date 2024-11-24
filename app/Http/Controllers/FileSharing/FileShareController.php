@@ -7,50 +7,31 @@ use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Notifications\FileAccessRequestNotification;
+use App\Notifications\FileShareNotification;
+
 class FileShareController extends Controller
 {
-    public function ShareFile(Request $request)
+    public function shareFile(Request $request)
     {
-
-
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
-            'permission' => 'required|in:viewer,editor,admin',
-            'remarks' => 'required',
-            'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
+            'remarks' => 'required|string',
         ]);
 
-        // Create the file share record
+        $fileId = $validated['file_id'];
+        $userId = $validated['shared_with_user_id'];
+        $sharedBy = auth()->id();
+        $message = $validated['remarks'];
 
-        try {
+        // Notify the recipient
+        $user = User::findOrFail($userId);
+        $user->notify(new FileShareNotification($fileId, $userId, $sharedBy, $message));
 
-            $adminId = auth()->id();
-
-
-
-            FileShares::create([
-                'file_id' => $validated['file_id'],
-                'shared_with_user_id' => $validated['shared_with_user_id'],
-                'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
-                'permission' => $validated['permission'],
-                'remarks' => $validated['remarks'],
-                'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
-            ]);
-
-
-
-            return response()->json([
-                'success' => true,
-                'message' => 'File shared successfully!',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error sharing file: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'File shared and notification sent!',
+        ]);
     }
 
     public function StoreRequest(Request $request)

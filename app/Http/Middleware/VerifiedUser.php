@@ -15,17 +15,11 @@ class VerifiedUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if (Auth::check() && !Auth::user()->hasVerifiedEmail()) {
-            // If the request is an AJAX request, return a JSON response
-
-            // if ($request->expectsJson()) {
-            //     return response()->json([
-            //         'message' => 'Email verification required.'
-            //     ], 403);
-            // }
-            return redirect()->route('verification.show')->withErrors(['error' => 'Email verification required.']);
+        if (!$user || !$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.show')
+                ->withErrors(['error' => 'Email verification required.']);
         }
 
         if (!$user) {
