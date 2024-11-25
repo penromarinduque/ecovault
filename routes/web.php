@@ -40,7 +40,7 @@ Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verifi
 Route::post('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
 Route::get('/logout', [AuthController::class, 'Logout'])->name('logout.post');
 
-Route::middleware(['authentication'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
     Route::get('/staff/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
     Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);

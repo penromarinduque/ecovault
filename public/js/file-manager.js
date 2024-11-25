@@ -6,8 +6,28 @@ function refreshTable(){
     fetchData();
     fetchDatas();
 }
+function truncateFilename(filename, maxLength) {
+    const parts = filename.split('.');
+    if (parts.length < 2) {
+        return filename; // No extension, return the filename as is
+    }
 
+    const name = parts.slice(0, -1).join('.'); // The main part of the filename
+    const extension = parts[parts.length - 1]; // The file extension
 
+    if (filename.length <= maxLength) {
+        return filename; // No truncation needed
+    }
+
+    // Calculate the length for the truncated name
+    const keepLength = maxLength - extension.length - 3; // 3 is for the "..."
+    if (keepLength <= 0) {
+        return `...${extension}`; // If there's no space for the name, just show the extension
+    }
+
+    // Truncate the name and return the result
+    return name.substring(0, keepLength) + '...' + extension;
+}
 // Archive file function
 async function archiveFile(fileId) {
     const csrfToken = document.querySelector('input[name="_token"]').value;

@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\FileSharing;
-
+use App\Events\SimpleEvent;
 use App\Models\FileShares;
 use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Notifications\FileAccessRequestNotification;
+use App\Notifications\FileShareNotification;
 class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
@@ -17,7 +17,6 @@ class FileShareController extends Controller
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
-            'permission' => 'required|in:viewer,editor,admin',
             'remarks' => 'required',
             'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
         ]);
@@ -28,22 +27,29 @@ class FileShareController extends Controller
 
             $adminId = auth()->id();
 
+            $fileId = $validated['file_id'];
+            $userId = $validated['shared_with_user_id'];
+            $sharedBy = $adminId;  // Assuming the admin is the one sharing the file
+            $remarks = $validated['remarks'];  // Use the remarks field for the message
+            //$expirationDate = $validated['expiration_date'];
 
 
             FileShares::create([
                 'file_id' => $validated['file_id'],
                 'shared_with_user_id' => $validated['shared_with_user_id'],
                 'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
-                'permission' => $validated['permission'],
                 'remarks' => $validated['remarks'],
                 'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
             ]);
-
+            $user = User::findOrFail($userId);
+            $info = 'Shared a File';
+            $user->notify(new FileShareNotification($fileId, $userId, $sharedBy, $remarks, $info));
 
 
             return response()->json([
                 'success' => true,
                 'message' => 'File shared successfully!',
+                'userId' => $userId,
             ]);
         } catch (\Exception $e) {
             return response()->json([
