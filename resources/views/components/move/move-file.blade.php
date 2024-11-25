@@ -219,11 +219,7 @@
                 `<option value="${permitType}" selected>${file.report_type}</option>`;
 
         }
-
     }
-
-
-
 
     document.getElementById('move-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -250,7 +246,6 @@
         this.reset();
         refreshTable();
         showToast("File moved successfully", 'top-right', 'success')
-
     });
 
 

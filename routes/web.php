@@ -16,6 +16,8 @@ use App\Http\Controllers\API\StaffController;
 use App\Http\Controllers\Backup\BackupController;
 use App\Http\Controllers\CRUD\SettingController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\CRUD\FolderController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -129,6 +131,11 @@ Route::middleware(['authentication'])->group(function () {
     Route::get('/setting', [AdminController::class, 'ShowSetting'])->name("show.setting");
 
     Route::get('/api/notifications', [NotificationController::class, 'getNotifications']); // Get all notifications for a user
+
+    Route::get('/api/folders', [FolderController::class, 'GetFolders']);
+    Route::post('/api/folders/add', [FolderController::class, 'AddFolder']);
+
+
 
 });
 
