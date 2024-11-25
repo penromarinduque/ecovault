@@ -16,13 +16,15 @@ class button extends Component
     public $type;
     public $onclick;
     public $style;
-    public function __construct($id, $label, $type = 'button', $style = 'default', $onclick = null)
+
+    public function __construct($id, $label, $type = 'button', $style = 'default', $onclick = null, )
     {
         $this->id = $id;
         $this->label = $label;
         $this->type = $type;
         $this->style = $style;
         $this->onclick = $onclick;
+
     }
 
     /**

@@ -21,7 +21,8 @@ use Endroid\QrCode\Writer\PngWriter;
 use App\Models\RecentActivity;
 use App\Models\File;
 use Exception;
-
+use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\ImageManager;
 class UploadController extends Controller
 {
     public function StoreFile(Request $request)
@@ -94,6 +95,10 @@ class UploadController extends Controller
             Storage::disk('public')->put($qrCodeFilePath, $result->getString());
             // Log file and QR code paths
 
+            if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                // Embed QR code in image file
+                $filePath = $this->embedQrCodeInImage($filePath, $qrCodeFilePath);
+            }
             if ($extension === 'pdf') {
                 $filePath = $this->embedQrCodeInPdf($filePath, $qrCodeFilePath);
             } elseif ($extension === 'zip') {
@@ -126,6 +131,43 @@ class UploadController extends Controller
             'debug' => $request->all(),
         ]);
     }
+
+    public function embedQrCodeInImage($filePath, $qrCodeFilePath)
+    {
+        try {
+            $manager = ImageManager::gd();
+
+            // $image = Image::read(Storage::disk('public')->path($filePath));
+            // $qrCode = Image::read(Storage::disk('public')->path($qrCodeFilePath));
+            $image = $manager->read(Storage::disk('public')->path($filePath));
+
+            $qrCode = $manager->read(Storage::disk('public')->path($qrCodeFilePath));
+
+            // Resize the QR code (watermark)
+            $qrCode->resize(150, 150);
+
+            $image->place(
+                $qrCode,
+                'bottom-right',
+                10,
+                10,
+                100
+            );
+
+            // Insert the QR code
+            // $qrCode->resize(100, 100);
+            // $image->insert($qrCode, 'bottom-right', 10, 10);
+
+            // Save the final image
+            $image->save(Storage::disk('public')->path($filePath));
+
+            return $filePath;
+        } catch (\Exception $e) {
+            \Log::error('Error embedding QR code into image: ' . $e->getMessage());
+            return null;
+        }
+    }
+
     private function processZipFile($filePath, $qrCodePath)
     {
         // Full path to the original ZIP file
@@ -269,16 +311,46 @@ class UploadController extends Controller
             }
 
             if ($file->permit_type) {
+                // Get the new destination municipality
                 $destinationMunicipality = $request->input('move_to_municipality');
+                // Set the new file path
                 $newFilePath = "PENRO/uploads/{$file->permit_type}/{$destinationMunicipality}";
 
-                Storage::disk('public')->move($currentFilePath, $newFilePath);
+                // Ensure the destination directory exists, create it if it doesn't
+                if (!Storage::disk('public')->exists("PENRO/uploads/{$file->permit_type}")) {
+                    Storage::disk('public')->makeDirectory("PENRO/uploads/{$file->permit_type}");
+                }
 
-                $file->update(['municipality' => $destinationMunicipality]);
+                if (!Storage::disk('public')->exists("PENRO/uploads/{$file->permit_type}/{$destinationMunicipality}")) {
+                    Storage::disk('public')->makeDirectory("PENRO/uploads/{$file->permit_type}/{$destinationMunicipality}");
+                }
+                $fullMovePath = $newFilePath . '/' . $file->file_name;
+                // Move the file to the new location
+                Storage::disk('public')->move($currentFilePath, $fullMovePath);
+
+                // Update the file's municipality
+                $file->update(['municipality' => $destinationMunicipality, 'file_path' => $fullMovePath]);
             } else {
+                // Get the new destination report type
                 $destinationReportType = $request->input('move_to_report_type');
-                $file->update(['report_type' => $destinationReportType]);
+
+                // Set the new file path
+                $newFilePath = "PENRO/uploads/{$destinationReportType}";
+
+                // Ensure the destination directory exists, create it if it doesn't
+                if (!Storage::disk('public')->exists("PENRO/uploads/{$destinationReportType}")) {
+                    Storage::disk('public')->makeDirectory("PENRO/uploads/{$destinationReportType}");
+                }
+
+                $fullMovePath = $newFilePath . '/' . $file->file_name;
+                // Move the file to the new location
+                Storage::disk('public')->move($currentFilePath, $fullMovePath);
+
+                // Update the file's report type
+                $file->update(['report_type' => $destinationReportType, 'file_path' => $fullMovePath]);
+
             }
+
             DB::commit();
             return response()->json([
                 'success' => true,

@@ -33,12 +33,9 @@ class FileController extends Controller
 
         if ($extension === 'pdf') {
             $contentType = 'application/pdf';
-        } elseif ($extension === 'doc') {
-            $contentType = 'application/msword'; // Correct MIME type for DOC files
-        } elseif ($extension === 'docx') {
-            $contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // Correct MIME type for DOCX files
-        }// add zip
-
+        } elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff'])) {
+            $contentType = 'image/' . $extension; // Set appropriate image content type
+        }
         return response()->file($filePath, [
             'Content-Type' => $contentType,
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',

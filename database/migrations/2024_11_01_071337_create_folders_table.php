@@ -12,7 +12,9 @@ return new class extends Migration {
     {
         Schema::create('folders', function (Blueprint $table) {
             $table->id();
-            $table->string('file_name');
+            $table->string('folder_path');
+            $table->string('folder_type');
+            $table->boolean('is_archive')->default(false);
             $table->timestamps();
         });
     }
