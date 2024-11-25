@@ -42,7 +42,7 @@
             </button>
             <!-- Notifications -->
             <button type="button" data-dropdown-toggle="notification-dropdown"
-                class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100   focus:ring-4 focus:ring-gray-300 ">
+                class="relative p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100   focus:ring-4 focus:ring-gray-300 ">
                 <span class="sr-only">View notifications</span>
                 <!-- Bell icon -->
                 <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
@@ -51,6 +51,8 @@
                         d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z">
                     </path>
                 </svg>
+                <span id="notification-indicator"
+                    class="top-1 start-5 absolute w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
             <!-- Dropdown menu -->
             <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white divide-y divide-gray-100 shadow-lg  rounded-md"
@@ -58,9 +60,37 @@
                 <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 ">
                     Notifications
                 </div>
-                <div id="notifications-list">
+                <div id="notifications-list" class="max-h-[calc(80vh-100px)] overflow-auto">
+                    <template id="notification-list-template">
+                        <li class="border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow">
+                            <a href="#" class="flex items-center px-4 py-3 bg-white hover:bg-gray-50 rounded-lg">
+                                <div class="flex-shrink-0">
+                                    <!-- Add a placeholder or dynamic image -->
+                                    {{-- <img class="rounded-full w-12 h-12 border border-gray-300"
+                                        src="/path/to/placeholder.jpg" alt="User avatar"> --}}
+                                </div>
+                                <div class="flex-grow ml-4">
+                                    <div class="text-gray-700 text-sm font-medium whitespace-normal break-all">
+                                        <span class="fileShare-sender-name text-blue-600 font-semibold"></span>
+                                        shared
+                                        <span class="fileShare-file-name font-medium text-gray-900"></span>
+                                        to
+                                        <span class="fileShare-receiver-name text-blue-600 font-semibold">you.</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <span class="notification-time">Just now</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </template>
 
-                    <!-- Notifications will be dynamically loaded here -->
+                    <ul id="notification-list" class=" border rounded p-4 space-y-4 ">
+                        <li id="no-notifications-message" class="hidden text-center text-gray-500">No notifications
+                            available.</li>
+                        <!-- Notifications will be dynamically loaded here -->
+                    </ul>
+
                 </div>
                 <a href="#"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">

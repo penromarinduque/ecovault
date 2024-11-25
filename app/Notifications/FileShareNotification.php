@@ -5,21 +5,23 @@ namespace App\Notifications;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Broadcasting\PrivateChannel;
-
+use App\Models\File;
+use App\Models\User;
 class FileShareNotification extends Notification implements ShouldBroadcast
 {
     public $fileId;
-    public $userId;
-    public $sharedBy;
+    public $receiverId;
+    public $senderId;
     public $remarks;
-    public $info;
-    public function __construct(int $fileId, int $userId, int $sharedBy, string $remarks, string $info)
+    public $notifyType;
+
+    public function __construct(int $fileId, int $receiverId, int $senderId, string $remarks, string $notifyType)
     {
         $this->fileId = $fileId;
-        $this->userId = $userId;
-        $this->sharedBy = $sharedBy;
+        $this->receiverId = $receiverId;
+        $this->senderId = $senderId;
         $this->remarks = $remarks;
-        $this->info = $info;
+        $this->notifyType = $notifyType;
 
     }
 
@@ -30,7 +32,7 @@ class FileShareNotification extends Notification implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->receiverId);
     }
 
     public function broadcastWith(): array
@@ -38,10 +40,13 @@ class FileShareNotification extends Notification implements ShouldBroadcast
 
         return [
             'fileId' => $this->fileId,
-            'userId' => $this->userId,
-            'sharedBy' => $this->sharedBy,
+            'fileName' => File::find($this->fileId)->file_name ?? 'Unknown File',
+            'receiverId' => $this->receiverId,
+            'receiverName' => User::find($this->receiverId)->name ?? 'Unknown User',
+            'senderId' => $this->senderId,
+            'senderName' => User::find($this->senderId)->name ?? 'Unknown User',
             'message' => $this->remarks,
-            'info' => $this->info,
+            'notifyType' => $this->notifyType,
         ];
     }
 
@@ -49,10 +54,13 @@ class FileShareNotification extends Notification implements ShouldBroadcast
     {
         return [
             'fileId' => $this->fileId,
-            'userId' => $this->userId,
-            'sharedBy' => $this->sharedBy,
+            'fileName' => File::find($this->fileId)->file_name ?? 'Unknown File',
+            'receiverId' => $this->receiverId,
+            'receiverName' => User::find($this->receiverId)->name ?? 'Unknown User',
+            'senderId' => $this->senderId,
+            'senderName' => User::find($this->senderId)->name ?? 'Unknown User',
             'message' => $this->remarks,
-            'info' => $this->info
+            'notifyType' => $this->notifyType,
         ];
     }
 }

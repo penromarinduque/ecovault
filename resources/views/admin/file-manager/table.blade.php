@@ -6,7 +6,7 @@
 
     <div class="overflow-auto rounded-md text-black p-4">
 
-        <div class="w-full">
+        <div class="w-full flex">
             <div class="space-x-3 mb-4">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <x-button id="" label="Create a Folder" style="secondary" />
@@ -108,5 +108,6 @@
             </div>
         </div>
     </div>
+
     @include('admin.file-manager.component.js')
 @endsection

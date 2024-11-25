@@ -7,6 +7,7 @@ use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\File;
 use App\Notifications\FileShareNotification;
 class FileShareController extends Controller
 {
@@ -25,11 +26,10 @@ class FileShareController extends Controller
 
         try {
 
-            $adminId = auth()->id();
-
+            $senderId = auth()->id();
             $fileId = $validated['file_id'];
-            $userId = $validated['shared_with_user_id'];
-            $sharedBy = $adminId;  // Assuming the admin is the one sharing the file
+            $receiverId = $validated['shared_with_user_id'];
+            $sharedBy = $senderId;  // Assuming the admin is the one sharing the file
             $remarks = $validated['remarks'];  // Use the remarks field for the message
             //$expirationDate = $validated['expiration_date'];
 
@@ -41,15 +41,15 @@ class FileShareController extends Controller
                 'remarks' => $validated['remarks'],
                 'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
             ]);
-            $user = User::findOrFail($userId);
-            $info = 'Shared a File';
-            $user->notify(new FileShareNotification($fileId, $userId, $sharedBy, $remarks, $info));
+
+            $user = User::findOrFail($receiverId);
+
+            $user->notify(new FileShareNotification($fileId, $receiverId, $senderId, $remarks, 'file share'));
 
 
             return response()->json([
                 'success' => true,
                 'message' => 'File shared successfully!',
-                'userId' => $userId,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -113,7 +113,7 @@ class FileShareController extends Controller
         ]);
 
         $admin = User::where('isAdmin', 'true')->first(); // Or find the appropriate admin
-        $admin->notify(new FileAccessRequestNotification($fileAccessRequest));
+        // $admin->notify(new FileAccessRequestNotification($fileAccessRequest));
 
         // Return a JSON response with the created request data
         return response()->json([
