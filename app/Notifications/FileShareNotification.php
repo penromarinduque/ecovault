@@ -22,7 +22,6 @@ class FileShareNotification extends Notification implements ShouldBroadcast
         $this->senderId = $senderId;
         $this->remarks = $remarks;
         $this->notifyType = $notifyType;
-
     }
 
     public function via($notifiable): array

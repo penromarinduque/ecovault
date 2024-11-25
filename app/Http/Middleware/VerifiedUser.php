@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+
 class VerifiedUser
 {
     /**
@@ -15,17 +16,18 @@ class VerifiedUser
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Ensure user is authenticated
         $user = $request->user();
 
+        // If the user is not authenticated or their email is not verified
         if (!$user || !$user->hasVerifiedEmail()) {
-            return redirect()->route('verification.show')
-                ->withErrors(['error' => 'Email verification required.']);
+            $route = $user ? 'verification.show' : 'login.show'; // Redirect to either verification or login
+            $message = $user ? 'Email verification required.' : 'Access Denied'; // Custom message based on condition
+
+            return redirect()->route($route)->withErrors(['error' => $message]);
         }
 
-        if (!$user) {
-            return redirect('/login')->withErrors(['error' => 'Access Denied']);
-        }
-
+        // Continue with the request if all checks pass
         return $next($request);
     }
 }

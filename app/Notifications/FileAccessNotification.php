@@ -10,23 +10,26 @@ use Illuminate\Notifications\Notification;
 class FileAccessNotification extends Notification
 {
     use Queueable;
+    public $fileId;
+    public $receiverId;
+    public $senderId;
+    public $remarks;
+    public $notifyType;
+    public $status;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
+    public function __construct(int $fileId, int $receiverId, int $senderId, string $remarks, string $notifyType, string $status)
     {
-        //
+        $this->fileId = $fileId;
+        $this->receiverId = $receiverId;
+        $this->senderId = $senderId;
+        $this->remarks = $remarks;
+        $this->notifyType = $notifyType;
+        $this->status = $status;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['broadcast', 'database'];
     }
 
     /**
@@ -35,9 +38,9 @@ class FileAccessNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**

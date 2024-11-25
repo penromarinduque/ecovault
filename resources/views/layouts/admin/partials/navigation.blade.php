@@ -52,7 +52,7 @@
                     </path>
                 </svg>
                 <span id="notification-indicator"
-                    class="top-1 start-5 absolute w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
+                    class="hidden top-1 start-5 absolute w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
             <!-- Dropdown menu -->
             <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white divide-y divide-gray-100 shadow-lg  rounded-md"
@@ -60,16 +60,17 @@
                 <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 ">
                     Notifications
                 </div>
-                <div id="notifications-list" class="max-h-[calc(80vh-100px)] overflow-auto">
+                <div class="max-h-[calc(80vh-100px)] overflow-auto">
                     <template id="notification-list-template">
-                        <li class="border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow">
-                            <a href="#" class="flex items-center px-4 py-3 bg-white hover:bg-gray-50 rounded-lg">
+                        <li class="border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow mb-3">
+                            <a href="#"
+                                class="flex items-center px-4 py-3 mt-0 bg-white hover:bg-gray-50 rounded-lg">
                                 <div class="flex-shrink-0">
                                     <!-- Add a placeholder or dynamic image -->
                                     {{-- <img class="rounded-full w-12 h-12 border border-gray-300"
                                         src="/path/to/placeholder.jpg" alt="User avatar"> --}}
                                 </div>
-                                <div class="flex-grow ml-4">
+                                <div class="flex-grow">
                                     <div class="text-gray-700 text-sm font-medium whitespace-normal break-all">
                                         <span class="fileShare-sender-name text-blue-600 font-semibold"></span>
                                         shared
@@ -85,9 +86,11 @@
                         </li>
                     </template>
 
-                    <ul id="notification-list" class=" border rounded p-4 space-y-4 ">
-                        <li id="no-notifications-message" class="hidden text-center text-gray-500">No notifications
-                            available.</li>
+                    <ul id="notifications-list" class=" border rounded px-4 py-4 ">
+                        <p id="no-notifcations-message" class=" text-center font-semibold bg-white text-gray-500">No
+                            notifications
+                            available.</p>
+
                         <!-- Notifications will be dynamically loaded here -->
                     </ul>
 
