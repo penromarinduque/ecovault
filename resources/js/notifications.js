@@ -15,13 +15,16 @@ export function updateFetchNotification() {
             } else {
                 notificationIndicator.classList.remove('hidden');
                 noNotificationsMessage.classList.add('hidden'); // Hide the "No notifications" message
+
+
                 notifications.forEach(notification => {
                     // Access the template and clone its content
                     const template = document.getElementById('notification-list-template');
                     const templateContent = template.content.cloneNode(true); // Clone the template content
 
-                    templateContent.querySelector('.fileShare-sender-name').textContent = notification.data.senderName;
-                    templateContent.querySelector('.fileShare-file-name').textContent = notification.data.fileName;
+                    templateContent.querySelector('.notice-sender-name').textContent = notification.data.senderName;
+                    templateContent.querySelector('.notice-type').textContent = notification.data.notifyType;
+                    templateContent.querySelector('.notice-file-name').textContent = notification.data.fileName;
 
                     notificationsList.appendChild(templateContent); // Append each notification
                 });
@@ -31,3 +34,4 @@ export function updateFetchNotification() {
             console.error('Error fetching notifications:', error);
         });
 }
+

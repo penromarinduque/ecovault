@@ -14,11 +14,10 @@ class FileShareController extends Controller
     public function ShareFile(Request $request)
     {
 
-
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
-            'remarks' => 'required',
+            'remarks' => 'nullable|string',
             'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
         ]);
 
@@ -29,22 +28,20 @@ class FileShareController extends Controller
             $senderId = auth()->id();
             $fileId = $validated['file_id'];
             $receiverId = $validated['shared_with_user_id'];
-            $sharedBy = $senderId;  // Assuming the admin is the one sharing the file
             $remarks = $validated['remarks'];  // Use the remarks field for the message
             //$expirationDate = $validated['expiration_date'];
 
 
-            FileShares::create([
+            FileShares::create(attributes: [
                 'file_id' => $validated['file_id'],
                 'shared_with_user_id' => $validated['shared_with_user_id'],
                 'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
-                'remarks' => $validated['remarks'],
                 'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
             ]);
 
             $user = User::findOrFail($receiverId);
 
-            $user->notify(new FileShareNotification($fileId, $receiverId, $senderId, $remarks, 'file share'));
+            $user->notify(new FileShareNotification($fileId, $receiverId, $senderId, $remarks, 'shared file'));
 
 
             return response()->json([
@@ -64,7 +61,6 @@ class FileShareController extends Controller
         // Validate the incoming request
         $request->validate([
             'file_id' => 'required|exists:files,id',
-            'requested_permission' => 'required|in:viewer,editor,admin',
             'remarks' => 'nullable|string|max:255',
         ]);
 
@@ -90,7 +86,6 @@ class FileShareController extends Controller
                 // Optionally, you can allow resubmission if the previous request was rejected
                 // You might want to reset the remarks or permission
                 $existingRequest->update([
-                    'requested_permission' => $request->requested_permission,
                     'remarks' => $request->remarks,
                     'status' => 'pending', // Reset status to pending for resubmission
                 ]);
@@ -107,7 +102,6 @@ class FileShareController extends Controller
         $fileAccessRequest = FileAccessRequests::create([
             'file_id' => $request->file_id,
             'requested_by_user_id' => auth()->id(),
-            'requested_permission' => $request->requested_permission,
             'remarks' => $request->remarks,
             'status' => 'pending', // Default status when creating a new request
         ]);
@@ -123,7 +117,6 @@ class FileShareController extends Controller
                 'id' => $fileAccessRequest->id,
                 'file_id' => $fileAccessRequest->file_id,
                 'requested_by_user_id' => $fileAccessRequest->requested_by_user_id,
-                'requested_permission' => $fileAccessRequest->requested_permission,
                 'remarks' => $fileAccessRequest->remarks,
                 'status' => $fileAccessRequest->status,
                 'created_at' => $fileAccessRequest->created_at,
@@ -181,7 +174,6 @@ class FileShareController extends Controller
                 'file_id' => $fileAccessRequest->file_id,
                 'shared_with_user_id' => $fileAccessRequest->requested_by_user_id,
                 'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
-                'permission' => $fileAccessRequest->requested_permissionrequested_permission,
             ]);
 
             return response()->json([

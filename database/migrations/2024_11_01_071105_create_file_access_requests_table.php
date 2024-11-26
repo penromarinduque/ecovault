@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->foreignId('requested_by_user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('handled_by_admin_id')->nullable()->constrained('users')->onDelete('set null');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->enum('requested_permission', ['viewer', 'editor', 'admin'])->default('viewer');
-            $table->string('remarks')->nullable();
+            $table->date('start_date')->nullable(); // Date when access starts
+            $table->date('expiration_date')->nullable(); // Date when access ends
             $table->timestamps();
         });
     }

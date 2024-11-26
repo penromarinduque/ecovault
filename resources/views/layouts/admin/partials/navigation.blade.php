@@ -55,36 +55,13 @@
                     class="hidden top-1 start-5 absolute w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
             <!-- Dropdown menu -->
+            @include('components.notification.notification')
             <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white divide-y divide-gray-100 shadow-lg  rounded-md"
                 id="notification-dropdown">
                 <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 ">
                     Notifications
                 </div>
                 <div class="max-h-[calc(80vh-100px)] overflow-auto">
-                    <template id="notification-list-template">
-                        <li class="border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow mb-3">
-                            <a href="#"
-                                class="flex items-center px-4 py-3 mt-0 bg-white hover:bg-gray-50 rounded-lg">
-                                <div class="flex-shrink-0">
-                                    <!-- Add a placeholder or dynamic image -->
-                                    {{-- <img class="rounded-full w-12 h-12 border border-gray-300"
-                                        src="/path/to/placeholder.jpg" alt="User avatar"> --}}
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="text-gray-700 text-sm font-medium whitespace-normal break-all">
-                                        <span class="fileShare-sender-name text-blue-600 font-semibold"></span>
-                                        shared
-                                        <span class="fileShare-file-name font-medium text-gray-900"></span>
-                                        to
-                                        <span class="fileShare-receiver-name text-blue-600 font-semibold">you.</span>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        <span class="notification-time">Just now</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </template>
 
                     <ul id="notifications-list" class=" border rounded px-4 py-4 ">
                         <p id="no-notifcations-message" class=" text-center font-semibold bg-white text-gray-500">No

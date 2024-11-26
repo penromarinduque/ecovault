@@ -11,8 +11,8 @@ class FileAccessRequests extends Model
         'requested_by_user_id',
         'handled_by_admin_id',
         'status',
-        'requested_permission',
-        'remarks',
+        'start_date',
+        'expiration_date',
     ];
 
     public function file()

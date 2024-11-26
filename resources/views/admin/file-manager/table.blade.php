@@ -18,9 +18,6 @@
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-
-
-
         @component('components.addfile.add-file', [
             'type' => $type ?? '',
         
@@ -37,7 +34,7 @@
         ])
         @endcomponent
         <div class="grid">
-            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
+            <div id="mainTable" class="duration-500 ease-in-out opacity-100 ">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->
@@ -53,7 +50,7 @@
                 </div>
             </div>
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-3 gap-4 ">
                     <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
                             'type' => $type ?? '',
@@ -67,7 +64,7 @@
                         <!-- minimize table here-->
                     </div>
 
-                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
+                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md animate-slideIn">
                         {{-- this for upload --}}
                         @component('components.move.move-file', [
                             'type' => $type ?? '',

@@ -15,7 +15,7 @@ class FileShareNotification extends Notification implements ShouldBroadcast
     public $remarks;
     public $notifyType;
 
-    public function __construct(int $fileId, int $receiverId, int $senderId, string $remarks, string $notifyType)
+    public function __construct(int $fileId, int $receiverId, int $senderId, string $remarks = null, string $notifyType)
     {
         $this->fileId = $fileId;
         $this->receiverId = $receiverId;
@@ -46,6 +46,7 @@ class FileShareNotification extends Notification implements ShouldBroadcast
             'senderName' => User::find($this->senderId)->name ?? 'Unknown User',
             'message' => $this->remarks,
             'notifyType' => $this->notifyType,
+            'title' => 'New Notification',
         ];
     }
 
