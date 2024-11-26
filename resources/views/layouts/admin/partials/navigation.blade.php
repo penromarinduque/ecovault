@@ -42,7 +42,7 @@
             </button>
             <!-- Notifications -->
             <button type="button" data-dropdown-toggle="notification-dropdown"
-                class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100   focus:ring-4 focus:ring-gray-300 ">
+                class="relative p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100   focus:ring-4 focus:ring-gray-300 ">
                 <span class="sr-only">View notifications</span>
                 <!-- Bell icon -->
                 <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
@@ -51,16 +51,26 @@
                         d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z">
                     </path>
                 </svg>
+                <span id="notification-indicator"
+                    class="hidden top-1 start-5 absolute w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
             <!-- Dropdown menu -->
+            @include('components.notification.notification')
             <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white divide-y divide-gray-100 shadow-lg  rounded-md"
                 id="notification-dropdown">
                 <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 ">
                     Notifications
                 </div>
-                <div id="notifications-list">
+                <div class="max-h-[calc(80vh-100px)] overflow-auto">
 
-                    <!-- Notifications will be dynamically loaded here -->
+                    <ul id="notifications-list" class=" border rounded px-4 py-4 ">
+                        <p id="no-notifcations-message" class=" text-center font-semibold bg-white text-gray-500">No
+                            notifications
+                            available.</p>
+
+                        <!-- Notifications will be dynamically loaded here -->
+                    </ul>
+
                 </div>
                 <a href="#"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">

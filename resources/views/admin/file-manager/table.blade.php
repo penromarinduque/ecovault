@@ -6,7 +6,7 @@
 
     <div class="overflow-auto rounded-md text-black p-4">
 
-        <div class="w-full">
+        <div class="w-full flex">
             <div class="space-x-3 mb-4">
                 <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
                 <button id='add-folder-btn' data-modal-target="add-folder-modal" data-modal-toggle="add-folder-modal"
@@ -18,9 +18,6 @@
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-
-
-
         @component('components.addfile.add-file', [
             'type' => $type ?? '',
             'municipality' => $municipality ?? '',
@@ -42,7 +39,7 @@
             @endcomponent
 
 
-            <div id="mainTable" class="hidden  transition-opacity duration-500 ease-in-out opacity-100 ">
+            <div id="mainTable" class="duration-500 ease-in-out opacity-100 ">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->
@@ -58,7 +55,7 @@
                 </div>
             </div>
             <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-3 gap-4 ">
                     <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
                             'type' => $type ?? '',
@@ -72,7 +69,7 @@
                         <!-- minimize table here-->
                     </div>
 
-                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
+                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md animate-slideIn">
                         {{-- this for upload --}}
                         @component('components.move.move-file', [
                             'type' => $type ?? '',
@@ -125,5 +122,6 @@
             </div>
         </div>
     </div>
+
     @include('admin.file-manager.component.js')
 @endsection

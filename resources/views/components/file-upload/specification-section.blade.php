@@ -2,9 +2,8 @@
     <section class="col-span-2 w-full mt-10">
         <!-- Main modal -->
         <div class="overflow-y-auto overflow-x-hidden">
-
             <div class="bg-transparent">
-                <div id="file-specification-container" class="grid grid-cols-2 gap-y-10 gap-x-10">
+                <div id="file-specification-container" class="grid grid-cols-1 gap-y-10 gap-x-10">
                     <template id="file-specification-template">
                         <div class="file-specification-box col-span-1 border border-gray-500 rounded-md">
                             <div class="flex items-center justify-between">

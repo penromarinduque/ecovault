@@ -12,8 +12,6 @@ class FileShares extends Model
         'file_id',
         'shared_with_user_id',
         'shared_by_admin_id',
-        'remarks',
         'expiration_date'
-
     ];
 }

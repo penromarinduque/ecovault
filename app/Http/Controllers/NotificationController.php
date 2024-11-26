@@ -10,9 +10,7 @@ class NotificationController extends Controller
     public function getNotifications()
     {
 
-
-        $user = User::first();
-        $notifications = $user()->user->unreadNotifications;
+        $notifications = Auth::user()->notifications()->latest()->take(10)->get();
         return response()->json($notifications);
 
     }

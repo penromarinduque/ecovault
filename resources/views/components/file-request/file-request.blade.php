@@ -31,24 +31,12 @@
                                  disabled>
 
                          </div>
-
-                         <div class="col-span-2">
-                             <label for="category"
-                                 class="block mb-2 text-sm font-medium text-gray-900 ">Category</label>
-                             <select id="category"
-                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                 <option selected="">Select permission</option>
-                                 <option value="viewer">Viewer</option>
-                                 <option value="editor">Editor</option>
-                             </select>
-                         </div>
-
                          <div class="col-span-2">
                              <label for="request-remarks"
                                  class="block mb-2 text-sm font-medium text-gray-900 ">Remarks</label>
                              <textarea id="request-remarks" rows="4"
                                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-green-500 focus:border-green-500 "
-                                 placeholder="Write remarks here" required></textarea>
+                                 placeholder="Write remarks here"></textarea>
                          </div>
 
                          <input type="hidden" id="request-file-id">
@@ -74,16 +62,13 @@
              const userId = document.getElementById("request-user-id")
                  .value; // Get user ID from hidden input
              // Get other form values
-             const requestedPermission = document.getElementById("category")
-                 .value; // Get selected permission
-             const remarks = document.getElementById("remarks").value; // Get remarks
+             const remarks = document.getElementById("request-remarks").value; // Get remarks
              const csrfToken = document.querySelector('input[name="_token"]').value;
 
              // Create the request payload
              const requestData = {
                  file_id: fileId,
                  requested_by_user_id: userId, // Current user's ID
-                 requested_permission: requestedPermission,
                  remarks: remarks
              };
 
