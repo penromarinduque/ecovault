@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('folder_path');
             $table->string('folder_type');
+            $table->string('municipality')->nullable();
             $table->boolean('is_archive')->default(false);
             $table->timestamps();
         });

@@ -48,6 +48,7 @@
 
                     <div>
                         <input type="hidden" name="folder_type" id="folder_type">
+                        <input type="hidden" name="folder_municipality" id="folder_municipality">
                     </div>
 
                     <button type="submit"
@@ -96,29 +97,29 @@
 
 
 
-    function fetchFolders(folderType) {
-        fetch(`/api/folders?folderType=${folderType}`) // Assuming you have a route to fetch the list of folders
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const folderSelect = document.getElementById('existing_folder');
-                    // Clear previous options
-                    folderSelect.innerHTML = '<option value="">-- Select Existing Folder --</option>';
+    // function fetchFolders(folderType) {
+    //     fetch(`/api/folders?folderType=${folderType}`) // Assuming you have a route to fetch the list of folders
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.success) {
+    //                 const folderSelect = document.getElementById('existing_folder');
+    //                 // Clear previous options
+    //                 folderSelect.innerHTML = '<option value="">-- Select Existing Folder --</option>';
 
-                    // Populate dropdown with fetched folders
-                    data.folders.forEach(folder => {
-                        const option = document.createElement('option');
-                        option.value = folder
-                            .folder_path; // Assuming 'folder' is the folder path or identifier
-                        option.textContent = folder.folder_path; // Display folder name
-                        folderSelect.appendChild(option);
-                    });
-                } else {
+    //                 // Populate dropdown with fetched folders
+    //                 data.folders.forEach(folder => {
+    //                     const option = document.createElement('option');
+    //                     option.value = folder
+    //                         .folder_path; // Assuming 'folder' is the folder path or identifier
+    //                     option.textContent = folder.folder_path; // Display folder name
+    //                     folderSelect.appendChild(option);
+    //                 });
+    //             } else {
 
-                }
-            })
-            .catch(error => console.error('Error fetching folders:', error));
-    }
+    //             }
+    //         })
+    //         .catch(error => console.error('Error fetching folders:', error));
+    // }
 
     // Listen for when the modal is shown
     document.getElementById('add-folder-btn').addEventListener('click', function() {
@@ -128,8 +129,12 @@
 
         console.log(folderType)
         const fieldFolderType = document.getElementById('folder_type');
-        fieldFolderType.value = folderType;
+        const fieldMunicipality = document.getElementById('folder_municipality');
 
+
+        fieldFolderType.value = folderType;
+        fieldMunicipality.value = municipality;
+        //municipality
 
     });
 </script>

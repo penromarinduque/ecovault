@@ -23,7 +23,7 @@
 
         @component('components.addfile.add-file', [
             'type' => $type ?? '',
-        
+            'municipality' => $municipality ?? '',
             'isArchived' => false,
         ])
         @endcomponent
@@ -37,7 +37,12 @@
         ])
         @endcomponent
         <div class="grid">
-            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100 ">
+
+            @component('components.folders')
+            @endcomponent
+
+
+            <div id="mainTable" class="hidden  transition-opacity duration-500 ease-in-out opacity-100 ">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->

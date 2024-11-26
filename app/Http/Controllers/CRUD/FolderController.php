@@ -13,7 +13,7 @@ class FolderController extends Controller
     public function AddFolder(Request $request)
     {
         try {
-            $folder = Folder::create(['folder_path' => $request->folder_path, 'folder_type' => $request->folder_type]);
+            $folder = Folder::create(['folder_path' => $request->folder_path, 'folder_type' => $request->folder_type, 'municipality' => $request->folder_municipality]);
             return response()->json([
                 'success' => true,
                 'message' => 'Folders Added Successful',
@@ -32,7 +32,7 @@ class FolderController extends Controller
     public function GetFolders(Request $request)
     {
         try {
-            $folders = Folder::where('folder_type', $request->query('folderType'))->get();
+            $folders = Folder::where('folder_type', $request->query('folderType'))->where('municipality', $request->query('municipality'))->get();
 
             return response()->json([
                 'success' => true,

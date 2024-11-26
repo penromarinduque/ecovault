@@ -7,15 +7,19 @@ use App\Models\RecentActivity;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\File;
+use App\Models\Config;
 use Illuminate\Database\QueryException;
 class StorageController extends Controller
 {
     public function GetStorageUsage()
     {
         try {
+
+            $drive = Config::first();
+
             // Total and available space on the C: drive
-            $totalSpace = disk_total_space('C:') / (1024 * 1024 * 1024); // Convert to GB
-            $freeSpace = disk_free_space('C:') / (1024 * 1024 * 1024);   // Convert to GB
+            $totalSpace = disk_total_space($drive->Drive) / (1024 * 1024 * 1024); // Convert to GB
+            $freeSpace = disk_free_space($drive->Drive) / (1024 * 1024 * 1024);   // Convert to GB
             $usedSpace = $totalSpace - $freeSpace;
 
             // Calculate the size of the C:\PENRO directory
