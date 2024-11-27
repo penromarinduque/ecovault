@@ -1,4 +1,4 @@
-<div>
+{{-- <div>
     <!-- Folder cards will be dynamically appended here -->
 </div>
 
@@ -16,4 +16,4 @@
         const folderType = type || record; // Replace with dynamic value if needed
         fetchFolders(folderType);
     });
-</script>
+</script> --}}

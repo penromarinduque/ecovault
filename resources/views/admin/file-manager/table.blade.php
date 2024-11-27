@@ -17,7 +17,7 @@
         </div>
 
 
-        @include('components.create-folder.create-folder')
+
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
         @component('components.addfile.add-file', [
@@ -37,7 +37,10 @@
         @endcomponent
         <div class="grid">
 
-            @component('components.folders')
+            @component('components.create-folder.create-folder', [
+                'type' => $type ?? '',
+                'municipality' => $municipality ?? '',
+            ])
             @endcomponent
 
 
