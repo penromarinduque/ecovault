@@ -3,17 +3,18 @@
 </div>
 
 <script>
-    function fetchFolders(folderType) {
-        fetch(`/api/folders?folderType=${folderType}&municipality=${municipality}`)
-            .then(response => response.json())
-            .then(data => {
+    // function fetchFolders(folderType) {
+    //     fetch(`/api/folders?folderType=${folderType}&municipality=${municipality}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log(data.folders)
 
-            })
-            .catch(error => console.error('Error fetching folders:', error));
-    }
+    //         })
+    //         .catch(error => console.error('Error fetching folders:', error));
+    // }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const folderType = type || record; // Replace with dynamic value if needed
-        fetchFolders(folderType);
-    });
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     const folderType = type || record; // Replace with dynamic value if needed
+    //     fetchFolders(folderType);
+    // });
 </script>

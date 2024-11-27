@@ -19,7 +19,7 @@
 
             <!-- QR Code result output -->
             <div id="qr-reader-results" class="text-center text-gray-800">
-                QR Code Result: <span id="output">None</span>
+                <span id="output"></span>
             </div>
 
             <!-- Start and Stop buttons -->
@@ -32,12 +32,20 @@
                     class="bg-red-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-red-600 ml-2 hidden">
                     Stop Scanner
                 </button>
+                <!-- Add Reset button -->
+
+
             </div>
 
             <!-- Go to URL button (hidden by default) -->
             <button id="go-to-url-button"
                 class="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-blue-600 mt-4 hidden">
                 Go to URL
+            </button>
+
+            <button id="reset-button"
+                class="bg-yellow-500 w-full text-white font-bold py-2 px-4 rounded hover:bg-yellow-600 mt-4 hidden">
+                Reset Scanner
             </button>
         </div>
     </div>
@@ -61,7 +69,28 @@
         let html5QrCode;
         let isScanning = false;
 
-        // Function to start scanning
+        const resetButton = document.getElementById('reset-button');
+
+        // Function to reset the scanner
+        function resetScanner() {
+            if (html5QrCode && isScanning) {
+                html5QrCode.stop().then(() => {
+                    // Clear previous scan result and indicator
+                    output.innerText = "";
+                    qrIndicator.classList.remove("success");
+                    goToUrlButton.classList.add("hidden");
+                    resetButton.classList.add("hidden");
+
+                    // Restart scanning with the current camera
+                    const selectedCameraId = cameraSelect.value;
+                    startScanning(selectedCameraId);
+                }).catch((err) => {
+                    console.error("Failed to reset the scanner:", err);
+                });
+            }
+        }
+
+        // Modify the QR code scanning success callback
         function startScanning(cameraId) {
             html5QrCode = new Html5Qrcode("qr-reader");
             html5QrCode.start(
@@ -74,14 +103,22 @@
                 },
                 (decodedText) => {
                     // Display the scanned result
-                    output.innerText = decodedText;
+                    output.innerText = "Scan Complete";
                     qrIndicator.classList.add("success");
 
-                    // Show "Go to URL" button with link to scanned URL
+                    // Show "Go to URL" and "Reset" buttons
                     goToUrlButton.classList.remove("hidden");
+                    resetButton.classList.remove("hidden");
+
                     goToUrlButton.onclick = () => {
-                        // window.location.href = decodedText;
-                        window.open(decodedText);
+
+                        if (decodedText.startsWith("qr-validation")) {
+                            // If the URL starts with "qr-validation", open it
+                            window.open(decodedText);
+                        } else {
+                            // If not, redirect to "/qr-validation/invalid"
+                            window.open("/qr-validation-invalid");
+                        }
                     };
 
                     setTimeout(() => {
@@ -100,6 +137,9 @@
                 alert("Could not start scanner. Check console for details.");
             });
         }
+
+        // Add an event listener to the reset button
+        resetButton.addEventListener("click", resetScanner);
 
         // Function to stop scanning
         function stopScanning() {

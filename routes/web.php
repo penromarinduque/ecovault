@@ -135,7 +135,9 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/folders', [FolderController::class, 'GetFolders']);
     Route::post('/api/folders/add', [FolderController::class, 'AddFolder']);
 
-
-
+    Route::get('/qr-validation/{id}', [AdminController::class, 'ShowQrRedirect'])->name('show.qr-validation');
+    Route::get('/qr-validation-invalid', function () {
+        return view('admin.qr-redirect-invalid');
+    });
 });
 

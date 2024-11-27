@@ -226,8 +226,8 @@ abstract class BaseController extends Controller
 
             $type = $request->query('type');
             // Retrieve the file by ID
-            $file = DB::table('files')->where('id', $id)->first();
-
+            //$file = DB::table('files')->where('id', $id)->first();
+            $file = File::find($id);
             if (!$file) {
                 return response()->json([
                     'success' => false,
@@ -235,12 +235,20 @@ abstract class BaseController extends Controller
                 ], 404);
             }
 
-            // Update the file's data
-            DB::table('files')->where('id', $id)->update([
+
+            $file->update([
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'),
                 'updated_at' => now(), // Set the update timestamp
             ]);
+
+
+            // // Update the file's data
+            // DB::table('files')->where('id', $id)->update([
+            //     'office_source' => $request->input('office_source'),
+            //     'classification' => $request->input('classification'),
+            //     'updated_at' => now(), // Set the update timestamp
+            // ]);
 
             // Check if permit data is provided
             if ($type) {

@@ -104,4 +104,34 @@ class File extends Model
     {
         return $this->hasMany(FileHistory::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($file) {
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'created',
+                'changes' => json_encode(['attributes' => $file->toArray()]),
+                'user_id' => auth()->id(), // The current user
+            ]);
+        });
+
+        static::updated(function ($file) {
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'updated',
+                'changes' => json_encode($file->getChanges()),
+                'user_id' => auth()->id(),
+            ]);
+        });
+
+        static::deleted(function ($file) {
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'deleted',
+                'changes' => null,
+                'user_id' => auth()->id(),
+            ]);
+        });
+    }
 }

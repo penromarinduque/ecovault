@@ -410,7 +410,8 @@
             const response = await editFileResponse.json();
             console.log("Update success:", response);
         } catch (error) {
-            console.error("Error:", error);
+            showToast(error.message, 'top-right', 'danger')
+
         }
     });
 

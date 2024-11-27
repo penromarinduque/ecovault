@@ -82,7 +82,7 @@ class UploadController extends Controller
             }
 
             $fileEntry = File::create($formData);
-            $url = url("/download/{$fileEntry->id}"); //previw page
+            $url = url("/qr-validation/{$fileEntry->id}"); //previw page
             $result = Builder::create()
                 ->writer(new PngWriter())
                 ->data($url)

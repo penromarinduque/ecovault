@@ -112,4 +112,9 @@ class AdminController extends Controller
     {
         return view('admin.scanQr');
     }
+
+    function ShowQrRedirect()
+    {
+        return view('admin.qr-redirect');
+    }
 }

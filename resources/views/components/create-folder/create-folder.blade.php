@@ -65,18 +65,18 @@
 
 
 <script>
-    let cardCoundter = 0;
+    let cardCounter = 0;
 
-    function createFolderCard(title, content) {
+    function createFolderCard(folderPath) {
         const template = document.querySelector('.folder-template');
         const cardClone = template.content.cloneNode(true);
 
         //set the content for the folder
-        cardClone.querySelector('.folder-title').textContent = title;
-        cardClone.querySelector('.folder-text').textContent = content;
+        cardClone.querySelector('.folder-title').textContent = folderPath;
+        // cardClone.querySelector('.folder-text').textContent = content;
 
         //get the dropdown
-        const dropdownId = `folder-dropdown-${++cardCoundter}`;
+        const dropdownId = `folder-dropdown-${++cardCounter}`;
         const dropdown = cardClone.querySelector('.folder-dropdown');
         const dropDownToggle = cardClone.querySelector('.folder-dropdown-btn');
 
@@ -87,9 +87,22 @@
         document.querySelector('.folder-container').appendChild(cardClone);
     }
 
-    createFolderCard('bots', 'test');
-    createFolderCard('ai', 'boost');
-    createFolderCard('bots', 'test');
-    createFolderCard('ai', 'boost');
-    createFolderCard('bots', 'test');
+    function fetchFolders(folderType) {
+        fetch(`/api/folders?folderType=${folderType}&municipality=${municipality}`)
+            .then(response => response.json())
+            .then(data => {
+
+                data.folders.forEach(folder => {
+                    console.log(folder.folder_path)
+                    createFolderCard(folder.folder_path); // Pass each folder to the function
+                });
+
+            })
+            .catch(error => console.error('Error fetching folders:', error));
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const folderType = type || record; // Replace with dynamic value if needed
+        fetchFolders(folderType);
+    });
 </script>

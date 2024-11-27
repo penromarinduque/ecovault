@@ -293,7 +293,6 @@
         }
         const allowedTypes = [
             'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'image/jpeg',
             'image/png',
             'application/zip',
@@ -325,10 +324,17 @@
 
 
     let fileId;
-
+    let canUpload = false;
+    document.getElementById('add-file-specification').addEventListener('click', function(event) {
+        canUpload = true;
+    })
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
-
+        //filter if not add specs
+        if (!canUpload) {
+            showToast("Add Specification before uploading", 'top-right', 'danger')
+            return;
+        }
         const csrfToken = "{{ csrf_token() }}";
         const uploadButton = document.getElementById('upload-btn');
         const buttonText = document.getElementById('button-text');
@@ -406,6 +412,10 @@
             this.reset();
         } catch (error) {
             showToast(error.message, 'top-right', 'danger')
+            uploadButton.disabled = false;
+            this.reset();
+            buttonText.classList.remove('hidden');
+            buttonSpinner.classList.add('hidden');
         }
     });
 
