@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\File;
 use App\Notifications\FileShareNotification;
+use App\Notifications\FileAccessNotification;
+use Notification;
 class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
@@ -97,8 +99,10 @@ class FileShareController extends Controller
                 ], 200); // 200 OK
             }
         }
+        $senderId = auth()->id();
+        $fileId = $request->file_id;
+        $remarks = $request->remarks;  // Use the remarks field for the message
 
-        // Create the file access request
         $fileAccessRequest = FileAccessRequests::create([
             'file_id' => $request->file_id,
             'requested_by_user_id' => auth()->id(),
@@ -106,8 +110,18 @@ class FileShareController extends Controller
             'status' => 'pending', // Default status when creating a new request
         ]);
 
-        $admin = User::where('isAdmin', 'true')->first(); // Or find the appropriate admin
-        // $admin->notify(new FileAccessRequestNotification($fileAccessRequest));
+        $admins = User::where('isAdmin', true)->get(); // Or find the appropriate admin
+
+        $notification = new FileAccessNotification(
+            $fileId,       // The ID of the file
+            null,          // Receiver ID is null since it's for admins
+            $senderId,     // Sender's ID (the user who wants to access the file)
+            $remarks,  // Remarks/message
+            'request access', // Notification type
+            'pending',     // Status
+            'admin'        // Recipient is admin
+        );
+        Notification::send($admins, $notification);
 
         // Return a JSON response with the created request data
         return response()->json([

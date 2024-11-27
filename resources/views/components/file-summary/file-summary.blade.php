@@ -10,7 +10,11 @@
             {{-- add summary --}}
             <button type="button" id="close-summary-btn"
                 class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <i class='bx bx-x bx-md'></i>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+
             </button>
         </div>
 
@@ -104,30 +108,34 @@
         @endif
         @if (in_array($type, ['tree-cutting-permits', 'tree-transport-permits']))
             <div class="relative overflow-x-auto mt-12">
-                <table class="w-full text-lg text-left text-gray-600 border border-gray-400">
-                    {{-- <caption class="p-5 text-lg font-semibold text-left text-gray-800 border border-gray-400">
-        Tree Specifications
-    </caption> --}}
-                    <thead class="text-xs text-gray-700 uppercase">
-                        <tr class="border border-gray-400">
-                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                <table
+                    class="w-full text-sm text-left text-gray-600 border-separate border-spacing-0.5 border border-gray-300 rounded-lg overflow-hidden">
+                    <!-- Optional Caption -->
+                    <!-- <caption class="p-4 text-lg font-semibold text-left text-gray-800">Tree Specifications</caption> -->
+
+                    <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
                                 Species
                             </th>
-                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
                                 Number
                             </th>
-                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
                                 Location
                             </th>
-                            <th scope="col" class="px-6 py-3 border border-gray-400">
+                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
                                 Date Applied
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="table-body" class="">
+                    <tbody id="table-body">
+                        <!-- Example Row -->
 
+                        <!-- Add more rows here -->
                     </tbody>
                 </table>
+
             </div>
         @endif
 

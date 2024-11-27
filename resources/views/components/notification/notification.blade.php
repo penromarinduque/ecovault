@@ -6,11 +6,8 @@
 
 <template id="notification-list-template">
     <li class="border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow mb-3">
-        <a href="#" class="flex items-center px-4 py-3 mt-0 bg-white hover:bg-gray-50 rounded-lg">
+        <a href="#" class="capitalize flex items-center px-4 py-3 mt-0 bg-white hover:bg-gray-50 rounded-lg">
             <div class="flex-shrink-0">
-                <!-- Add a placeholder or dynamic image -->
-                {{-- <img class="rounded-full w-12 h-12 border border-gray-300"
-                                        src="/path/to/placeholder.jpg" alt="User avatar"> --}}
             </div>
             <div class="flex-grow">
                 <div class="text-gray-700 text-sm font-medium whitespace-normal break-all">
@@ -28,7 +25,8 @@
 </template>
 
 <template id="notification-template">
-    <div class="notification-item w-full min-w-72 p-4 rounded-lg shadow bg-gray-800 text-gray-400" role="alert">
+    <div class="capitalize notification-item w-full min-w-72 p-4 rounded-lg shadow bg-gray-800 text-gray-400"
+        role="alert">
         <div class="flex">
             <div
                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg text-blue-300 bg-blue-900">
@@ -49,7 +47,7 @@
                 </div>
                 <h6 class="notification-message text-gray-100 mb-2 font-normal">"sample message"
                 </h6>
-                <div class="grid grid-cols-2 gap-2 ">
+                <div class="notification-action-btn grid grid-cols-2 gap-2">
                     <div>
                         <a href="#"
                             class="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white  rounded-lg  focus:ring-4 focus:outline-none  bg-blue-500 hover:bg-blue-600 focus:ring-blue-800">Approve</a>
@@ -89,6 +87,12 @@
         notificationFragment.querySelector('.notification-type').textContent = `${notifyType}:`;
         notificationFragment.querySelector('.notification-file-name').textContent = fileName;
         notificationFragment.querySelector('.notification-message').textContent = message ? `"${message}"` : '';
+
+        const actionsDiv = notificationFragment.querySelector('.notification-action-btn');
+        if (notifyType === 'file request') {
+            actionsDiv.classList.remove('hidden');
+        }
+
 
         // Create a wrapper for the notification to append properly
         const wrapper = document.createElement('div');

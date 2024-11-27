@@ -17,6 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ auth()->id() }}">
+    <meta name="user-is-admin" content="{{ json_encode(auth()->user()->isAdmin) }}">
 </head>
 
 <body class="bg-slate-100">

@@ -10,7 +10,7 @@
         <div class="grid max-w-screen-xl mx-auto lg:gap-8 xl:gap-8 lg:py-16 lg:grid-cols-12">
 
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                <img src="{{ asset('images/logo.png') }}" class="" alt="PENRO-logo">
+                <img src="{{ asset('images/updated-logo.png') }}" class="" alt="PENRO-logo">
             </div>
 
             <div class="mr-auto place-self-center lg:col-span-7">

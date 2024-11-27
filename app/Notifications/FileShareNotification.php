@@ -46,7 +46,6 @@ class FileShareNotification extends Notification implements ShouldBroadcast
             'senderName' => User::find($this->senderId)->name ?? 'Unknown User',
             'message' => $this->remarks,
             'notifyType' => $this->notifyType,
-            'title' => 'New Notification',
         ];
     }
 

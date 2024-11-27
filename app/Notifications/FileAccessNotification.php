@@ -2,29 +2,53 @@
 
 namespace App\Notifications;
 
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+//use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\File;
+use App\Models\User;
 
-class FileAccessNotification extends Notification
+class FileAccessNotification extends Notification implements ShouldBroadcast
 {
-    use Queueable;
+    //use Queueable;
     public $fileId;
     public $receiverId;
     public $senderId;
     public $remarks;
     public $notifyType;
     public $status;
+    public $recipient;
 
-    public function __construct(int $fileId, int $receiverId, int $senderId, string $remarks, string $notifyType, string $status)
-    {
+    public $fileName;
+    public $receiverName;
+    public $senderName;
+
+    public function __construct(
+        int $fileId,
+        ?int $receiverId,
+        int $senderId,
+        string $remarks,
+        string $notifyType,
+        string $status,
+        string $recipient
+    ) {
         $this->fileId = $fileId;
-        $this->receiverId = $receiverId;
+        $this->receiverId = $receiverId === 'admin' ? null : $receiverId;
         $this->senderId = $senderId;
         $this->remarks = $remarks;
         $this->notifyType = $notifyType;
         $this->status = $status;
+        $this->recipient = $recipient;
+
+        // Preload related data
+        $this->fileName = File::find($fileId)->file_name ?? 'Unknown File';
+        $this->receiverName = $this->receiverId
+            ? User::find($this->receiverId)->name ?? 'Unknown User'
+            : 'Admin Group';
+        $this->senderName = User::find($senderId)->name ?? 'Unknown User';
     }
 
     public function via(object $notifiable): array
@@ -32,26 +56,34 @@ class FileAccessNotification extends Notification
         return ['broadcast', 'database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+
+    public function broadcastOn(): PrivateChannel
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        if ($this->recipient === 'admin') {
+            return new PrivateChannel("admin.notifications");
+        }
+        return new PrivateChannel('user.' . $this->receiverId);
+
+
+    }
+    public function broadcastWith(): array
+    {
+
+        return [
+            'fileId' => $this->fileId,
+            'fileName' => $this->fileName,
+            'receiverId' => $this->receiverId,
+            'receiverName' => $this->receiverName,
+            'senderId' => $this->senderId,
+            'senderName' => $this->senderName,
+            'message' => $this->remarks,
+            'notifyType' => $this->notifyType,
+            'status' => $this->status,
+        ];
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return $this->broadcastWith();
     }
 }

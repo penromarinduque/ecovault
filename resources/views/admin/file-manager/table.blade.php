@@ -16,6 +16,8 @@
             </div>
         </div>
 
+
+        @include('components.create-folder.create-folder')
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
         @component('components.addfile.add-file', [
