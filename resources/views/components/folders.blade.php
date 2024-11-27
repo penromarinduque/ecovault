@@ -1,4 +1,4 @@
-<div>
+{{-- <div>
     <!-- Folder cards will be dynamically appended here -->
 </div>
 

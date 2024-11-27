@@ -71,38 +71,54 @@
         const template = document.querySelector('.folder-template');
         const cardClone = template.content.cloneNode(true);
 
-        //set the content for the folder
-        cardClone.querySelector('.folder-title').textContent = folderPath;
-        // cardClone.querySelector('.folder-text').textContent = content;
+        // Create a wrapper div for the folder card
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('folder-card-wrapper'); // You can customize this class for styling
 
-        //get the dropdown
+        // Set the content for the folder
+        cardClone.querySelector('.folder-title').textContent = folderPath;
+
+        // Get the dropdown
         const dropdownId = `folder-dropdown-${++cardCounter}`;
         const dropdown = cardClone.querySelector('.folder-dropdown');
         const dropDownToggle = cardClone.querySelector('.folder-dropdown-btn');
 
-        //set the id of dropdown
+        // Set the ID of the dropdown
         dropdown.id = dropdownId;
         dropDownToggle.setAttribute('data-dropdown-toggle', `${dropdownId}`);
 
-        document.querySelector('.folder-container').appendChild(cardClone);
+        // Append the cloned content to the wrapper
+        wrapper.appendChild(cardClone);
+
+        // Now append the wrapper to the parent container
+        document.querySelector('.folder-container').appendChild(wrapper);
+
+        // Initialize the dropdown for the newly added card
     }
 
+
     function fetchFolders(folderType) {
+        let municipality = {!! json_encode($municipality ?? '') !!};
+
         fetch(`/api/folders?folderType=${folderType}&municipality=${municipality}`)
             .then(response => response.json())
             .then(data => {
-
-                data.folders.forEach(folder => {
-                    console.log(folder.folder_path)
-                    createFolderCard(folder.folder_path); // Pass each folder to the function
-                });
-
+                if (Array.isArray(data.folders)) {
+                    data.folders.forEach(folder => {
+                        createFolderCard('folder.folder_path');
+                    });
+                } else {
+                    console.error('Folders data is not an array or is missing');
+                }
             })
-            .catch(error => console.error('Error fetching folders:', error));
+
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+        let type = {!! json_encode($type ?? '') !!};
         const folderType = type || record; // Replace with dynamic value if needed
         fetchFolders(folderType);
+        createFolderCard(type);
+
     });
 </script>
