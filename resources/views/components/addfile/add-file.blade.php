@@ -125,7 +125,12 @@
     document.getElementById('add-folder-btn').addEventListener('click', function() {
         // Fetch folders when the modal is shown
         const folderType = type || report;
-        fetchFolders(folderType);
+        fetch(`/api/folders?folderType=${type}&municipality=${municipality}`)
+            .then(response => response.json())
+            .then(data => {
+                //renderFolders(data.folders); // Pass the folders array to the render function
+            })
+            .catch(error => console.error('Error fetching folders:', error));
 
         console.log(folderType)
         const fieldFolderType = document.getElementById('folder_type');
@@ -134,7 +139,7 @@
 
         fieldFolderType.value = folderType;
         fieldMunicipality.value = municipality;
-        //municipality
+
 
     });
 </script>

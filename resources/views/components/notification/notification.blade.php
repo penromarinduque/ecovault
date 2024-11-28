@@ -115,7 +115,7 @@
         // Auto-remove the notification after 5 seconds
         setTimeout(() => {
             fadeOutAndRemove(appendedNotification);
-        }, 700000);
+        }, 10000);
     }
 
     function fadeOutAndRemove(notification) {

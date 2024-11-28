@@ -6,6 +6,7 @@ function refreshTable(){
     fetchData();
     fetchDatas();
 }
+
 function truncateFilename(filename, maxLength) {
     const parts = filename.split('.');
     if (parts.length < 2) {
