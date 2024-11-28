@@ -413,7 +413,7 @@
         } catch (error) {
             showToast(error.message, 'top-right', 'danger')
             uploadButton.disabled = false;
-            this.reset();
+
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
         }
