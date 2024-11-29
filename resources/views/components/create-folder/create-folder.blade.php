@@ -2,10 +2,9 @@
 
 
 
-<div class="folder-container flex gap-4 mb-4">
+<div id="folders-container" class=" flex gap-4 mb-4">
     <!--populate the folder-->
 </div>
-
 
 <template class="folder-template">
     <div class="folder-content w-full max-w-xs bg-white border border-gray-300 rounded-md">
@@ -28,33 +27,33 @@
 
             <!-- Dropdown Button -->
             <div class="relative">
-                <button data-dropdown-toggle="folder-dropdown"
-                    class="folder-dropdown-btn inline-block text-gray-500 hover:bg-gray-100 focus:ring-2 focus:outline-none focus:ring-gray-200 rounded-md text-xs p-1"
+                <button id="folder-dropdown-btn" data-dropdown-toggle="folder-dropdown"
+                    class="folder-dropdown-btn inline-block text-gray-500 hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
                     type="button">
                     <span class="sr-only">Open dropdown</span>
-                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                        viewBox="0 0 4 15">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 16 3">
                         <path
-                            d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                            d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                     </svg>
                 </button>
-
-                <!-- Dropdown Menu -->
-                <div
-                    class="folder-dropdown z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-md shadow w-36">
-                    <ul class="py-1" aria-labelledby="folder-modal-toggle">
+                <!-- Dropdown menu -->
+                <div id="folder-dropdown"
+                    class="folder-dropdown hidden z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                    <ul class="py-2" aria-labelledby="dropdownButton">
                         <li>
-                            <a href="#" class="block px-3 py-1 text-xs text-gray-700 hover:bg-gray-100">Edit</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
                         </li>
                         <li>
-                            <a href="#" class="block px-3 py-1 text-xs text-gray-700 hover:bg-gray-100">Export
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Export
                                 Data</a>
                         </li>
                         <li>
-                            <a href="#" class="block px-3 py-1 text-xs text-red-600 hover:bg-gray-100">Delete</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Delete</a>
                         </li>
                     </ul>
                 </div>
+
             </div>
         </div>
     </div>
@@ -65,60 +64,64 @@
 
 
 <script>
-    let cardCounter = 0;
-
-    function createFolderCard(folderPath) {
+    // Function to clone the template and update it with folder data
+    function cloneFolderTemplate(data) {
         const template = document.querySelector('.folder-template');
-        const cardClone = template.content.cloneNode(true);
+        const clone = template.content.cloneNode(true);
 
-        // Create a wrapper div for the folder card
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('folder-card-wrapper'); // You can customize this class for styling
+        // Populate folder title and description
+        clone.querySelector('.folder-title').textContent = data.folder_path || 'Folder Title';
+        clone.querySelector('.folder-text').textContent = data.folder_type || 'Folder Description';
 
-        // Set the content for the folder
-        cardClone.querySelector('.folder-title').textContent = folderPath;
+        // Update dropdown button and menu IDs for uniqueness
+        const dropdownMenu = clone.querySelector('.folder-dropdown');
+        const dropdownButton = clone.querySelector('.folder-dropdown-btn');
 
-        // Get the dropdown
-        const dropdownId = `folder-dropdown-${++cardCounter}`;
-        const dropdown = cardClone.querySelector('.folder-dropdown');
-        const dropDownToggle = cardClone.querySelector('.folder-dropdown-btn');
+        dropdownMenu.id = `folder-dropdown-${data.id}`;
+        dropdownButton.setAttribute('data-dropdown-toggle', `folder-dropdown-${data.id}`);
+        dropdownButton.setAttribute('data-folder-id', data.id);
 
-        // Set the ID of the dropdown
-        dropdown.id = dropdownId;
-        dropDownToggle.setAttribute('data-dropdown-toggle', `${dropdownId}`);
-
-        // Append the cloned content to the wrapper
-        wrapper.appendChild(cardClone);
-
-        // Now append the wrapper to the parent container
-        document.querySelector('.folder-container').appendChild(wrapper);
-
-        // Initialize the dropdown for the newly added card
+        return clone;
     }
 
+    // Function to initialize dropdowns for all folders using Flowbite
+    function initializedFolderDropdown() {
+        const dropdownButtons = document.querySelectorAll('.folder-dropdown-btn');
+        dropdownButtons.forEach(button => {
+            const dropdownId = button.getAttribute('data-dropdown-toggle');
+            const dropdownMenu = document.getElementById(dropdownId);
 
-    function fetchFolders(folderType) {
-        let municipality = {!! json_encode($municipality ?? '') !!};
+            if (dropdownMenu) {
+                new Dropdown(dropdownMenu, button, {
+                    placement: 'bottom',
+                    triggerType: 'click',
+                    offsetSkidding: 0,
+                    offsetDistance: 0,
+                });
+            }
+        });
+    }
 
-        fetch(`/api/folders?folderType=${folderType}&municipality=${municipality}`)
+    // Function to render folders in the DOM
+    function renderFolders(folders) {
+        const container = document.querySelector('#folders-container');
+        folders.forEach(folder => {
+            const folderElement = cloneFolderTemplate(folder);
+            container.appendChild(folderElement);
+        });
+        initializedFolderDropdown(); // Initialize dropdowns after rendering
+    }
+
+    // Fetch folders from the server and render them
+    document.addEventListener('DOMContentLoaded', () => {
+        const type = {!! json_encode($type ?? '') !!};
+        const municipality = {!! json_encode($municipality ?? '') !!};
+
+        fetch(`/api/folders?folderType=${type}&municipality=${municipality}`)
             .then(response => response.json())
             .then(data => {
-                if (Array.isArray(data.folders)) {
-                    data.folders.forEach(folder => {
-                        createFolderCard('folder.folder_path');
-                    });
-                } else {
-                    console.error('Folders data is not an array or is missing');
-                }
+                renderFolders(data.folders); // Pass the folders array to the render function
             })
-
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        let type = {!! json_encode($type ?? '') !!};
-        const folderType = type || record; // Replace with dynamic value if needed
-        fetchFolders(folderType);
-        createFolderCard(type);
-
+            .catch(error => console.error('Error fetching folders:', error));
     });
 </script>

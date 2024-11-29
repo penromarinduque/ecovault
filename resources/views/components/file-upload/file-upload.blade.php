@@ -403,7 +403,12 @@
 
                 refreshTable();
             }
-            showToast("File uploaded successfully", 'top-right', 'success')
+            showToast({
+                type: 'success',
+                message: 'Success! The upload is complete.',
+
+            });
+
 
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
@@ -411,9 +416,12 @@
             uploadButton.disabled = false;
             this.reset();
         } catch (error) {
-            showToast(error.message, 'top-right', 'danger')
+            showToast({
+                type: 'danger',
+                message: 'Upload unsuccessful. Check your file or file format and try again.',
+            });
             uploadButton.disabled = false;
-
+            // this.reset();
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
         }

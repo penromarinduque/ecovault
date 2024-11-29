@@ -15,8 +15,9 @@
                 </button>
             </div>
         </div>
-
         {{-- <x-folders /> --}}
+
+
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
@@ -37,11 +38,11 @@
         @endcomponent
         <div class="grid">
 
-            {{-- @component('components.create-folder.create-folder', [
-    'type' => $type ?? '',
-    'municipality' => $municipality ?? '',
-])
-            @endcomponent --}}
+            @component('components.create-folder.create-folder', [
+                'type' => $type ?? '',
+                'municipality' => $municipality ?? '',
+            ])
+            @endcomponent
 
 
             <div id="mainTable" class="duration-500 ease-in-out opacity-100 ">
