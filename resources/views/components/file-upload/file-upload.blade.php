@@ -409,7 +409,6 @@
 
             });
 
-
             buttonText.classList.remove('hidden');
             buttonSpinner.classList.add('hidden');
             document.getElementById('file-upload-name').textContent = 'No file chosen';
