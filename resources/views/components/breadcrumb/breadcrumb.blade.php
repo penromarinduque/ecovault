@@ -31,7 +31,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <a href="{{ route('file-manager.land-title.show', $type) }}"
+                            <a href="{{ route('file-manager.land-title.show', ['type' => $type, 'category' => $category ?? null]) }}"
                                 class="{{ Route::is('file-manager.land-title.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}
                             {{ !$type && !Route::is('file-manager.municipality.show') ? 'pointer-events-none cursor-not-allowed' : 'text-blue-600' }}">
                                 {{ ucwords(str_replace('-', ' ', $type)) }}
@@ -46,9 +46,9 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
-                                <a href="{{ route('file-manager.municipality.with-category.show', ['type' => $type, 'category' => $category]) }}"
-                                    class="{{ Route::is('file-manager.municipality.with-category.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}"
-                                    {{ Route::is('file-manager.municipality.with-category.show') ? 'pointer-events-none cursor-not-allowed' : 'text-blue-600' }}">
+                                <a href="{{ route('file-manager.municipality.show', ['type' => $type, 'category' => $category]) }}"
+                                    class="{{ Route::is('file-manager.municipality.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}"
+                                    {{ Route::is('file-manager.municipality.show') ? 'pointer-events-none cursor-not-allowed' : 'text-blue-600' }}">
                                     {{ ucwords(str_replace('-', ' ', $category ?: 'Category')) }}
                                 </a>
                             </div>
@@ -62,7 +62,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <a href="{{ route('file-manager.municipality.show', $type) }}"
+                            <a href="{{ route('file-manager.municipality.show', ['type' => $type, 'category' => $category ?? null]) }}"
                                 class="{{ Route::is('file-manager.municipality.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}
                             {{ !$type && !Route::is('file-manager.municipality.show') ? 'pointer-events-none cursor-not-allowed' : 'text-blue-600' }}">
                                 {{ ucwords(str_replace('-', ' ', $type)) }}

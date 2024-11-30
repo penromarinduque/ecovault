@@ -87,7 +87,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    alert(data.message); // Display success message
+                    // Display success message
                     fetchFileAccessRequests(); // Refresh the table
                 } else {
                     console.error(data.message);

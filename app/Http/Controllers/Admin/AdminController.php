@@ -10,8 +10,10 @@ class AdminController extends Controller
     //
     function ShowHome()
     {
-
-        return view('admin.home');
+        if (auth()->check()) {
+            return view('admin.home');
+        }
+        return view('welcome');
     }
 
     function ShowFileManager()
@@ -19,38 +21,49 @@ class AdminController extends Controller
         return view('admin.file-manager.file-manager');
     }
 
-    function ShowMunicipality($type)
+    function ShowMunicipality(Request $request)
     {
-        return view('admin.file-manager.municipality', compact('type'));
-    }
-
-    function ShowMunicipalityWithCategory($type, $category)
-    {
+        $type = $request->query('type');
+        $category = $request->query('category') ?? null;
+        if (!$type) {
+            abort(404);
+        }
         return view('admin.file-manager.municipality', compact('type', 'category'));
     }
 
-    function ShowLandTitlesOrPatentedLots($type)
+    function ShowLandTitlesOrPatentedLots(Request $request)
     {
 
+        $type = $request->query('type');
+        if (!$type) {
+            abort(404);
+        }
         return view('admin.file-manager.land-title-categories', compact('type'));
     }
 
-    function ShowTable($type, $municipality)
+    function ShowTable(Request $request)
     {
-        return view('admin.file-manager.table', compact('type', 'municipality'));
-    }
-    function ShowTableWithCategory($type, $category, $municipality)
-    {
-        return view('admin.file-manager.table', compact('type', 'category', 'municipality'));
+        $type = $request->query('type');
+        $municipality = $request->query('municipality') ?? null;
+        $category = $request->query('category') ?? null;
+        if (!$type || !$municipality) {
+            abort(404);
+        }
+        return view('admin.file-manager.table', compact('type', 'municipality', 'category'));
     }
 
     function ShowAdministrativeDocuments()
     {
+
         return view('admin.administrative.administrative-documents');
     }
 
-    function ShowRecord($record)
+    function ShowRecord(Request $request)
     {
+        $record = $request->query('record');
+        // if (!$record) {
+        //     abort(404);
+        // }
         return view('admin.administrative.records', compact('record'));
     }
 

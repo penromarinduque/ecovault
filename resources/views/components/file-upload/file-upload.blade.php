@@ -325,16 +325,30 @@
 
     let fileId;
     let canUpload = false;
-    document.getElementById('add-file-specification').addEventListener('click', function(event) {
-        canUpload = true;
-    })
+
+    const addFileSpecificationButton = document.getElementById('add-file-specification');
+
+    if (addFileSpecificationButton) {
+        addFileSpecificationButton.addEventListener('click', function() {
+            canUpload = true;
+        });
+    }
+
+
+
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         //filter if not add specs
+
+        if (!addFileSpecificationButton) {
+            canUpload = true;
+        }
+
         if (!canUpload) {
             showToast("Add Specification before uploading", 'top-right', 'danger')
             return;
         }
+
         const csrfToken = "{{ csrf_token() }}";
         const uploadButton = document.getElementById('upload-btn');
         const buttonText = document.getElementById('button-text');
@@ -351,6 +365,8 @@
         let municipality = {!! json_encode($municipality) !!};
         let category = {!! json_encode($category ?? '') !!};
         let isArchived = {!! json_encode($isArchived) !!};
+
+
 
         const params = {
             type: type,

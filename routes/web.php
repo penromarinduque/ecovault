@@ -18,9 +18,7 @@ use App\Http\Controllers\CRUD\SettingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CRUD\FolderController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password.forgot-password');
@@ -40,22 +38,46 @@ Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verifi
 Route::post('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
 Route::get('/logout', [AuthController::class, 'Logout'])->name('logout.post');
 
+Route::get('/', [AdminController::class, 'ShowHome'])->name('admin.home.show');
+
 Route::middleware([VerifiedUser::class])->group(function () {
-    Route::get('/staff', [AdminController::class, 'ShowHome'])->name('admin.home.show');
     Route::get('/staff/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
     Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);
     Route::get('/staff/scan/qrcode', [AdminController::class, 'ShowQR'])->name('show.qr');
 
-    Route::get('/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
-    Route::get('/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
-    Route::get('/file-manager', [AdminController::class, 'ShowFileManager'])->name('file-manager.show');
-    Route::get('/file-manager/{type}/municipality', [AdminController::class, 'ShowMunicipality'])->name('file-manager.municipality.show');
-    Route::get('/file-manager/{type}/categories', [AdminController::class, 'ShowLandTitlesOrPatentedLots'])->name('file-manager.land-title.show');
 
-    Route::get('/file-manager/{type}/{municipality}', [AdminController::class, 'ShowTable'])->name('file-manager.table.show');
+    //Route::get('file-manager', [AdminController::class, 'ShowFileManager'])->name('file-manager.show');
 
-    Route::get("/administrative-document", [AdminController::class, "ShowAdministrativeDocuments"])->name('administrative.show');
-    Route::get('/administrative-document/{record}', [AdminController::class, 'ShowRecord'])->name('administrative.record.show');
+
+    Route::prefix('file-manager')->name('file-manager.')->group(function () {
+        Route::get('/', [AdminController::class, 'ShowFileManager'])->name('show');
+        Route::get('/municipality', [AdminController::class, 'ShowMunicipality'])->name('municipality.show');
+        Route::get('/categories', [AdminController::class, 'ShowLandTitlesOrPatentedLots'])->name('land-title.show');
+        Route::get('/repository', [AdminController::class, 'ShowTable'])->name('table.show');
+    });
+
+    Route::prefix('administrative-document')->name('administrative.')->group(function () {
+        Route::get('/', [AdminController::class, "ShowAdministrativeDocuments"])->name('show');
+        Route::get('/repository', [AdminController::class, 'ShowRecord'])->name('record.show');
+    });
+
+    Route::prefix('archive-file')->name('archive-file')->group(function () {
+
+    });
+    // Route::get('/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
+    // Route::get('/file-manager/{type}/municipality', [AdminController::class, 'ShowMunicipality'])->name('file-manager.municipality.show');
+    // Route::get('/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
+    // Route::get('/file-manager', [AdminController::class, 'ShowFileManager'])->name('file-manager.show');
+    // Route::get('/file-manager/{type}/categories', [AdminController::class, 'ShowLandTitlesOrPatentedLots'])->name('file-manager.land-title.show');
+
+    // // Route::get('/file-manager/{type}/{municipality}', [AdminController::class, 'ShowTable'])->name('file-manager.table.show');
+
+    // Route::get('/file-manager/folder/61566f663d72f7034ac95d3a51b69cf7/{path}', function () {
+    //     return "HELLLO";
+    // });
+
+    // Route::get("/administrative-document", [AdminController::class, "ShowAdministrativeDocuments"])->name('administrative.show');
+    // Route::get('/administrative-document/{record}', [AdminController::class, 'ShowRecord'])->name('administrative.record.show');
 
     //ARCHIVED FILE MANAGER 
     Route::get('/archived-file', [AdminController::class, 'ShowArchivedFiles'])->name('archived-file.show');
@@ -65,6 +87,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/archived-file/{archivedType}/file/{type}/{category}/municipality', [AdminController::class, 'ShowArchivedMunicipalityWithCategory'])->name('archived.file-manager.municipality.with-category.show');
     Route::get('/archived-file/{archivedType}/file/{type}/{category}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTableWithCategory'])->name('archived.file-manager.table.with-category.show');
     Route::get('/archived-file/{archivedType}/file/{type}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTable'])->name('archived.file-manager');
+
 
     Route::get('/archived-file/{archivedType}/report', [AdminController::class, 'ShowArchivedAdministrativeDocument'])->name('archived.administrative.show');
     Route::get("/archived-file/{archivedType}/report/{record}", [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('archived.administrative.record.show');
