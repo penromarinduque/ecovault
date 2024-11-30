@@ -27,25 +27,29 @@
                     })
                     .then(municipalities => {
                         // Clear the container
+                        const _type = {!! json_encode($type ?? '') !!};
+                        const _category = {!! json_encode($category ?? '') !!};
                         container.innerHTML = '';
 
                         // Populate the municipalities dynamically
                         municipalities.forEach(municipality => {
                             const municipalityDiv = document.createElement('div');
-                            municipalityDiv.classList.add(
-                                'flex',
-                                'flex-col',
-                                'items-center',
-                                'text-center',
-                                'mx-auto'
-                            );
+                            municipalityDiv.classList.add('flex', 'flex-col', 'items-center', 'text-center',
+                                'mx-auto');
+
+                            const municipalityUrl =
+                                `{{ route('archived-file.file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
+                                .replace('__type__', _type)
+                                .replace('__municipality__', municipality.name)
+                                .replace('__category__', _category ??
+                                    'null'); // if category is null, use null
 
                             municipalityDiv.innerHTML = `
-                                <a href="${municipality.name}" class="text-center">
-                                    <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
-                                    <h2 class="w-[120px] truncate">${municipality.name}</h2>
-                                </a>
-                            `;
+                        <a href="${municipalityUrl}" class="text-center">
+                            <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
+                            <h2 class="w-[120px] truncate">${municipality.name}</h2>
+                        </a>
+                    `;
 
                             container.appendChild(municipalityDiv);
                         });

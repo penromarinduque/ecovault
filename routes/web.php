@@ -61,36 +61,21 @@ Route::middleware([VerifiedUser::class])->group(function () {
         Route::get('/repository', [AdminController::class, 'ShowRecord'])->name('record.show');
     });
 
-    Route::prefix('archive-file')->name('archive-file')->group(function () {
+    Route::prefix('archive-file')->name('archived-file.')->group(function () {
+        Route::get('/', [AdminController::class, 'ShowArchivedFiles'])->name('show');
 
+        Route::prefix('file-manager')->name('file-manager.')->group(function () {
+            Route::get('/', [AdminController::class, 'ShowArchivedFileManager'])->name('show');
+            Route::get('/municipality', [AdminController::class, 'ShowArchivedMunicipality'])->name('municipality.show');
+            Route::get('/categories', [AdminController::class, 'ShowArchivedandTitlesOrPatentedLots'])->name('land-title.show');
+            Route::get('/repository', [AdminController::class, 'ShowArchivedFileManagerTable'])->name('table.show');
+        });
+
+        Route::prefix('administrative-document')->name('administrative.')->group(function () {
+            Route::get('/', [AdminController::class, "ShowArchivedAdministrativeDocument"])->name('show');
+            Route::get('/repository', [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('record.show');
+        });
     });
-    // Route::get('/file-manager/{type}/{category}/municipality', [AdminController::class, 'ShowMunicipalityWithCategory'])->name('file-manager.municipality.with-category.show');
-    // Route::get('/file-manager/{type}/municipality', [AdminController::class, 'ShowMunicipality'])->name('file-manager.municipality.show');
-    // Route::get('/file-manager/{type}/{category}/{municipality}', [AdminController::class, 'ShowTableWithCategory'])->name('file-manager.table.with-category.show');
-    // Route::get('/file-manager', [AdminController::class, 'ShowFileManager'])->name('file-manager.show');
-    // Route::get('/file-manager/{type}/categories', [AdminController::class, 'ShowLandTitlesOrPatentedLots'])->name('file-manager.land-title.show');
-
-    // // Route::get('/file-manager/{type}/{municipality}', [AdminController::class, 'ShowTable'])->name('file-manager.table.show');
-
-    // Route::get('/file-manager/folder/61566f663d72f7034ac95d3a51b69cf7/{path}', function () {
-    //     return "HELLLO";
-    // });
-
-    // Route::get("/administrative-document", [AdminController::class, "ShowAdministrativeDocuments"])->name('administrative.show');
-    // Route::get('/administrative-document/{record}', [AdminController::class, 'ShowRecord'])->name('administrative.record.show');
-
-    //ARCHIVED FILE MANAGER 
-    Route::get('/archived-file', [AdminController::class, 'ShowArchivedFiles'])->name('archived-file.show');
-    Route::get('/archived-file/{archivedType}', [AdminController::class, 'ShowArchivedFileManager'])->name('archived-file.file-manager.show');
-    Route::get('/archived-file/{archivedType}/file/{type}/municipality', [AdminController::class, 'ShowArchivedMunicipality'])->name('archived.file-manager.municipality.show');
-    Route::get('/archived-file/{archivedType}/file/{type}/categories', [AdminController::class, 'ShowArchivedandTitlesOrPatentedLots'])->name('archived.file-manager.land-title.show');
-    Route::get('/archived-file/{archivedType}/file/{type}/{category}/municipality', [AdminController::class, 'ShowArchivedMunicipalityWithCategory'])->name('archived.file-manager.municipality.with-category.show');
-    Route::get('/archived-file/{archivedType}/file/{type}/{category}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTableWithCategory'])->name('archived.file-manager.table.with-category.show');
-    Route::get('/archived-file/{archivedType}/file/{type}/{municipality}', [AdminController::class, 'ShowArchivedFileManagerTable'])->name('archived.file-manager');
-
-
-    Route::get('/archived-file/{archivedType}/report', [AdminController::class, 'ShowArchivedAdministrativeDocument'])->name('archived.administrative.show');
-    Route::get("/archived-file/{archivedType}/report/{record}", [AdminController::class, 'ShowArchivedAdministrativeDocumentRecord'])->name('archived.administrative.record.show');
 
     //API HANDLER 
     Route::post('/file-upload', [UploadController::class, 'StoreFile'])->name('file.post');
