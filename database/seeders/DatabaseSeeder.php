@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $fileTypes = [
-            ['type_name' => 'tree-cutting-permit', 'classification_id' => 1],
+            ['type_name' => 'tree-cutting-permits', 'classification_id' => 1],
             ['type_name' => 'chainsaw-registration', 'classification_id' => 1],
             ['type_name' => 'tree-plantation-registration', 'classification_id' => 1],
             ['type_name' => 'transport-permit', 'classification_id' => 1],
