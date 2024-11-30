@@ -48,18 +48,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Show success toast
-        showToast({
-            type: 'success',
-            message: 'Item moved successfully!',
-            timeout: 10000
-        });
-
-        // Show danger toast
-        showToast({
-            type: 'danger',
-            message: 'Item has been deleted!',
-            timeout: 10000
-        });
     });
 
     function showToast({

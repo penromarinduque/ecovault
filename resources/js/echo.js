@@ -19,9 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
     const isAdmin = JSON.parse(document.querySelector('meta[name="user-is-admin"]').getAttribute('content'));
 
-
-
-    console.log(isAdmin);
     updateFetchNotification();
 
     window.Echo.private(`user.${userId}`)
