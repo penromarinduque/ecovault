@@ -1,10 +1,11 @@
 <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
-<div id="upload-file-div" class="items-center justify-center mx-10">
+
+<div class="items-center justify-center mx-10">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-lg font-bold text-gray-700">Upload File</h2> {{-- add summary --}}
-        <button type="button" id="close-upload-btn"
-            class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <button type="button" id="close-upload-btn" aria-controls="section-close-all"
+            class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
@@ -275,7 +276,6 @@
         </div>
     </form>
 </div>
-
 <script>
     const fileInput = document.getElementById('file-upload');
     const fileUploadName = document.getElementById('file-upload-name');
@@ -443,74 +443,74 @@
     });
 
 
-    if (type !== "tree-cutting-permits" || report == null) {
+    // if (type !== "tree-cutting-permits" || report == null) {
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            const locationSelect = document.getElementById('location');
-            const errorMessage = document.getElementById('error-message');
-            const currentPath = window.location.pathname;
-            const currentMunicipality = currentPath.split('/').pop();
+    //     document.addEventListener('DOMContentLoaded', async function() {
+    //         const locationSelect = document.getElementById('location');
+    //         const errorMessage = document.getElementById('error-message');
+    //         const currentPath = window.location.pathname;
+    //         const currentMunicipality = currentPath.split('/').pop();
 
-            try {
-                // Fetch all municipalities
-                const municipalityResponse = await fetch(
-                    'https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
-                if (!municipalityResponse.ok) {
-                    throw new Error('Failed to fetch municipalities');
-                }
+    //         try {
+    //             // Fetch all municipalities
+    //             const municipalityResponse = await fetch(
+    //                 'https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
+    //             if (!municipalityResponse.ok) {
+    //                 throw new Error('Failed to fetch municipalities');
+    //             }
 
-                const municipalities = await municipalityResponse.json();
+    //             const municipalities = await municipalityResponse.json();
 
-                // Ensure the response is an array
-                if (!Array.isArray(municipalities)) {
+    //             // Ensure the response is an array
+    //             if (!Array.isArray(municipalities)) {
 
-                }
+    //             }
 
-                // Match the current municipality by name
-                const matchedMunicipality = municipalities.find(
-                    (municipality) => municipality.name.toLowerCase() === currentMunicipality
-                    .toLowerCase()
-                );
+    //             // Match the current municipality by name
+    //             const matchedMunicipality = municipalities.find(
+    //                 (municipality) => municipality.name.toLowerCase() === currentMunicipality
+    //                 .toLowerCase()
+    //             );
 
-                if (!matchedMunicipality) {
-                    return;
-                }
+    //             if (!matchedMunicipality) {
+    //                 return;
+    //             }
 
-                console.log(`Matched Municipality:`, matchedMunicipality);
+    //             console.log(`Matched Municipality:`, matchedMunicipality);
 
 
 
-                // Use the `code` to fetch barangays
-                const barangayResponse = await fetch(
-                    `https://psgc.gitlab.io/api/municipalities/${matchedMunicipality.code}/barangays/`
+    //             // Use the `code` to fetch barangays
+    //             const barangayResponse = await fetch(
+    //                 `https://psgc.gitlab.io/api/municipalities/${matchedMunicipality.code}/barangays/`
 
-                );
-                if (!barangayResponse.ok) {
-                    throw new Error('Failed to fetch barangays');
-                }
+    //             );
+    //             if (!barangayResponse.ok) {
+    //                 throw new Error('Failed to fetch barangays');
+    //             }
 
-                const barangays = await barangayResponse.json();
+    //             const barangays = await barangayResponse.json();
 
-                // Populate the barangay dropdown
-                locationSelect.innerHTML = '<option value="" disabled selected>Select a barangay</option>';
-                barangays.forEach(barangay => {
-                    const option = document.createElement('option');
-                    option.value = barangay.id || barangay.name; // Adjust based on API structure
-                    option.textContent = barangay.name;
-                    locationSelect.appendChild(option);
-                });
+    //             // Populate the barangay dropdown
+    //             locationSelect.innerHTML = '<option value="" disabled selected>Select a barangay</option>';
+    //             barangays.forEach(barangay => {
+    //                 const option = document.createElement('option');
+    //                 option.value = barangay.id || barangay.name; // Adjust based on API structure
+    //                 option.textContent = barangay.name;
+    //                 locationSelect.appendChild(option);
+    //             });
 
-                errorMessage.classList.add('hidden');
-            } catch (error) {
-                console.error('Error:', error);
+    //             errorMessage.classList.add('hidden');
+    //         } catch (error) {
+    //             console.error('Error:', error);
 
-                if (errorMessage) {
-                    errorMessage.classList.remove('hidden');
-                    locationSelect.innerHTML =
-                        '<option value="" disabled selected>Error loading options</option>';
-                }
+    //             if (errorMessage) {
+    //                 errorMessage.classList.remove('hidden');
+    //                 locationSelect.innerHTML =
+    //                     '<option value="" disabled selected>Error loading options</option>';
+    //             }
 
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 </script>

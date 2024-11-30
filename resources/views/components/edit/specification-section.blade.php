@@ -30,7 +30,7 @@
                                 </button>
 
                             </div>
-                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full">
+                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full font-medium">
                                 <input type="hidden" id="id[]" data-edit="id[]" name="id[]" value="">
 
                                 <div class="my-4">

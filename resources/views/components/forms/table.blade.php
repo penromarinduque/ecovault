@@ -146,10 +146,10 @@
         const adminActions = `
         <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
         <li><a href="/api/files/download/${fileId}"  target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-        <li><button class="w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
+        <li><button class="toggle-btn w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}" data-role="edit" data-toggle-target="edit" aria-controls="section-edit" aria-expanded="false">Edit</button></li>
         <li><a class="block cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div" data-file-id="${fileId}">Move</a></li>
         <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 share-file-link" data-file-id="${fileId}">Share</a></li>
-        <li><a class="w-full cursor-pointer text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</a></li>
+        <li><a class="toggle-btn w-full cursor-pointer text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}" data-role="summary" data-toggle-target="summary" aria-controls="section-summary" aria-expanded="false">File Summary</a></li>
         <li><a onclick="archiveFile(${fileId})" class="block px-4 py-2 cursor-pointer hover:bg-gray-100">Archive</a></li>
     `;
 

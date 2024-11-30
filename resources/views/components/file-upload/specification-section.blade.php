@@ -19,7 +19,7 @@
                                     <span class="sr-only">Close modal</span>
                                 </button>
                             </div>
-                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full">
+                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full font-medium">
                                 <div class="my-4">
                                     <label for="species" id="label-species"
                                         class="block mb-2 text-sm font-medium text-gray-700">Species</label>

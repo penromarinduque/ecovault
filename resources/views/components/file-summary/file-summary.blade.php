@@ -8,13 +8,13 @@
                     class="font-medium text-slate-600 pl-6">({{ ucwords(str_replace('-', ' ', $type ?: $record)) }})</span>
             </h2>
             {{-- add summary --}}
-            <button type="button" id="close-summary-btn"
-                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            <button type="button" id="close-upload-btn" aria-controls="section-close-all"
+                class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                 </svg>
-
             </button>
         </div>
 
@@ -108,33 +108,32 @@
         @endif
         @if (in_array($type, ['tree-cutting-permits', 'tree-transport-permits']))
             <div class="relative overflow-x-auto mt-12">
-                <table
-                    class="w-full text-sm text-left text-gray-600 border-separate border-spacing-0.5 border border-gray-300 rounded-lg overflow-hidden">
-                    <!-- Optional Caption -->
-                    <!-- <caption class="p-4 text-lg font-semibold text-left text-gray-800">Tree Specifications</caption> -->
 
-                    <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Species
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Number
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Location
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Date Applied
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Example Row -->
 
-                        <!-- Add more rows here -->
-                    </tbody>
-                </table>
+                <div class="relative overflow-x-auto border">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-white uppercase bg-gray-500 border">
+                            <tr>
+                                @if ($type === 'tree-cutting-permits')
+                                    <th scope="col" class="px-6 py-3">Species</th>
+                                    <th scope="col" class="px-6 py-3">No.</th>
+                                    <th scope="col" class="px-6 py-3">Location</th>
+                                    <th scope="col" class="px-6 py-3">Date Applied</th>
+                                @elseif($type === 'tree-transport-permits')
+                                    <th scope="col" class="px-6 py-3">Species</th>
+                                    <th scope="col" class="px-6 py-3">No.</th>
+                                    <th scope="col" class="px-6 py-3">Destination</th>
+                                    <th scope="col" class="px-6 py-3">Date of Transport</th>
+                                    <th scope="col" class="px-6 py-3">Date Applied</th>
+                                @endif
+
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="font-medium capitalize">
+                            <!-- display the permit details here-->
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         @endif
@@ -160,7 +159,7 @@
 
 <script>
     // Fetches file data dynamically
-    async function fetchFileDetails(fileId) {
+    async function fetchFileSummary(fileId) {
 
 
         let includePermit = {!! json_encode($includePermit ?? '') !!};
@@ -206,20 +205,34 @@
 
                     if (data.permit.details) {
                         const details = data.permit.details;
-                        const tableBody = document.getElementById("table-body");
-                        details.forEach((detail) => {
-                            const row = document.createElement("tr");
-                            row.classList.add("bg-white", "border");
 
-                            row.innerHTML = `
-                                    <td class="px-6 py-4 border border-gray-400">${detail.species}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.number_of_trees}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.location}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.date_applied}</td>
+                        const tableBody = document.getElementById('table-body');
+
+                        tableBody.innerHTML = '';
+                        details.forEach((detail, index) => {
+                            let row = '';
+
+                            if (type === 'tree-cutting-permits') {
+                                row = `
+                                    <tr class="odd:bg-white even:bg-gray-100">
+                                        <td class="px-6 py-3">${detail.species || ''}</td>
+                                        <td class="px-6 py-3">${detail.number_of_trees || ''}</td>
+                                        <td class="px-6 py-3">${detail.location || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_applied || ''}</td>
+                                    </tr>
                                 `;
-
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                            } else if (type === 'tree-transport-permits') {
+                                row = `
+                                    <tr class="odd:bg-white even:bg-gray-100">
+                                        <td class="px-6 py-3">${detail.species || ''}</td>
+                                        <td class="px-6 py-3">${detail.number_of_trees || ''}</td>
+                                        <td class="px-6 py-3">${detail.destination || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_of_transport || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_applied || ''}</td>
+                                    </tr>
+                                `;
+                            }
+                            tableBody.insertAdjacentHTML('beforeend', row);
                         });
                     }
                 }
