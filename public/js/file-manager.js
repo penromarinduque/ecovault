@@ -65,19 +65,19 @@ document.addEventListener('click', event => {
         const fileId = button.dataset.fileId;
         const role = button.dataset.role;//logic by harvey select the role of button base on dataset.
 
-        if(fileId){
-           console.log('File ID:', fileId);
-           console.log(role);
-           switch(role) {
-            case 'edit':
-                fetchEditFile(fileId);
-                break;
+        if (fileId) {
+            console.log('File ID:', fileId);
+            console.log(role);
+            switch (role) {
+                case 'edit':
+                    fetchEditFile(fileId);
+                    break;
 
-            case 'summary':
-                fetchFileSummary(fileId);
-                break;
-                
-           }
+                case 'summary':
+                    fetchFileSummary(fileId);
+                    break;
+
+            }
 
         }
 
@@ -131,12 +131,27 @@ async function archiveFile(fileId) {
 
             refreshTable();
 
-            showToast(result.message, 'top-right', 'success');
+            showToast({
+                type: 'success',
+                message: 'File successfully moved to the archive.',
+
+            });
+
         } else {
-            showToast(result.message, 'top-right', 'success');
+            showToast({
+                type: 'danger',
+                message: 'An error occurred while archiving the file.',
+
+            });
+
         }
     } catch (error) {
-        showToast(error.message, 'top-right', 'danger');
+        showToast({
+            type: 'danger',
+            message: 'An error occurred while archiving the file.',
+
+        });
+
     }
 }
 

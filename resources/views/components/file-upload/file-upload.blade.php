@@ -106,19 +106,15 @@
                 @elseif ($type == 'chainsaw-registration')
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Serial Number Field -->
@@ -171,19 +167,15 @@
 
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Date Applied Field -->
@@ -220,19 +212,15 @@
                 @elseif ($type == 'land-titles')
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Lot Number Field -->
@@ -359,6 +347,7 @@
         uploadButton.disabled = true;
         buttonText.classList.add('hidden');
         buttonSpinner.classList.remove('hidden');
+
         let report = {!! json_encode($record ?? '') !!};
         let isAdmin = {!! json_encode($isAdmin) !!};
         let type = {!! json_encode($type) !!};
@@ -418,6 +407,12 @@
                 if (!permitUploadResponse.ok) throw new Error("Permit upload failed");
 
                 refreshTable();
+            }
+            const specification = document.querySelectorAll('.file-specification-box');
+            if (specification) {
+                specification.forEach(template => {
+                    template.remove();
+                });
             }
             showToast({
                 type: 'success',

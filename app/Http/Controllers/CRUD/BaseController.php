@@ -298,10 +298,10 @@ abstract class BaseController extends Controller
 
                     case 'tree-plantation':
                         DB::table('tree_plantation_registration')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'number_of_trees' => $permit_data['number_of_trees'] ?? null,
-                            'location' => $permit_data['location'] ?? null,
-                            'date_applied' => $permit_data['date_applied'] ?? null,
+                            'name_of_client' => $request->input('name_of_client') ?? null,
+                            'number_of_trees' => $request->input('number_of_trees') ?? null,
+                            'location' => $request->input('location') ?? null,
+                            'date_applied' => $request->input('date_applied') ?? null,
                         ]);
                         break;
 
@@ -352,10 +352,18 @@ abstract class BaseController extends Controller
 
                     case 'land-titles':
                         DB::table('land_titles')->where('file_id', $id)->update([
-                            'name_of_client' => $permit_data['name_of_client'] ?? null,
-                            'location' => $permit_data['location'] ?? null,
-                            'lot_number' => $permit_data['lot_number'] ?? null,
-                            'property_category' => $permit_data['property_category'] ?? null,
+                            'name_of_client' => $request->input('name_of_client') ?? null,
+                            'location' => $request->input('location') ?? null,
+                            'lot_number' => $request->input('lot_number') ?? null,
+                            // 'property_category' => $request->input('property_category') ?? null,
+                        ]);
+                        break;
+                    case 'chainsaw-registration':
+                        DB::table('chainsaw_registrations')->where('file_id', $id)->update([
+                            'name_of_client' => $request->input('name_of_client') ?? null,
+                            'location' => $request->input('location') ?? null,
+                            'serial_number' => $request->input('serial_number') ?? null,
+                            // 'property_category' => $request->input('property_category') ?? null,
                         ]);
                         break;
 
