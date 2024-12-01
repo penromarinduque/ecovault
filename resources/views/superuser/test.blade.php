@@ -35,7 +35,7 @@
 @endsection --}}
 
 @section('content')
-    <div id="table-container">
+    {{-- <div id="table-container">
         <!-- Table container -->
         <h1>Table Content</h1>
     </div>
@@ -128,10 +128,60 @@
                 }
             }
         });
-    </script>
+    </script> --}}
 
+    <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400 bg-white">
 
-
+        <li class="relative">
+            <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
+                onclick="openFileModal(${fileId})">
+                <i class='bx bxs-search-alt-2 absolute left-4 text-lg'></i>
+                <span class="ml-7">View</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                <i class='bx bxs-down-arrow absolute left-4'></i> <!-- Icon -->
+                <span class="ml-7">Download</span><!-- Text -->
+            </a>
+        </li>
+        <li class="relative">
+            <button class="toggle-btn w-full flex items-center gap-2 edit-button px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="edit" data-toggle-target="edit" aria-controls="section-edit"
+                aria-expanded="false">
+                <i class='bx bxs-pencil absolute left-4 text-lg'></i>
+                <span class="ml-7">Edit</span>
+            </button>
+        </li>
+        <li class="relative">
+            <a class="flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div"
+                data-file-id="${fileId}">
+                <i class='bx bxs-share absolute left-4 text-lg'></i>
+                <span class="ml-7">Move</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 share-file-link"
+                data-file-id="${fileId}">
+                <i class='bx bxs-cloud-upload absolute left-4 text-lg'></i>
+                <span class="ml-7">Share</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a class="toggle-btn w-full cursor-pointer text-left file-summary-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="summary" data-toggle-target="summary" aria-controls="section-summary"
+                aria-expanded="false">
+                <i class='bx bxs-file absolute left-4 text-lg'></i>
+                <span class="ml-7">Summary</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a onclick="archiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+                <i class='bx bxs-archive-in absolute left-4 text-lg'></i>
+                <span class="ml-7">Edit</span>
+            </a>
+        </li>
+    </ul>
 
 
 

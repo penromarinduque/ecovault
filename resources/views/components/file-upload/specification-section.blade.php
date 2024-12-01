@@ -4,7 +4,7 @@
         <div class="overflow-y-auto overflow-x-hidden">
             <div class="bg-transparent">
                 <div id="file-specification-container" class="grid grid-cols-1 gap-y-10 gap-x-10">
-                    <template id="file-specification-template">
+                    <template id="file-specification-template" class="specification-template">
                         <div class="file-specification-box col-span-1 border border-gray-500 rounded-md">
                             <div class="flex items-center justify-between">
                                 <h2 id="box-number" class="text-lg font-bold text-gray-700 m-2">Specification 1

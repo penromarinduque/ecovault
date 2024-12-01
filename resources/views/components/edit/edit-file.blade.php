@@ -319,11 +319,21 @@
                     });
 
                     if (data.permit.details) {
+                        // const specificationTemplate = document.querySelectorAll('.file-specification-box');
+                        // if (specificationTemplate) {
+                        //     specificationTemplate.innerHTML = "";
+                        // }
+
                         const details = data.permit.details;
 
                         for (let index = 0; index < details.length; index++) {
                             const detail = details[index];
-                            editSpecification();
+
+                            const existingTemplate = document.querySelector(`#file-specification-box-${index}`);
+                            if (!existingTemplate) {
+                                editSpecification(); // Clone only if it doesn't exist
+                            }
+
 
                             const deleteBtn = document.querySelector(`#delete-specification-${index}`);
                             const closeBtn = document.querySelector(`#close-specification-${index}`);
@@ -408,9 +418,20 @@
 
             if (!editFileResponse.ok) throw new Error("File Update failed");
             const response = await editFileResponse.json();
-            console.log("Update success:", response);
+
+
+            showToast({
+                type: 'success',
+                message: 'Success! The edit is complete.',
+
+            });
+            closeAllSections();
         } catch (error) {
-            showToast(error.message, 'top-right', 'danger')
+            showToast({
+                type: 'danger',
+                message: 'Failed to edit the file.',
+
+            });
 
         }
     });
@@ -438,11 +459,19 @@
             })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Success:', data);
+                showToast({
+                    type: 'success',
+                    message: 'Success! The specification is deleted.',
+
+                });
 
             })
             .catch((error) => {
-                console.error('Error:', error);
+                showToast({
+                    type: 'danger',
+                    message: 'Unable to delete the selected detail.',
+
+                });
 
             });
     }
