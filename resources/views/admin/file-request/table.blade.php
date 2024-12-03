@@ -60,8 +60,8 @@
                       
                         <td class="px-4 py-2 border-b text-center">${new Date(request.created_at).toLocaleString()}</td>
                           <td class="px-4 py-2 border-b text-center">
-                                <button class="bg-green-500 text-white px-2 py-1 rounded" onclick="updateRequestStatus(${request.id}, 'approved')">Yes</button>
-                                <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="updateRequestStatus(${request.id}, 'rejected')">No</button>
+                                <button class="bg-green-500 text-white px-2 py-1 rounded" onclick="updateRequestStatus(${request.id}, 'approved')">Approve</button>
+                                <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="updateRequestStatus(${request.id}, 'rejected')">Reject</button>
                             </td>                       
                     `;
 
