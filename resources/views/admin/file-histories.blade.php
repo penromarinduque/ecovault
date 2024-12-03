@@ -13,9 +13,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             const container = document.getElementById('history-container');
-            const folderId = {!! json_encode($folderId) !!};
+            const fileId = {!! json_encode($fileId) !!};
             try {
-                const response = await fetch(`/api/history?file_id=${folderId}'`);
+                const response = await fetch(`/api/history?file_id=${fileId}'`);
                 const result = await response.json();
 
                 // Check if request was successful
@@ -48,13 +48,13 @@
                     </thead>
                     <tbody>
                         ${histories.map(history => `
-                                                               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                                      <td class="p-3 border">${history.user_id || 'N/A'}</td>
-                                                                    <td class="p-3 border">${history.action}</td>                                            
-                                                                  
-                                                                    <td class="p-3 border">${new Date(history.created_at).toLocaleString()}</td>
-                                                                </tr>
-                                                            `).join('')}
+                                                                       <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                                              <td class="p-3 border">${history.user_id || 'N/A'}</td>
+                                                                            <td class="p-3 border">${history.action}</td>                                            
+                                                                          
+                                                                            <td class="p-3 border">${new Date(history.created_at).toLocaleString()}</td>
+                                                                        </tr>
+                                                                    `).join('')}
                     </tbody>
                 </table>
             `;

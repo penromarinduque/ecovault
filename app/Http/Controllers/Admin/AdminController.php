@@ -159,7 +159,7 @@ class AdminController extends Controller
 
     function ShowFileHistory($fileId)
     {
-        $this->fileId = $fileId;
+
         return view('admin.file-histories', compact('fileId'));
     }
 }

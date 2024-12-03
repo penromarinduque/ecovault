@@ -188,7 +188,7 @@
             </a>
         </li>
          <li class="relative">
-            <a class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+            <a class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100" href="/file-history/${fileId}">
                <i class='bx bxs-time absolute left-4 text-lg'></i>
                 <span class="ml-7">History</span>
             </a>
