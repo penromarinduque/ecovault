@@ -112,7 +112,7 @@ class File extends Model
                 'file_id' => $file->id,
                 'action' => 'created',
                 'changes' => json_encode(['attributes' => $file->toArray()]),
-                'user_id' => auth()->id(), // The current user
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
             ]);
         });
 
@@ -121,7 +121,7 @@ class File extends Model
                 'file_id' => $file->id,
                 'action' => 'updated',
                 'changes' => json_encode($file->getChanges()),
-                'user_id' => auth()->id(),
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
             ]);
         });
 
@@ -130,8 +130,9 @@ class File extends Model
                 'file_id' => $file->id,
                 'action' => 'deleted',
                 'changes' => null,
-                'user_id' => auth()->id(),
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
             ]);
         });
+
     }
 }

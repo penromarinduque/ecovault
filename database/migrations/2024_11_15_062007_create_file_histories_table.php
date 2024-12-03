@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade');
             $table->string('action'); // e.g., 'created', 'updated', 'archived'
             $table->text('changes')->nullable(); // JSON or text describing the changes
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // The user who made the change
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); // The user who made the change
             $table->timestamps();
         });
     }

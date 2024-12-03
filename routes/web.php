@@ -138,5 +138,10 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/qr-validation-invalid', function () {
         return view('admin.qr-redirect-invalid');
     });
+
+    Route::get('/file-history/{fileId}', [AdminController::class, 'ShowFileHistory'])->name('file-history.show');
+    Route::get('/api/history', [FileManagerController::class, "GetFileHistoryById"]);
+
+
 });
 

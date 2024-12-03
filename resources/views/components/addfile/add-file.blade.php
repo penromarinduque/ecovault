@@ -1,7 +1,3 @@
-<!-- Modal toggle -->
-
-
-<!-- Main modal -->
 <div id="add-folder-modal" tabindex="-1" aria-hidden="true"
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -28,10 +24,10 @@
                 <form id="add-folder-form" class="space-y-4">
                     @csrf
                     <div>
-                        <label for="folder_path"
+                        <label for="folder_name"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                             Folder Name</label>
-                        <input type="text" name="folder_path" id="folder_path"
+                        <input type="text" name="folder_name" id="folder_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             placeholder="New Folder" required />
                     </div>
@@ -49,12 +45,12 @@
                     <div>
                         <input type="hidden" name="folder_type" id="folder_type">
                         <input type="hidden" name="folder_municipality" id="folder_municipality">
+                        <input type="hidden" name="folder_id" id="folder_id">
                     </div>
 
                     <button type="submit"
                         class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Create
                         Folder</button>
-
                 </form>
             </div>
         </div>
@@ -83,15 +79,11 @@
             const data = await response.json();
 
             if (data.success) {
-                alert('Folder created successfully!');
+
                 console.log('Created Folder:', data.folder); // Log the folder details
-            } else {
-                alert('Error creating folder: ' + data.message);
-                console.error(data.error); // Log the error message
             }
         } catch (error) {
             console.error('Form submission error:', error);
-            alert('An error occurred while submitting the form.');
         }
     });
 
@@ -132,14 +124,14 @@
             })
             .catch(error => console.error('Error fetching folders:', error));
 
-        console.log(folderType)
+        const folderId = {!! json_encode($folderId ?? '') !!}
+
         const fieldFolderType = document.getElementById('folder_type');
         const fieldMunicipality = document.getElementById('folder_municipality');
-
-
+        const fieldFolderId = document.getElementById('folder_id');
+        console.log($folderId);
         fieldFolderType.value = folderType;
         fieldMunicipality.value = municipality;
-
-
+        fieldFolderId.value = folderId;
     });
 </script>

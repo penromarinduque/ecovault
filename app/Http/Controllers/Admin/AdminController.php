@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\VerifiedUser;
+use Illuminate\Support\Facades\Artisan;
 class AdminController extends Controller
 {
     //
@@ -32,7 +33,7 @@ class AdminController extends Controller
 
     function ShowFileManager()
     {
-
+        Artisan::call('files:archive');
         return view('admin.file-manager.file-manager');
     }
 
@@ -69,7 +70,7 @@ class AdminController extends Controller
 
     function ShowAdministrativeDocuments()
     {
-
+        Artisan::call('files:archive');
         return view('admin.administrative.administrative-documents');
     }
 
@@ -84,6 +85,7 @@ class AdminController extends Controller
 
     function ShowArchivedFiles()
     {
+        Artisan::call('files:archive');
         return view('admin.archived-file.archive-type');
     }
 
@@ -153,5 +155,11 @@ class AdminController extends Controller
     function ShowQrRedirect()
     {
         return view('admin.qr-redirect');
+    }
+
+    function ShowFileHistory($fileId)
+    {
+        $this->fileId = $fileId;
+        return view('admin.file-histories', compact('fileId'));
     }
 }

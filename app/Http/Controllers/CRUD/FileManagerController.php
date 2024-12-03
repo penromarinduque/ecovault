@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CRUD;
 
 use App\Http\Controllers\Controller;
+use App\Models\FileHistory;
 use Illuminate\Http\Request;
 
 use App\Models\TreeCuttingPermit;
@@ -158,6 +159,25 @@ class FileManagerController extends BaseController
         ], 200);
     }
 
+    public function GetFileHistoryById(Request $request)
+    {
+        $file_id = $request->query('file_id');
 
+        if (!$file_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'file_id parameter is required.'
+            ], 400);
+        }
+
+        $history = FileHistory::where('file_id', $file_id)->get();
+
+
+        // Return the file types as a JSON response
+        return response()->json([
+            'success' => true,
+            'history' => $history,
+        ], 200);
+    }
 
 }
