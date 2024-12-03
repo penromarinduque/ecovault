@@ -3,29 +3,36 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-    <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">File Access Requests</h1>
+    <div class="container mx-auto p-6 bg-gray-50 rounded-lg shadow">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">File Access Requests</h1>
         @csrf
-        <table class="min-w-full bg-white border border-gray-300">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 border-b">ID</th>
-                    <th class="px-4 py-2 border-b">File ID</th>
-                    <th class="px-4 py-2 border-b">Requested By</th>
-                    <th class="px-4 py-2 border-b">Handled By</th>
-                    <th class="px-4 py-2 border-b">Status</th>
-                    <th class="px-4 py-2 border-b">Requested Permission</th>
-                    <th class="px-4 py-2 border-b">Remarks</th>
-                    <th class="px-4 py-2 border-b">Created At</th>
-                </tr>
-            </thead>
-            <tbody id="fileAccessRequestsTableBody">
-                <!-- JavaScript will populate rows here -->
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
+                <thead class="bg-gray-100 border-b">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">File ID
+                        </th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Requested
+                            By</th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Handled By
+                        </th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Created
+                            At</th>
+                        <th class="px-6 py-3 text-center text-sm font-medium text-gray-600 uppercase tracking-wider">Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="fileAccessRequestsTableBody" class="text-gray-700">
+                    <!-- JavaScript will populate rows here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    {{-- <script>
+    <script>
         // Function to fetch data from the API and populate the table
         async function fetchFileAccessRequests() {
             try {
@@ -49,8 +56,8 @@
                         <td class="px-4 py-2 border-b text-center">${request.requested_by ? request.requested_by.name : 'Unknown'}</td>
                         <td class="px-4 py-2 border-b text-center">${request.handled_by_admin_id ?? 'Not Handled'}</td>
                         <td class="px-4 py-2 border-b text-center">${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
-                        <td class="px-4 py-2 border-b text-center">${request.requested_permission.charAt(0).toUpperCase() + request.requested_permission.slice(1)}</td>
-                        <td class="px-4 py-2 border-b text-center">${request.remarks ?? 'N/A'}</td>
+                     
+                      
                         <td class="px-4 py-2 border-b text-center">${new Date(request.created_at).toLocaleString()}</td>
                           <td class="px-4 py-2 border-b text-center">
                                 <button class="bg-green-500 text-white px-2 py-1 rounded" onclick="updateRequestStatus(${request.id}, 'approved')">Yes</button>
@@ -96,5 +103,5 @@
                 console.error('Error updating request status:', error);
             }
         }
-    </script> --}}
+    </script>
 @endsection

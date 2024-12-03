@@ -108,6 +108,14 @@
     }
 
     function formData(data) {
+        function formatDate(dateString) {
+            const options = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }; // Customize as needed
+            return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
+        }
         return {
             headings: ["Name", "Office Source", "Date Modified", "Modified By",
                 "Classification",
@@ -117,7 +125,7 @@
                 cells: [
                     truncateFilename(file.file_name, 20),
                     file.office_source,
-                    file.updated_at,
+                    formatDate(file.updated_at),
                     file.user_name,
                     file.classification,
                     generateKebab(file.id, file.shared_users, file.file_name),
@@ -134,12 +142,37 @@
         const employeeActions = `
         ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
         ? `
-        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-        <li><a href="/api/files/download/${fileId}" target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
+        <li class="relative">
+            <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
+                onclick="openFileModal(${fileId})">
+                <i class='bx bxs-search-alt-2 absolute left-4 text-lg'></i>
+                <span class="ml-7">View</span>
+            </a>
+        </li>
+         <li class="relative">
+            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
+           <i class='bx bxs-folder-plus absolute left-4 text-lg'></i>
+                <span class="ml-7">Download</span><!-- Text -->
+            </a>
+        </li>
+        <li class="relative">
+            <a class="toggle-btn w-full cursor-pointer text-left file-summary-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="summary" data-toggle-target="summary" aria-controls="section-summary"
+                aria-expanded="false">
+                <i class='bx bxs-file absolute left-4 text-lg'></i>
+                <span class="ml-7">Summary</span>
+            </a>
+        </li>
         `
         : `
-        <li><button onclick="requestAccess(${fileId}, '${fileName}')" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
+         <li class="relative">
+            <a onclick="requestAccess(${fileId}, '${fileName}')" class="toggle-btn w-full cursor-pointer text-left file-request-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="request" data-toggle-target="request" aria-controls="section-request"
+                aria-expanded="false">
+                <i class='bx bxs-user-check absolute left-4 text-2xl'></i>
+                <span class="ml-7">Request Access</span>
+            </a>
+        </li>
         `}
     `;
 

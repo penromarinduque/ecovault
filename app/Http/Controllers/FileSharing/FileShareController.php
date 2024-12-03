@@ -165,7 +165,7 @@ class FileShareController extends Controller
     {
         try {
 
-            $requests = FileAccessRequests::with(['requestedBy:id,name', 'handledBy:id,name'])->get();
+            $requests = FileAccessRequests::with(['requestedBy:id,name', 'handledBy:id,name', 'file:id,file_name'])->get();
 
             return response()->json([
                 'success' => true,
@@ -180,52 +180,44 @@ class FileShareController extends Controller
             ], 500);
         }
     }
-
     public function UpdateRequestStatus($id, Request $request)
     {
-        try {
-            $status = $request->status;
-            if (!in_array($status, ['pending', 'approved', 'rejected'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid status value provided.',
-                ], 400); // 400 Bad Request
-            }
-            $fileAccessRequest = FileAccessRequests::find($id);
+        $status = $request->status;
 
-            if (!$fileAccessRequest) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'File access request not found.',
-                ], 404); // 404 Not Found
-            }
+        if (!in_array($status, ['pending', 'approved', 'rejected'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid status value provided.',
+            ], 400);
+        }
 
-            // Update the status field
-            $fileAccessRequest->status = $status;
-            $fileAccessRequest->handled_by_admin_id = auth()->user()->id;
-            $fileAccessRequest->save();
+        $fileAccessRequest = FileAccessRequests::find($id);
 
-            //FileShare
+        if (!$fileAccessRequest) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File access request not found.',
+            ], 404);
+        }
+
+        $fileAccessRequest->update([
+            'status' => $status,
+            'handled_by_admin_id' => auth()->id(),
+        ]);
+
+        if ($status === 'approved') {
             FileShares::create([
                 'file_id' => $fileAccessRequest->file_id,
                 'shared_with_user_id' => $fileAccessRequest->requested_by_user_id,
-                'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
+                'shared_by_admin_id' => auth()->id(),
             ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'File access request status updated successfully!',
-                'data' => $fileAccessRequest
-            ]);
-
-
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating status : ' . $e->getMessage(),
-            ], 500);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'File access request status updated successfully!',
+            'data' => $fileAccessRequest,
+        ]);
     }
 
 }

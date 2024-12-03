@@ -126,10 +126,27 @@
     function generateKebabs(fileId, fileShared, fileName) {
         const employeeActions = `
         ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
-        ? `
-        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-        <li><a href="/api/files/download/${fileId}" target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-        <li><button class="file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</button></li>
+        ? ` <li class="relative">
+            <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
+                onclick="openFileModal(${fileId})">
+                <i class='bx bxs-search-alt-2 absolute left-4 text-lg'></i>
+                <span class="ml-7">View</span>
+            </a>
+        </li>
+         <li class="relative">
+            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
+           <i class='bx bxs-folder-plus absolute left-4 text-lg'></i>
+                <span class="ml-7">Download</span><!-- Text -->
+            </a>
+        </li>
+        <li class="relative">
+            <a class="toggle-btn w-full cursor-pointer text-left file-summary-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="summary" data-toggle-target="summary" aria-controls="section-summary"
+                aria-expanded="false">
+                <i class='bx bxs-file absolute left-4 text-lg'></i>
+                <span class="ml-7">Summary</span>
+            </a>
+        </li>
         `
         : `
         <li><button onclick="requestAccess(${fileId}, '${fileName}')" class="block px-4 py-2 hover:bg-gray-100">Request Access</button></li>
@@ -137,7 +154,7 @@
     `;
 
         const adminActions = `
-            <li class="relative">
+       <li class="relative">
             <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
                 onclick="openFileModal(${fileId})">
                 <i class='bx bxs-search-alt-2 absolute left-4 text-lg'></i>
@@ -198,12 +215,12 @@
         const actions = isAdmin ? adminActions : employeeActions;
 
         return `
-        <button id="dropdownLeftButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
+        <button id="dropdownRightButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">
             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
         </button>
-        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 shadow-lg rounded-lg">
+        <div id="dropdownRight${fileId}" class="hidden z-10 w-44 shadow-lg rounded-lg">
             <ul class="py-2 text-sm text-gray-700 border border-gray-200 bg-white rounded-lg divide-y divide-gray-400">
                 ${actions}
             </ul>
