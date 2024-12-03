@@ -1,4 +1,4 @@
-@if ($type == 'tree-cutting-permits' || $type == 'tree-transport-permits')
+@if ($type == 'tree-cutting-permits' || $type == 'transport-permit')
     <section class="col-span-2 w-full mt-10">
         <!-- Main modal -->
         <div class="overflow-y-auto overflow-x-hidden">
@@ -108,6 +108,7 @@
         const maxEditSpecifications = 20;
 
         document.addEventListener('DOMContentLoaded', function() {
+
             uploadSpecification();
         });
 
@@ -120,7 +121,7 @@
 
                 if (type === 'tree-cutting-permits') {
                     inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
-                } else if (type === 'tree-transport-permits') {
+                } else if (type === 'transport-permit') {
                     inputs = ['species', 'number_of_trees', 'destination', 'date_applied', 'date_of_transport'];
                 } else {
                     // Default type or fallback, can be empty or another set of fields
@@ -165,6 +166,7 @@
 
                 // Close button logic to remove and renumber remaining specifications
                 const closeBtn = clone.querySelector('#close-specification');
+
                 if (closeBtn) {
                     closeBtn.id = `close-specification-${idNameChanger}`;
                     closeBtn.addEventListener('click', function() {

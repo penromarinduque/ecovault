@@ -4,17 +4,31 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Middleware\VerifiedUser;
 class AdminController extends Controller
 {
     //
-    function ShowHome()
+    public function ShowHome(Request $request)
     {
+        // Check if the user is authenticated
         if (auth()->check()) {
-            return view('admin.home');
+            // User is authenticated, check if email is verified
+            if (auth()->user()->email_verified_at) {
+                // Verified user, show the admin home
+                return view('admin.home');
+            }
+
+            // Unverified user, redirect using the VerifiedUser middleware logic
+            return app(VerifiedUser::class)->handle($request, function () {
+                // The middleware will redirect the unverified user, no need for additional logic here
+            });
         }
+
+        // For guests (non-logged-in users), show the welcome page
         return view('welcome');
     }
+
+
 
     function ShowFileManager()
     {

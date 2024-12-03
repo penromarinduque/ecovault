@@ -153,7 +153,7 @@
         </li>
         <li class="relative">
             <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
-                <i class='bx bxs-down-arrow absolute left-4'></i> <!-- Icon -->
+           <i class='bx bxs-folder-plus absolute left-4 text-lg'></i>
                 <span class="ml-7">Download</span><!-- Text -->
             </a>
         </li>
@@ -166,15 +166,15 @@
             </button>
         </li>
         <li class="relative">
-            <a class="flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div"
-                data-file-id="${fileId}">
+            <a class="toggle-btn move-button flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div"
+                data-file-id="${fileId}" data-toggle-target="move" data-role="move" aria-controls="section-move" aria-expanded="false">
                 <i class='bx bxs-share absolute left-4 text-lg'></i>
                 <span class="ml-7">Move</span>
             </a>
         </li>
         <li class="relative">
-            <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 share-file-link"
-                data-file-id="${fileId}">
+            <a href="#" class="toggle-btn flex items-center gap-2 px-4 py-2 hover:bg-gray-100 share-file-link"
+                data-file-id="${fileId}" data-role="share">
                 <i class='bx bxs-cloud-upload absolute left-4 text-lg'></i>
                 <span class="ml-7">Share</span>
             </a>
@@ -187,10 +187,16 @@
                 <span class="ml-7">Summary</span>
             </a>
         </li>
+         <li class="relative">
+            <a class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+               <i class='bx bxs-time absolute left-4 text-lg'></i>
+                <span class="ml-7">History</span>
+            </a>
+        </li>
         <li class="relative">
             <a onclick="archiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
                 <i class='bx bxs-archive-in absolute left-4 text-lg'></i>
-                <span class="ml-7">Edit</span>
+                <span class="ml-7">Archived</span>
             </a>
         </li>
     `;
@@ -204,8 +210,8 @@
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
         </button>
-        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-            <ul class="py-2 text-sm text-gray-700 border border-gray-200 rounded-lg divide-y divide-gray-400">
+        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 shadow-lg rounded-lg">
+            <ul class="py-2 text-sm text-gray-700 border border-gray-200 bg-white rounded-lg divide-y divide-gray-400">
                 ${actions}
             </ul>
         </div>

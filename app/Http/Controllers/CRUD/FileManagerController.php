@@ -52,7 +52,7 @@ class FileManagerController extends BaseController
                     $treeCuttingPermit->details()->createMany($detailsData);
                     break;
 
-                case 'tree-transport-permits':
+                case 'transport-permit':
                     $treeTransportPermit = TransportPermit::create([
                         'file_id' => $request->file_id,
                         'name_of_client' => $request->name_of_client,
@@ -87,7 +87,7 @@ class FileManagerController extends BaseController
                     ]);
                     break;
 
-                case 'tree-plantation':
+                case 'tree-plantation-registration':
                     TreePlantation::create([
                         'file_id' => $request->file_id,
                         'name_of_client' => $request->name_of_client,
@@ -97,7 +97,7 @@ class FileManagerController extends BaseController
                     ]);
                     break;
 
-                case 'land-titles':
+                case 'land-title':
                     LandTitle::create([
                         'file_id' => $request->file_id,
                         'name_of_client' => $request->name_of_client,
@@ -158,6 +158,6 @@ class FileManagerController extends BaseController
         ], 200);
     }
 
-    
+
 
 }

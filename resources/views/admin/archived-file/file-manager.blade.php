@@ -17,7 +17,10 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'tree-plantation']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', [
+                    'type' => 'tree-plantation-registration
+                ',
+                ]) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Tree Plantation</h2>
@@ -25,7 +28,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'tree-transport-permits']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'transport-permit']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Transport Permits" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Tree Transport Permits</h2>

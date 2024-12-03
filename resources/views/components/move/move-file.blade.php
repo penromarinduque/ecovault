@@ -5,9 +5,13 @@
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-lg font-bold text-gray-700">Move <span id="label-file-name"> </span></h2>
             {{-- add summary --}}
-            <button type="button" id="close-edit-btn"
-                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <i class='bx bx-x bx-md'></i>
+            <button type="button" id="close-upload-btn" aria-controls="section-close-all"
+                class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
             </button>
         </div>
 
@@ -245,7 +249,11 @@
 
         this.reset();
         refreshTable();
-        showToast("File moved successfully", 'top-right', 'success')
+        showToast({
+            type: 'success',
+            message: 'File moved successfully.',
+
+        });
     });
 
 

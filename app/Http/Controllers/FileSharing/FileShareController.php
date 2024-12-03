@@ -15,7 +15,6 @@ class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
     {
-
         $validated = $request->validate([
             'file_id' => 'required|exists:files,id',
             'shared_with_user_id' => 'required|exists:users,id',
@@ -23,28 +22,48 @@ class FileShareController extends Controller
             'expiration_date' => 'required|date_format:m-d-Y' // Validate the date in "mm-dd-yyyy" format
         ]);
 
-        // Create the file share record
-
         try {
-
             $senderId = auth()->id();
             $fileId = $validated['file_id'];
             $receiverId = $validated['shared_with_user_id'];
-            $remarks = $validated['remarks'];  // Use the remarks field for the message
-            //$expirationDate = $validated['expiration_date'];
+            $remarks = $validated['remarks'];
+            $expirationDate = \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date']);
 
+            // Check if the expiration date is in the past
+            if (\Carbon\Carbon::now()->greaterThan($expirationDate)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The expiration date cannot be in the past.',
+                ], 400);
+            }
 
-            FileShares::create(attributes: [
-                'file_id' => $validated['file_id'],
-                'shared_with_user_id' => $validated['shared_with_user_id'],
-                'shared_by_admin_id' => auth()->id(), // Assuming the logged-in admin is sharing the file
-                'expiration_date' => \Carbon\Carbon::createFromFormat('m-d-Y', $validated['expiration_date'])
+            // Check if the file has already been shared with the user
+            $existingShare = FileShares::where('file_id', $fileId)
+                ->where('shared_with_user_id', $receiverId)
+                ->first();
+
+            if ($existingShare) {
+                // If the existing share is not expired, prevent creating a new share
+                if (\Carbon\Carbon::now()->lessThan($existingShare->expiration_date)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'This file has already been shared with the specified user and the share has not expired yet.',
+                    ], 400);
+                }
+            }
+
+            // Create the file share record
+            FileShares::create([
+                'file_id' => $fileId,
+                'shared_with_user_id' => $receiverId,
+                'shared_by_admin_id' => $senderId,
+                'expiration_date' => $expirationDate
             ]);
 
             $user = User::findOrFail($receiverId);
 
+            // Send notification to the user
             $user->notify(new FileShareNotification($fileId, $receiverId, $senderId, $remarks, 'shared file'));
-
 
             return response()->json([
                 'success' => true,
@@ -57,6 +76,9 @@ class FileShareController extends Controller
             ], 500);
         }
     }
+
+
+
 
     public function StoreRequest(Request $request)
     {

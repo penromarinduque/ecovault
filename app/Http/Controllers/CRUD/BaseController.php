@@ -164,13 +164,13 @@ abstract class BaseController extends Controller
                             ->first();
                         break;
 
-                    case 'tree-plantation':
+                    case 'tree-plantation-registration':
                         $permit = DB::table('tree_plantation_registration')
                             ->where('file_id', $id)
                             ->first();
                         break;
 
-                    case 'tree-transport-permits':
+                    case 'transport-permit':
                         $permit = TransportPermit::with('details')
                             ->where('file_id', $id)
                             ->first();
@@ -178,7 +178,7 @@ abstract class BaseController extends Controller
                         $permit ? $permit->details : [];
                         break;
 
-                    case 'land-titles':
+                    case 'land-title':
                         $permit = DB::table('land_titles')
                             ->where('file_id', $id)
                             ->first();
@@ -296,7 +296,7 @@ abstract class BaseController extends Controller
                         }
                         break;
 
-                    case 'tree-plantation':
+                    case 'tree-plantation-registration':
                         DB::table('tree_plantation_registration')->where('file_id', $id)->update([
                             'name_of_client' => $request->input('name_of_client') ?? null,
                             'number_of_trees' => $request->input('number_of_trees') ?? null,
@@ -305,7 +305,7 @@ abstract class BaseController extends Controller
                         ]);
                         break;
 
-                    case 'tree-transport-permits':
+                    case 'transport-permit':
                         // Step 1: Update the TreeCuttingPermit (main data)
                         $treeTransportPermit = TransportPermit::where('file_id', $id)->first();
 
@@ -398,7 +398,7 @@ abstract class BaseController extends Controller
         $specification = null;
         if ($type === 'tree-cutting-permits') {
             $specification = TreeCuttingPermitDetail::find($id);
-        } elseif ($type === 'tree-transport-permits') {
+        } elseif ($type === 'transport-permit') {
             $specification = TreeTransportPermitDetails::find($id);
         }
 

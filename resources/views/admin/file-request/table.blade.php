@@ -25,7 +25,7 @@
         </table>
     </div>
 
-    <script>
+    {{-- <script>
         // Function to fetch data from the API and populate the table
         async function fetchFileAccessRequests() {
             try {
@@ -96,5 +96,5 @@
                 console.error('Error updating request status:', error);
             }
         }
-    </script>
+    </script> --}}
 @endsection

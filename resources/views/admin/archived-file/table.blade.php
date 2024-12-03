@@ -1,23 +1,32 @@
 @extends('layouts.admin.master')
 
 @section('title', 'PENRO Archiving System')
-<link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+
 @section('content')
 
     <div class="overflow-auto rounded-md text-black p-4">
 
-        <div>
 
+        <div class="w-full flex {{ Auth::user()->isAdmin ? '' : 'hidden' }}">
+            <div class="space-x-3 mb-4">
+                <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
+                    data-role="upload" aria-expanded="false" label="Upload File" type="button" style="primary" />
 
-            <div class="my-4 space-x-3">
-                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
-                <x-button id="" label="Create a Folder" style="secondary" />
+                <button id='add-folder-btn' data-modal-target="add-folder-modal" data-modal-toggle="add-folder-modal"
+                    class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">
+                    Create Folder
+                </button>
             </div>
         </div>
+
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
+        @component('components.addfile.add-file', [
+            'type' => $type ?? '',
+            'municipality' => $municipality ?? '',
+            'isArchived' => true,
+        ])
+        @endcomponent
         <!-- file sharing-->
         @component('components.file-share.file-share', [
             'includePermit' => true,
@@ -27,10 +36,18 @@
             //Enter here for passing variable(future purposes)
         ])
         @endcomponent
-
         <div class="grid">
-            <div id="mainTable" class="transition-opacity duration-500 ease-in-out opacity-100">
-                <div class="overflow-x-auto bg-white rounded-lg p-5">
+
+            @component('components.create-folder.create-folder', [
+                'type' => $type ?? '',
+                'municipality' => $municipality ?? '',
+            ])
+            @endcomponent
+
+
+            <div id="table-container">
+                <div
+                    class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->
                     @component('components.forms.table', [
                         'type' => $type ?? '',
@@ -42,12 +59,10 @@
                         <!--add something to use in the table updated by harvs-->
                     @endcomponent
                 </div>
-
             </div>
-
-            <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="overflow-auto  rounded-lg bg-white p-5">
+            <div id="section-container" class="hidden">
+                <div class="grid grid-cols-3 gap-4 ">
+                    <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
                             'type' => $type ?? '',
                             'municipality' => $municipality ?? '',
@@ -57,44 +72,57 @@
                         ])
                             <!--add something to use in the table updated by harvs-->
                         @endcomponent
+                        <!-- minimize table here-->
                     </div>
 
-                    <div class=" p-4 col-span-2 bg-white rounded-md ">
+                    <div id="section-animation" class="p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
+                        {{-- this for upload --}}
+                        <div id="move-section" class="section hidden" role="region" aria-labelledby="section-move-title">
+                            @component('components.move.move-file', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                                'isArchived' => true,
+                                'category' => $category ?? '',
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.move.move-file', [
-                            'type' => $type ?? '',
-                            'municipality' => $municiplaity ?? '',
-                            'record' => $record ?? '',
-                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
-                            'isArchived' => false,
-                            'category' => $category ?? '',
-                        ])
-                        @endcomponent
+                        <div id="upload-section" class="section hidden" role="region"
+                            aria-labelledby="section-upload-title">
+                            @component('components.file-upload.file-upload', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'record' => $record ?? '',
+                                'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                                'isArchived' => true,
+                                'category' => $category ?? '',
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.file-upload.file-upload', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'record' => $record ?? '',
-                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
-                            'isArchived' => true,
-                            'category' => $category ?? '',
-                        ])
-                        @endcomponent
+                        <div id="edit-section" class="section hidden" role="region" aria-labelledby="section-edit-title">
+                            @component('components.edit.edit-file', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'record' => $record ?? '',
+                                'authId' => Auth::user()->id,
+                                'includePermit' => true,
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.edit.edit-file', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'record' => $record ?? '',
-                            'authId' => Auth::user()->id,
-                            'includePermit' => true,
-                        ])
-                        @endcomponent
-                        @component('components.file-summary.file-summary', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'record' => $record ?? '',
-                        ])
-                        @endcomponent
+                        <div id="summary-section" class="section hidden" role="region"
+                            aria-labelledby="section-summary-title">
+                            @component('components.file-summary.file-summary', [
+                                'type' => $type ?? '',
+                                'record' => $record ?? '',
+                                'includePermit' => true,
+                            ])
+                            @endcomponent
+                        </div>
+
+                        <!-- for showing the specification details-->
 
                         <div id="toast"
                             class="hidden fixed z-[90] right-0 bottom-0 m-8 bg-red-500 text-white p-4 rounded-lg shadow-lg transition-opacity duration-300 ">
@@ -106,12 +134,10 @@
                             </div>
                             <div id="toast-timer" class="w-full h-1 bg-green-300 mt-2"></div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     @include('admin.file-manager.component.js')
 @endsection

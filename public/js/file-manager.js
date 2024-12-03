@@ -65,6 +65,8 @@ document.addEventListener('click', event => {
         const fileId = button.dataset.fileId;
         const role = button.dataset.role;//logic by harvey select the role of button base on dataset.
 
+
+
         if (fileId) {
             console.log('File ID:', fileId);
             console.log(role);
@@ -76,13 +78,48 @@ document.addEventListener('click', event => {
                 case 'summary':
                     fetchFileSummary(fileId);
                     break;
+                case 'share':
+                    fileShare(fileId);
 
+                case 'move':
+                    fetchFileDataMove(fileId);   
             }
 
         }
 
-
         if (button.classList.contains("close-all-btn")) {
+
+            switch (role) {
+                case 'upload':
+                    const specification = document.querySelectorAll('.file-specification-box');
+                    const uploadForm = document.getElementById("upload-form");
+
+                    if (uploadForm) {
+                        uploadForm.reset();
+                        showToast({
+                            type: 'default',
+                            message: 'Exit upload. File input has been reset.',
+
+                        });
+                    }
+
+                    if (specification) {
+                        specification.forEach(template => {
+                            template.remove();
+                        });
+                    }
+                    break;
+
+                case 'edit':
+                        showToast({
+                            type: 'default',
+                            message: 'Edit has been canceled.',
+
+                        });
+                    break;
+
+            }
+
             closeAllSections(); // Close all sections when "Close All" button is clicked
         } else {
             toggleSection(sectionId); // Toggle the respective section

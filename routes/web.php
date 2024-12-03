@@ -24,7 +24,7 @@ Route::get('/forgot-password', function () {
 
 Route::post('/forgot-password', [AuthController::class, 'SendPassResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'ShowResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'Reset'])->name('password.update');
+Route::post('password/reset', [AuthController::class, 'ResetPassword'])->name('password.update');
 Route::get('/register', [AuthController::class, 'ShowRegistrationForm'])->name('register.show');
 Route::post('/store-account', [AuthController::class, 'StoreAccount'])->name('user.post');
 Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.show');
@@ -32,10 +32,13 @@ Route::post('/login/auth', [AuthController::class, 'Authenticate'])->name('login
 Route::get('/verify', [AuthController::class, 'ShowVerification'])->name('verification.show');
 Route::post('/verify/account', [AuthController::class, 'VerifyEmail'])->name('verify.email.post');
 Route::get('/logout', [AuthController::class, 'Logout'])->name('logout.post');
+Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend.otp');
 
 Route::get('/', [AdminController::class, 'ShowHome'])->name('admin.home.show');
 
 Route::middleware([VerifiedUser::class])->group(function () {
+
+
     Route::get('/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
 
     Route::get('/scan/qrcode', [AdminController::class, 'ShowQR'])->name('show.qr');

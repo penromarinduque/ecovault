@@ -39,12 +39,7 @@
             </div>
 
             <!-- Example additional category -->
-            <div class="flex flex-col items-center">
-                <a href="{{ route('file-manager.land-title.show', ['type' => 'land-titles']) }}">
-                    <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles Folder" class="w-24 mb-2">
-                    <h1 class="w-[120px] text-center">Land Titles</h1>
-                </a>
-            </div>
+
         </div>
     </div>
 

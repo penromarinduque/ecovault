@@ -34,23 +34,24 @@
                     <span id="summary-name-of-client" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
-        @elseif($record)
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-lg font-medium text-gray-800">Office Source:</span>
-                    <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-lg font-medium text-gray-800">Classification:</span>
-                    <span id="summary-classification" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
         @endif
-        @if ($type == 'tree-plantation')
+
+        <div class="relative z-0 w-full mb-5 group">
+            <div
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">Office Source:</span>
+                <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+            </div>
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            <div
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">Classification:</span>
+                <span id="summary-classification" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+            </div>
+        </div>
+
+        @if ($type == 'tree-plantation-registration')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -59,7 +60,7 @@
                 </div>
             </div>
         @endif
-        @if (in_array($type, ['chainsaw-registration', 'tree-plantation', 'land-titles']))
+        @if (in_array($type, ['chainsaw-registration', 'tree-plantation-registration', 'land-titles']))
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -68,7 +69,11 @@
                 </div>
             </div>
         @endif
-        @if ($type == 'chainsaw-registration' || $type == 'tree-plantation')
+        @if (
+            $type == 'chainsaw-registration' ||
+                $type ==
+                    'tree-plantation-registration
+                                                                                                ')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -90,7 +95,7 @@
         @endif
 
 
-        @if ($type == 'land-titles')
+        @if ($type == 'land-title')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -107,7 +112,7 @@
                 </div>
             </div>
         @endif
-        @if (in_array($type, ['tree-cutting-permits', 'tree-transport-permits']))
+        @if (in_array($type, ['tree-cutting-permits', 'transport-permit']))
             <div class="relative overflow-x-auto mt-12">
 
 
@@ -120,7 +125,7 @@
                                     <th scope="col" class="px-6 py-3">No.</th>
                                     <th scope="col" class="px-6 py-3">Location</th>
                                     <th scope="col" class="px-6 py-3">Date Applied</th>
-                                @elseif($type === 'tree-transport-permits')
+                                @elseif($type === 'transport-permit')
                                     <th scope="col" class="px-6 py-3">Species</th>
                                     <th scope="col" class="px-6 py-3">No.</th>
                                     <th scope="col" class="px-6 py-3">Destination</th>
@@ -239,7 +244,7 @@
                                         <td class="px-6 py-3">${detail.date_applied || ''}</td>
                                     </tr>
                                 `;
-                            } else if (type === 'tree-transport-permits') {
+                            } else if (type === 'transport-permit') {
                                 row = `
                                     <tr class="odd:bg-white even:bg-gray-100">
                                         <td class="px-6 py-3">${detail.species || ''}</td>
