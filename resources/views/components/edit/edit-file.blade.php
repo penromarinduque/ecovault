@@ -1,12 +1,12 @@
 <!-- An unexamined life is not worth living. - Socrates -->
 
-<div id="edit-file-div" class="items-center justify-center hidden mx-10">
+<div id="edit-file-div" class="items-center justify-center mx-10">
     <div id="edit-content" class="">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-lg font-bold text-gray-700">Edit File</h2>
-            <button type="button" id="close-edit-button"
-                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+            <button type="button" id="close-edit-btn" aria-controls="section-close-all" data-role="edit"
+                class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
@@ -49,19 +49,70 @@
                     </div>
 
                     <div class="my-4">
-                        <label for="classification"
-                            class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                        <select id="edit-classification" name="classification"
-                            class="classification bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        @if ($type == 'land-title')
+                            @if ($municipality == 'Santa Cruz')
+                                {{-- Content specific for Sta Cruz --}}
+                                <label for="classification"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                <select id="edit-classification" name="classification"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
                         required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
-                            <option value="" disabled selected>Select a Classification</option>
-                            <option value="highly-technical">Highly Technical</option>
-                            <option value="simple">Simple</option>
-                        </select>
+                                    autocomplete="off" required>
+                                    <option value="" disabled selected>Select a Classification</option>
+                                    <option value="PLS 726">PLS 726</option>
+                                    <option value="CAD 815">CAD 815</option>
+                                    <option value="PSC4">PSC4</option>
+                                </select>
+                            @elseif ($municipality == 'Torrijos')
+                                {{-- Content specific for Torrijos --}}
+                                <label for="classification"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                <select id="edit-classification" name="classification"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                    <option value="" disabled selected>Select a Classification</option>
+                                    <option value="PLS 783">PLS 783</option>
+                                    <option value="CAD 612">CAD 612</option>
+                                </select>
+                            @else
+                                {{-- Content for other municipalities --}}
+                                <label for="classification"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                <select id="edit-classification" name="classification"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                    <option value="" disabled selected>Select a Classification</option>
+                                    <option value="highly-technical">Highly Technical</option>
+                                    <option value="simple">Simple</option>
+                                </select>
+                            @endif
+                        @else
+                            {{-- Content for types other than land-title --}}
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="edit-classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <option value="" disabled selected>Select a Classification</option>
+                                <option value="highly-technical">Highly Technical</option>
+                                <option value="simple">Simple</option>
+                            </select>
+                        @endif
                     </div>
                 </div>
 
@@ -82,7 +133,7 @@
                                 Click to Add
                             </button>
                         </div>
-                        <!-- Show species for tree-cutting-permits, tree-transport-permits -->
+                        <!-- Show species for tree-cutting-permits, transport-permit -->
 
                         <!-- this for pop up modal for adding no. of trees/species/location/date applied/ -->
                     @elseif ($type == 'chainsaw-registration')
@@ -132,7 +183,7 @@
                                 valid
                                 input!</p>
                         </div>
-                    @elseif ($type == 'tree-plantation')
+                    @elseif ($type == 'tree-plantation-registration')
                         <!-- Number of Trees Field -->
                         <div class="my-4">
                             <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
@@ -180,7 +231,7 @@
                                 valid
                                 input!</p>
                         </div>
-                    @elseif ($type == 'tree-transport-permits')
+                    @elseif ($type == 'transport-permit')
                         <!-- Transport Permits Inputs -->
                         <div class="my-4">
                             <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree
@@ -196,7 +247,7 @@
                                 Click to Add
                             </button>
                         </div>
-                    @elseif ($type == 'land-titles')
+                    @elseif ($type == 'land-title')
                         <!-- Location Field -->
                         <div class="my-4">
                             <label for="location"
@@ -269,8 +320,7 @@
 <script>
     // Fetches file data dynamically
 
-    async function fetchFileData(fileId) {
-
+    async function fetchEditFile(fileId) {
 
         let includePermit = {!! json_encode($includePermit ?? '') !!};
 
@@ -319,11 +369,21 @@
                     });
 
                     if (data.permit.details) {
+                        // const specificationTemplate = document.querySelectorAll('.file-specification-box');
+                        // if (specificationTemplate) {
+                        //     specificationTemplate.innerHTML = "";
+                        // }
+
                         const details = data.permit.details;
 
                         for (let index = 0; index < details.length; index++) {
                             const detail = details[index];
-                            editSpecification();
+
+                            const existingTemplate = document.querySelector(`#file-specification-box-${index}`);
+                            if (!existingTemplate) {
+                                editSpecification(); // Clone only if it doesn't exist
+                            }
+
 
                             const deleteBtn = document.querySelector(`#delete-specification-${index}`);
                             const closeBtn = document.querySelector(`#close-specification-${index}`);
@@ -408,9 +468,20 @@
 
             if (!editFileResponse.ok) throw new Error("File Update failed");
             const response = await editFileResponse.json();
-            console.log("Update success:", response);
+
+
+            showToast({
+                type: 'success',
+                message: 'Success! The edit is complete.',
+
+            });
+            closeAllSections();
         } catch (error) {
-            showToast(error.message, 'top-right', 'danger')
+            showToast({
+                type: 'danger',
+                message: 'Failed to edit the file.',
+
+            });
 
         }
     });
@@ -438,11 +509,19 @@
             })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Success:', data);
+                showToast({
+                    type: 'success',
+                    message: 'Success! The specification is deleted.',
+
+                });
 
             })
             .catch((error) => {
-                console.error('Error:', error);
+                showToast({
+                    type: 'danger',
+                    message: 'Unable to delete the selected detail.',
+
+                });
 
             });
     }

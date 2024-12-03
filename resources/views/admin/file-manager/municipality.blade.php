@@ -17,9 +17,9 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const container = document.getElementById('municipalities-container');
-
                 // Show a loading message
                 container.innerHTML = '<p class="col-span-4 text-center text-gray-600">Loading municipalities...</p>';
+
 
                 // Fetch municipalities for Marinduque
                 fetch('https://psgc.gitlab.io/api/provinces/174000000/municipalities/')
@@ -29,6 +29,8 @@
                     })
                     .then(municipalities => {
                         // Clear the container
+                        const _type = {!! json_encode($type ?? '') !!};
+                        const _category = {!! json_encode($category ?? '') !!};
                         container.innerHTML = '';
 
                         // Populate the municipalities dynamically
@@ -37,8 +39,15 @@
                             municipalityDiv.classList.add('flex', 'flex-col', 'items-center', 'text-center',
                                 'mx-auto');
 
+                            const municipalityUrl =
+                                `{{ route('file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
+                                .replace('__type__', _type)
+                                .replace('__municipality__', municipality.name)
+                                .replace('__category__', _category ??
+                                    'null'); // if category is null, use null
+
                             municipalityDiv.innerHTML = `
-                        <a href="${municipality.name}" class="text-center">
+                        <a href="${municipalityUrl}" class="text-center">
                             <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
                             <h2 class="w-[120px] truncate">${municipality.name}</h2>
                         </a>

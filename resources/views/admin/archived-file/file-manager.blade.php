@@ -9,7 +9,7 @@
 
         <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold"> <!-- Use gap for consistent spacing -->
             <div class="flex flex-col items-center"> <!-- Flexbox for centering -->
-                <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-cutting-permits']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'tree-cutting-permits']) }}"
                     class="text-center"> <!-- Centering text under image -->
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Cutting Permits" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Tree Cutting Permits</h2>
@@ -17,7 +17,10 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-plantation']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', [
+                    'type' => 'tree-plantation-registration
+                ',
+                ]) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Tree Plantation</h2>
@@ -25,7 +28,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'tree-transport-permits']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'transport-permit']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Transport Permits" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Tree Transport Permits</h2>
@@ -33,7 +36,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.file-manager.municipality.show', ['archivedType' => $archivedType, 'type' => 'chainsaw-registration']) }}"
+                <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'chainsaw-registration']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Chainsaw Registration" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Chainsaw Registration</h2>
@@ -41,7 +44,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.file-manager.land-title.show', ['archivedType' => $archivedType, 'type' => 'land-titles']) }}"
+                <a href="{{ route('archived-file.file-manager.land-title.show', ['type' => 'land-titles']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles/ Patented Lots" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Land Titles/ Patented Lots</h2>

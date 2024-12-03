@@ -102,17 +102,19 @@
 </div>
 <script>
     //file share modal 
-    document.addEventListener('click', (event) => {
-        // Check if the clicked element has the class 'share-file-link'
-        if (event.target.matches('.share-file-link')) {
-            event.preventDefault(); // Prevent default link behavior
-            const fileId = event.target.dataset.fileId;
-            fileShare(fileId); // Call the async function with the fileId
-        }
-    });
+    // document.addEventListener('click', (event) => {
+    //     // Check if the clicked element has the class 'share-file-link'
+    //     if (event.target.matches('.share-file-link')) {
+    //         event.preventDefault(); // Prevent default link behavior
+    //         const fileId = event.target.dataset.fileId;
+    //         fileShare(fileId); // Call the async function with the fileId
+    //     }
+    // });
 
     async function fileShare(fileId) {
+
         const includePermit = @json($includePermit);
+        console.log(includePermit);
         const fileShareModal = document.getElementById('file-share-modal');
 
         try {
@@ -166,14 +168,28 @@
                 event.target.reset();
                 clearSelection();
                 closeFileShare();
+                showToast({
+                    type: 'success',
+                    message: data.message,
+
+                });
             } else {
-                alert('Failed to share file: ' + data.message);
+                showToast({
+                    type: '',
+                    message: data.message,
+
+                });
             }
 
 
         } catch (error) {
             console.error('Error sharing file:', error);
-            alert('An error occurred while sharing the file.');
+            showToast({
+                type: 'danger',
+                message: 'An error occurred while sharing the file.',
+
+            });
+
         }
     });
 

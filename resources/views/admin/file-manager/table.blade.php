@@ -6,18 +6,18 @@
 
     <div class="overflow-auto rounded-md text-black p-4">
 
-        <div class="w-full flex">
+
+        <div class="w-full flex {{ Auth::user()->isAdmin ? '' : 'hidden' }}">
             <div class="space-x-3 mb-4">
-                <x-button id="uploadBtn" label="Upload File" type="submit" style="primary" />
+                <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
+                    data-role="upload" aria-expanded="false" label="Upload File" type="button" style="primary" />
+
                 <button id='add-folder-btn' data-modal-target="add-folder-modal" data-modal-toggle="add-folder-modal"
                     class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">
                     Create Folder
                 </button>
             </div>
         </div>
-        {{-- <x-folders /> --}}
-
-
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
@@ -45,7 +45,7 @@
             @endcomponent
 
 
-            <div id="mainTable" class="duration-500 ease-in-out opacity-100 ">
+            <div id="table-container">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
                     <!-- load the table-->
@@ -60,7 +60,7 @@
                     @endcomponent
                 </div>
             </div>
-            <div id="fileSection" class="transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none hidden">
+            <div id="section-container" class="hidden">
                 <div class="grid grid-cols-3 gap-4 ">
                     <div class="overflow-y-auto rounded-md bg-white p-5 border border-gray-300 shadow-md">
                         @component('components.forms.minimize-table', [
@@ -75,42 +75,53 @@
                         <!-- minimize table here-->
                     </div>
 
-                    <div class=" p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md animate-slideIn">
+                    <div id="section-animation" class="p-4 col-span-2 bg-white rounded-md border border-gray-300 shadow-md">
                         {{-- this for upload --}}
-                        @component('components.move.move-file', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
-                            'isArchived' => false,
-                            'category' => $category ?? '',
-                        ])
-                        @endcomponent
+                        <div id="move-section" class="section hidden" role="region" aria-labelledby="section-move-title">
+                            @component('components.move.move-file', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                                'isArchived' => false,
+                                'category' => $category ?? '',
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.file-upload.file-upload', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'record' => $record ?? '',
-                            'isAdmin' => auth()->check() && auth()->user()->isAdmin,
-                            'isArchived' => false,
-                            'category' => $category ?? '',
-                        ])
-                        @endcomponent
+                        <div id="upload-section" class="section hidden" role="region"
+                            aria-labelledby="section-upload-title">
+                            @component('components.file-upload.file-upload', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'record' => $record ?? '',
+                                'isAdmin' => auth()->check() && auth()->user()->isAdmin,
+                                'isArchived' => false,
+                                'category' => $category ?? '',
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.edit.edit-file', [
-                            'type' => $type ?? '',
-                            'municipality' => $municipality ?? '',
-                            'record' => $record ?? '',
-                            'authId' => Auth::user()->id,
-                            'includePermit' => true,
-                        ])
-                        @endcomponent
+                        <div id="edit-section" class="section hidden" role="region" aria-labelledby="section-edit-title">
+                            @component('components.edit.edit-file', [
+                                'type' => $type ?? '',
+                                'municipality' => $municipality ?? '',
+                                'record' => $record ?? '',
+                                'authId' => Auth::user()->id,
+                                'includePermit' => true,
+                            ])
+                            @endcomponent
+                        </div>
 
-                        @component('components.file-summary.file-summary', [
-                            'type' => $type ?? '',
-                            'record' => $record ?? '',
-                            'includePermit' => true,
-                        ])
-                        @endcomponent
+                        <div id="summary-section" class="section hidden" role="region"
+                            aria-labelledby="section-summary-title">
+                            @component('components.file-summary.file-summary', [
+                                'type' => $type ?? '',
+                                'record' => $record ?? '',
+                                'includePermit' => true,
+                            ])
+                            @endcomponent
+                        </div>
+
                         <!-- for showing the specification details-->
 
                         <div id="toast"
@@ -128,6 +139,5 @@
             </div>
         </div>
     </div>
-
     @include('admin.file-manager.component.js')
 @endsection

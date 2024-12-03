@@ -1,10 +1,10 @@
-@if ($type == 'tree-cutting-permits' || $type == 'tree-transport-permits')
+@if ($type == 'tree-cutting-permits' || $type == 'transport-permit')
     <section class="col-span-2 w-full mt-10">
         <!-- Main modal -->
         <div class="overflow-y-auto overflow-x-hidden">
             <div class="bg-transparent">
                 <div id="file-specification-container" class="grid grid-cols-1 gap-y-10 gap-x-10">
-                    <template id="file-specification-template">
+                    <template id="file-specification-template" class="specification-template">
                         <div class="file-specification-box col-span-1 border border-gray-500 rounded-md">
                             <div class="flex items-center justify-between">
                                 <h2 id="box-number" class="text-lg font-bold text-gray-700 m-2">Specification 1
@@ -19,7 +19,7 @@
                                     <span class="sr-only">Close modal</span>
                                 </button>
                             </div>
-                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full">
+                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full font-medium">
                                 <div class="my-4">
                                     <label for="species" id="label-species"
                                         class="block mb-2 text-sm font-medium text-gray-700">Species</label>
@@ -108,6 +108,7 @@
         const maxEditSpecifications = 20;
 
         document.addEventListener('DOMContentLoaded', function() {
+
             uploadSpecification();
         });
 
@@ -120,7 +121,7 @@
 
                 if (type === 'tree-cutting-permits') {
                     inputs = ['species', 'number_of_trees', 'location', 'date_applied'];
-                } else if (type === 'tree-transport-permits') {
+                } else if (type === 'transport-permit') {
                     inputs = ['species', 'number_of_trees', 'destination', 'date_applied', 'date_of_transport'];
                 } else {
                     // Default type or fallback, can be empty or another set of fields
@@ -165,6 +166,7 @@
 
                 // Close button logic to remove and renumber remaining specifications
                 const closeBtn = clone.querySelector('#close-specification');
+
                 if (closeBtn) {
                     closeBtn.id = `close-specification-${idNameChanger}`;
                     closeBtn.addEventListener('click', function() {

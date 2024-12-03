@@ -2,10 +2,131 @@
 
 
 //Refresh Table In every activity upload/edit/archiving/etc
-function refreshTable(){
+function refreshTable() {
     fetchData();
     fetchDatas();
 }
+
+
+// Get references to containers
+const sectionContainer = document.getElementById('section-container');
+const tableContainer = document.getElementById('table-container');
+const closeAllBtns = document.querySelectorAll('.close-all-btn'); // Select all close buttons by class
+const sectionAnimation = document.getElementById('section-animation');
+// Function to toggle sections
+function toggleSection(sectionId) {
+    // Hide all sections first
+    sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+
+    // Show the selected section
+    const targetSection = document.getElementById(`${sectionId}-section`);
+    if (targetSection) {
+        sectionAnimation.classList.add('animate-slideIn');
+        targetSection.classList.remove('hidden');
+    }
+
+    sectionContainer.classList.remove('hidden'); // Show parent container
+    tableContainer.classList.add('hidden'); // Hide table container
+
+    // Update aria-expanded attributes for buttons
+    document.querySelectorAll('.toggle-btn').forEach(button => {
+        button.setAttribute('aria-expanded', button.dataset.toggleTarget === sectionId ? 'true' : 'false');
+    });
+
+    // If no sections are visible, hide parent container
+    if (!sectionContainer.querySelector('.section:not(.hidden)')) {
+        sectionContainer.classList.add('hidden');
+        tableContainer.classList.remove('hidden'); // Show table container
+    }
+}
+
+// Function to close all sections and return to table view
+function closeAllSections() {
+    // Start fade-out animation
+    sectionAnimation.classList.remove('animate-slideIn'); // Remove any active slide-in
+    sectionAnimation.classList.add('animate-fadeOut');
+    // Wait for fade-out to complete
+    sectionAnimation.addEventListener(
+        'animationend',
+        () => {
+            sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden')); // Hide sections
+            sectionContainer.classList.add('hidden'); // Hide parent container
+            tableContainer.classList.remove('hidden'); // Show table container
+            sectionAnimation.classList.remove('animate-fadeOut'); // Clean up animation class
+        },
+        { once: true }
+    );
+}
+// Global event listener for all toggle buttons
+document.addEventListener('click', event => {
+    const button = event.target.closest('.toggle-btn');
+    if (button) {
+        const sectionId = button.dataset.toggleTarget;
+        const fileId = button.dataset.fileId;
+        const role = button.dataset.role;//logic by harvey select the role of button base on dataset.
+
+
+
+        if (fileId) {
+            console.log('File ID:', fileId);
+            console.log(role);
+            switch (role) {
+                case 'edit':
+                    fetchEditFile(fileId);
+                    break;
+
+                case 'summary':
+                    fetchFileSummary(fileId);
+                    break;
+                case 'share':
+                    fileShare(fileId);
+
+                case 'move':
+                    fetchFileDataMove(fileId);   
+            }
+
+        }
+
+        if (button.classList.contains("close-all-btn")) {
+
+            switch (role) {
+                case 'upload':
+                    const specification = document.querySelectorAll('.file-specification-box');
+                    const uploadForm = document.getElementById("upload-form");
+
+                    if (uploadForm) {
+                        uploadForm.reset();
+                        showToast({
+                            type: 'default',
+                            message: 'Exit upload. File input has been reset.',
+
+                        });
+                    }
+
+                    if (specification) {
+                        specification.forEach(template => {
+                            template.remove();
+                        });
+                    }
+                    break;
+
+                case 'edit':
+                        showToast({
+                            type: 'default',
+                            message: 'Edit has been canceled.',
+
+                        });
+                    break;
+
+            }
+
+            closeAllSections(); // Close all sections when "Close All" button is clicked
+        } else {
+            toggleSection(sectionId); // Toggle the respective section
+        }
+    }
+});
+
 
 function truncateFilename(filename, maxLength) {
     const parts = filename.split('.');
@@ -44,101 +165,32 @@ async function archiveFile(fileId) {
         const result = await response.json();
         if (response.ok && result.success) {
             console.log('succccc')
-            
+
             refreshTable();
-            
-            showToast(result.message, 'top-right', 'success');
+
+            showToast({
+                type: 'success',
+                message: 'File successfully moved to the archive.',
+
+            });
+
         } else {
-            showToast(result.message, 'top-right', 'success');
+            showToast({
+                type: 'danger',
+                message: 'An error occurred while archiving the file.',
+
+            });
+
         }
     } catch (error) {
-        showToast(error.message, 'top-right', 'danger');
+        showToast({
+            type: 'danger',
+            message: 'An error occurred while archiving the file.',
+
+        });
+
     }
 }
-
-// Toggle sections
-function toggleSections(showFileSection) {
-    const mainTable = document.getElementById('mainTable');
-    const fileSection = document.getElementById('fileSection');
-    if (showFileSection) {
-        mainTable.classList.replace('opacity-100', 'opacity-0');
-        setTimeout(() => {
-            mainTable.classList.add('pointer-events-none', 'hidden');
-            fileSection.classList.replace('opacity-0', 'opacity-100');
-            fileSection.classList.remove('hidden', 'pointer-events-none');
-        }, 300);
-    } else {
-        fileSection.classList.replace('opacity-100', 'opacity-0');
-        setTimeout(() => {
-            fileSection.classList.add('pointer-events-none', 'hidden');
-            mainTable.classList.replace('opacity-0', 'opacity-100');
-            mainTable.classList.remove('hidden', 'pointer-events-none');
-        }, 300);
-    }
-}
-
-// Show/hide div sections
-function toggleDivVisibility(showDivId) {
-    const sections = ['upload-file-div', 'edit-file-div', 'file-summary-div', 'move-file-div'];
-    sections.forEach(section => {
-        const sectionDiv = document.getElementById(section);
-        sectionDiv.classList.toggle('hidden', section !== showDivId);
-    });
-}
-
-// Event listeners for buttons
-
-document.body.addEventListener('click', (event) => {
-    if (event.target.matches('.move-file-div')) {
-        toggleSections(true);
-        
-         const fileId = event.target.dataset.fileId;
-        // fetchFileData(fileId);
-         fetchFileDataMove(fileId)
-         toggleDivVisibility('move-file-div');
-    }
-});
-
-document.getElementById('uploadBtn').addEventListener('click', () => {
-    toggleSections(true);
-    toggleDivVisibility('upload-file-div');
-});
-document.body.addEventListener('click', (event) => {
-    if (event.target.matches('.edit-button')) {
-        toggleSections(true);
-        const fileId = event.target.dataset.fileId;
-        fetchFileData(fileId);
-        
-        // fetchFileDetails(fileId);
-        toggleDivVisibility('edit-file-div');
-    }
-    
-});
-
-document.body.addEventListener('click', (event) => {
-    if (event.target.matches('.file-summary-button')) {
-        toggleSections(true);
-        const fileId = event.target.dataset.fileId;
-        fetchFileDetails(fileId);
-        toggleDivVisibility('file-summary-div');
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const closeEditBtn = document.getElementById('close-edit-btn');
-    if (closeEditBtn) {
-        closeEditBtn.addEventListener('click', () => toggleSections(false));
-    }
-});
-document.addEventListener('DOMContentLoaded', () => {
-    
-    document.getElementById('close-upload-btn').addEventListener('click', () => toggleSections(false));
-    document.getElementById('close-summary-btn').addEventListener('click', () => toggleSections(false));
-    document.getElementById('close-edit-button').addEventListener('click', () => toggleSections(false));
-});
-
-
-
 
 
 

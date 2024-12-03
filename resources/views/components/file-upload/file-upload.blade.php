@@ -1,10 +1,11 @@
 <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
-<div id="upload-file-div" class="items-center justify-center mx-10">
+
+<div class="items-center justify-center mx-10">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-lg font-bold text-gray-700">Upload File</h2> {{-- add summary --}}
-        <button type="button" id="close-upload-btn"
-            class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <button type="button" id="close-upload-btn" aria-controls="section-close-all" data-role="upload"
+            class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
@@ -66,19 +67,71 @@
                 </div>
 
                 <div class="my-4">
-                    <label for="classification"
-                        class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                    <select id="classification" name="classification"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+
+                    @if ($type == 'land-title')
+                        @if ($municipality == 'Santa Cruz')
+                            {{-- Content specific for Sta Cruz --}}
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                         block w-full p-2.5 
                         focus:border-green-500 focus:ring-green-500 
                         required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                        autocomplete="off" required>
-                        <option value="" disabled selected>Select a Classification</option>
-                        <option value="highly-technical">Highly Technical</option>
-                        <option value="simple">Simple</option>
-                    </select>
+                                autocomplete="off" required>
+                                <option value="" disabled selected>Select a Classification</option>
+                                <option value="PLS 726">PLS 726</option>
+                                <option value="CAD 815">CAD 815</option>
+                                <option value="PSC4">PSC4</option>
+                            </select>
+                        @elseif ($municipality == 'Torrijos')
+                            {{-- Content specific for Torrijos --}}
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <option value="" disabled selected>Select a Classification</option>
+                                <option value="PLS 783">PLS 783</option>
+                                <option value="CAD 612">CAD 612</option>
+                            </select>
+                        @else
+                            {{-- Content for other municipalities --}}
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <option value="" disabled selected>Select a Classification</option>
+                                <option value="highly-technical">Highly Technical</option>
+                                <option value="simple">Simple</option>
+                            </select>
+                        @endif
+                    @else
+                        {{-- Content for types other than land-title --}}
+                        <label for="classification"
+                            class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                        <select id="classification" name="classification"
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required>
+                            <option value="" disabled selected>Select a Classification</option>
+                            <option value="highly-technical">Highly Technical</option>
+                            <option value="simple">Simple</option>
+                        </select>
+                    @endif
                 </div>
             </div>
 
@@ -86,7 +139,7 @@
             <div class="font-medium">
                 @if ($type == 'tree-cutting-permits')
                     <div class="my-4">
-                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree
+                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Cutting
                             Specification</h2>
                         <button type="button" id="add-file-specification"
                             class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
@@ -99,25 +152,21 @@
                             Click to Add
                         </button>
                     </div>
-                    <!-- Show species for tree-cutting-permits, tree-transport-permits -->
+                    <!-- Show species for tree-cutting-permits, transport-permit -->
 
                     <!-- this for pop up modal for adding no. of trees/species/location/date applied/ -->
                 @elseif ($type == 'chainsaw-registration')
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Serial Number Field -->
@@ -151,7 +200,7 @@
                             valid
                             input!</p>
                     </div>
-                @elseif ($type == 'tree-plantation')
+                @elseif ($type == 'tree-plantation-registration')
                     <!-- Number of Trees Field -->
                     <div class="my-4">
                         <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
@@ -170,19 +219,15 @@
 
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Date Applied Field -->
@@ -200,10 +245,10 @@
                             valid
                             input!</p>
                     </div>
-                @elseif ($type == 'tree-transport-permits')
+                @elseif ($type == 'transport-permit')
                     <!-- Transport Permits Inputs -->
                     <div class="my-4">
-                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree
+                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Transport
                             Specification</h2>
                         <button type="button" id="add-file-specification"
                             class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
@@ -216,22 +261,18 @@
                             Click to Add
                         </button>
                     </div>
-                @elseif ($type == 'land-titles')
+                @elseif ($type == 'land-title')
                     <!-- Location Field -->
                     <div class="my-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <select id="location" name="location"
+                        <label for="location" id="label-location"
+                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                        <input type="text" id="location" name="location"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500 required:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            required>
-                            <option value="" disabled selected>Loading barangays...</option>
-                        </select>
-                        <p id="error-message" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Error:</span> Unable to load barangays. Please try again.
-                        </p>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
                     <!-- Lot Number Field -->
@@ -275,8 +316,8 @@
         </div>
     </form>
 </div>
-
 <script>
+    console.log(municipality)
     const fileInput = document.getElementById('file-upload');
     const fileUploadName = document.getElementById('file-upload-name');
     const fileUploadError = document.getElementById('file-upload-error');
@@ -325,16 +366,35 @@
 
     let fileId;
     let canUpload = false;
-    document.getElementById('add-file-specification').addEventListener('click', function(event) {
-        canUpload = true;
-    })
+
+    const addFileSpecificationButton = document.getElementById('add-file-specification');
+
+    if (addFileSpecificationButton) {
+        addFileSpecificationButton.addEventListener('click', function() {
+
+            canUpload = true;
+        });
+    }
+
+
+
     document.getElementById('upload-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         //filter if not add specs
+
+        if (!addFileSpecificationButton) {
+            canUpload = true;
+        }
+
         if (!canUpload) {
-            showToast("Add Specification before uploading", 'top-right', 'danger')
+            showToast({
+                type: 'danger',
+                message: 'Add file specification before uploading.',
+
+            }); //update the toast here
             return;
         }
+
         const csrfToken = "{{ csrf_token() }}";
         const uploadButton = document.getElementById('upload-btn');
         const buttonText = document.getElementById('button-text');
@@ -345,12 +405,15 @@
         uploadButton.disabled = true;
         buttonText.classList.add('hidden');
         buttonSpinner.classList.remove('hidden');
+
         let report = {!! json_encode($record ?? '') !!};
         let isAdmin = {!! json_encode($isAdmin) !!};
         let type = {!! json_encode($type) !!};
         let municipality = {!! json_encode($municipality) !!};
         let category = {!! json_encode($category ?? '') !!};
         let isArchived = {!! json_encode($isArchived) !!};
+
+
 
         const params = {
             type: type,
@@ -403,6 +466,12 @@
 
                 refreshTable();
             }
+            const specification = document.querySelectorAll('.file-specification-box');
+            if (specification) {
+                specification.forEach(template => {
+                    template.remove();
+                });
+            }
             showToast({
                 type: 'success',
                 message: 'Success! The upload is complete.',
@@ -427,74 +496,74 @@
     });
 
 
-    if (type !== "tree-cutting-permits" || report == null) {
+    // if (type !== "tree-cutting-permits" || report == null) {
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            const locationSelect = document.getElementById('location');
-            const errorMessage = document.getElementById('error-message');
-            const currentPath = window.location.pathname;
-            const currentMunicipality = currentPath.split('/').pop();
+    //     document.addEventListener('DOMContentLoaded', async function() {
+    //         const locationSelect = document.getElementById('location');
+    //         const errorMessage = document.getElementById('error-message');
+    //         const currentPath = window.location.pathname;
+    //         const currentMunicipality = currentPath.split('/').pop();
 
-            try {
-                // Fetch all municipalities
-                const municipalityResponse = await fetch(
-                    'https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
-                if (!municipalityResponse.ok) {
-                    throw new Error('Failed to fetch municipalities');
-                }
+    //         try {
+    //             // Fetch all municipalities
+    //             const municipalityResponse = await fetch(
+    //                 'https://psgc.gitlab.io/api/provinces/174000000/municipalities/');
+    //             if (!municipalityResponse.ok) {
+    //                 throw new Error('Failed to fetch municipalities');
+    //             }
 
-                const municipalities = await municipalityResponse.json();
+    //             const municipalities = await municipalityResponse.json();
 
-                // Ensure the response is an array
-                if (!Array.isArray(municipalities)) {
+    //             // Ensure the response is an array
+    //             if (!Array.isArray(municipalities)) {
 
-                }
+    //             }
 
-                // Match the current municipality by name
-                const matchedMunicipality = municipalities.find(
-                    (municipality) => municipality.name.toLowerCase() === currentMunicipality
-                    .toLowerCase()
-                );
+    //             // Match the current municipality by name
+    //             const matchedMunicipality = municipalities.find(
+    //                 (municipality) => municipality.name.toLowerCase() === currentMunicipality
+    //                 .toLowerCase()
+    //             );
 
-                if (!matchedMunicipality) {
-                    return;
-                }
+    //             if (!matchedMunicipality) {
+    //                 return;
+    //             }
 
-                console.log(`Matched Municipality:`, matchedMunicipality);
+    //             console.log(`Matched Municipality:`, matchedMunicipality);
 
 
 
-                // Use the `code` to fetch barangays
-                const barangayResponse = await fetch(
-                    `https://psgc.gitlab.io/api/municipalities/${matchedMunicipality.code}/barangays/`
+    //             // Use the `code` to fetch barangays
+    //             const barangayResponse = await fetch(
+    //                 `https://psgc.gitlab.io/api/municipalities/${matchedMunicipality.code}/barangays/`
 
-                );
-                if (!barangayResponse.ok) {
-                    throw new Error('Failed to fetch barangays');
-                }
+    //             );
+    //             if (!barangayResponse.ok) {
+    //                 throw new Error('Failed to fetch barangays');
+    //             }
 
-                const barangays = await barangayResponse.json();
+    //             const barangays = await barangayResponse.json();
 
-                // Populate the barangay dropdown
-                locationSelect.innerHTML = '<option value="" disabled selected>Select a barangay</option>';
-                barangays.forEach(barangay => {
-                    const option = document.createElement('option');
-                    option.value = barangay.id || barangay.name; // Adjust based on API structure
-                    option.textContent = barangay.name;
-                    locationSelect.appendChild(option);
-                });
+    //             // Populate the barangay dropdown
+    //             locationSelect.innerHTML = '<option value="" disabled selected>Select a barangay</option>';
+    //             barangays.forEach(barangay => {
+    //                 const option = document.createElement('option');
+    //                 option.value = barangay.id || barangay.name; // Adjust based on API structure
+    //                 option.textContent = barangay.name;
+    //                 locationSelect.appendChild(option);
+    //             });
 
-                errorMessage.classList.add('hidden');
-            } catch (error) {
-                console.error('Error:', error);
+    //             errorMessage.classList.add('hidden');
+    //         } catch (error) {
+    //             console.error('Error:', error);
 
-                if (errorMessage) {
-                    errorMessage.classList.remove('hidden');
-                    locationSelect.innerHTML =
-                        '<option value="" disabled selected>Error loading options</option>';
-                }
+    //             if (errorMessage) {
+    //                 errorMessage.classList.remove('hidden');
+    //                 locationSelect.innerHTML =
+    //                     '<option value="" disabled selected>Error loading options</option>';
+    //             }
 
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 </script>

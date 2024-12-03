@@ -84,12 +84,22 @@
                  .then(response => {
                      if (!response.ok) {
                          throw new Error('Network response was not ok ' + response.statusText);
+                         showToast({
+                             type: 'danger',
+                             message: response.statusText,
+
+                         });
                      }
                      return response.json(); // Parse the JSON response
                  })
                  .then(data => {
                      // Hide the modal after a successful request
                      document.getElementById("file-request").classList.add("hidden");
+                     showToast({
+                         type: 'success',
+                         message: data.message,
+
+                     });
                  })
                  .catch(error => {
                      console.error('Error:', error);

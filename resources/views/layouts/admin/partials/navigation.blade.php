@@ -72,7 +72,7 @@
                     </ul>
 
                 </div>
-                <a href="#"
+                <a href="{{ route('ShowFileRequest') }}"
                     class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  ">
                     <div class="inline-flex items-center">
                         <svg aria-hidden="true" class="mr-2 w-4 h-4 text-gray-500 " fill="currentColor"
@@ -82,7 +82,7 @@
                                 d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        View all
+                        View all Request
                     </div>
                 </a>
             </div>

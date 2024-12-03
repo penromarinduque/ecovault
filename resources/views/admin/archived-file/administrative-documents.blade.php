@@ -12,7 +12,7 @@
         <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
             <!-- Memoranda Folder -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'memoranda']) }}"
+                <a href="{{ route('archived-file.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'memoranda']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Memoranda Folder" class="w-24 mb-2">
                     <h2 class="w-[120px] truncate">Memoranda</h2>
@@ -21,7 +21,7 @@
 
             <!-- Letters Folder -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'letters']) }}"
+                <a href="{{ route('archived-file.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'letters']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Letters Folder" class="w-24 mb-2">
                     <h2 class="w-[120px] truncate">Letters</h2>
@@ -30,7 +30,7 @@
 
             <!-- Special Orders Folder -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'special-orders']) }}"
+                <a href="{{ route('archived-file.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'special-orders']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Special Orders Folder" class="w-24 mb-2">
                     <h2 class="w-[120px] truncate">Special Orders</h2>
@@ -39,7 +39,7 @@
 
             <!-- Reports Folder -->
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'reports']) }}"
+                <a href="{{ route('archived-file.administrative.record.show', ['archivedType' => $archivedType, 'record' => 'reports']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Reports Folder" class="w-24 mb-2">
                     <h2 class="w-[120px] truncate">Reports</h2>

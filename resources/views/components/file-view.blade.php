@@ -47,11 +47,11 @@
                 // renderCards(data.data); // Assuming `data.data` contains the file records
             } else {
                 console.error('Failed to retrieve files:', data.message);
-                alert('Failed to fetch data. Please try again.');
+
             }
         } catch (error) {
             console.error('Fetch operation error:', error.message || error);
-            alert('Failed to fetch data. Please try again.');
+
         }
     }
 

@@ -20,15 +20,17 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('file-manager.municipality.show', ['type' => 'tree-plantation']) }}" class="text-center">
+                <a href="{{ route('file-manager.municipality.show', [
+                    'type' => 'tree-plantation-registration',
+                ]) }}"
+                    class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
                     <h2 class="w-[120px]">Tree Plantation</h2>
                 </a>
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('file-manager.municipality.show', ['type' => 'tree-transport-permits']) }}"
-                    class="text-center">
+                <a href="{{ route('file-manager.municipality.show', ['type' => 'transport-permit']) }}" class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Transport Permits" class="w-24 mb-2">
                     <h2 class="w-[120px]">Tree Transport Permits</h2>
                 </a>
@@ -43,7 +45,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('file-manager.land-title.show', ['type' => 'land-titles']) }}" class="text-center">
+                <a href="{{ route('file-manager.land-title.show', ['type' => 'land-title']) }}" class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles/ Patented Lots" class="w-24 mb-2">
                     <h2 class="w-[120px]">Land Titles/ Patented Lots</h2>
                 </a>

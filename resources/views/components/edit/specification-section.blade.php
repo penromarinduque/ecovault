@@ -1,4 +1,4 @@
-@if ($type == 'tree-cutting-permits' || $type == 'tree-transport-permits')
+@if ($type == 'tree-cutting-permits' || $type == 'transport-permit')
     <section class="col-span-2 w-full mt-10">
         <!-- Main modal -->
         <div class="overflow-y-auto overflow-x-hidden">
@@ -30,7 +30,7 @@
                                 </button>
 
                             </div>
-                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full">
+                            <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full font-medium">
                                 <input type="hidden" id="id[]" data-edit="id[]" name="id[]" value="">
 
                                 <div class="my-4">

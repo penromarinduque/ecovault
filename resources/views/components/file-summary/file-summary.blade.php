@@ -7,14 +7,15 @@
             <h2 class="text-xl font-bold text-gray-700">File Summary <span
                     class="font-medium text-slate-600 pl-6">({{ ucwords(str_replace('-', ' ', $type ?: $record)) }})</span>
             </h2>
-            {{-- add summary --}}
-            <button type="button" id="close-summary-btn"
-                class="text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
 
+            {{-- add summary --}}
+            <button type="button" id="close-upload-btn" aria-controls="section-close-all"
+                class="close-all-btn toggle-btn hover:bg-red-200 p-3 rounded-full text-red-500 hover:text-red-700 focus:outline-none hover:cursor-pointer">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
             </button>
         </div>
 
@@ -22,7 +23,7 @@
             <div
                 class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                 <span class="text-lg font-medium text-gray-800">File Name:</span>
-                <span id="summary-file-name" class="text-gray-600 font-semibold pl-4 "> </span>
+                <span id="summary-file-name" class="text-gray-500 font-semibold pl-4 "> </span>
             </div>
         </div>
         @if (!$record)
@@ -30,49 +31,54 @@
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Name of Client:</span>
-                    <span id="summary-name-of-client" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
-        @elseif($record)
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-lg font-medium text-gray-800">Office Source:</span>
-                    <span id="summary-office-source" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
-                </div>
-            </div>
-            <div class="relative z-0 w-full mb-5 group">
-                <div
-                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-lg font-medium text-gray-800">Classification:</span>
-                    <span id="summary-classification" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-name-of-client" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
-        @if ($type == 'tree-plantation')
+
+        <div class="relative z-0 w-full mb-5 group">
+            <div
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">Office Source:</span>
+                <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+            </div>
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            <div
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">Classification:</span>
+                <span id="summary-classification" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+            </div>
+        </div>
+
+        @if ($type == 'tree-plantation-registration')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Number of Trees:</span>
-                    <span id="summary-number-of-trees" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-number-of-trees" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
-        @if (in_array($type, ['chainsaw-registration', 'tree-plantation', 'land-titles']))
+        @if (in_array($type, ['chainsaw-registration', 'tree-plantation-registration', 'land-titles']))
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Location:</span>
-                    <span id="summary-location" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-location" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
-        @if ($type == 'chainsaw-registration' || $type == 'tree-plantation')
+        @if (
+            $type == 'chainsaw-registration' ||
+                $type ==
+                    'tree-plantation-registration
+                                                                                                ')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Date Applied:</span>
-                    <span id="summary-date-applied" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-date-applied" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
@@ -83,58 +89,57 @@
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Serial Number:</span>
-                    <span id="summary-serial-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-serial-number" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
         @endif
 
 
-        @if ($type == 'land-titles')
+        @if ($type == 'land-title')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Lot Number:</span>
-                    <span id="summary-lot-number" class="text-gray-600 capitalize font-semibold pl-4 "> </span>
+                    <span id="summary-lot-number" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                     <span class="text-lg font-medium text-gray-800">Property Category:</span>
-                    <span id="summary-property-category" class="text-gray-600 capitalize font-semibold pl-4 ">
+                    <span id="summary-property-category" class="text-gray-500 capitalize font-semibold pl-4 ">
                     </span>
                 </div>
             </div>
         @endif
-        @if (in_array($type, ['tree-cutting-permits', 'tree-transport-permits']))
+        @if (in_array($type, ['tree-cutting-permits', 'transport-permit']))
             <div class="relative overflow-x-auto mt-12">
-                <table
-                    class="w-full text-sm text-left text-gray-600 border-separate border-spacing-0.5 border border-gray-300 rounded-lg overflow-hidden">
-                    <!-- Optional Caption -->
-                    <!-- <caption class="p-4 text-lg font-semibold text-left text-gray-800">Tree Specifications</caption> -->
 
-                    <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Species
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Number
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Location
-                            </th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300">
-                                Date Applied
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Example Row -->
 
-                        <!-- Add more rows here -->
-                    </tbody>
-                </table>
+                <div class="relative overflow-x-auto border">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-white uppercase bg-gray-500 border">
+                            <tr>
+                                @if ($type === 'tree-cutting-permits')
+                                    <th scope="col" class="px-6 py-3">Species</th>
+                                    <th scope="col" class="px-6 py-3">No.</th>
+                                    <th scope="col" class="px-6 py-3">Location</th>
+                                    <th scope="col" class="px-6 py-3">Date Applied</th>
+                                @elseif($type === 'transport-permit')
+                                    <th scope="col" class="px-6 py-3">Species</th>
+                                    <th scope="col" class="px-6 py-3">No.</th>
+                                    <th scope="col" class="px-6 py-3">Destination</th>
+                                    <th scope="col" class="px-6 py-3">Date of Transport</th>
+                                    <th scope="col" class="px-6 py-3">Date Applied</th>
+                                @endif
+
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="font-medium capitalize">
+                            <!-- display the permit details here-->
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         @endif
@@ -154,15 +159,32 @@
             <span class="sr-only"> </span>
         </div>
     </div>
+    <div class="w-full text-end pt-6">
+        <button type="button" data-toggle-target="edit" aria-controls="section-edit" aria-expanded="false"
+            data-role="edit"
+            class="toggle-btn text-white inline-flex items-center gap-2 bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+            </svg>
+
+            Edit
+        </button>
+    </div>
 </div>
 
 
 
 <script>
     // Fetches file data dynamically
-    async function fetchFileDetails(fileId) {
-
-
+    async function fetchFileSummary(fileId) {
+        const editBtn = document.querySelectorAll('[data-role="edit"]');
+        if (editBtn) {
+            editBtn.forEach(button => {
+                button.setAttribute('data-file-id', fileId);
+            });
+        }
         let includePermit = {!! json_encode($includePermit ?? '') !!};
 
         //includePermit boolean if file have permit Y/N
@@ -206,20 +228,34 @@
 
                     if (data.permit.details) {
                         const details = data.permit.details;
-                        const tableBody = document.getElementById("table-body");
-                        details.forEach((detail) => {
-                            const row = document.createElement("tr");
-                            row.classList.add("bg-white", "border");
 
-                            row.innerHTML = `
-                                    <td class="px-6 py-4 border border-gray-400">${detail.species}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.number_of_trees}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.location}</td>
-                                    <td class="px-6 py-4 border border-gray-400">${detail.date_applied}</td>
+                        const tableBody = document.getElementById('table-body');
+
+                        tableBody.innerHTML = '';
+                        details.forEach((detail, index) => {
+                            let row = '';
+
+                            if (type === 'tree-cutting-permits') {
+                                row = `
+                                    <tr class="odd:bg-white even:bg-gray-100">
+                                        <td class="px-6 py-3">${detail.species || ''}</td>
+                                        <td class="px-6 py-3">${detail.number_of_trees || ''}</td>
+                                        <td class="px-6 py-3">${detail.location || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_applied || ''}</td>
+                                    </tr>
                                 `;
-
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                            } else if (type === 'transport-permit') {
+                                row = `
+                                    <tr class="odd:bg-white even:bg-gray-100">
+                                        <td class="px-6 py-3">${detail.species || ''}</td>
+                                        <td class="px-6 py-3">${detail.number_of_trees || ''}</td>
+                                        <td class="px-6 py-3">${detail.destination || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_of_transport || ''}</td>
+                                        <td class="px-6 py-3">${detail.date_applied || ''}</td>
+                                    </tr>
+                                `;
+                            }
+                            tableBody.insertAdjacentHTML('beforeend', row);
                         });
                     }
                 }

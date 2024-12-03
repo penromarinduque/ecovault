@@ -144,13 +144,61 @@
     `;
 
         const adminActions = `
-        <a class="block px-4 py-2 cursor-pointer hover:bg-gray-100" onclick="openFileModal(${fileId})">View</a>
-        <li><a href="/api/files/download/${fileId}"  target='_blank' class="block px-4 py-2 hover:bg-gray-100">Download</a></li>
-        <li><button class="w-full text-left edit-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">Edit</button></li>
-        <li><a class="block cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div" data-file-id="${fileId}">Move</a></li>
-        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 share-file-link" data-file-id="${fileId}">Share</a></li>
-        <li><a class="w-full cursor-pointer text-left file-summary-button block px-4 py-2 hover:bg-gray-100" data-file-id="${fileId}">File Summary</a></li>
-        <li><a onclick="archiveFile(${fileId})" class="block px-4 py-2 cursor-pointer hover:bg-gray-100">Archive</a></li>
+            <li class="relative">
+            <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
+                onclick="openFileModal(${fileId})">
+                <i class='bx bxs-search-alt-2 absolute left-4 text-lg'></i>
+                <span class="ml-7">View</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
+           <i class='bx bxs-folder-plus absolute left-4 text-lg'></i>
+                <span class="ml-7">Download</span><!-- Text -->
+            </a>
+        </li>
+        <li class="relative">
+            <button class="toggle-btn w-full flex items-center gap-2 edit-button px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="edit" data-toggle-target="edit" aria-controls="section-edit"
+                aria-expanded="false">
+                <i class='bx bxs-pencil absolute left-4 text-lg'></i>
+                <span class="ml-7">Edit</span>
+            </button>
+        </li>
+        <li class="relative">
+            <a class="toggle-btn move-button flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 move-file-div"
+                data-file-id="${fileId}" data-toggle-target="move" data-role="move" aria-controls="section-move" aria-expanded="false">
+                <i class='bx bxs-share absolute left-4 text-lg'></i>
+                <span class="ml-7">Move</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a href="#" class="toggle-btn flex items-center gap-2 px-4 py-2 hover:bg-gray-100 share-file-link"
+                data-file-id="${fileId}" data-role="share">
+                <i class='bx bxs-cloud-upload absolute left-4 text-lg'></i>
+                <span class="ml-7">Share</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a class="toggle-btn w-full cursor-pointer text-left file-summary-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="summary" data-toggle-target="summary" aria-controls="section-summary"
+                aria-expanded="false">
+                <i class='bx bxs-file absolute left-4 text-lg'></i>
+                <span class="ml-7">Summary</span>
+            </a>
+        </li>
+         <li class="relative">
+            <a class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+               <i class='bx bxs-time absolute left-4 text-lg'></i>
+                <span class="ml-7">History</span>
+            </a>
+        </li>
+        <li class="relative">
+            <a onclick="archiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+                <i class='bx bxs-archive-in absolute left-4 text-lg'></i>
+                <span class="ml-7">Archived</span>
+            </a>
+        </li>
     `;
 
         // Choose the correct actions based on isAdmin
@@ -162,8 +210,8 @@
                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
             </svg>
         </button>
-        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow-lg">
-            <ul class="py-2 text-sm text-gray-700 border border-gray-200 divide-y divide-gray-400">
+        <div id="dropdownLeft${fileId}" class="hidden z-10 w-44 shadow-lg rounded-lg">
+            <ul class="py-2 text-sm text-gray-700 border border-gray-200 bg-white rounded-lg divide-y divide-gray-400">
                 ${actions}
             </ul>
         </div>

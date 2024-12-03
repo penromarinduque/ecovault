@@ -35,6 +35,112 @@
 @endsection --}}
 
 @section('content')
+    <div id="table-container">
+        <!-- Table container -->
+        <h1>Table Content</h1>
+    </div>
+
+    <div id="section-container" class="hidden">
+        <!-- Divs for each section instead of using templates -->
+        <div id="upload-section" class="section hidden" role="region" aria-labelledby="section-upload-title">
+            hello this is upload
+        </div>
+
+        <div id="edit-section" class="section hidden" role="region" aria-labelledby="section-edit-title">
+            hello this is edit
+        </div>
+
+        <div id="summary-section" class="section hidden" role="region" aria-labelledby="section-summary-title">
+            hello this is summary
+        </div>
+
+        <div id="move-section" class="section hidden" role="region" aria-labelledby="section-move-title">
+            hello this is move
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
+        aria-expanded="false" label="Upload File" type="button" style="primary" />
+
+    <button class="toggle-btn" data-toggle-target="edit" aria-controls="section-edit" aria-expanded="false">
+        Show Edit
+    </button>
+    <button class="toggle-btn" data-toggle-target="summary" aria-controls="section-summary" aria-expanded="false">
+        Show Summary
+    </button>
+    <button class="toggle-btn" data-toggle-target="move" aria-controls="section-move" aria-expanded="false">
+        Show Move
+    </button>
+
+    <!-- Close All Button with class instead of ID -->
+    <button class="close-all-btn toggle-btn" type="button" aria-controls="section-close-all">
+        Close All
+    </button>
+
+    <script>
+        const sectionContainer = document.getElementById('section-container');
+        const tableContainer = document.getElementById('table-container');
+        const closeAllBtns = document.querySelectorAll('.close-all-btn'); // Select all close buttons by class
+
+        // Function to toggle sections
+        function toggleSection(sectionId) {
+            // Hide all sections first
+            sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+
+            // Show the selected section
+            const targetSection = document.getElementById(`${sectionId}-section`);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+
+            sectionContainer.classList.remove('hidden'); // Show parent container
+            tableContainer.classList.add('hidden'); // Hide table container
+
+            // Update aria-expanded attributes for buttons
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.setAttribute('aria-expanded', button.dataset.toggleTarget === sectionId ? 'true' : 'false');
+            });
+
+            // If no sections are visible, hide parent container
+            if (!sectionContainer.querySelector('.section:not(.hidden)')) {
+                sectionContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden'); // Show table container
+            }
+        }
+
+        // Function to close all sections and return to table view
+        function closeAllSections() {
+            sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+            sectionContainer.classList.add('hidden'); // Hide parent container
+            tableContainer.classList.remove('hidden'); // Show table container
+        }
+
+        // Global event listener for all toggle buttons
+        document.addEventListener('click', event => {
+            const button = event.target.closest('.toggle-btn');
+            if (button) {
+                const sectionId = button.dataset.toggleTarget;
+                if (button.classList.contains("close-all-btn")) {
+                    closeAllSections(); // Close all sections when "Close All" button is clicked
+                } else {
+                    toggleSection(sectionId); // Toggle the respective section
+                }
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+    <!-- Parent container is hidden initially -->
+
+    {{-- 
     <h1>Select Location</h1>
 
     <!-- Province Dropdown -->
@@ -157,5 +263,5 @@
 
         // Initialize Provinces on Page Load
         loadProvinces();
-    </script>
+    </script> --}}
 @endsection

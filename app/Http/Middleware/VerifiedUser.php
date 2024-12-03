@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use App\Http\Requests\StoreAccountRequest;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpMailVerification;
 class VerifiedUser
 {
     /**
@@ -14,20 +15,38 @@ class VerifiedUser
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        // Ensure user is authenticated
         $user = $request->user();
 
-        // If the user is not authenticated or their email is not verified
-        if (!$user || !$user->hasVerifiedEmail()) {
-            $route = $user ? 'verification.show' : 'login.show'; // Redirect to either verification or login
-            $message = $user ? 'Email verification required.' : 'Access Denied'; // Custom message based on condition
 
-            return redirect()->route($route)->withErrors(['error' => $message]);
+        if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Access Denied. Please log in to continue.',
+                ], 401);
+            }
+            return redirect()->route('login.show')->with('error', 'Access Denied. Please login to continue.');
         }
 
-        // Continue with the request if all checks pass
+        if (!$user->hasVerifiedEmail()) {
+            session(['email' => $user->email]);
+
+            if (!$user->otp) {
+                $otp = random_int(1000, 9999);
+                $user->otp = $otp;
+                $user->save();
+
+                Mail::to($user->email)->send(new OtpMailVerification($otp));
+            }
+
+            return redirect()->route('verification.show')->with('error', 'Please verify your email address using the OTP sent to your email.');
+
+        }
+
         return $next($request);
     }
+
+
 }
