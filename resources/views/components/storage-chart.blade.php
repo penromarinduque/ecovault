@@ -84,7 +84,7 @@
     };
 
     // Fetch storage data from the Laravel API and initialize the chart
-    fetch('/staff/storage-usage')
+    fetch('/storage-usage')
         .then(response => response.json())
         .then(data => {
             if (data && !data.error) {
