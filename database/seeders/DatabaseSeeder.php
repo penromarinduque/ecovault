@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Config::create([
-            'Drive' => 'D:',
+            'Drive' => 'C:',
             'BackDirSQL' => '/backup/sql',
             'BackDirFiles' => '/backup/files',
             'StorePath' => 'app/public/PENRO',
