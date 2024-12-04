@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('municipalities', function (Blueprint $table) {
             $table->id();
             $table->string('location');
+            $table->string('img_src');
             $table->timestamps();
         });
     }

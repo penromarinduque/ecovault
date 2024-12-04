@@ -59,12 +59,12 @@ class DatabaseSeeder extends Seeder
 
 
         Municipality::insert([
-            ['location' => 'Mogpog'],
-            ['location' => 'Torrijos'],
-            ['location' => 'Boac'],
-            ['location' => 'Gasan'],
-            ['location' => 'Buenavista'],
-            ['location' => 'Sta. Cruz'],
+            ['location' => 'Mogpog', 'img_src' => 'images/folders/orange.png'],
+            ['location' => 'Torrijos', 'img_src' => 'images/folders/orange.png'],
+            ['location' => 'Boac', 'img_src' => 'images/folders/orange.png'],
+            ['location' => 'Gasan', 'img_src' => 'images/folders/orange.png'],
+            ['location' => 'Buenavista', 'img_src' => 'images/folders/orange.png'],
+            ['location' => 'Sta. Cruz', 'img_src' => 'images/folders/orange.png'],
         ]);
 
         Config::create([
