@@ -18,5 +18,5 @@ Artisan::command('schedule', function (Schedule $schedule) {
 });
 
 app()->booted(function () {
-    app(Schedule::class)->command('files:archive')->everyTenSeconds();
+    app(Schedule::class)->command('files:archive')->everyTenMinutes();
 });
