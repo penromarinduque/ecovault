@@ -2,132 +2,189 @@
 
 @section('title', 'PENRO Archiving System')
 
-{{-- @section('content')
-    <img src="{{ asset('images/denr-home.jpg') }}" class="fixed inset-0 bg-cover w-full h-full -z-10" alt="Background Image">
-    <section class="bg-transparent p-10">
-        <div class="grid max-w-screen-xl mx-auto lg:gap-8 xl:gap-8 lg:py-16 lg:grid-cols-12">
-
-            <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                <img src="{{ asset('images/logo.png') }}" class="" alt="PENRO-logo">
-            </div>
-
-            <div class="mr-auto place-self-center lg:col-span-7">
-                <h1 class="max-w-2xl text-white mb-4 text-5xl font-extrabold tracking-tight leading-none">
-                    Welcome to Document Security and Digital Archiving System.</h1>
-                <h1 class="max-w-2xl text-slate-300 mb-4 text-4xl font-extrabold tracking-tight leading-none">
-                    PENRO-Boac Marinduque</h1>
-                <p class="max-w-2xl mb-6 font-md text-gray-300 lg:mb-8 md:text-lg lg:text-xl">
-                    Efficient document management system provides tailored solutions, enhancing workflow seamlessly</p>
-                <a href="#"
-                    class="transition ease-in-out delay-150 hover:scale-110  hover:-translate-y-1 inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white border bg-primary-700 border-gray-300 rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-gray-100">
-                    Get started
-                    <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </a>
-
-            </div>
-        </div>
-    </section>
-@endsection --}}
 
 @section('content')
-    <div id="table-container">
-        <!-- Table container -->
-        <h1>Table Content</h1>
-    </div>
-
-    <div id="section-container" class="hidden">
-        <!-- Divs for each section instead of using templates -->
-        <div id="upload-section" class="section hidden" role="region" aria-labelledby="section-upload-title">
-            hello this is upload
-        </div>
-
-        <div id="edit-section" class="section hidden" role="region" aria-labelledby="section-edit-title">
-            hello this is edit
-        </div>
-
-        <div id="summary-section" class="section hidden" role="region" aria-labelledby="section-summary-title">
-            hello this is summary
-        </div>
-
-        <div id="move-section" class="section hidden" role="region" aria-labelledby="section-move-title">
-            hello this is move
-        </div>
-    </div>
-
-    <!-- Buttons -->
-    <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
-        aria-expanded="false" label="Upload File" type="button" style="primary" />
-
-    <button class="toggle-btn" data-toggle-target="edit" aria-controls="section-edit" aria-expanded="false">
-        Show Edit
-    </button>
-    <button class="toggle-btn" data-toggle-target="summary" aria-controls="section-summary" aria-expanded="false">
-        Show Summary
-    </button>
-    <button class="toggle-btn" data-toggle-target="move" aria-controls="section-move" aria-expanded="false">
-        Show Move
-    </button>
-
-    <!-- Close All Button with class instead of ID -->
-    <button class="close-all-btn toggle-btn" type="button" aria-controls="section-close-all">
-        Close All
-    </button>
+    @csrf
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <table id="request-access-table" class="min-w-full bg-white border border-gray-300">
+        <!-- Table content will be populated dynamically -->
+    </table>
 
     <script>
-        const sectionContainer = document.getElementById('section-container');
-        const tableContainer = document.getElementById('table-container');
-        const closeAllBtns = document.querySelectorAll('.close-all-btn'); // Select all close buttons by class
+        // Declare dataTable variable globally
+        let dataTable;
 
-        // Function to toggle sections
-        function toggleSection(sectionId) {
-            // Hide all sections first
-            sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
-
-            // Show the selected section
-            const targetSection = document.getElementById(`${sectionId}-section`);
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
-            }
-
-            sectionContainer.classList.remove('hidden'); // Show parent container
-            tableContainer.classList.add('hidden'); // Hide table container
-
-            // Update aria-expanded attributes for buttons
-            document.querySelectorAll('.toggle-btn').forEach(button => {
-                button.setAttribute('aria-expanded', button.dataset.toggleTarget === sectionId ? 'true' : 'false');
-            });
-
-            // If no sections are visible, hide parent container
-            if (!sectionContainer.querySelector('.section:not(.hidden)')) {
-                sectionContainer.classList.add('hidden');
-                tableContainer.classList.remove('hidden'); // Show table container
-            }
-        }
-
-        // Function to close all sections and return to table view
-        function closeAllSections() {
-            sectionContainer.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
-            sectionContainer.classList.add('hidden'); // Hide parent container
-            tableContainer.classList.remove('hidden'); // Show table container
-        }
-
-        // Global event listener for all toggle buttons
-        document.addEventListener('click', event => {
-            const button = event.target.closest('.toggle-btn');
-            if (button) {
-                const sectionId = button.dataset.toggleTarget;
-                if (button.classList.contains("close-all-btn")) {
-                    closeAllSections(); // Close all sections when "Close All" button is clicked
-                } else {
-                    toggleSection(sectionId); // Toggle the respective section
-                }
-            }
+        document.addEventListener("DOMContentLoaded", function() {
+            // Define parameters for the request
+            fetchRequestAccess();
         });
+        async function fetchRequestAccess() {
+            try {
+                const response = await fetch('/api/files/GET/request-access');
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Fetch failed with status: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                initializeTable(data);
+            } catch (error) {
+                console.error('Fetch operation error:', error.message || error);
+            }
+        }
+
+
+        function initializeTable(data) {
+            if (dataTable) {
+                dataTable.destroy();
+            }
+
+            const customData = formData(data.requests); // Changed to use 'data.requests'
+            console.log(customData);
+            const dataTableElement = document.getElementById("request-access-table");
+
+            if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
+                dataTable = new simpleDatatables.DataTable(dataTableElement, {
+                    classes: {
+                        active: "datatable-active bg-red-400",
+                        loading: "datatable-loading text-sm",
+                        headercontainer: "datatable-headercontainer bg-gray-500 m-10",
+                        container: "datatable-container p-10 bg-blue-500",
+                        dropdown: "datatable-perPage flex items-center",
+                        selector: "per-page-selector px-2 py-1 border rounded border-gray-300 text-gray-600",
+                        ellipsis: "datatable-ellipsis text-lg",
+                        info: "datatable-info text-sm text-gray-500",
+                        search: "datatable-search",
+                        input: "datatable-input",
+                        top: "datatable-top",
+                        table: "datatable-table",
+                        bottom: "datatable-bottom",
+                        wrapper: "datatable-wrapper bg-red-500 p-10"
+                    },
+                    data: customData,
+                    paging: true,
+                    nextPrev: true, // Enable previous and next buttons
+                    pagerDelta: -6, // Show only one page number on each side of the current page
+                    perPageSelect: [5, 10, 20, 50],
+                    perPage: 5,
+                    sortable: true,
+                    searchable: true,
+                    ellipsisText: '...',
+                    labels: {
+                        perPage: "<span class='text-gray-500 m-3'>Rows</span>",
+                        searchTitle: "Search through table data",
+                        placeholder: "Search...",
+                    },
+                });
+
+                tableEvents(data); // Custom function for handling events if required
+            }
+        }
+
+        function tableEvents(data) {
+            const events = ["init", "refresh", "page", "perpage", "update"];
+            events.forEach(event => {
+                dataTable.on(`datatable.${event}`, () => {
+                    initializeDropdowns(data);
+                });
+            });
+        }
+
+        function formData(requests) {
+            function formatDate(dateString) {
+                const options = {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                };
+                return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
+            }
+
+            return {
+                headings: ["Name", "File Name", "Date Requested", "Handled By", "Status", "Actions"],
+                data: requests.map(request => ({
+                    cells: [
+                        request.requested_by.name,
+                        request.file.file_name, // You can customize this to show a file name if needed
+                        formatDate(request.created_at), // Format date as needed
+                        request.handled_by ? request.handled_by.name : 'Unknown', // Display admin's name
+                        request.status.charAt(0).toUpperCase() + request.status.slice(
+                            1), // Capitalize status
+                        generateKebab(request.file_id), // Placeholder for action buttons
+                    ],
+                    attributes: {
+                        class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
+                    },
+                }))
+            };
+        }
+        // Generate action buttons for dropdowns
+        function generateKebab(fileId) {
+            return `
+        <button 
+            class="bg-green-500 text-white px-2 py-1 rounded" 
+            onclick="updateRequestStatus(${fileId}, 'approved')">
+            Approve
+        </button>
+        <button 
+            class="bg-red-500 text-white px-2 py-1 rounded" 
+            onclick="updateRequestStatus(${fileId}, 'rejected')">
+            Reject
+        </button>
+    `;
+        }
+
+        // Create dropdown for each file
+        function createDropdown(fileId) {
+            const dropdownButton = document.getElementById(`dropdownLeftButton${fileId}`);
+            const dropdownElement = document.getElementById(`dropdownLeft${fileId}`);
+            if (dropdownButton && dropdownElement) {
+                new Dropdown(dropdownElement, dropdownButton, {
+                    placement: 'left',
+                    triggerType: 'click',
+                    offsetSkidding: 0,
+                    offsetDistance: 0,
+                    ignoreClickOutsideClass: false,
+                });
+            }
+        }
+
+        function initializeDropdowns(data) {
+            data.requests.forEach((file) => {
+                createDropdown(file.id);
+            });
+        }
+
+
+
+        async function updateRequestStatus(requestId, status) {
+            try {
+                const csrfToken = "{{ csrf_token() }}";
+                const response = await fetch(`/api/files/request-access/${requestId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        status
+                    }),
+                });
+
+                const {
+                    success,
+                    message
+                } = await response.json();
+
+                if (success) {
+                    alert('Request status updated successfully!');
+                } else {
+                    console.error(message);
+                }
+            } catch (error) {
+                console.error('Error updating request status:', error);
+            }
+        }
     </script>
 
 

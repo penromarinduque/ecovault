@@ -150,6 +150,11 @@
         const sharedWithUserId = formData.get('shared_with_user_id');
 
         if (!sharedWithUserId) {
+            showToast({
+                type: 'danger',
+                message: 'Could not be share to unregister user.',
+
+            });
             return;
         }
 

@@ -117,7 +117,7 @@
             return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
         }
         return {
-            headings: ["Name", "Office Source", "Date Modified", "Modified By",
+            headings: ["File Name", "Office Source", "Date Modified", "Modified By",
                 "Classification",
                 "Actions"
             ],
