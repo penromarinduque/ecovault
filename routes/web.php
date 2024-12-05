@@ -36,7 +36,7 @@ Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend.o
 
 Route::get('/', [AdminController::class, 'ShowHome'])->name('admin.home.show');
 
-Route::middleware([VerifiedUser::class])->group(function () {
+Route::middleware([VerifiedUser::class, 'auth'])->group(function () {
 
 
     Route::get('/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
