@@ -225,14 +225,14 @@ class FileShareController extends Controller
 
     public function GetSharedFilesById(Request $request)
     {
-        if (!$request->query('file_id')) {
+        if (!$request->query('user_id')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error fetching file'
             ], 500);
         }
 
-        $fileId = $request->query('file_id');
+        $userId = $request->query('user_id');
 
         $results = DB::table('file_shares')
             ->select(
@@ -252,7 +252,7 @@ class FileShareController extends Controller
             ->join('users as shared_with_user', 'file_shares.shared_with_user_id', '=', 'shared_with_user.id')
             ->join('users as shared_by_admin', 'file_shares.shared_by_admin_id', '=', 'shared_by_admin.id')
             ->join('files', 'file_shares.file_id', '=', 'files.id')
-            ->whereRaw($fileId) // Replace `2` with the actual condition
+            ->whereRaw($userId) // Replace `2` with the actual condition
             ->get();
         return response()->json([
             'success' => true,
