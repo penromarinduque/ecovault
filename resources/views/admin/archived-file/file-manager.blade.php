@@ -19,7 +19,7 @@
             <div class="flex flex-col items-center">
                 <a href="{{ route('archived-file.file-manager.municipality.show', [
                     'type' => 'tree-plantation-registration
-                ',
+                                                ',
                 ]) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
@@ -44,7 +44,7 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <a href="{{ route('archived-file.file-manager.land-title.show', ['type' => 'land-titles']) }}"
+                <a href="{{ route('archived-file.file-manager.land-title.show', ['type' => 'land-title']) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles/ Patented Lots" class="w-24 mb-2">
                     <h2 class="w-[120px] text-center">Land Titles/ Patented Lots</h2>

@@ -20,39 +20,48 @@
                 container.innerHTML = '<p class="col-span-4 text-center text-gray-600">Loading municipalities...</p>';
 
                 // Fetch municipalities for Marinduque
-                fetch('https://psgc.gitlab.io/api/provinces/174000000/municipalities/')
+                fetch('/api/municipalities')
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to fetch municipalities.');
                         return response.json();
                     })
-                    .then(municipalities => {
+                    .then(data => {
+                        // Extract the locations array from the JSON response
+                        const municipalities = data.locations;
+
                         // Clear the container
-                        const _type = {!! json_encode($type ?? '') !!};
-                        const _category = {!! json_encode($category ?? '') !!};
+                        const _type = @json($type ?? '');
+                        const _category = @json($category ?? '');
                         container.innerHTML = '';
 
                         // Populate the municipalities dynamically
-                        municipalities.forEach(municipality => {
-                            const municipalityDiv = document.createElement('div');
-                            municipalityDiv.classList.add('flex', 'flex-col', 'items-center', 'text-center',
-                                'mx-auto');
+                        if (municipalities.length > 0) {
+                            municipalities.forEach(municipality => {
+                                const municipalityDiv = document.createElement('div');
+                                municipalityDiv.classList.add('flex', 'flex-col', 'items-center',
+                                    'text-center', 'mx-auto');
 
-                            const municipalityUrl =
-                                `{{ route('archived-file.file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
-                                .replace('__type__', _type)
-                                .replace('__municipality__', municipality.name)
-                                .replace('__category__', _category ??
-                                    'null'); // if category is null, use null
+                                const municipalityUrl =
+                                    `{{ route('archived-file.file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
+                                    .replace('__type__', _type)
+                                    .replace('__municipality__', municipality.location)
+                                    .replace('__category__', _category ??
+                                        'null'); // Handle null category
+                                const imgSrc = `{{ asset('__src__') }}`.replace('__src__', municipality
+                                    .img_src);
+                                municipalityDiv.innerHTML = `
+                            <a href="${municipalityUrl}" class="text-center">
+                                <img src="${imgSrc}"  alt="${municipality.location} Folder" class="w-24 mb-2">
+                                <h2 class="w-[120px] truncate">${municipality.location}</h2>
+                            </a>
+                        `;
 
-                            municipalityDiv.innerHTML = `
-                        <a href="${municipalityUrl}" class="text-center">
-                            <img src="{{ asset('images/admin/folder.png') }}" alt="${municipality.name} Folder" class="w-24 mb-2">
-                            <h2 class="w-[120px] truncate">${municipality.name}</h2>
-                        </a>
-                    `;
-
-                            container.appendChild(municipalityDiv);
-                        });
+                                container.appendChild(municipalityDiv);
+                            });
+                        } else {
+                            container.innerHTML =
+                                '<p class="col-span-4 text-center text-gray-600">No municipalities found.</p>';
+                        }
                     })
                     .catch(error => {
                         console.error('Error fetching municipalities:', error);

@@ -92,6 +92,10 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/superuser/test', function () {
         return view("superuser.test");
     });
+    Route::get("/client/records", function () {
+        return view('admin.client.client-records');
+    });
+
     Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);
     //Home Page
     Route::get('/recent-uploads', [StorageController::class, 'getRecentUploads']);
