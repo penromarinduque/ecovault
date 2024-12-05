@@ -125,7 +125,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::post('/api/files/restore', [BackupController::class, "Restore"]);
     Route::get('/api/list-backups', [BackupController::class, "listBackups"]);
 
-
+    Route::get('/api/sharewithme', [FileShareController::class, 'GetSharedFilesById']);
 
     Route::post('/api/config', [SettingController::class, 'UpdateConfig']);
     Route::get('api/getconfig/', [SettingController::class, 'GetConfig']);

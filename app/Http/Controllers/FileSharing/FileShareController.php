@@ -11,6 +11,7 @@ use App\Models\File;
 use App\Notifications\FileShareNotification;
 use App\Notifications\FileAccessNotification;
 use Notification;
+use Illuminate\Support\Facades\DB;
 class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
@@ -220,4 +221,43 @@ class FileShareController extends Controller
         ]);
     }
 
+
+
+    public function GetSharedFilesById(Request $request)
+    {
+        if (!$request->query('file_id')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching file'
+            ], 500);
+        }
+
+        $fileId = $request->query('file_id');
+
+        $results = DB::table('file_shares')
+            ->select(
+                'file_shares.*',
+                'shared_with_user.name as shared_with_name',
+                'shared_by_admin.name as shared_by_name',
+                'files.file_name',
+                'files.file_path',
+                'files.permit_type',
+                'files.land_category',
+                'files.municipality',
+                'files.report_type',
+                'files.office_source',
+                'files.classification',
+                'files.is_archived'
+            )
+            ->join('users as shared_with_user', 'file_shares.shared_with_user_id', '=', 'shared_with_user.id')
+            ->join('users as shared_by_admin', 'file_shares.shared_by_admin_id', '=', 'shared_by_admin.id')
+            ->join('files', 'file_shares.file_id', '=', 'files.id')
+            ->whereRaw($fileId) // Replace `2` with the actual condition
+            ->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'sharewithme' => $results
+        ], 200);
+    }
 }
