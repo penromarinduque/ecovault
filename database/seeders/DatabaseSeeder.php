@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
             ['location' => 'Boac', 'img_src' => 'images/folders/boac.png'],
             ['location' => 'Gasan', 'img_src' => 'images/folders/gasan.png'],
             ['location' => 'Buenavista', 'img_src' => 'images/folders/buenavista.png'],
-            ['location' => 'Sta. Cruz', 'img_src' => 'images/folders/staCruz.png'],
+            ['location' => 'Santa Cruz', 'img_src' => 'images/folders/staCruz.png'],
         ]);
 
         Config::create([

@@ -10,6 +10,7 @@ use App\Models\TreeTransportPermitDetails;
 use App\Models\TreeCuttingPermit;
 use App\Models\TransportPermit;
 use App\Models\TreeCuttingPermitDetail;
+use App\Models\FileHistory;
 abstract class BaseController extends Controller
 {
     public function ArchivedById($id)
@@ -240,6 +241,13 @@ abstract class BaseController extends Controller
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'),
                 'updated_at' => now(), // Set the update timestamp
+            ]);
+
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'updated',
+                'changes' => json_encode($file->getChanges()),
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
             ]);
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\FileSharing;
 use App\Events\SimpleEvent;
 use App\Models\FileShares;
+use App\Models\FileHistory;
 use App\Models\FileAccessRequests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use App\Notifications\FileShareNotification;
 use App\Notifications\FileAccessNotification;
 use Notification;
 use Illuminate\Support\Facades\DB;
+
 class FileShareController extends Controller
 {
     public function ShareFile(Request $request)
@@ -61,14 +63,21 @@ class FileShareController extends Controller
                 'expiration_date' => $expirationDate
             ]);
 
+
             $user = User::findOrFail($receiverId);
 
+            FileHistory::create([
+                'file_id' => $fileId,
+                'action' => 'file shared to ' . $user->name,
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
+            ]);
             // Send notification to the user
             $user->notify(new FileShareNotification($fileId, $receiverId, $senderId, $remarks, 'shared file'));
 
             return response()->json([
                 'success' => true,
                 'message' => 'File shared successfully!',
+                'user' => $user->name
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -134,6 +143,14 @@ class FileShareController extends Controller
         ]);
 
         $admins = User::where('isAdmin', true)->get(); // Or find the appropriate admin
+
+        $user = User::findOrFail($senderId);
+
+        $history = FileHistory::create([
+            'file_id' => $request->file_id,
+            'action' => $user->name . ' has request for this file',
+            'user_id' => auth()->id(), // Fallback to a default user ID (0 or system user)
+        ]);
 
         $notification = new FileAccessNotification(
             $fileId,       // The ID of the file
@@ -205,7 +222,7 @@ class FileShareController extends Controller
             'status' => $status,
             'handled_by_admin_id' => auth()->id(),
         ]);
-
+        $userId = $fileAccessRequest->requested_by_user_id;
         if ($status === 'approved') {
             FileShares::create([
                 'file_id' => $fileAccessRequest->file_id,
@@ -214,10 +231,18 @@ class FileShareController extends Controller
             ]);
         }
 
+        $user = User::where('id', $userId)->firstOrFail();
+
+        FileHistory::create([
+            'file_id' => $fileAccessRequest->file_id,
+            'action' => 'Admin has ' . $status . ' for the request of ' . $user->name,
+            'user_id' => auth()->id(), // Fallback to a default user ID (0 or system user)
+        ]);
         return response()->json([
             'success' => true,
             'message' => 'File access request status updated successfully!',
             'data' => $fileAccessRequest,
+            'user' => $user->name
         ]);
     }
 

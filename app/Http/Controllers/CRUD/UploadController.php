@@ -21,6 +21,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use App\Models\RecentActivity;
 use App\Models\File;
 use Exception;
+use App\Models\FileHistory;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
 class UploadController extends Controller
@@ -352,6 +353,12 @@ class UploadController extends Controller
             }
 
             DB::commit();
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'Move to municipality: ' . $file->municipality,
+                'changes' => json_encode($file->getChanges()),
+                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
+            ]);
             return response()->json([
                 'success' => true,
                 'message' => 'test',

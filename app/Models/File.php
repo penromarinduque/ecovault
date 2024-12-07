@@ -59,6 +59,13 @@ class File extends Model
         $this->is_archived = true;
         $this->archived_at = now();
         $this->save();
+
+        FileHistory::create([
+            'file_id' => $this->id,
+            'action' => 'File has been archived',
+            'changes' => json_encode(['attributes' => $this->file]),
+            'user_id' => auth()->id() ?: 0,
+        ]);
     }
 
     // Check if the file is archived
@@ -116,14 +123,14 @@ class File extends Model
             ]);
         });
 
-        static::updated(function ($file) {
-            FileHistory::create([
-                'file_id' => $file->id,
-                'action' => 'updated',
-                'changes' => json_encode($file->getChanges()),
-                'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
-            ]);
-        });
+        // static::updated(function ($file) {
+        //     FileHistory::create([
+        //         'file_id' => $file->id,
+        //         'action' => 'updated',
+        //         'changes' => json_encode($file->getChanges()),
+        //         'user_id' => auth()->id() ?: 0, // Fallback to a default user ID (0 or system user)
+        //     ]);
+        // });
 
         static::deleted(function ($file) {
             FileHistory::create([
