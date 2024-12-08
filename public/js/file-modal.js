@@ -1,4 +1,5 @@
 async function openFileModal(id) {
+    console.log("im running")
     try {
         // First API call to get file metadata
         const response = await fetch(`/api/files/${id}?includePermit=false`);

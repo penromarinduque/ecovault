@@ -98,7 +98,9 @@ abstract class BaseController extends Controller
                             'user_name' => $file->user->name, // Uploader's name
                             'classification' => $file->classification,
                             'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
-                            'shared_users' => $sharedUserIds, // List of user IDs who have access
+                            'shared_users' => $sharedUserIds,
+                            'owner_nane' => 'john doe'
+                            // List of user IDs who have access
                         ];
                     });
 
@@ -418,4 +420,6 @@ abstract class BaseController extends Controller
 
         return response()->json(['message' => 'Specification not found.'], 200);
     }
+
+
 }

@@ -117,6 +117,7 @@
             return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
         }
         return {
+
             headings: ["File Name", "Office Source", "Date Modified", "Modified By",
                 "Classification",
                 "Actions"
@@ -250,7 +251,6 @@
         </div>
     `;
     }
-
 
     // Create dropdown for each file
     function createDropdown(fileId) {

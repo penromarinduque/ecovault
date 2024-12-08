@@ -146,6 +146,11 @@ Route::middleware([VerifiedUser::class, 'auth'])->group(function () {
     Route::get('/file-history/{fileId}', [AdminController::class, 'ShowFileHistory'])->name('file-history.show');
     Route::get('/api/history', [FileManagerController::class, "GetFileHistoryById"]);
 
+    Route::get('/file-shared-with-me', function () {
+        return view('admin.file-shared');
+    })->name('shared-with-me');
+
+
 
 });
 

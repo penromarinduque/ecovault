@@ -41,6 +41,16 @@
                 </a>
             </li>
 
+            <li
+                class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('shared-with-me') }}" class="flex items-center gap-4 w-full">
+                    <img src="{{ asset('images/navigation/archive.png') }}" alt="Archived Files" class="w-14">
+                    <span class="text-lg font-semibold text-gray-200">Share with me</span>
+                </a>
+            </li>
+
+
+
 
         </ul>
 
