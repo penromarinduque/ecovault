@@ -51,7 +51,12 @@
 
         } catch (error) {
             console.error('Fetch operation error:', error.message || error);
-            alert('Failed to fetch data. Please try again.');
+
+            showToast({
+                type: 'danger',
+                message: 'failed! to fetch data.',
+
+            });
         }
     }
 
@@ -91,6 +96,33 @@
                     searchTitle: "Search through table data",
                     placeholder: "Search...",
                 },
+                // tableRender: (_data, table, type) => {
+                //     if (type === "print") {
+                //         return table
+                //     }
+                //     const tHead = table.childNodes[0]
+                //     const filterHeaders = {
+                //         nodeName: "TR",
+                //         attributes: {
+                //             class: "search-filtering-row"
+                //         },
+                //         childNodes: tHead.childNodes[0].childNodes.map(
+                //             (_th, index) => ({
+                //                 nodeName: "TH",
+                //                 childNodes: [{
+                //                     nodeName: "INPUT",
+                //                     attributes: {
+                //                         class: "datatable-input",
+                //                         type: "search",
+                //                         "data-columns": "[" + index - "]"
+                //                     }
+                //                 }]
+                //             })
+                //         )
+                //     }
+                //     tHead.childNodes.push(filterHeaders)
+                //     return table
+                // },
             });
 
             tableEvents(data); // Custom function for handling events if required

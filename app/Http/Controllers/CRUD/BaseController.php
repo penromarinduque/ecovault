@@ -99,6 +99,7 @@ abstract class BaseController extends Controller
                             'classification' => $file->classification,
                             'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
                             'shared_users' => $sharedUserIds, // List of user IDs who have access
+                            'client_name' => 'john doe'
                         ];
                     });
 
