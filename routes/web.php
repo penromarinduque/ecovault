@@ -36,7 +36,7 @@ Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend.o
 
 Route::get('/', [AdminController::class, 'ShowHome'])->name('admin.home.show');
 
-Route::middleware([VerifiedUser::class, 'auth'])->group(function () {
+Route::middleware([VerifiedUser::class])->group(function () {
 
 
     Route::get('/storage-usage', [StorageController::class, 'GetStorageUsage'])->name('admin.storage.usage');
@@ -94,7 +94,7 @@ Route::middleware([VerifiedUser::class, 'auth'])->group(function () {
     });
     Route::get("/client/records", function () {
         return view('admin.client.client-records');
-    });
+    })->name('client.records.show');
 
     Route::get('/api/getAreaChart', [StorageController::class, 'GetAreaChartData']);
     //Home Page

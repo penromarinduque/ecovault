@@ -18,7 +18,7 @@
                 </button>
             </div>
             <div class="mb-4 space-x-3">
-                <button type="button"
+                <a type="button" href="{{ route('client.records.show') }}"
                     class="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg  text-center inline-flex items-center text-sm px-5 py-2.5">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-2">
                         <path fill-rule="evenodd"
@@ -29,7 +29,7 @@
                     </svg>
 
                     Clients
-                </button>
+                </a>
             </div>
         </div>
 
