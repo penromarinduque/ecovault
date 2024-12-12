@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\VerifiedUser;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\File;
 class AdminController extends Controller
 {
     //
@@ -152,14 +153,29 @@ class AdminController extends Controller
         return view('admin.scanQr');
     }
 
-    function ShowQrRedirect()
+    function ShowQrRedirect($id)
     {
-        return view('admin.qr-redirect');
+        $fileId = $id;
+        return view('admin.qr-redirect', compact('fileId'));
     }
 
     function ShowFileHistory($fileId)
     {
 
         return view('admin.file-histories', compact('fileId'));
+    }
+
+    function ShowFileSummary($file_id)
+    {
+
+        // $file = File::firstOrFail($fileId);
+
+        $fileId = $file_id;
+        $file = File::where('id', $fileId)->first();
+        $type = $file->permit_type;
+        $record = $file->report_type;
+
+
+        return view('admin.qr-file-summary', compact('fileId', 'type', 'record'));
     }
 }

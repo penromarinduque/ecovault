@@ -150,6 +150,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
         return view('admin.file-shared');
     })->name('shared-with-me');
 
+    Route::get('/qr-validation/file-summary/{file_id}', [AdminController::class, 'ShowFileSummary'])->name('qr.file-summary');
 
 
 });

@@ -137,7 +137,6 @@ class UploadController extends Controller
     {
         try {
             $manager = ImageManager::gd();
-
             // $image = Image::read(Storage::disk('public')->path($filePath));
             // $qrCode = Image::read(Storage::disk('public')->path($qrCodeFilePath));
             $image = $manager->read(Storage::disk('public')->path($filePath));
