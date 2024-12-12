@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Admin\PermitTypeController;
 use App\Http\Middleware\VerifiedUser;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\CRUD\ArchiveController;
@@ -150,7 +151,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
         return view('admin.file-shared');
     })->name('shared-with-me');
 
-
-
+    Route::get('/api/permit/type', [PermitTypeController::class, 'GetPermitTypes']);
+    Route::get('/files/filter', [FileManagerController::class, 'GetFileAndPermits']);
 });
 

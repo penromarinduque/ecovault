@@ -11,6 +11,7 @@ use App\Models\TreeCuttingPermit;
 use App\Models\TransportPermit;
 use App\Models\TreeCuttingPermitDetail;
 use App\Models\FileHistory;
+use Carbon\Carbon;
 abstract class BaseController extends Controller
 {
     public function ArchivedById($id)
@@ -82,6 +83,8 @@ abstract class BaseController extends Controller
 
             // If $type and $municipality are provided, fetch files with join
             elseif (!empty($type) && !empty($municipality)) {
+
+
                 $files = File::where('is_archived', $isArchived)
                     ->where('permit_type', $type)
                     ->where('municipality', $municipality)
@@ -90,6 +93,7 @@ abstract class BaseController extends Controller
                     ->get()
                     ->map(function ($file) use ($currentUserId) {
                         $sharedUserIds = $file->fileShares->pluck('shared_with_user_id')->toArray();
+                        // Extract relevant permit details
                         return [
                             'id' => $file->id,
                             'file_name' => $file->file_name,
@@ -98,9 +102,7 @@ abstract class BaseController extends Controller
                             'user_name' => $file->user->name, // Uploader's name
                             'classification' => $file->classification,
                             'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
-                            'shared_users' => $sharedUserIds,
-                            'owner_nane' => 'john doe'
-                            // List of user IDs who have access
+                            'shared_users' => $sharedUserIds, // Only include specific permit details
                         ];
                     });
 
@@ -109,6 +111,7 @@ abstract class BaseController extends Controller
                     'data' => $files,
                     'message' => 'Files retrieved successfully',
                 ], 200);
+
             }
 
             return response()->json([
@@ -121,6 +124,88 @@ abstract class BaseController extends Controller
                 'message' => 'An error occurred while retrieving files.',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+    function GetFileAndPermits(Request $request)
+    {
+        try {
+            $classification = $request->input('classification');
+            $clientSearch = $request->input('client-search'); // e.g., string or null
+            $permitType = $request->input('permit_type'); // e.g., string or null
+            $archived = filter_var($request->input('archived'), FILTER_VALIDATE_BOOLEAN); // Converts 'true'/'false' string to boolean
+
+            // Start building the query on the 'files' table
+            $query = File::query();
+
+            // Determine which table to join based on permit_type
+            switch ($permitType) {
+                case 'tree-cutting-permits':
+                    $query = TreeCuttingPermit::with('details') // Load related details
+                        ->join('files', 'files.id', '=', 'tree_cutting_permits.file_id')
+                        ->where('tree_cutting_permits.name_of_client', 'like', "%{$clientSearch}%")
+                        ->select('files.*', 'tree_cutting_permits.*'); // Select required columns
+                    break;
+
+                case 'chainsaw-registration':
+                    $query->join('chainsaw_registrations', 'files.id', '=', 'chainsaw_registrations.file_id')
+                        ->where('chainsaw_registrations.name_of_client', 'like', "%{$clientSearch}%");
+                    break;
+
+                case 'tree-plantation-registration':
+                    $query->join('tree_plantation_registration', 'files.id', '=', 'tree_plantation_registration.file_id')
+                        ->where('tree_plantation_registration.name_of_client', 'like', "%{$clientSearch}%");
+                    break;
+
+                case 'transport-permit':
+                    $query->join('transport_permits', 'files.id', '=', 'transport_permits.file_id')
+                        ->where('transport_permits.name_of_client', 'like', "%{$clientSearch}%");
+                    break;
+
+                case 'land-title':
+                    $query->join('land_titles', 'files.id', '=', 'land_titles.file_id')
+                        ->where('land_titles.name_of_client', 'like', "%{$clientSearch}%");
+                    break;
+
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid permit type.',
+                        'received_permit_type' => $permitType
+                    ], 400);
+            }
+
+
+            $query->where('files.classification', $classification);
+            $query->where('files.is_archived', $archived); // Filter by archived (0 or 1)
+
+
+            // Execute the query to get the filtered files
+            $files = $query->get();
+
+            $files->transform(function ($file) {
+                // Assuming the file has a 'created_at' field or any other date field you want to format
+                $file->created_at = Carbon::parse($file->created_at)->format('Y-m-d H:i:s'); // You can adjust the format as needed
+
+                // If you have other date fields to format, you can add them here
+                // For example, if there's an 'updated_at' field:
+                // $file->updated_at = Carbon::parse($file->updated_at)->format('Y-m-d H:i:s');
+
+                return $file;
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'you retrieve client files',
+                'data' => $files,
+                'permit-type' => $permitType,
+            ]);
+        } catch (\Exception $e) {
+            // Handle any exception and return an error response
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching files.',
+                'error' => $e->getMessage(), // Optionally include the exception message for debugging
+            ], 500); // HTTP 500 Internal Server Error
         }
     }
 
@@ -420,6 +505,5 @@ abstract class BaseController extends Controller
 
         return response()->json(['message' => 'Specification not found.'], 200);
     }
-
 
 }
