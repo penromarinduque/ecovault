@@ -436,7 +436,7 @@
         event.preventDefault();
         const csrfToken = "{{ csrf_token() }}";
         const fileId = event.target.dataset.fileId;
-
+        document.getElementById('edit-file-form').classList.add('pointer-events-none', 'opacity-50');
         //parameters
 
         let authId = {!! json_encode($authId) !!};
@@ -483,6 +483,8 @@
 
             });
 
+        } finally {
+            document.getElementById('edit-file-form').classList.remove('pointer-events-none', 'opacity-50');
         }
     });
 

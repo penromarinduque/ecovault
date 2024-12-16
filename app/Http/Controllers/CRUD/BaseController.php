@@ -133,7 +133,7 @@ abstract class BaseController extends Controller
             $clientSearch = $request->input('client-search'); // e.g., string or null
             $permitType = $request->input('permit_type'); // e.g., string or null
             $archived = filter_var($request->input('archived'), FILTER_VALIDATE_BOOLEAN); // Converts 'true'/'false' string to boolean
-
+            $municipality = $request->input('municipality');
             // Start building the query on the 'files' table
             $query = File::query();
 
@@ -146,6 +146,13 @@ abstract class BaseController extends Controller
                         ->select('files.*', 'tree_cutting_permits.*'); // Select required columns
                     break;
 
+                case 'transport-permit':
+                    $query = TransportPermit::with('details')
+                        ->join('files', 'files.id', '=', 'transport_permits.file_id')
+                        ->where('transport_permits.name_of_client', 'like', "%{$clientSearch}%")
+                        ->select('files.*', 'transport_permits.*');
+                    break;
+
                 case 'chainsaw-registration':
                     $query->join('chainsaw_registrations', 'files.id', '=', 'chainsaw_registrations.file_id')
                         ->where('chainsaw_registrations.name_of_client', 'like', "%{$clientSearch}%");
@@ -154,11 +161,6 @@ abstract class BaseController extends Controller
                 case 'tree-plantation-registration':
                     $query->join('tree_plantation_registration', 'files.id', '=', 'tree_plantation_registration.file_id')
                         ->where('tree_plantation_registration.name_of_client', 'like', "%{$clientSearch}%");
-                    break;
-
-                case 'transport-permit':
-                    $query->join('transport_permits', 'files.id', '=', 'transport_permits.file_id')
-                        ->where('transport_permits.name_of_client', 'like', "%{$clientSearch}%");
                     break;
 
                 case 'land-title':
@@ -177,7 +179,7 @@ abstract class BaseController extends Controller
 
             $query->where('files.classification', $classification);
             $query->where('files.is_archived', $archived); // Filter by archived (0 or 1)
-
+            $query->where('files.municipality', $municipality);
 
             // Execute the query to get the filtered files
             $files = $query->get();
@@ -198,6 +200,7 @@ abstract class BaseController extends Controller
                 'message' => 'you retrieve client files',
                 'data' => $files,
                 'permit-type' => $permitType,
+
             ]);
         } catch (\Exception $e) {
             // Handle any exception and return an error response
