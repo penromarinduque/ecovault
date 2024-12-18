@@ -29,18 +29,18 @@
                             <label for="current_municipality-preview"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current
                                 Municipality</label>
-                            <select disabled id="current_municipality-preview"
+                            <p disabled id="current_municipality-preview"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
-                            </select>
+                            </p>
                             <div class="mt-2">
                                 <label for="current_permit_type-preview"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current
                                     Category Type</label>
-                                <select id="current_permit_type-preview" disabled
+                                <p id="current_permit_type-preview" disabled
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
-                                </select>
+                                </p>
                             </div>
                         @elseif($record)
                             <div class="mt-2">

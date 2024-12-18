@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Admin\PermitTypeController;
 use App\Http\Middleware\VerifiedUser;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\CRUD\ArchiveController;
@@ -153,5 +154,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/qr-validation/file-summary/{file_id}', [AdminController::class, 'ShowFileSummary'])->name('qr.file-summary');
 
 
+    Route::get('/api/permit/type', [PermitTypeController::class, 'GetPermitTypes']);
+    Route::get('/files/filter', [FileManagerController::class, 'GetFileAndPermits']);
 });
 

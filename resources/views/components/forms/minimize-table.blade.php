@@ -8,12 +8,12 @@
     //love what you are doing
     let minidataTable;
 
-    let reports = {!! json_encode($record ?? '') !!};
-
-    let isAdmins = {!! json_encode($isAdmin) !!};
-    let types = {!! json_encode($type) !!};
-    let municipalities = {!! json_encode($municipality) !!};
-    let isArchives = {!! json_encode($isArchived) !!};
+    let miniReportData = {!! json_encode($record ?? '') !!};
+    let miniIsAdmin = {!! json_encode($isAdmin) !!};
+    let miniType = {!! json_encode($type ?? '') !!};
+    let miniMunicipality = {!! json_encode($municipality ?? '') !!};
+    let miniCategory = {!! json_encode($category ?? '') !!};
+    let miniIsArchived = {!! json_encode($isArchived) !!};
 
     document.addEventListener("DOMContentLoaded", function() {
         // Define parameters for the request
@@ -23,10 +23,11 @@
 
     async function fetchDatas() {
         const params = {
-            type: types || '',
-            municipality: municipalities || '',
-            report: reports || '',
-            isArchived: isArchives
+            type: miniType || '',
+            municipality: miniMunicipality || '',
+            report: miniReportData || '',
+            category: miniCategory || '',
+            isArchived: miniIsArchived,
         };
 
         // Remove empty parameters
@@ -125,7 +126,7 @@
     // Generate action buttons for dropdowns
     function generateKebabs(fileId, fileShared, fileName) {
         const employeeActions = `
-        ${fileShared.includes({{ auth()->user()->id }}) || isAdmin
+        ${fileShared.includes({{ auth()->user()->id }}) || miniIsAdmin
         ? ` <li class="relative">
             <a class="items-center w-full gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 inline-flex"
                 onclick="openFileModal(${fileId})">
@@ -212,7 +213,7 @@
     `;
 
         // Choose the correct actions based on isAdmin
-        const actions = isAdmin ? adminActions : employeeActions;
+        const actions = miniIsAdmin ? adminActions : employeeActions;
 
         return `
         <button id="dropdownRightButton${fileId}" class="inline-flex items-center p-0.5 text-sm font-medium text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none" type="button">

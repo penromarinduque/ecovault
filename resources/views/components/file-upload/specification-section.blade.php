@@ -73,7 +73,7 @@
                                     <div class="my-4">
                                         <label for="destination" id="label-destination"
                                             class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
-                                        <input type="text" id="destination" name="destination"
+                                        <input type="text" id="destination" name="destination[]"
                                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                     block w-full p-2.5 
                                     focus:border-green-500 focus:ring-green-500 
@@ -125,13 +125,21 @@
                     inputs = ['species', 'number_of_trees', 'destination', 'date_applied', 'date_of_transport'];
                 } else {
                     // Default type or fallback, can be empty or another set of fields
-                    alert("Error! try reloading the page.");
+                    showToast({
+                        type: 'danger',
+                        message: 'Error! Try reloading the page.',
+
+                    });
                 }
                 console.log(inputs);
 
 
                 if (existingEditSpecifications >= maxEditSpecifications) {
-                    alert(`You can only add up to ${maxSpecifications} specifications.`);
+                    showToast({
+                        type: 'danger',
+                        message: `Specification limit reach, you can only have ${maxEditSpecifications}`,
+
+                    });
                     return;
                 }
 
