@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CRUD;
 
 use App\Http\Controllers\Controller;
+use App\Models\QrValidation;
 use Illuminate\Http\Request;
 
 
@@ -84,6 +85,12 @@ class UploadController extends Controller
 
             $fileEntry = File::create($formData);
             $url = url("/qr-validation/{$fileEntry->id}"); //previw page
+
+            QrValidation::create([
+                'file_id' => $fileEntry->id,
+                'url' => "/qr-validation/{$fileEntry->id}"
+            ]);
+
             $result = Builder::create()
                 ->writer(new PngWriter())
                 ->data($url)

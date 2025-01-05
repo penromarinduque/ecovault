@@ -105,14 +105,14 @@
                     // Display the scanned result
                     output.innerText = "Scan Complete";
                     qrIndicator.classList.add("success");
-
+                    console.log(decodedText);
                     // Show "Go to URL" and "Reset" buttons
                     goToUrlButton.classList.remove("hidden");
                     resetButton.classList.remove("hidden");
 
                     goToUrlButton.onclick = () => {
 
-                        if (decodedText.startsWith("qr-validation")) {
+                        if (decodedText.includes("/qr-validation")) {
                             // If the URL starts with "qr-validation", open it
                             window.open(decodedText);
                         } else {
