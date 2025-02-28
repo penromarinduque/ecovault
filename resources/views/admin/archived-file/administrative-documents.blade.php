@@ -6,7 +6,7 @@
 
     <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-gray-300 mt-2">
         <!-- Header -->
-        <h1 class="font-medium text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
+        <h1 class="font-medium text-2xl text-gray-500">Administrative Documents</h1>
 
         <!-- Grid Container -->
         <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">

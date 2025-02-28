@@ -18,7 +18,7 @@
             <div class="flex flex-col items-center">
                 <a href="{{ route('file-manager.municipality.show', ['type' => $type, 'category' => 'agricultural']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Agricultural Folder" class="w-24 mb-2">
-                    <h1 class="w-[120px] text-center">Agricultural</h1>
+                    <h1 class="w-[120px] text-center">Agricultural Free Patent</h1>
                 </a>
             </div>
 
@@ -26,7 +26,7 @@
             <div class="flex flex-col items-center">
                 <a href="{{ route('file-manager.municipality.show', ['type' => $type, 'category' => 'residential']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Residential Folder" class="w-24 mb-2">
-                    <h1 class="w-[120px] text-center">Residential</h1>
+                    <h1 class="w-[120px] text-center">Residential Free Patent</h1>
                 </a>
             </div>
 
@@ -34,7 +34,7 @@
             <div class="flex flex-col items-center">
                 <a href="{{ route('file-manager.municipality.show', ['type' => $type, 'category' => 'special']) }}">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Special Folder" class="w-24 mb-2">
-                    <h1 class="w-[120px] text-center">Special</h1>
+                    <h1 class="w-[120px] text-center">Special Free Patent</h1>
                 </a>
             </div>
 

@@ -12,7 +12,9 @@ return new class extends Migration {
     {
         Schema::create('file_types', function (Blueprint $table) {
             $table->id();
+            $table->string('group_name')->nullable();
             $table->string('type_name'); // e.g., 'Tree Cutting Permit', 'Chainsaw Registration', etc.
+            $table->string("folder_name")->nullable();
             $table->tinyInteger('classification_id');
             $table->timestamps();
         });

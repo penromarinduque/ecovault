@@ -35,27 +35,29 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $fileTypes = [
-            ['type_name' => 'tree-cutting-permits', 'classification_id' => 1],
-            ['type_name' => 'chainsaw-registration', 'classification_id' => 1],
-            [
-                'type_name' => 'tree-plantation-registration',
-                'classification_id' => 1
-            ],
-            ['type_name' => 'transport-permit', 'classification_id' => 1],
-            ['type_name' => 'land-title', 'classification_id' => 1],
-            ['type_name' => 'memoranda', 'classification_id' => 2],
-            ['type_name' => 'letters', 'classification_id' => 2],
-            ['type_name' => 'special-orders', 'classification_id' => 2],
-            ['type_name' => 'reports', 'classification_id' => 2],
+            ['group_name' => 'Forestry', 'type_name' => 'tree-cutting-permits', 'classification_id' => 1, 'folder_name' => 'Tree Cutting Permits'],
+            ['group_name' => 'Forestry', 'type_name' => 'chainsaw-registration', 'classification_id' => 1, 'folder_name' => 'Chainsaw Registration'],
+            ['group_name' => 'Forestry', 'type_name' => 'tree-plantation-registration', 'classification_id' => 1, 'folder_name' => 'Private Tree Plantation Registration'],
+            ['group_name' => 'Forestry', 'type_name' => 'transport-permit', 'classification_id' => 1, 'folder_name' => 'Tree Transport Permit'],
+            ['group_name' => 'Lands', 'type_name' => 'land-title', 'classification_id' => 1, 'folder_name' => 'Land Titles / Patented Lots'],
+            ['group_name' => 'Biodiversity', 'type_name' => 'local-transport-permit', 'classification_id' => 1, 'folder_name' => 'Local Transport Permits'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'memoranda', 'classification_id' => 2, 'folder_name' => 'Memoranda'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'letters', 'classification_id' => 2, 'folder_name' => 'Letters'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'special-orders', 'classification_id' => 2, 'folder_name' => 'Special Orders'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'reports', 'classification_id' => 2, 'folder_name' => 'Reports'],
         ];
-
 
         foreach ($fileTypes as $fileType) {
             FileType::updateOrCreate(
                 ['type_name' => $fileType['type_name']], // Find by type_name
-                ['classification_id' => $fileType['classification_id']] // Set classification_id
+                [
+                    'group_name' => $fileType['group_name'],
+                    'classification_id' => $fileType['classification_id'],
+                    'folder_name' => $fileType['folder_name']
+                ] // Set or update values
             );
         }
+
 
 
         Municipality::insert([
@@ -75,5 +77,7 @@ class DatabaseSeeder extends Seeder
             'MySqlDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe',
             'MySqlDumpDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysqldump.exe'
         ]);
+
+
     }
 }

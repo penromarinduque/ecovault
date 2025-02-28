@@ -23,7 +23,7 @@
                 ]) }}"
                     class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
-                    <h2 class="w-[120px] text-center">Tree Plantation</h2>
+                    <h2 class="w-[120px] text-center">Private Tree Plantation Registration</h2>
                 </a>
             </div>
 
