@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('file_path');
             $table->string('office_source');
             $table->string('classification');
-            $table->timestamp('date_released')->nullable();
+            $table->date('date_released')->nullable();
             $table->boolean('is_archived')->default(false);
             $table->timestamp('archived_at')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->string('name_of_client');
             $table->timestamps();
         });
+
 
         // Tree cutting permit details table
         Schema::create('tree_cutting_permit_details', function (Blueprint $table) {
@@ -92,6 +93,18 @@ return new class extends Migration {
             $table->string('location');  // Location of the property
             $table->string('lot_number');  // Lot number
             $table->string('property_category');  // Property category (residential, agricultural, special)
+            $table->timestamps();
+        });
+
+        Schema::create('local_transport_permits', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('file_id')->constrained('files')->onDelete('cascade'); // Connect to files table
+            $table->string('name_of_client');
+            $table->string('business_farm_name');
+            $table->string('butterfly_permt_number');
+            $table->string('destination');
+            $table->date('date_applied');
+            $table->string('classification');
             $table->timestamps();
         });
     }
