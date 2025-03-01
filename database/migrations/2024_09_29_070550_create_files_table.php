@@ -94,6 +94,18 @@ return new class extends Migration {
             $table->string('property_category');  // Property category (residential, agricultural, special)
             $table->timestamps();
         });
+
+        Schema::create('local_transport_permits', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('file_id')->constrained('files')->onDelete('cascade'); // Connect to files table
+            $table->string('name_of_client');
+            $table->string('business_farm_name');
+            $table->string('butterfly_permt_number');
+            $table->string('destination');
+            $table->date('date_applied');
+            $table->string('classification');
+            $table->timestamps();
+        });
     }
 
     /**
