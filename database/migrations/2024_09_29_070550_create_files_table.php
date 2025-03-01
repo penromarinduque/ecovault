@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('file_path');
             $table->string('office_source');
             $table->string('classification');
+            $table->timestamp('date_released')->nullable();
             $table->boolean('is_archived')->default(false);
             $table->timestamp('archived_at')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
