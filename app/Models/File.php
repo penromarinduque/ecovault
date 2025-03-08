@@ -12,7 +12,7 @@ class File extends Model
 
     protected $fillable = [
         'permit_type',
-        'land_category',
+        'category',
         'municipality',
         'report_type',
         'file_name',

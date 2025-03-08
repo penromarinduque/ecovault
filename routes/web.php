@@ -49,6 +49,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
         Route::get('/municipality', [AdminController::class, 'ShowMunicipality'])->name('municipality.show');
         Route::get('/categories', [AdminController::class, 'ShowLandTitlesOrPatentedLots'])->name('land-title.show');
         Route::get('/repository', [AdminController::class, 'ShowTable'])->name('table.show');
+        Route::get('/chainsaw-categories', [AdminController::class, 'ShowChainsawCategories'])->name('chainsaw-categories.show');
     });
 
     Route::prefix('administrative-document')->name('administrative.')->middleware([CheckQueryParameter::class])->group(function () {
@@ -64,6 +65,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
             Route::get('/municipality', [AdminController::class, 'ShowArchivedMunicipality'])->name('municipality.show');
             Route::get('/categories', [AdminController::class, 'ShowArchivedandTitlesOrPatentedLots'])->name('land-title.show');
             Route::get('/repository', [AdminController::class, 'ShowArchivedFileManagerTable'])->name('table.show');
+            Route::get('/chainsaw-categories', [AdminController::class, 'ShowArchivedChainsawCategories'])->name('chainsaw-categories.show');
         });
 
         Route::prefix('administrative-document')->name('administrative.')->group(function () {
@@ -136,8 +138,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/api/notifications', [NotificationController::class, 'getNotifications']); // Get all notifications for a user
 
-    Route::get('/api/folders', [FolderController::class, 'GetFolders']);
-    Route::post('/api/folders/add', [FolderController::class, 'AddFolder']);
+
 
     Route::get('/qr-validation/{id}', [AdminController::class, 'ShowQrRedirect'])->name('show.qr-validation');
     Route::get('/qr-validation-invalid', function () {
@@ -156,5 +157,10 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/api/permit/type', [PermitTypeController::class, 'GetPermitTypes']);
     Route::get('/files/filter', [FileManagerController::class, 'GetFileAndPermits']);
+
+
+    Route::get('/butterfly', [AdminController::class, 'ShowButterflyList'])->name('butterfly.show');
+    Route::post('/butterfly/add', [AdminController::class, 'ShowButterflyAdd']);
+    // Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
 });
 

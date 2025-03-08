@@ -17,13 +17,7 @@
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-        @component('components.addfile.add-file', [
-            'type' => $type ?? '',
-            'municipality' => $municipality ?? '',
-            'isArchived' => false,
-        ])
-        @endcomponent
-        <!-- file sharing-->
+      <!-- file sharing-->
         @component('components.file-share.file-share', [
             'includePermit' => true,
         ])
@@ -34,11 +28,6 @@
         @endcomponent
         <div class="grid">
 
-            @component('components.create-folder.create-folder', [
-                'type' => $type ?? '',
-                'municipality' => $municipality ?? '',
-            ])
-            @endcomponent
 
 
             <div id="table-container">

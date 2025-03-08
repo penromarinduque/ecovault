@@ -178,4 +178,29 @@ class AdminController extends Controller
 
         return view('admin.qr-file-summary', compact('fileId', 'type', 'record'));
     }
+    function ShowButterflyList()
+    {
+        return view('admin.butterfly.butterfly-list');
+    }
+
+    function ShowButterflyAdd()
+    {
+        return view('admin.butterfly.butterfly-add');
+    }
+
+    function ShowButterflyEdit()
+    {
+        return view('admin.butterfly.butterfly-edit');
+    }
+
+    function ShowChainsawCategories()
+    {
+
+        return view('admin.file-manager.chainsaw-categories');
+    }
+
+    function ShowArchivedChainsawCategories()
+    {
+        return view('admin.archived-file.chainsaw-categories');
+    }
 }

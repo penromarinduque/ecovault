@@ -88,7 +88,7 @@ abstract class BaseController extends Controller
                 $files = File::where('is_archived', $isArchived)
                     ->where('permit_type', $type)
                     ->where('municipality', $municipality)
-                    ->where('land_category', $category)
+                    ->where('category', $category)
                     ->with(['user:id,name', 'fileShares']) // Load uploader and shared users
                     ->get()
                     ->map(function ($file) use ($currentUserId) {

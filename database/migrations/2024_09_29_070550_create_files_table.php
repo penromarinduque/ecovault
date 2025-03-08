@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('permit_type')->nullable();
-            $table->string('land_category')->nullable();
+            $table->string('category')->nullable();
             $table->string('municipality')->nullable();
             $table->string('report_type')->nullable();
             $table->string(column: 'file_name');
@@ -54,6 +54,7 @@ return new class extends Migration {
             $table->string('name_of_client');
             $table->string('location');
             $table->string('serial_number');
+            $table->string('category');
             $table->date('date_applied');
             $table->timestamps();
         });
@@ -99,10 +100,10 @@ return new class extends Migration {
 
         Schema::create('local_transport_permits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('file_id')->constrained('files')->onDelete('cascade'); // Connect to files table
+            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');  // Connect to files table
             $table->string('name_of_client');
             $table->string('business_farm_name');
-            $table->string('butterfly_permt_number');
+            $table->string('butterfly_permit_number');
             $table->string('destination');
             $table->date('date_applied');
             $table->string('classification');
@@ -115,13 +116,17 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        // Drop tables in the correct order to avoid foreign key constraint errors
+        Schema::dropIfExists('local_transport_permits');
         Schema::dropIfExists('land_titles');
         Schema::dropIfExists('tree_transport_permit_details');
         Schema::dropIfExists('transport_permits');
         Schema::dropIfExists('tree_cutting_permit_details');
+        Schema::dropIfExists('tree_cutting_permits');
         Schema::dropIfExists('tree_plantation_registration');
         Schema::dropIfExists('chainsaw_registrations');
-        Schema::dropIfExists('tree_cutting_permits');
+
+        // Finally, drop the parent table
         Schema::dropIfExists('files');
     }
 };

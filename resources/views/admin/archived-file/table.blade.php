@@ -12,21 +12,13 @@
                 <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
                     data-role="upload" aria-expanded="false" label="Upload File" type="button" style="primary" />
 
-                <button id='add-folder-btn' data-modal-target="add-folder-modal" data-modal-toggle="add-folder-modal"
-                    class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">
-                    Create Folder
-                </button>
+            
             </div>
         </div>
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-        @component('components.addfile.add-file', [
-            'type' => $type ?? '',
-            'municipality' => $municipality ?? '',
-            'isArchived' => true,
-        ])
-        @endcomponent
+       
         <!-- file sharing-->
         @component('components.file-share.file-share', [
             'includePermit' => true,
@@ -37,14 +29,7 @@
         ])
         @endcomponent
         <div class="grid">
-
-            @component('components.create-folder.create-folder', [
-                'type' => $type ?? '',
-                'municipality' => $municipality ?? '',
-            ])
-            @endcomponent
-
-
+         
             <div id="table-container">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">

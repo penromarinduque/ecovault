@@ -86,6 +86,7 @@ class FileManagerController extends BaseController
                         'location' => $request->location,
                         'serial_number' => $request->serial_number,
                         'date_applied' => $request->date_applied,
+                        'category' => $category,
                     ]);
                     break;
 

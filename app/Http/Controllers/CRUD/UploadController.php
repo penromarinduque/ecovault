@@ -69,7 +69,7 @@ class UploadController extends Controller
             // Create the form data to store in your database
             $formData = [
                 'permit_type' => $type,  // Ensure this is present in the request
-                'land_category' => $category, // This can be null
+                'category' => $category, // This can be null
                 'municipality' => $municipality, // Ensure this is present in the request
                 'report_type' => $report,
                 'file_name' => $originalFileName,
