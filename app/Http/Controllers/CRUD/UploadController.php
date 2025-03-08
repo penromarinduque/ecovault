@@ -41,6 +41,7 @@ class UploadController extends Controller
             'permit_type' => 'nullable|string', // Make this field nullable
             'municipality' => 'nullable|string', // Make this field nullable
             'classification' => 'required|string',
+            'date_released' => 'required',
         ]);
 
         if ($request->file('file')->isValid()) {
@@ -77,6 +78,7 @@ class UploadController extends Controller
                 'classification' => $request->input('classification'), // Ensure this is present in the request
                 'user_id' => auth()->user()->id, // Assuming you're using auth to get the logged-in user's ID
                 'is_archived' => $isArchived,
+                'date_released' => $request->date_released,
             ];
 
             if ($isArchived) {

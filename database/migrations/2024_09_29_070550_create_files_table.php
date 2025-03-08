@@ -31,6 +31,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onDelete('cascade'); // Connect to files table
             $table->string('name_of_client');
+            $table->string('permit_type');
             $table->timestamps();
         });
 

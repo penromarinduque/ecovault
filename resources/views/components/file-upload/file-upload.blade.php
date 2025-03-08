@@ -65,9 +65,19 @@
                         <span class="font-medium">Please!</span> Enter valid input!
                     </p>
                 </div>
+                
+                <div class="my-4">
+                    <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                        Release</label>
+                    <input type="date" id="date-released" name="date_released" placeholder="Enter Date Release" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                        block w-full p-2.5 
+                                        focus:border-green-500 focus:ring-green-500 
+                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                        autocomplete="off" required>
+                </div>
 
                 <div class="my-4">
-
                     @if ($type == 'land-title')
                         @if ($municipality == 'Santa Cruz')
                             {{-- Content specific for Sta Cruz --}}
@@ -133,21 +143,42 @@
                         </select>
                     @endif
                 </div>
+
+
+
+
+                <div class="my-4">
+                    @if ($type == 'tree-cutting-permits')
+                        <label for="tcp-type" class="block mb-2 text-sm font-medium text-gray-700">Tree Cutting Permit Type</label>
+                        <select id="tcp-type" name="tcp-type" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                block w-full p-2.5 
+                                                focus:border-green-500 focus:ring-green-500 
+                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required>
+                            <option value="" disabled selected hidden>Choose Tree Cutting Permit</option>
+                            <option value="Special Tree Cutting Permit">Special Tree Cutting Permit</option>
+                            <option value="Tree Cutting Permit for planted/naturally growing growing trees">Tree Cutting Permit for planted/naturally growing growing trees</option>
+                            <option value="Private Land Timber Permit">Private Land Timber Permit(PLTP)</option>
+                            <option value="Special Private Timber Permit">Special Private Timber Permit(SPTP)</option>
+                        </select>
+                    @endif
+                </div>
             </div>
 
             <!-- step 2 -->
             <div class="font-medium">
                 @if ($type == 'tree-cutting-permits')
                     <div class="my-4">
-                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Cutting
-                            Specification</h2>
+                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Cutting Specification</h2>
                         <button type="button" id="add-file-specification"
                             class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
                             <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clip-rule="evenodd"></path>
+                                    clip-rule="evenodd">
+                                </path>
                             </svg>
                             Click to Add
                         </button>
@@ -432,7 +463,7 @@
 
         //console.log('this', queryParams);
         const formData = new FormData(this);
-
+        console.log(formData);
         try {
             // File upload
             const fileUploadResponse = await fetch(`/file-upload?${queryParams}`, {

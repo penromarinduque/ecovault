@@ -223,6 +223,12 @@
                 <span class="ml-7">Download</span><!-- Text -->
             </a>
         </li>
+         <li class="relative">
+            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
+           <i class='bx bxs-edit absolute left-4 text-lg'></i>
+                <span class="ml-7">Rename</span><!-- Text -->
+            </a>
+        </li>
         <li class="relative">
             <button class="toggle-btn w-full flex items-center gap-2 edit-button px-4 py-2 hover:bg-gray-100"
                 data-file-id="${fileId}" data-role="edit" data-toggle-target="edit" aria-controls="section-edit"

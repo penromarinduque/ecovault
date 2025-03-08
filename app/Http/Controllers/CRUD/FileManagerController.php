@@ -33,6 +33,7 @@ class FileManagerController extends BaseController
                     $treeCuttingPermit = TreeCuttingPermit::create([
                         'file_id' => $request->file_id,
                         'name_of_client' => $request->name_of_client,
+                        'permit_type' => $request->input('tcp-type'),
                     ]);
 
                     $speciesArray = $request->input('species');

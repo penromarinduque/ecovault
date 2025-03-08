@@ -12,6 +12,7 @@ class TreeCuttingPermit extends Model
     protected $fillable = [
         'file_id',
         'name_of_client',
+        'permit_type'
     ];
 
     /**
