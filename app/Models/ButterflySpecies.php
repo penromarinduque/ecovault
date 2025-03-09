@@ -11,6 +11,8 @@ class ButterflySpecies extends Model
         'scientific_name',
         'common_name',
         'family',
-        'genus'
+        'genus',
+        'description',
+        'image_url'
     ];
 }

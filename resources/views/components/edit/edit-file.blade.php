@@ -16,6 +16,312 @@
         <form id="edit-file-form" class="space-y-4">
             @csrf
             <div class="grid grid-cols-2 gap-x-10">
+
+
+                @if ($type == 'local-transport-permit')
+                    <div class="col-span-2 flex">
+                        <div class="font-medium w-5/12">
+                            <div class="my-4">
+                                <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                                    Client</label>
+                                <input type="text" id="edit-name-of-client" name="name_of_client" placeholder="Enter Value"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                            block w-full p-2.5 
+                                                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid name for the client!
+                                </p>
+                            </div>
+
+                            <div class="my-4">
+                                <label for="business-farm-name"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Business Farm Name</label>
+                                <input type="text" id="edit-business-farm-name" name="business_farm_name"
+                                    placeholder="Enter Farm Name"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                            block w-full p-2.5 
+                                                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p id="business-farm-name-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid business farm name
+                                </p>
+                            </div>
+
+                            <div class="my-4">
+                                <label for="butterfly-permit-number"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Butterfly Permit Number</label>
+                                <input type="text" id="edit-butterfly-permit-number" name="butterfly_permit_number"
+                                    placeholder="Enter Permit Number"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                                    block w-full p-2.5 
+                                                                                                                                    focus:border-green-500 focus:ring-green-500 
+                                                                                                                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p id="butterfly-permit-number-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid business farm name
+                                </p>
+                            </div>
+
+                            <div class="my-4">
+                                <label for="destination"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
+                                <input type="text" id="edit-destination" name="destination" placeholder="Enter Destination"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                                                            block w-full p-2.5 
+                                                                                                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p id="destination-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid Destination
+                                </p>
+                            </div>
+
+                            <div class="my-4">
+                                <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Applied</label>
+                                <input type="date" id="edit-date_applied" name="date_applied"
+                                    placeholder="Date Applied"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                                    block w-full p-2.5 
+                                                                                                                                    focus:border-green-500 focus:ring-green-500 
+                                                                                                                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p id=-date-applied-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter valid Date
+                                </p>
+
+                            </div>
+
+                            <div class="my-4">
+                                <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Release</label>
+                                <input type="date" id="edit-date-released" name="date_released"
+                                    placeholder="Enter Date Release"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                        block w-full p-2.5 
+                                                        focus:border-green-500 focus:ring-green-500 
+                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                            </div>
+
+
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="edit-classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                            block w-full p-2.5 
+                                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <option value="" disabled selected hidden>Select a Classification</option>
+                                <option value="highly-technical">Highly Technical</option>
+                                <option value="simple">Simple</option>
+                            </select>
+
+
+
+                            <input type="hidden" id="edit-office-source"  name="office_source" placeholder="Enter office source" value=null 
+                                class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                        block w-full p-2.5 
+                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                        </div>
+
+                        <div class="w-full">
+                            <div class="max-w-lg mx-auto my-6">
+                                <div class="flex gap-2">
+                                    <input type="text" id="searchInput" placeholder="Search butterfly..."
+                                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                                    <button type="button" onclick="searchButterflies()"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Search</button>
+                                </div>
+
+                                <!-- Search Results -->
+                                <ul id="searchResults"
+                                    class="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                                </ul>
+
+                                <!-- Modal Backdrop -->
+                                <div id="modalBackdrop" class="hidden fixed inset-0 bg-black bg-opacity-50"></div>
+
+                                <!-- Add Butterfly Modal -->
+                                <div id="addButterflyModal"
+                                    class="hidden fixed inset-0 flex justify-center items-center z-50">
+                                    <div class="bg-white p-6 rounded-lg shadow-lg w-9/12 relative">
+                                        <!-- Close Button (X Icon) -->
+                                        <button onclick="closeModal()"
+                                            class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+                                            ✖
+                                        </button>
+
+                                        <h2 class="text-xl font-bold mb-4">Add New Butterfly</h2>
+                                        <input type="text" id="newScientificName" placeholder="Scientific Name"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        <input type="text" id="newCommonName" placeholder="Common Name"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        <input type="text" id="newFamily" placeholder="Family"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        <input type="text" id="newGenus" placeholder="Genus"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        <textarea id="newDescription" placeholder="Description" class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
+                                        <input type="text" id="newImageUrl" placeholder="Image URL"
+                                            class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
+
+                                        <button type="button" onclick="addButterfly()"
+                                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
+                                            Butterfly</button>
+                                    </div>
+                                </div>
+
+                                <!-- Selected Butterflies Table -->
+                                <div class="mt-4">
+                                    <table class="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
+                                        <thead>
+                                            <tr class="bg-green-500 text-white">
+                                                <th class="py-2 px-4 text-left">Common/ScientificName</th>
+                                                <th class="py-2 px-4 text-left">Quantity</th>
+                                                <th class="py-2 px-4 text-left">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="selectedButterflies" class="bg-white"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <script>
+                                function searchButterflies() {
+                                    let query = document.getElementById("searchInput").value;
+                                    fetch(`/api/butterflies/search?query=${query}`)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            let resultsList = document.getElementById("searchResults");
+                                            resultsList.innerHTML = ""; // Clear previous results
+
+                                            if (data.length === 0) {
+                                                document.getElementById("modalBackdrop").classList.remove("hidden"); // Show backdrop
+                                                document.getElementById("addButterflyModal").classList.remove("hidden"); // Show modal
+                                                return;
+                                            }
+
+                                            data.forEach(butterfly => {
+                                                let li = document.createElement("li");
+                                                li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
+                                                li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
+                                                li.onclick = function() {
+                                                    addToTable(butterfly);
+                                                };
+                                                resultsList.appendChild(li);
+                                            });
+                                        })
+                                        .catch(error => console.error("Error fetching data:", error));
+                                }
+
+                                function addToTable(butterfly) {
+                                    let tableBody = document.getElementById("selectedButterflies");
+
+                                    // Prevent duplicates
+                                    let existingRows = tableBody.querySelectorAll("tr");
+                                    for (let row of existingRows) {
+                                        if (row.getAttribute("data-id") === butterfly.id.toString()) {
+                                            alert("Already added!");
+                                            return;
+                                        }
+                                    }
+
+                                    let row = document.createElement("tr");
+                                    row.setAttribute("data-id", butterfly.id);
+                                    row.className = "border-b border-gray-200";
+                                    row.innerHTML = `<td class="py-2 px-4">${butterfly.common_name} / ${butterfly.scientific_name}</td>
+                                                                <td class="py-2 px-4">
+                                                                <input type="number" value=1 
+                    class="w-6/12 p-1 border border-gray-300 rounded-lg focus:ring-green-500" /></td>
+                                                                <td class="py-2 px-4">
+                                                                    <button onclick="removeRow(this)" 
+                                                                        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"><i class='bx bxs-trash-alt'></i></button>
+                                                                </td>`;
+                                    tableBody.appendChild(row);
+                                }
+
+                                function removeRow(button) {
+                                    button.closest("tr").remove();
+                                }
+
+                               function addButterfly() {
+                                    let scientific_name = document.getElementById("newScientificName").value;
+                                    let common_name = document.getElementById("newCommonName").value;
+                                    let family = document.getElementById("newFamily").value;
+                                    let genus = document.getElementById("newGenus").value;
+                                    let description = document.getElementById("newDescription").value;
+                                    let image_url = document.getElementById("newImageUrl").value;
+
+                                    fetch('/butterfly/add', {  // <-- Ensure this matches your Laravel route
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                                        },
+                                        body: JSON.stringify({
+                                            scientific_name,
+                                            common_name,
+                                            family,
+                                            genus,
+                                            description,
+                                            image_url
+                                        })
+                                    })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                return response.json().then(err => Promise.reject(err));
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            // Add the newly created butterfly to the table
+                                            addToTable(data.butterfly);
+
+                                            // Clear the input fields
+                                            document.getElementById("newScientificName").value = "";
+                                            document.getElementById("newCommonName").value = "";
+                                            document.getElementById("newFamily").value = "";
+                                            document.getElementById("newGenus").value = "";
+                                            document.getElementById("newDescription").value = "";
+                                            document.getElementById("newImageUrl").value = "";
+
+                                            closeModal();
+                                        })
+                                        .catch(error => {
+                                            console.error("Error adding butterfly:", error);
+                                              showToast({
+                                                type: 'failed',
+                                                message: 'Failed to add butterfly. Please check the input.',
+
+                                            });
+
+                                        });
+                                }
+
+                                function closeModal() {
+                                    document.getElementById("addButterflyModal").classList.add("hidden");
+                                    document.getElementById("modalBackdrop").classList.add("hidden"); // Hide backdrop
+                                }
+                            </script>
+
+                        </div>
+                    </div>
+
+                @else
+
                 <!-- step 1 -->
                 <div class="font-medium ">
                     @if (!$record)
@@ -303,7 +609,11 @@
                         <span id="button-text">Update</span>
                     </button>
                 </div>
+
+                @endif
             </div>
+
+           
         </form>
     </div>
     <div id="skeleton" role="status" class="w-full animate-pulse hidden pt-4">

@@ -102,7 +102,7 @@
                         <div class="my-4">
                             <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date
                                 Applied</label>
-                            <input type="date" id="butterfly-permit-number" name="date_applied"
+                            <input type="date" id="date_applied" name="date_applied"
                                 placeholder="Date Applied"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                 block w-full p-2.5 
@@ -146,7 +146,7 @@
 
 
 
-                        <input type="hidden" id="office-source"  name="office_source" placeholder="Enter office source" value=null 
+                        <input type="hidden" id="office-source"  name="office_source" placeholder="Enter office source" value=''
                             class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                     block w-full p-2.5 
                                                                     focus:border-green-500 focus:ring-green-500 
@@ -318,7 +318,12 @@
                                     })
                                     .catch(error => {
                                         console.error("Error adding butterfly:", error);
-                                        alert("Failed to add butterfly. Please check the input.");
+                                          showToast({
+                                            type: 'failed',
+                                            message: 'Failed to add butterfly. Please check the input.',
+
+                                        });
+
                                     });
                             }
 
@@ -662,7 +667,7 @@
     </form>
 </div>
 <script>
-    console.log(municipality)
+   
     const fileInput = document.getElementById('file-upload');
     const fileUploadName = document.getElementById('file-upload-name');
     const fileUploadError = document.getElementById('file-upload-error');
@@ -775,7 +780,27 @@
 
         //console.log('this', queryParams);
         const formData = new FormData(this);
-        console.log(formData);
+        
+        let butterflies = []; // Collect selected butterfly data
+
+        if (type == 'local-transport-permit') {
+            butterflies = getSelectedButterflies();
+            
+
+            if (butterflies.length === 0) {
+                showToast({
+                    type: 'failed',
+                    message: 'Please select at least one butterfly before proceeding..',
+                    
+                });
+                 buttonText.classList.remove('hidden');
+                 buttonSpinner.classList.add('hidden');
+                  uploadButton.disabled = false;
+                return; // Stop execution if the array is empty
+            }
+        }
+
+
         try {
             // File upload
             const fileUploadResponse = await fetch(`/file-upload?${queryParams}`, {
@@ -796,7 +821,7 @@
             if (type !== undefined && type !== null && type !== '') {
                 const permitData = new FormData(this);
                 permitData.append('file_id', fileId);
-                console.log(fileId);
+                
                 const permitUploadResponse = await fetch(`/permit-upload?${queryParams}`, {
                     method: 'POST',
                     body: permitData,
@@ -806,8 +831,7 @@
                 });
 
                 if(type == 'local-transport-permit'){
-                     let butterflies = getSelectedButterflies(); // Collect selected butterfly data
-                    
+                     
                      fetch(`/api/files/${fileId}/butterfly-details`, {
                         method: "POST",
                         headers: {
@@ -820,6 +844,10 @@
                         .then(data => console.log("Success:", data))
                         .catch(error => console.error("Error:", error));
                    
+
+                    document.getElementById("selectedButterflies").innerHTML = ""; // Clear table
+                    document.getElementById("searchInput").value = ""; // Clear search input
+                    document.getElementById("searchResults").innerHTML = ""; // Clear search results
                     //  const ltpUploadResponse = await fetch(`/api/files/${fileId}/butterfly-details`, {
                     //     method: "POST",
                     //     headers: {                               

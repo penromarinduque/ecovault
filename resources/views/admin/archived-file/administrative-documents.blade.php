@@ -49,3 +49,19 @@
     </div>
 
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let params = new URLSearchParams(window.location.search);
+
+        if (params.toString()) {
+            localStorage.setItem("savedQueryParams", params.toString());
+        }
+
+        window.addEventListener("popstate", function () {
+            let savedParams = localStorage.getItem("savedQueryParams");
+            if (savedParams) {
+                window.location.href = window.location.pathname + "?" + savedParams;
+            }
+        });
+    });
+</script>

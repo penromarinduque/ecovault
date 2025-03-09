@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('report_type')->nullable();
             $table->string(column: 'file_name');
             $table->string('file_path');
-            $table->string('office_source');
+            $table->string('office_source')->nullable();
             $table->string('classification');
             $table->date('date_released')->nullable();
             $table->boolean('is_archived')->default(false);

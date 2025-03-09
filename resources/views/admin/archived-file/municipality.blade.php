@@ -46,7 +46,7 @@
                                     .replace('__type__', _type)
                                     .replace('__municipality__', municipality.location)
                                     .replace('__category__', _category ??
-                                        'null'); // Handle null category
+                                        ''); // Handle null category
                                 const imgSrc = `{{ asset('__src__') }}`.replace('__src__', municipality
                                     .img_src);
                                 municipalityDiv.innerHTML = `

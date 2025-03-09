@@ -27,9 +27,6 @@
         ])
         @endcomponent
         <div class="grid">
-
-
-
             <div id="table-container">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">

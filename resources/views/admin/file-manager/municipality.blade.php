@@ -39,12 +39,12 @@
                                 const municipalityDiv = document.createElement('div');
                                 municipalityDiv.classList.add('flex', 'flex-col', 'items-center',
                                     'text-center', 'mx-auto');
-
                                 const municipalityUrl =
-                                    `{{ route('file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
-                                    .replace('__type__', _type)
-                                    .replace('__municipality__', municipality.location)
-                                    .replace('__category__', _category || 'null'); // Handle null category
+                                    `{{ route('archived-file.file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
+                                        .replace('__type__', _type)
+                                        .replace('__municipality__', municipality.location)
+                                       .replace('__category__', _category ??
+                                            '');
                                 const imgSrc = `{{ asset('__src__') }}`.replace('__src__', municipality
                                     .img_src);
                                 municipalityDiv.innerHTML = `

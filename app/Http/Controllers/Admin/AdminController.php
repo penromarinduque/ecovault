@@ -121,7 +121,8 @@ class AdminController extends Controller
         $type = $request->query('type');
         $municipality = $request->query('municipality');
         $archivedType = "File Manager";
-        return view('admin.archived-file.table', compact('archivedType', 'type', 'municipality'));
+        $category = $request->query('category') ?? null;
+        return view('admin.archived-file.table', compact('archivedType', 'type', 'municipality', 'category'));
     }
 
 
