@@ -106,7 +106,30 @@ return new class extends Migration {
             $table->string('butterfly_permit_number');
             $table->string('destination');
             $table->date('date_applied');
+            $table->date('date_released');
             $table->string('classification');
+            $table->timestamps();
+        });
+
+        Schema::create('butterfly_species', function (Blueprint $table) {
+            $table->id();
+            $table->string('scientific_name');
+            $table->string('common_name')->nullable();
+            $table->string('family')->nullable();
+            $table->string('genus')->nullable();
+            $table->text('description')->nullable();
+            $table->string('image_url')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('butterfly_details', function (Blueprint $table) {
+            $table->id();
+
+            // Foreign Keys
+            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');
+            $table->foreignId('butterfly_id')->constrained('butterfly_species')->onDelete('cascade');
+
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }
@@ -125,7 +148,8 @@ return new class extends Migration {
         Schema::dropIfExists('tree_cutting_permits');
         Schema::dropIfExists('tree_plantation_registration');
         Schema::dropIfExists('chainsaw_registrations');
-
+        Schema::dropIfExists('butterfly_details'); // Drop child table first
+        Schema::dropIfExists('butterfly_species');
         // Finally, drop the parent table
         Schema::dropIfExists('files');
     }

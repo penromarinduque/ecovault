@@ -168,6 +168,11 @@ abstract class BaseController extends Controller
                         ->where('land_titles.name_of_client', 'like', "%{$clientSearch}%");
                     break;
 
+                case 'local-trasport-permit':
+                    $query->join('local-transport-permit', 'files.id', '=', 'local-transport-permit.file_id')
+                        ->where('local-transport-permit.name_of_client', 'like', "%{$clientSearch}%");
+                    break;
+
                 default:
                     return response()->json([
                         'success' => false,
@@ -271,6 +276,12 @@ abstract class BaseController extends Controller
 
                     case 'land-title':
                         $permit = DB::table('land_titles')
+                            ->where('file_id', $id)
+                            ->first();
+                        break;
+
+                    case 'local-transport-permit':
+                        $permit = DB::table('local_transport_permits')
                             ->where('file_id', $id)
                             ->first();
                         break;

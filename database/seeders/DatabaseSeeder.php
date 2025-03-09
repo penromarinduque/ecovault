@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Config;
 use App\Models\FileType;
+use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -78,6 +79,48 @@ class DatabaseSeeder extends Seeder
             'MySqlDumpDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysqldump.exe'
         ]);
 
+        DB::table('butterfly_species')->insert([
+            [
+                'scientific_name' => 'Papilio machaon',
+                'common_name' => 'Swallowtail Butterfly',
+                'family' => 'Papilionidae',
+                'genus' => 'Papilio',
+                'description' => 'A large, colorful butterfly known for its distinctive tail-like extensions on its hindwings.',
+                'image_url' => 'https://example.com/swallowtail.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'scientific_name' => 'Vanessa atalanta',
+                'common_name' => 'Red Admiral',
+                'family' => 'Nymphalidae',
+                'genus' => 'Vanessa',
+                'description' => 'A striking black, orange, and white butterfly often found in gardens and woodlands.',
+                'image_url' => 'https://example.com/red-admiral.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'scientific_name' => 'Danaus plexippus',
+                'common_name' => 'Monarch Butterfly',
+                'family' => 'Nymphalidae',
+                'genus' => 'Danaus',
+                'description' => 'Famous for its long migrations and bright orange wings with black veins.',
+                'image_url' => 'https://example.com/monarch.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'scientific_name' => 'Idea leuconoe',
+                'common_name' => 'Paper Kite Butterfly',
+                'family' => 'Nymphalidae',
+                'genus' => 'Idea',
+                'description' => 'A large butterfly with delicate black-and-white patterned wings.',
+                'image_url' => 'https://example.com/paper-kite.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
     }
 }

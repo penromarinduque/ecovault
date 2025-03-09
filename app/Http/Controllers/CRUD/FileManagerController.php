@@ -14,6 +14,7 @@ use App\Models\LandTitle;
 use App\Models\TreeCuttingPermitDetail;
 use App\Models\TreeTransportPermitDetails;
 use App\Models\FileType;
+use App\Models\LocalTransportPermit;
 class FileManagerController extends BaseController
 {
 
@@ -109,6 +110,21 @@ class FileManagerController extends BaseController
                         'property_category' => $category,
                     ]);
                     break;
+
+                case 'local-transport-permit':
+                    LocalTransportPermit::create([
+                        'file_id' => $request->file_id,
+                        'name_of_client' => $request->name_of_client,
+                        'business_farm_name' => $request->business_farm_name,
+                        'butterfly_permit_number' => $request->butterfly_permit_number,
+                        'destination' => $request->destination,
+                        'date_applied' => $request->date_applied,
+                        'date_released' => $request->date_released,
+                        'classification' => $request->classification,
+                    ]);
+                    break;
+
+
 
                 default:
                     return response()->json([

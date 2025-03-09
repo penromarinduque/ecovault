@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Admin\PermitTypeController;
+use App\Http\Controllers\CRUD\ButterflyController;
 use App\Http\Middleware\VerifiedUser;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\CRUD\ArchiveController;
@@ -77,7 +78,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::post('/file-upload', [UploadController::class, 'StoreFile'])->name('file.post');
     Route::post('/permit-upload', [FileManagerController::class, 'StorePermit'])->name('permit.post');
     // Route::post('/api/file-upload', [FileController::class, 'StoreFileNoRelation']);
-
+    Route::get('/api/butterflies/search', [ButterflyController::class, 'search']);
     //Store File
     Route::get("/api/files", [FileManagerController::class, 'GetFiles'])->name('file.getAll');
     Route::post('/api/files/update/{id}', [FileManagerController::class, 'UpdateFileById'])->name('file.update');
@@ -160,7 +161,9 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
 
     Route::get('/butterfly', [AdminController::class, 'ShowButterflyList'])->name('butterfly.show');
-    Route::post('/butterfly/add', [AdminController::class, 'ShowButterflyAdd']);
-    // Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
+    Route::post('/butterfly/add', [ButterflyController::class, 'AddSpecies']);
+    //   Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
+    Route::post('/api/files/{fileId}/butterfly-details', [ButterflyController::class, 'AddButterflyDetails']);
+
 });
 
