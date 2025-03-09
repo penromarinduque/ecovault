@@ -15,6 +15,7 @@ class ChainsawRegistration extends Model
         'location',
         'serial_number',
         'date_applied',
+        'category'
     ];
 
     public function file()

@@ -33,298 +33,372 @@
                 <p id="file-upload-error" class="text-red-500  min-h-[1.5rem] invisible mt-2 ml-32">
                     Please choose a file to upload.</p>
             </div>
-            <!-- step 1 -->
-            <div class="font-medium ">
-                @if (!$record)
-                    <div class="my-4">
-                        <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                            Client</label>
-                        <input type="text" id="name-of-client" name="name_of_client" placeholder="Enter Value"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                            block w-full p-2.5 
-                            focus:border-green-500 focus:ring-green-500 
-                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
-                        <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                            <span class="font-medium">Please!</span> Enter a valid name for the client!
-                        </p>
-                    </div>
-                @endif
-                <div class="my-4">
-                    <label for="office-source" class="block mb-2 text-sm font-medium text-gray-700">Office
-                        Source</label>
-                    <input type="text" id="office-source" name="office_source" placeholder="Enter office source"
-                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                        autocomplete="off" required>
-                    <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden">
-                        <span class="font-medium">Please!</span> Enter valid input!
-                    </p>
-                </div>
-                
-                <div class="my-4">
-                    <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
-                        Release</label>
-                    <input type="date" id="date-released" name="date_released" placeholder="Enter Date Release" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                        block w-full p-2.5 
-                                        focus:border-green-500 focus:ring-green-500 
-                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                        autocomplete="off" required>
-                </div>
 
-                <div class="my-4">
-                    @if ($type == 'land-title')
-                        @if ($municipality == 'Santa Cruz')
-                            {{-- Content specific for Sta Cruz --}}
-                            <label for="classification"
-                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                            <select id="classification" name="classification"
+            @if($type == 'local-transport-permit')
+                <div class="font-medium ">
+                        <div class="my-4">
+                            <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                                Client</label>
+                            <input type="text" id="name-of-client" name="name_of_client" placeholder="Enter Value"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                autocomplete="off" required>
-                                <option disabled selected hidden>Select a Classification</option>
-                                <option value="PLS 726">PLS 726</option>
-                                <option value="CAD 815">CAD 815</option>
-                                <option value="PSC4">PSC4</option>
-                            </select>
-                        @elseif ($municipality == 'Torrijos')
-                            {{-- Content specific for Torrijos --}}
-                            <label for="classification"
-                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                            <select id="classification" name="classification"
+                                                                                        block w-full p-2.5 
+                                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                            <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
+                                <span class="font-medium">Please!</span> Enter a valid name for the client!
+                            </p>
+                        </div>
+
+                        <div class="my-4">
+                            <label for="business-farm-name" class="block mb-2 text-sm font-medium text-gray-700">Business Farm Name</label>
+                            <input type="text" id="business-farm-name" name="business-farm-name" placeholder="Enter Farm Name"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                autocomplete="off" required>
-                                <option value="" disabled selected>Select a Classification</option>
-                                <option value="PLS 783">PLS 783</option>
-                                <option value="CAD 612">CAD 612</option>
-                            </select>
-                        @else
-                            {{-- Content for other municipalities --}}
-                            <label for="classification"
-                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                            <select id="classification" name="classification"
+                                                                                        block w-full p-2.5 
+                                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                            <p id="business-farm-name-error" class="mt-2 text-sm text-red-600 hidden">
+                                <span class="font-medium">Please!</span> Enter a valid business farm name
+                            </p>
+                        </div>
+
+                        <div class="my-4">
+                            <label for="butterfly-permit-number" class="block mb-2 text-sm font-medium text-gray-700">Butterfly Permit Number</label>
+                            <input type="text" id="butterfly-permit-number" name="business-permit-number" placeholder="Enter Permit Number"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                                                                                block w-full p-2.5 
+                                                                                                                focus:border-green-500 focus:ring-green-500 
+                                                                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                            <p id="butterfly-permit-number-error" class="mt-2 text-sm text-red-600 hidden">
+                                <span class="font-medium">Please!</span> Enter a valid business farm name
+                            </p>
+                        </div>
+
+                         <div class="my-4">
+                            <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date Applied</label>
+                            <input type="date" id="butterfly-permit-number" name="business-permit-number" placeholder="Date Applied"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                block w-full p-2.5 
+                                                                                                                focus:border-green-500 focus:ring-green-500 
+                                                                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                            <p id=-date-applied-error" class="mt-2 text-sm text-red-600 hidden">
+                                <span class="font-medium">Please!</span> Enter valid Date
+                            </p>
+
+                         </div>
+
+                        <div class="my-4">
+                            <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                Release</label>
+                            <input type="date" id="date-released" name="date_released" placeholder="Enter Date Release"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                 autocomplete="off" required>
-                                <option value="" disabled selected hidden>Select a Classification</option>
-                                <option value="highly-technical">Highly Technical</option>
-                                <option value="simple">Simple</option>
-                            </select>
-                        @endif
-                    @else
-                        {{-- Content for types other than land-title --}}
-                        <label for="classification"
-                            class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                        </div>
+
+
+                        <label for="classification" class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
                         <select id="classification" name="classification"
                             class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
+                                                                        block w-full p-2.5 
+                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
                             <option value="" disabled selected hidden>Select a Classification</option>
                             <option value="highly-technical">Highly Technical</option>
                             <option value="simple">Simple</option>
                         </select>
-                    @endif
-                </div>
-
-
-
-
-                <div class="my-4">
-                    @if ($type == 'tree-cutting-permits')
-                        <label for="tcp-type" class="block mb-2 text-sm font-medium text-gray-700">Tree Cutting Permit Type</label>
-                        <select id="tcp-type" name="tcp-type" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                                block w-full p-2.5 
-                                                focus:border-green-500 focus:ring-green-500 
-                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
-                            <option value="" disabled selected hidden>Choose Tree Cutting Permit</option>
-                            <option value="Special Tree Cutting Permit">Special Tree Cutting Permit</option>
-                            <option value="Tree Cutting Permit for planted/naturally growing growing trees">Tree Cutting Permit for planted/naturally growing growing trees</option>
-                            <option value="Private Land Timber Permit">Private Land Timber Permit(PLTP)</option>
-                            <option value="Special Private Timber Permit">Special Private Timber Permit(SPTP)</option>
-                        </select>
-                    @endif
-                </div>
-            </div>
-
-            <!-- step 2 -->
-            <div class="font-medium">
-                @if ($type == 'tree-cutting-permits')
-                    <div class="my-4">
-                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Cutting Specification</h2>
-                        <button type="button" id="add-file-specification"
-                            class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
-                            <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clip-rule="evenodd">
-                                </path>
-                            </svg>
-                            Click to Add
-                        </button>
-                    </div>
-                    <!-- Show species for tree-cutting-permits, transport-permit -->
-
-                    <!-- this for pop up modal for adding no. of trees/species/location/date applied/ -->
-                @elseif ($type == 'chainsaw-registration')
-                    <!-- Location Field -->
-                    <div class="my-4">
-                        <label for="location" id="label-location"
-                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                    block w-full p-2.5 
-                                    focus:border-green-500 focus:ring-green-500 
-                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter Location">
                     </div>
 
-                    <!-- Serial Number Field -->
-                    <div class="my-4">
-                        <label for="serial_number" class="block mb-2 text-sm font-medium text-gray-700">Serial
-                            Number</label>
-                        <input type="text" id="serial_number" name="serial_number"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter serial number">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
-                    </div>
 
-                    <!-- Date Applied Field -->
-                    <div class="my-4">
-                        <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date_applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
-                    </div>
-                @elseif ($type == 'tree-plantation-registration')
-                    <!-- Number of Trees Field -->
-                    <div class="my-4">
-                        <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
-                            of Trees</label>
-                        <input type="number" id="number_of_trees" name="number_of_trees"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter number of trees">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
-                    </div>
+                        <!-- step 1 -->
+            @else
+                                <div class="font-medium ">
+                                    @if (!$record)
+                                        <div class="my-4">
+                                            <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                                                Client</label>
+                                            <input type="text" id="name-of-client" name="name_of_client" placeholder="Enter Value" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                block w-full p-2.5 
+                                                                focus:border-green-500 focus:ring-green-500 
+                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required>
+                                            <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
+                                                <span class="font-medium">Please!</span> Enter a valid name for the client!
+                                            </p>
+                                        </div>
+                                    @endif
+                                    <div class="my-4">
+                                        <label for="office-source" class="block mb-2 text-sm font-medium text-gray-700">Office
+                                            Source</label>
+                                        <input type="text" id="office-source" name="office_source" placeholder="Enter office source" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                            autocomplete="off" required>
+                                        <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden">
+                                            <span class="font-medium">Please!</span> Enter valid input!
+                                        </p>
+                                    </div>
 
-                    <!-- Location Field -->
-                    <div class="my-4">
-                        <label for="location" id="label-location"
-                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                    block w-full p-2.5 
-                                    focus:border-green-500 focus:ring-green-500 
-                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter Location">
-                    </div>
+                                    <div class="my-4">
+                                        @if ($type == 'land-title')
+                                            @if ($municipality == 'Santa Cruz')
+                                                {{-- Content specific for Sta Cruz --}}
+                                                <label for="classification" class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                                <select id="classification" name="classification" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                block w-full p-2.5 
+                                                                focus:border-green-500 focus:ring-green-500 
+                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                    autocomplete="off" required>
+                                                    <option disabled selected hidden>Select a Classification</option>
+                                                    <option value="PLS 726">PLS 726</option>
+                                                    <option value="CAD 815">CAD 815</option>
+                                                    <option value="PSC4">PSC4</option>
+                                                </select>
+                                            @elseif ($municipality == 'Torrijos')
+                                                {{-- Content specific for Torrijos --}}
+                                                <label for="classification" class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                                <select id="classification" name="classification" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                block w-full p-2.5 
+                                                                focus:border-green-500 focus:ring-green-500 
+                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                    autocomplete="off" required>
+                                                    <option value="" disabled selected>Select a Classification</option>
+                                                    <option value="PLS 783">PLS 783</option>
+                                                    <option value="CAD 612">CAD 612</option>
+                                                </select>
+                                            @else
+                                                {{-- Content for other municipalities --}}
+                                                <label for="classification" class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                                <select id="classification" name="classification" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                block w-full p-2.5 
+                                                                focus:border-green-500 focus:ring-green-500 
+                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                    autocomplete="off" required>
+                                                    <option value="" disabled selected hidden>Select a Classification</option>
+                                                    <option value="highly-technical">Highly Technical</option>
+                                                    <option value="simple">Simple</option>
+                                                </select>
+                                            @endif
+                                        @else
+                                            {{-- Content for types other than land-title --}}
+                                            <label for="classification" class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                                            <select id="classification" name="classification" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required>
+                                                <option value="" disabled selected hidden>Select a Classification</option>
+                                                <option value="highly-technical">Highly Technical</option>
+                                                <option value="simple">Simple</option>
+                                            </select>
+                                        @endif
+                                    </div>
 
-                    <!-- Date Applied Field -->
-                    <div class="my-4">
-                        <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                            Applied</label>
-                        <input type="date" id="date_applied" name="date_applied"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required>
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
-                    </div>
-                @elseif ($type == 'transport-permit')
-                    <!-- Transport Permits Inputs -->
-                    <div class="my-4">
-                        <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Transport
-                            Specification</h2>
-                        <button type="button" id="add-file-specification"
-                            class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
-                            <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            Click to Add
-                        </button>
-                    </div>
-                @elseif ($type == 'land-title')
-                    <!-- Location Field -->
-                    <div class="my-4">
-                        <label for="location" id="label-location"
-                            class="block mb-2 text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" id="location" name="location"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                    block w-full p-2.5 
-                                    focus:border-green-500 focus:ring-green-500 
-                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter Location">
-                    </div>
 
-                    <!-- Lot Number Field -->
-                    <div class="my-4">
-                        <label for="lot_number" class="block mb-2 text-sm font-medium text-gray-700">Lot
-                            Number</label>
-                        <input type="text" id="lot_number" name="lot_number"
-                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                        block w-full p-2.5 
-                        focus:border-green-500 focus:ring-green-500 
-                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                            autocomplete="off" required placeholder="Enter lot number">
-                        <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
-                            valid
-                            input!</p>
-                    </div>
 
-                    <!-- Property Category Field -->
-                @endif
-            </div>
+
+                                    <div class="my-4">
+                                        @if ($type == 'tree-cutting-permits')
+                                            <label for="tcp-type" class="block mb-2 text-sm font-medium text-gray-700">Tree Cutting Permit Type</label>
+                                            <select id="tcp-type" name="tcp-type"
+                                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                    block w-full p-2.5 
+                                                                                    focus:border-green-500 focus:ring-green-500 
+                                                                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off"
+                                                required>
+                                                <option value="" disabled selected hidden>Choose Tree Cutting Permit</option>
+                                                <option value="Special Tree Cutting Permit">Special Tree Cutting Permit</option>
+                                                <option value="Tree Cutting Permit for planted/naturally growing growing trees">Tree Cutting Permit for
+                                                    planted/naturally growing growing trees</option>
+                                                <option value="Private Land Timber Permit">Private Land Timber Permit(PLTP)</option>
+                                                <option value="Special Private Timber Permit">Special Private Timber Permit(SPTP)</option>
+                                            </select>
+                                        @endif
+                                    </div>
+
+                                    <div class="my-4">
+                                        <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                            Release</label>
+                                        <input type="date" id="date-released" name="date_released" placeholder="Enter Date Release"
+                                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                                            block w-full p-2.5 
+                                                                                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                            autocomplete="off" required>
+                                    </div>
+
+                                </div>
+
+                                <!-- step 2 -->
+                                <div class="font-medium">
+                                    @if ($type == 'tree-cutting-permits')
+                                        <div class="my-4">
+                                            <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Cutting Specification</h2>
+                                            <button type="button" id="add-file-specification"
+                                                class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
+                                                <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                        clip-rule="evenodd">
+                                                    </path>
+                                                </svg>
+                                                Click to Add
+                                            </button>
+                                        </div>
+                                        <!-- Show species for tree-cutting-permits, transport-permit -->
+
+                                        <!-- this for pop up modal for adding no. of trees/species/location/date applied/ -->
+                                    @elseif ($type == 'chainsaw-registration')
+                                        <!-- Location Field -->
+                                        <div class="my-4">
+                                            <label for="location" id="label-location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                                            <input type="text" id="location" name="location"
+                                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                        block w-full p-2.5 
+                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required
+                                                placeholder="Enter Location">
+                                        </div>
+
+                                        <!-- Serial Number Field -->
+                                        <div class="my-4">
+                                            <label for="serial_number" class="block mb-2 text-sm font-medium text-gray-700">Serial
+                                                Number</label>
+                                            <input type="text" id="serial_number" name="serial_number" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required placeholder="Enter serial number">
+                                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                                valid
+                                                input!</p>
+                                        </div>
+
+                                        <!-- Date Applied Field -->
+                                        <div class="my-4">
+                                            <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                                Applied</label>
+                                            <input type="date" id="date_applied" name="date_applied" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required>
+                                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                                valid
+                                                input!</p>
+                                        </div>
+                                    @elseif ($type == 'tree-plantation-registration')
+                                        <!-- Number of Trees Field -->
+                                        <div class="my-4">
+                                            <label for="number_of_trees" class="block mb-2 text-sm font-medium text-gray-700">No.
+                                                of Trees</label>
+                                            <input type="number" id="number_of_trees" name="number_of_trees" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required placeholder="Enter number of trees">
+                                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                                valid
+                                                input!</p>
+                                        </div>
+
+                                        <!-- Location Field -->
+                                        <div class="my-4">
+                                            <label for="location" id="label-location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                                            <input type="text" id="location" name="location"
+                                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                        block w-full p-2.5 
+                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required
+                                                placeholder="Enter Location">
+                                        </div>
+
+                                        <!-- Date Applied Field -->
+                                        <div class="my-4">
+                                            <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                                Applied</label>
+                                            <input type="date" id="date_applied" name="date_applied" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required>
+                                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                                valid
+                                                input!</p>
+                                        </div>
+                                    @elseif ($type == 'transport-permit')
+                                        <!-- Transport Permits Inputs -->
+                                        <div class="my-4">
+                                            <h2 class="block mb-2 text-sm font-medium text-gray-700">Add Tree Transport
+                                                Specification</h2>
+                                            <button type="button" id="add-file-specification"
+                                                class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
+                                                <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                                Click to Add
+                                            </button>
+                                        </div>
+                                    @elseif ($type == 'land-title')
+                                        <!-- Location Field -->
+                                        <div class="my-4">
+                                            <label for="location" id="label-location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                                            <input type="text" id="location" name="location"
+                                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                        block w-full p-2.5 
+                                                                        focus:border-green-500 focus:ring-green-500 
+                                                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required
+                                                placeholder="Enter Location">
+                                        </div>
+
+                                        <!-- Lot Number Field -->
+                                        <div class="my-4">
+                                            <label for="lot_number" class="block mb-2 text-sm font-medium text-gray-700">Lot
+                                                Number</label>
+                                            <input type="text" id="lot_number" name="lot_number" class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                            block w-full p-2.5 
+                                                            focus:border-green-500 focus:ring-green-500 
+                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                                autocomplete="off" required placeholder="Enter lot number">
+                                            <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                                valid
+                                                input!</p>
+                                        </div>
+
+                                        <!-- Property Category Field -->
+                                    @endif
+
+
+                                </div>
+            @endif
             @include('components.file-upload.specification-section')
             <div class="mt-4 flex justify-end gap-4 col-span-2">
                 <button id="upload-btn" type="submit"
