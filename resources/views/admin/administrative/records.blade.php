@@ -18,14 +18,6 @@
         <x-modal.file-modal />
 
 
-
-        @component('components.addfile.add-file', [
-            'record' => $record ?? '',
-            'isArchived' => false,
-        ])
-        @endcomponent
-
-
         @component('components.file-share.file-share', [
             'includePermit' => false,
         ])

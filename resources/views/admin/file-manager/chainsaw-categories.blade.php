@@ -3,8 +3,6 @@
 @section('title', 'PENRO Archiving System')
 
 @section('content')
-
-
     <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">
 
         <h1 class="font-medium  text-2xl text-gray-500">Land Titles/Patented Lots</h1>

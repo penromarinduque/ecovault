@@ -22,8 +22,8 @@
 
                         <div class="flex flex-col items-center">
                             <a href="{{ route('file-manager.municipality.show', [
-        'type' => 'tree-plantation-registration',
-    ]) }}"
+    'type' => 'tree-plantation-registration',
+]) }}"
                                     class="text-center">
                                 <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
                                 <h2 class="w-[120px]">Private Tree Plantation Registration</h2>
@@ -69,3 +69,19 @@
                 </div>
 @endsection
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let params = new URLSearchParams(window.location.search);
+
+        if (params.toString()) {
+            localStorage.setItem("savedQueryParams", params.toString());
+        }
+
+        window.addEventListener("popstate", function () {
+            let savedParams = localStorage.getItem("savedQueryParams");
+            if (savedParams) {
+                window.location.href = window.location.pathname + "?" + savedParams;
+            }
+        });
+    });
+</script>

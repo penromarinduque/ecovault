@@ -17,15 +17,6 @@
         <!--call other popup here-->
         <x-modal.file-modal />
 
-
-
-        @component('components.addfile.add-file', [
-            'record' => $record ?? '',
-            'isArchived' => true,
-        ])
-        @endcomponent
-
-
         @component('components.file-share.file-share', [
             'includePermit' => false,
         ])

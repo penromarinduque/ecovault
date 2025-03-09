@@ -18,9 +18,9 @@
 
                     <div class="flex flex-col items-center">
                         <a href="{{ route('archived-file.file-manager.municipality.show', [
-        'type' => 'tree-plantation-registration
+    'type' => 'tree-plantation-registration
                                                         ',
-    ]) }}"
+]) }}"
                             class="text-center">
                             <img src="{{ asset('images/admin/folder.png') }}" alt="Tree Plantation" class="w-24 mb-2">
                             <h2 class="w-[120px] text-center">Private Tree Plantation Registration</h2>
@@ -53,3 +53,4 @@
             </div>
 
 @endsection
+
