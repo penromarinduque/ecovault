@@ -164,6 +164,10 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::post('/butterfly/add', [ButterflyController::class, 'AddSpecies']);
     //   Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
     Route::post('/api/files/{fileId}/butterfly-details', [ButterflyController::class, 'AddButterflyDetails']);
+    Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
+    Route::post('/api/file/sync-butterflies/{fileId}', [ButterflyController::class, 'syncButterflyDetails'])->name('butterflies.sync');
+
+
 
 });
 
