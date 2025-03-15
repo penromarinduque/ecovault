@@ -159,7 +159,7 @@
                             <div class="flex gap-2">
                                 <input type="text" id="searchInput" placeholder="Search butterfly..."
                                     class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                                <button type="button" onclick="searchButterflies()"
+                                <button type="button" onclick="searchButterfliesAdd()"
                                     class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Search</button>
                             </div>
 
@@ -176,7 +176,7 @@
                                 class="hidden fixed inset-0 flex justify-center items-center z-50">
                                 <div class="bg-white p-6 rounded-lg shadow-lg w-9/12 relative">
                                     <!-- Close Button (X Icon) -->
-                                    <button onclick="closeModal()"
+                                    <button type="button" onclick="closeModalAdd()"
                                         class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
                                         ✖
                                     </button>
@@ -194,7 +194,7 @@
                                     <input type="text" id="newImageUrl" placeholder="Image URL"
                                         class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
 
-                                    <button type="button" onclick="addButterfly()"
+                                    <button type="button" onclick="addButterflyOnUpload()"
                                         class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
                                         Butterfly</button>
                                 </div>
@@ -216,8 +216,10 @@
                         </div>
 
                         <script>
-                            function searchButterflies() {
+                            function searchButterfliesAdd() {
+
                                 let query = document.getElementById("searchInput").value;
+                                console.log("HELLO", query)
                                 fetch(`/api/butterflies/search?query=${query}`)
                                     .then(response => response.json())
                                     .then(data => {
@@ -234,8 +236,8 @@
                                             let li = document.createElement("li");
                                             li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
                                             li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
-                                            li.onclick = function() {
-                                                addToTable(butterfly);
+                                            li.onclick = function () {
+                                                addToTableAdd(butterfly);
                                             };
                                             resultsList.appendChild(li);
                                         });
@@ -243,7 +245,7 @@
                                     .catch(error => console.error("Error fetching data:", error));
                             }
 
-                            function addToTable(butterfly) {
+                            function addToTableAdd(butterfly) {
                                 let tableBody = document.getElementById("selectedButterflies");
 
                                 // Prevent duplicates
@@ -259,13 +261,13 @@
                                 row.setAttribute("data-id", butterfly.id);
                                 row.className = "border-b border-gray-200";
                                 row.innerHTML = `<td class="py-2 px-4">${butterfly.common_name} / ${butterfly.scientific_name}</td>
-                                                            <td class="py-2 px-4">
-                                                            <input type="number" value=1 
-                class="w-6/12 p-1 border border-gray-300 rounded-lg focus:ring-green-500" /></td>
-                                                            <td class="py-2 px-4">
-                                                                <button onclick="removeRow(this)" 
-                                                                    class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"><i class='bx bxs-trash-alt'></i></button>
-                                                            </td>`;
+                                                                                    <td class="py-2 px-4">
+                                                                                    <input type="number" value=1 
+                                        class="w-6/12 p-1 border border-gray-300 rounded-lg focus:ring-green-500" /></td>
+                                                                                    <td class="py-2 px-4">
+                                                                                        <button onclick="removeRow(this)" 
+                                                                                            class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"><i class='bx bxs-trash-alt'></i></button>
+                                                                                    </td>`;
                                 tableBody.appendChild(row);
                             }
 
@@ -273,7 +275,7 @@
                                 button.closest("tr").remove();
                             }
 
-                           function addButterfly() {
+                            function addButterflyOnUpload() {
                                 let scientific_name = document.getElementById("newScientificName").value;
                                 let common_name = document.getElementById("newCommonName").value;
                                 let family = document.getElementById("newFamily").value;
@@ -304,7 +306,7 @@
                                     })
                                     .then(data => {
                                         // Add the newly created butterfly to the table
-                                        addToTable(data.butterfly);
+                                        addToTableAdd(data.butterfly);
 
                                         // Clear the input fields
                                         document.getElementById("newScientificName").value = "";
@@ -314,11 +316,11 @@
                                         document.getElementById("newDescription").value = "";
                                         document.getElementById("newImageUrl").value = "";
 
-                                        closeModal();
+                                        closeModalAdd();
                                     })
                                     .catch(error => {
                                         console.error("Error adding butterfly:", error);
-                                          showToast({
+                                        showToast({
                                             type: 'failed',
                                             message: 'Failed to add butterfly. Please check the input.',
 
@@ -327,7 +329,7 @@
                                     });
                             }
 
-                            function closeModal() {
+                            function closeModalAdd() {
                                 document.getElementById("addButterflyModal").classList.add("hidden");
                                 document.getElementById("modalBackdrop").classList.add("hidden"); // Hide backdrop
                             }
@@ -781,13 +783,13 @@
         //console.log('this', queryParams);
         const formData = new FormData(this);
         
-        let butterflies = []; // Collect selected butterfly data
+        let butterfliesAdd = []; // Collect selected butterfly data
 
         if (type == 'local-transport-permit') {
-            butterflies = getSelectedButterflies();
+            butterfliesAdd = getSelectedButterfliesAdd();
             
 
-            if (butterflies.length === 0) {
+            if (butterfliesAdd.length === 0) {
                 showToast({
                     type: 'failed',
                     message: 'Please select at least one butterfly before proceeding..',
@@ -815,6 +817,7 @@
             if (!fileUploadResponse.ok) throw new Error("File upload failed");
 
             const fileResponseData = await fileUploadResponse.json();
+            console.log(fileResponseData);
             const fileId = fileResponseData.fileId; // Ensure `fileId` is in the response
             refreshTable();
             // Check if permit data exists before proceeding
@@ -831,14 +834,14 @@
                 });
 
                 if(type == 'local-transport-permit'){
-                     
+                     console.log(butterfliesAdd)
                      fetch(`/api/files/${fileId}/butterfly-details`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": csrfToken
                         },
-                        body: JSON.stringify({ butterflies })
+                           body: JSON.stringify({ butterflies: butterfliesAdd }) 
                     })
                         .then(response => response.json())
                         .then(data => console.log("Success:", data))
@@ -848,19 +851,7 @@
                     document.getElementById("selectedButterflies").innerHTML = ""; // Clear table
                     document.getElementById("searchInput").value = ""; // Clear search input
                     document.getElementById("searchResults").innerHTML = ""; // Clear search results
-                    //  const ltpUploadResponse = await fetch(`/api/files/${fileId}/butterfly-details`, {
-                    //     method: "POST",
-                    //     headers: {                               
-                    //         "X-CSRF-TOKEN": csrfToken// Ensure CSRF token for Laravel
-                    //     },
-                    //     body: JSON.stringify(butterflies) 
-                    // })
-                    //     .then(response => response.json())
-                    //     .then(data => console.log("Success:", data))
-                    //     .catch(error => console.error("Error:", error));
-                    
-
-                    //  if (!butterflies.ok) throw new Error("Permit upload failed");
+                 
                 }
 
 
@@ -897,8 +888,8 @@
             buttonSpinner.classList.add('hidden');
         }
     });
-   function getSelectedButterflies() {
-        let butterflies = [];
+   function getSelectedButterfliesAdd() {
+        let butterfliesAdd = [];
 
         document.querySelectorAll("#selectedButterflies tr").forEach(row => {
             let id = row.getAttribute("data-id"); // Get the data-id attribute
@@ -907,12 +898,12 @@
 
             if (quantityInput) {
                 let quantity = parseInt(quantityInput.value) || 0; // Get the quantity value
-                butterflies.push({ id, name, quantity });
+                butterfliesAdd.push({ id, name, quantity });
             }
         });
 
-        console.log(butterflies); // Debugging output
-        return butterflies;
+        console.log(butterfliesAdd); // Debugging output
+        return butterfliesAdd;
     }
     // if (type !== "tree-cutting-permits" || report == null) {
 
