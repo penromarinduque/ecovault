@@ -475,7 +475,17 @@ abstract class BaseController extends Controller
                             // 'property_category' => $request->input('property_category') ?? null,
                         ]);
                         break;
-
+                    case 'local-transport-permit':
+                        DB::table('local_transport_permits')->where('file_id', $id)->update([
+                            'name_of_client' => $request->input('name_of_client') ?? null,
+                            'business_farm_name' => $request->input('business_farm_name') ?? null,
+                            'butterfly_permit_number' => $request->input('butterfly_permit_number') ?? null,
+                            'destination' => $request->input('destination') ?? null,
+                            'date_applied' => $request->input('date_applied') ?? null,
+                            'date_released' => $request->input('date_released') ?? null,
+                            'classification' => $request->input('classification') ?? null,
+                        ]);
+                        break;
                     default:
                         return response()->json([
                             'success' => false,

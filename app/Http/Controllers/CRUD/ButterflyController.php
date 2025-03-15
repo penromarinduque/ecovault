@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ButterflySpecies;
 use App\Models\ButterflyDetails;
+use Illuminate\Support\Facades\DB;
 class ButterflyController extends Controller
 {
     // Get a single species by ID
@@ -56,8 +57,32 @@ class ButterflyController extends Controller
 
         return $species->delete();
     }
+    public function SyncButterflyDetails(Request $request, $fileId)
+    {
+        DB::transaction(function () use ($request, $fileId) {
+            $newButterflyIds = collect($request->butterflies)->pluck('id')->toArray();
 
+            // Delete records that are NOT in the new list
+            ButterflyDetails::where('file_id', $fileId)
+                ->whereNotIn('butterfly_id', $newButterflyIds)
+                ->delete();
 
+            // Update or insert remaining records
+            foreach ($request->butterflies as $butterfly) {
+                ButterflyDetails::updateOrCreate(
+                    [
+                        'file_id' => $fileId,
+                        'butterfly_id' => $butterfly['id']
+                    ],
+                    [
+                        'quantity' => $butterfly['quantity']
+                    ]
+                );
+            }
+        });
+
+        return response()->json(['message' => 'Butterfly details synced successfully']);
+    }
 
 
     public function AddSpecies(Request $request)
@@ -86,7 +111,7 @@ class ButterflyController extends Controller
 
 
         foreach ($request->butterflies as $butterfly) {
-            ButterflyDetails::create([
+            ButterflyDetails::updateOrCreate([
                 'file_id' => $fileId,
                 'butterfly_id' => $butterfly['id'],
                 'quantity' => $butterfly['quantity'],
@@ -95,6 +120,32 @@ class ButterflyController extends Controller
 
         return response()->json(['message' => 'Butterfly details added successfully']);
     }
+
+    public function getButterflyDetails($fileId)
+    {
+        $butterflies = DB::table('butterfly_details')
+            ->join('butterfly_species', 'butterfly_details.butterfly_id', '=', 'butterfly_species.id')
+            ->select(
+                'butterfly_details.id',
+                'butterfly_details.file_id',
+                'butterfly_details.butterfly_id',
+                'butterfly_details.quantity',
+                'butterfly_species.scientific_name',
+                'butterfly_species.common_name',
+                'butterfly_species.family',
+                'butterfly_species.genus',
+                'butterfly_species.description',
+                'butterfly_species.image_url',
+                'butterfly_details.created_at',
+                'butterfly_details.updated_at'
+            )
+            ->where('butterfly_details.file_id', $fileId)
+            ->get();
+
+        return response()->json($butterflies);
+    }
+
+
 
 
 }
