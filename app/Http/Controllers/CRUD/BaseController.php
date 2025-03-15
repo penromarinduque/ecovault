@@ -11,6 +11,7 @@ use App\Models\TreeCuttingPermit;
 use App\Models\TransportPermit;
 use App\Models\TreeCuttingPermitDetail;
 use App\Models\FileHistory;
+use App\Models\ButterflyDetails;
 use Carbon\Carbon;
 abstract class BaseController extends Controller
 {
@@ -284,6 +285,22 @@ abstract class BaseController extends Controller
                         $permit = DB::table('local_transport_permits')
                             ->where('file_id', $id)
                             ->first();
+
+                        $butterflyDetails = ButterflyDetails::with(['file', 'butterfly'])
+                            ->get()
+                            ->map(function ($detail) {
+                                return [
+                                    'id' => $detail->id,
+                                    'butterfly_id' => $detail->butterfly_id,
+                                    'common_name' => $detail->butterfly->common_name ?? null,
+                                    'scientific_name' => $detail->butterfly->scientific_name ?? null,
+                                    'family' => $detail->butterfly->family ?? null,
+                                    'genus' => $detail->butterfly->genus ?? null,
+                                    'description' => $detail->butterfly->description ?? null,
+                                    'quantity' => $detail->quantity,
+                                ];
+                            })
+                            ->toArray();
                         break;
 
                     default:
@@ -311,6 +328,11 @@ abstract class BaseController extends Controller
             ];
             if (isset($permit)) {
                 $response['permit'] = $permit;
+            }
+
+            // Fix: Use $butterflyDetails instead of $details
+            if (!empty($butterflyDetails)) {
+                $response['details'] = $butterflyDetails;
             }
             return response()->json($response, 200);
         } catch (\Exception $e) {
