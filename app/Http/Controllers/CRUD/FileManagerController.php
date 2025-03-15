@@ -138,7 +138,7 @@ class FileManagerController extends BaseController
                 'success' => true,
                 'message' => 'Permit type successfully processed.',
                 'permit' => $type,
-                'municipality' => $municipality
+                'municipality' => $municipality,
             ]);
 
         } catch (\Exception $e) {

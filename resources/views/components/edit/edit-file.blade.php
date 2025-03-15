@@ -166,19 +166,19 @@
                                                             </button>
 
                                                             <h2 class="text-xl font-bold mb-4">Add New Butterfly</h2>
-                                                            <input type="text" id="newScientificName" placeholder="Scientific Name"
+                                                            <input type="text" id="newEditScientificName" placeholder="Scientific Name"
                                                                 class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newCommonName" placeholder="Common Name"
+                                                            <input type="text" id="newEditCommonName" placeholder="Common Name"
                                                                 class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newFamily" placeholder="Family"
+                                                            <input type="text" id="newEditFamily" placeholder="Family"
                                                                 class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newGenus" placeholder="Genus"
+                                                            <input type="text" id="newEditGenus" placeholder="Genus"
                                                                 class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <textarea id="newDescription" placeholder="Description" class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
-                                                            <input type="text" id="newImageUrl" placeholder="Image URL"
+                                                            <textarea id="newEditDescription" placeholder="Description" class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
+                                                            <input type="text" id="newEditImageUrl" placeholder="Image URL"
                                                                 class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
 
-                                                            <button type="button" onclick="addButterfly()"
+                                                            <button type="button"  onclick="addButterflyEdit()"
                                                                 class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
                                                                 Butterfly</button>
                                                         </div>
@@ -534,7 +534,7 @@
     // Fetches file data dynamically
 
     async function fetchEditFile(fileId) {
-     
+       initializeButterfly(fileId);
         let includePermit = {!! json_encode($includePermit ?? '') !!};
 
         const editContent = document.getElementById("edit-content");
@@ -542,7 +542,7 @@
 
         editContent.classList.add("hidden");
         skeleton.classList.remove("hidden");
-        initializeButterfly(fileId);
+       
         //includePermit boolean if file have permit Y/N
         
         const url = `/api/files/${fileId}?includePermit=${includePermit}`;
@@ -673,7 +673,7 @@
         if (type == 'local-transport-permit') {
        
         butterflies = getSelectedButterflies();
-
+            console.log(butterflies)
 
         if (butterflies.length === 0) {
             showToast({
@@ -699,8 +699,11 @@
                 },
                 body: formData
             });
+            
+            if (!editFileResponse.ok) throw new Error("File Update failed");
+            const response = await editFileResponse.json();
 
-            try{
+            try {
                 if (type == 'local-transport-permit') {
 
                     fetch(`/api/file/sync-butterflies/${fileId}`, {
@@ -716,25 +719,21 @@
                         .catch(error => console.error("Error:", error));
 
 
-                    document.getElementById("selectedButterflies").innerHTML = ""; // Clear table
-                    document.getElementById("searchInput").value = ""; // Clear search input
-                    document.getElementById("searchResults").innerHTML = ""; // Clear search results
+                    // document.getElementById("edit-selectedButterflies").innerHTML = ""; // Clear table
+                    document.getElementById("edit-searchInput").value = ""; // Clear search input
+                    document.getElementById("edit-searchResults").innerHTML = ""; // Clear search results
 
                 }
+                
 
             }
-            catch(error){
+            catch (error) {
                 showToast({
                     type: 'danger',
                     message: 'Failed to update butterfly details.',
 
                 });
             }
-
-            
-            if (!editFileResponse.ok) throw new Error("File Update failed");
-            const response = await editFileResponse.json();
-
 
             showToast({
                 type: 'success',
@@ -805,7 +804,7 @@
                 if (tableBody) tableBody.innerHTML = "";
                 const response = await fetch(`/api/files/${fileId}/butterflies`);
                 const data = await response.json();
-                console.log(data)
+             
                 data.forEach(butterfly => addToTableEdit(butterfly, true));
             } catch (error) {
                 console.error("Error in initializeTable:", error);
@@ -874,13 +873,13 @@
             button.closest("tr").remove();
         }
 
-        function addButterfly() {
-            let scientific_name = document.getElementById("newScientificName").value;
-            let common_name = document.getElementById("newCommonName").value;
-            let family = document.getElementById("newFamily").value;
-            let genus = document.getElementById("newGenus").value;
-            let description = document.getElementById("newDescription").value;
-            let image_url = document.getElementById("newImageUrl").value;
+        function addButterflyEdit() {
+            let scientific_name = document.getElementById("newEditScientificName").value;
+            let common_name = document.getElementById("newEditCommonName").value;
+            let family = document.getElementById("newEditFamily").value;
+            let genus = document.getElementById("newEditGenus").value;
+            let description = document.getElementById("newEditDescription").value;
+            let image_url = document.getElementById("newEditImageUrl").value;
 
             fetch('/butterfly/add', {  // <-- Ensure this matches your Laravel route
                 method: "POST",
@@ -908,12 +907,12 @@
                     addToTableEdit(data.butterfly);
 
                     // Clear the input fields
-                    document.getElementById("newScientificName").value = "";
-                    document.getElementById("newCommonName").value = "";
-                    document.getElementById("newFamily").value = "";
-                    document.getElementById("newGenus").value = "";
-                    document.getElementById("newDescription").value = "";
-                    document.getElementById("newImageUrl").value = "";
+                    document.getElementById("newEditScientificName").value = "";
+                    document.getElementById("newEditCommonName").value = "";
+                    document.getElementById("newEditFamily").value = "";
+                    document.getElementById("newEditGenus").value = "";
+                    document.getElementById("newEditDescription").value = "";
+                    document.getElementById("newEditImageUrl").value = "";
 
                     closeModal();
                 })

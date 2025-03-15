@@ -323,7 +323,6 @@
                                         showToast({
                                             type: 'failed',
                                             message: 'Failed to add butterfly. Please check the input.',
-
                                         });
 
                                     });

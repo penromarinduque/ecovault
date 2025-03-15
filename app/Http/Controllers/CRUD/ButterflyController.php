@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ButterflySpecies;
 use App\Models\ButterflyDetails;
+use App\Models\File;
 use Illuminate\Support\Facades\DB;
 class ButterflyController extends Controller
 {
@@ -60,29 +61,57 @@ class ButterflyController extends Controller
     public function SyncButterflyDetails(Request $request, $fileId)
     {
         DB::transaction(function () use ($request, $fileId) {
-            $newButterflyIds = collect($request->butterflies)->pluck('id')->toArray();
+            // Check if file exists
+            if (!File::where('id', $fileId)->exists()) {
+                throw new \Exception("File ID {$fileId} does not exist.");
+            }
 
-            // Delete records that are NOT in the new list
-            ButterflyDetails::where('file_id', $fileId)
-                ->whereNotIn('butterfly_id', $newButterflyIds)
-                ->delete();
+            $newButterflyIds = [];
 
-            // Update or insert remaining records
             foreach ($request->butterflies as $butterfly) {
+                // Split name into common and scientific names
+                $nameParts = explode(" / ", $butterfly['name']);
+
+                if (count($nameParts) < 2) {
+                    throw new \Exception("Invalid butterfly name format: {$butterfly['name']}");
+                }
+
+                $commonName = trim($nameParts[0]);
+                $scientificName = trim($nameParts[1]);
+
+                // Find butterfly ID by matching common and scientific names
+                $butterflySpecies = ButterflySpecies::where('common_name', $commonName)
+                    ->where('scientific_name', $scientificName)
+                    ->first();
+
+                if (!$butterflySpecies) {
+                    throw new \Exception("Butterfly '{$butterfly['name']}' does not exist in the database.");
+                }
+
+                $newButterflyIds[] = $butterflySpecies->id;
+
+                // Insert or update butterfly details
                 ButterflyDetails::updateOrCreate(
                     [
                         'file_id' => $fileId,
-                        'butterfly_id' => $butterfly['id']
+                        'butterfly_id' => $butterflySpecies->id
                     ],
                     [
                         'quantity' => $butterfly['quantity']
                     ]
                 );
             }
+
+            // Delete records that are NOT in the new list
+            ButterflyDetails::where('file_id', $fileId)
+                ->whereNotIn('butterfly_id', $newButterflyIds)
+                ->delete();
         });
 
         return response()->json(['message' => 'Butterfly details synced successfully']);
     }
+
+
 
 
     public function AddSpecies(Request $request)
