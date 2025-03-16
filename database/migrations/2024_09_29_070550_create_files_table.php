@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Carbon\Carbon;
 return new class extends Migration {
     /**
      * Run the migrations.
@@ -34,7 +34,6 @@ return new class extends Migration {
             $table->string('permit_type');
             $table->timestamps();
         });
-
 
         // Tree cutting permit details table
         Schema::create('tree_cutting_permit_details', function (Blueprint $table) {
