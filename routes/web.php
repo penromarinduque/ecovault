@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Admin\PermitTypeController;
+use App\Http\Controllers\ChartingController;
 use App\Http\Controllers\CRUD\ButterflyController;
 use App\Http\Middleware\VerifiedUser;
 use App\Http\Controllers\BaseController;
@@ -167,7 +168,9 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
     Route::post('/api/file/sync-butterflies/{fileId}', [ButterflyController::class, 'syncButterflyDetails'])->name('butterflies.sync');
 
+    //Charting 
+    Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);
 
-
+    Route::get('/api/tree-cutting-statistics', [ChartingController::class, 'getTreeCuttingStatistics']);
 });
 
