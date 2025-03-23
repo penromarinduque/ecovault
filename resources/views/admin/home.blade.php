@@ -62,25 +62,10 @@
                     </div>
 
                     <div class="col-span-2" >
+                        <x-cutting-permit-chart/>
 
 
-
-                        <!-- Chart Section -->
-                        <div class="w-full bg-white rounded-lg shadow-sm">
-                                <!-- Month and Year Select Filters -->
-                                <div class="w-full mb-4">
-                                    <!-- Month and Year Select Filters -->
-                                    <select id="tcp_month-filter" class="p-2 border rounded mr-4">
-                                        <option value="">Select Month</option>
-                                    </select>
-
-                                    <select id="tcp_year-filter" class="p-2 border rounded">
-                                        <option value="">Select Year</option>
-                                    </select>
-                                </div>
-                            <div id="tcp-chart"></div>
-                        </div>
-
+                     
                     </div>
 
 
@@ -176,49 +161,6 @@
                     fetchPermitData(this.value);
                 });
             fetchPermitData();
-
-            // Fetch the data from the API
-                fetch('/api/tree-cutting-statistics')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Prepare the data for the chart
-                        const categories = data.data.map(item => `${item.municipality} (${item.year})`);
-                        const counts = data.data.map(item => item.count);
-
-                        // Options for the bar chart
-                        const options = {
-                            chart: {
-                                type: 'bar',
-                                height: 350
-                            },
-                            series: [{
-                                name: 'Tree Cutting Permits',
-                                data: counts
-                            }],
-                            xaxis: {
-                                categories: categories, // Display municipality and year
-                                title: {
-                                    text: 'Municipality (Year)'
-                                }
-                            },
-                            yaxis: {
-                                title: {
-                                    text: 'Number of Permits'
-                                }
-                            },
-
-                        };
-
-                        // Initialize the chart
-                        const chart = new ApexCharts(document.querySelector("#tcp-chart"), options);
-                        chart.render();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                    });
-
-
-
 
     </script>
 

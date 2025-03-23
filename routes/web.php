@@ -171,6 +171,6 @@ Route::middleware([VerifiedUser::class])->group(function () {
     //Charting 
     Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);
 
-    Route::get('/api/tree-cutting-statistics', [ChartingController::class, 'getTreeCuttingStatistics']);
+    Route::get('/api/tree-cutting-statistics', [ChartingController::class, 'GetTreeCuttingStatistics']);
 });
 
