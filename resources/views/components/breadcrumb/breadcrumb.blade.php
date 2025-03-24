@@ -5,7 +5,7 @@
     !Route::is('file-history.show') &&
     !Route::is('client.records.show') &&
     !Route::is('qr.file-summary') &&
-    !Route::is('butterfly.show'))
+    !Route::is('butterfly.show') && !Route::is('report.show'))
         
     <nav class="w-max flex py-2 text-gray-700 rounded-lg" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">

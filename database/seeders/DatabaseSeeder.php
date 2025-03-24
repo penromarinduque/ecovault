@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
             'BackDirSQL' => '/backup/sql',
             'BackDirFiles' => '/backup/files',
             'StorePath' => 'app/public/PENRO',
-            'MySqlDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe',
+            'MySqlDir' => ':\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe',
             'MySqlDumpDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysqldump.exe'
         ]);
 
@@ -140,6 +140,7 @@ class DatabaseSeeder extends Seeder
 
         $municipalities = ['Mogpog', 'Torrijos', 'Boac', 'Gasan', 'Buenavista', 'Santa Cruz'];
 
+        //remove
         $files = [];
 
         for ($i = 1; $i <= 100; $i++) {

@@ -11,7 +11,7 @@
                 class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
                 <a href="{{ route('admin.home.show') }}" class="flex items-center gap-4 w-full">
                     <img src="{{ asset('images/navigation/dashboard.png') }}" alt="Home" class="w-12">
-                    <span class="text-lg font-semibold text-gray-200">Reports</span>
+                    <span class="text-lg font-semibold text-gray-200">Dashboard</span>
                 </a>
             </li>
 
@@ -38,6 +38,13 @@
                 <a href="{{ route('archived-file.show') }}" class="flex items-center gap-4 w-full">
                     <img src="{{ asset('images/navigation/archive.png') }}" alt="Archived Files" class="w-14">
                     <span class="text-lg font-semibold text-gray-200">Archived</span>
+                </a>
+            </li>
+
+            <li class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
+                <a href="{{ route('report.show') }}" class="flex items-center gap-4 w-full">
+                    <img src="{{ asset('images/navigation/archive.png') }}" alt="Archived Files" class="w-14">
+                    <span class="text-lg font-semibold text-gray-200">Reports</span>
                 </a>
             </li>
             @if (!Auth::user()->isAdmin)

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use App\Models\TreeCuttingPermit;
+use App\Models\TreeCuttingPermitDetail;
 class ChartingController extends Controller
 {
     //
@@ -84,24 +85,108 @@ class ChartingController extends Controller
     }
 
 
-    // public function GetTreeCuttingStatistics(Request $request)
+    // public function GetTreeSpeciesStatistic(Request $request)
     // {
-    //     $data = TreeCuttingPermit::select(
-    //         DB::raw('YEAR(tree_cutting_permits.created_at) as year'),
-    //         'files.municipality',
-    //         DB::raw('COUNT(tree_cutting_permits.id) as permit_count')
-    //     )
-    //         ->join('files', 'tree_cutting_permits.file_id', '=', 'files.id')
-    //         ->groupBy('year', 'files.municipality')
-    //         ->orderBy('year')
-    //         ->orderBy('files.municipality')
-    //         ->get();
+    //     $timeframe = $request->query('timeframe', 'monthly');
+    //     $species = $request->query('species');
+    //     $municipality = $request->query('municipality');
+
+    //     // Base Query: Normalize species names
+    //     $query = DB::table('tree_cutting_permit_details as details')
+    //         ->join('tree_cutting_permits as permits', 'details.tree_cutting_permit_id', '=', 'permits.id')
+    //         ->join('files', 'permits.file_id', '=', 'files.id')
+    //         ->whereNotNull('files.date_released')
+    //         ->select(
+    //             DB::raw('SUM(details.number_of_trees) as total_trees'),
+    //             DB::raw("LOWER(TRIM(details.species)) as species"), // Normalize species
+    //             'files.municipality',
+    //             DB::raw('YEAR(files.date_released) as year'),
+    //             DB::raw("DATE_FORMAT(files.date_released, '%b') as month")
+    //         );
+
+    //     // Apply filters
+    //     if ($species) {
+    //         $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
+    //     }
+    //     if ($municipality) {
+    //         $query->where('files.municipality', $municipality);
+    //     }
+
+    //     // Adjust grouping based on timeframe
+    //     if ($timeframe === 'yearly') {
+    //         $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(files.date_released)'))
+    //             ->orderBy(DB::raw('YEAR(files.date_released)'), 'asc');
+    //     } else { // Default to monthly
+    //         $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(files.date_released)'), DB::raw("DATE_FORMAT(files.date_released, '%b')"))
+    //             ->orderBy(DB::raw('YEAR(files.date_released)'), 'asc')
+    //             ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(files.date_released, '%b'), '%b')"), 'asc');
+    //     }
+
+    //     // Fetch results
+    //     $data = $query->get();
+    //     $totalTrees = $data->sum('total_trees');
 
     //     return response()->json([
-    //         'data' => $data
+    //         'data' => $data,
+    //         'total_trees' => $totalTrees,
     //     ]);
     // }
 
+
+    public function GetTreeCuttingSpeciesChartData(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality'); // Optional filter
+        $species = $request->query('species'); // Optional filter
+
+        // Base Query: Normalize species names
+        $query = DB::table('tree_cutting_permit_details as details')
+            ->join('tree_cutting_permits as permits', 'details.tree_cutting_permit_id', '=', 'permits.id')
+            ->join('files', 'permits.file_id', '=', 'files.id')
+            ->whereNotNull('details.date_applied') // Correct date field
+            ->select(
+                DB::raw('SUM(details.number_of_trees) as total_trees'),
+                DB::raw("LOWER(TRIM(details.species)) as species"),
+                'files.municipality',
+                DB::raw('YEAR(details.date_applied) as year'), // Correct date field
+                DB::raw("DATE_FORMAT(details.date_applied, '%b %Y') as month"), // Correct date field
+                'details.date_applied' // Ensure this is in GROUP BY
+            );
+
+        // Apply filters
+        if ($municipality) {
+            $query->where('files.municipality', $municipality);
+        }
+        if ($species) {
+            $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
+        }
+
+        // Adjust grouping based on timeframe
+        if ($timeframe === 'yearly') {
+            $query->groupBy(
+                DB::raw("LOWER(TRIM(details.species))"),
+                'files.municipality',
+                DB::raw('YEAR(details.date_applied)'),
+                DB::raw("DATE_FORMAT(details.date_applied, '%b %Y')"), // ✅ Add this
+                'details.date_applied' // ✅ Add this
+            );
+        } else { // Default to monthly
+            $query->groupBy(
+                DB::raw("LOWER(TRIM(details.species))"),
+                'files.municipality',
+                DB::raw('YEAR(details.date_applied)'),
+                DB::raw("DATE_FORMAT(details.date_applied, '%b')"),
+                'details.date_applied' // 🔥 Added this line
+            )
+                ->orderBy(DB::raw('YEAR(details.date_applied)'), 'asc')
+                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(details.date_applied, '%b'), '%b')"), 'asc');
+        }
+
+        // Fetch results
+        $data = $query->get();
+
+        return response()->json($data);
+    }
 
 
 

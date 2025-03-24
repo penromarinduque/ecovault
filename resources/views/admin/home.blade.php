@@ -32,7 +32,20 @@
             </div>
         <div class="flex items-center   mb-4 rounded">
             <div class=" w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6">
-                <div class="flex justify-between border-gray-200 border-b dark:border-gray-700 pb-3">
+                <div class="flex gap-4 border-gray-200 border-b dark:border-gray-700 pb-3">
+                    <dl>
+                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
+                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
+                    </dl>
+
+                    <dl>
+                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
+                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
+                    </dl>
+                    <dl>
+                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
+                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
+                    </dl>
                     <dl>
                         <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
                         <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
@@ -62,10 +75,9 @@
                     </div>
 
                     <div class="col-span-2" >
-                        <x-cutting-permit-chart/>
+                       
 
 
-                     
                     </div>
 
 
@@ -81,7 +93,7 @@
     </div>
     </div>
     <script>
-        
+
         fetch("/files/count")
             .then(response => {
                 if (!response.ok) {

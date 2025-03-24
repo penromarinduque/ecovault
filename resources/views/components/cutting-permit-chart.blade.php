@@ -1,5 +1,9 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-   <h1 class="font-bold">Tree Cutting Permit</h1>
+   <div class="justify-between flex">
+      <h1 class="font-bold">Tree Cutting Permit</h1>
+      {{-- <h2>Total Permits: <span>0</span></h2> --}}
+</div>
+
    <hr class="my-4"></hr>
 
    <div class="flex gap-4 py-2 w-6/12">
@@ -64,7 +68,7 @@
          colors: ["#1A56DB"],
          series: [{ name: "Tree Cutting Permits", data: [] }],
          chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
-         xaxis: { labels: { style: { fontSize: '12px' } } },
+         xaxis: { forceNiceScale: true, labels: { style: { fontSize: '12px' } } },
          yaxis: { show: true },
          plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
       };

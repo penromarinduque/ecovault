@@ -204,4 +204,10 @@ class AdminController extends Controller
     {
         return view('admin.archived-file.chainsaw-categories');
     }
+
+    function ShowReports()
+    {
+        return view('reports.reports');
+    }
+
 }
