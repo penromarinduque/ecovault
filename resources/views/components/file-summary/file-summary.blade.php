@@ -36,13 +36,15 @@
             </div>
         @endif
 
-        <div class="relative z-0 w-full mb-5 group">
-            <div
-                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <span class="text-lg font-medium text-gray-800">Office Source:</span>
-                <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+        @if ($type != 'local-transport-permit')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Office Source:</span>
+                    <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+                </div>
             </div>
-        </div>
+        @endif
         <div class="relative z-0 w-full mb-5 group">
             <div
                 class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -69,11 +71,7 @@
                 </div>
             </div>
         @endif
-        @if (
-            $type == 'chainsaw-registration' ||
-                $type ==
-                    'tree-plantation-registration
-                                                                                                ')
+        @if ($type == 'chainsaw-registration' || $type == 'tree-plantation-registration')
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
@@ -112,7 +110,7 @@
                 </div>
             </div>
         @endif
-        @if (in_array($type, ['tree-cutting-permits', 'transport-permit']))
+        @if (in_array($type, ['tree-cutting-permits', 'transport-permit', 'local-transport-permit']))
             <div class="relative overflow-x-auto mt-12">
 
 
@@ -131,8 +129,11 @@
                                     <th scope="col" class="px-6 py-3">Destination</th>
                                     <th scope="col" class="px-6 py-3">Date of Transport</th>
                                     <th scope="col" class="px-6 py-3">Date Applied</th>
+                                @elseif($type === 'local-transport-permit')
+                                    <th scope="col" class="px-6 py-3">Common/Scientific Name</th>
+                                    <th scope="col" class="px-6 py-3">Description</th>
+                                    <th scope="col" class="px-6 py-3">Quantity</th>
                                 @endif
-
                             </tr>
                         </thead>
                         <tbody id="table-body" class="font-medium capitalize">
@@ -225,6 +226,26 @@
                             input.innerHTML = value;
                         }
                     });
+
+                    if (type === 'local-transport-permit') {
+                        if (data.details) {
+                            const details = data.details;
+                            const tableBody = document.getElementById('table-body');
+                            tableBody.innerHTML = '';
+
+                            details.forEach((detail) => {
+                                let row = `
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-3">${detail.scientific_name || ''}</td>
+                    <td class="px-6 py-3">${detail.description || ''}</td>
+                    <td class="px-6 py-3">${detail.quantity || ''}</td>
+                </tr>
+            `;
+
+                                tableBody.insertAdjacentHTML('beforeend', row);
+                            });
+                        }
+                    }
 
                     if (data.permit.details) {
                         const details = data.permit.details;

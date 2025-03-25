@@ -166,8 +166,6 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::post('/api/files/{fileId}/butterfly-details', [ButterflyController::class, 'AddButterflyDetails']);
     Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
     Route::post('/api/file/sync-butterflies/{fileId}', [ButterflyController::class, 'syncButterflyDetails'])->name('butterflies.sync');
-
-
-
+    Route::get('/maintenance/ltp', [AdminController::class, 'ShowMaintenance'])->name('show.maintenance');
 });
 
