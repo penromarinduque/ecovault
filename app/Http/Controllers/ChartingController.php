@@ -189,6 +189,53 @@ class ChartingController extends Controller
     }
 
 
+    public function GetTreeCuttingByCategory(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly'); // 'monthly' or 'yearly'
+        $municipality = $request->query('municipality'); // Optional filter
+
+        // Base Query
+        $query = DB::table('tree_cutting_permit_details as details')
+            ->join('tree_cutting_permits as permits', 'details.tree_cutting_permit_id', '=', 'permits.id')
+            ->join('files', 'permits.file_id', '=', 'files.id') // Join to get municipality
+            ->whereNotNull('details.date_applied')
+            ->select(
+                'permits.permit_type',
+                DB::raw('SUM(details.number_of_trees) as total_trees'),
+                DB::raw('YEAR(details.date_applied) as year'),
+                DB::raw("DATE_FORMAT(details.date_applied, '%b') as month") // Ensure it's included in GROUP BY
+            );
+
+        // Apply Municipality Filter
+        if ($municipality) {
+            $query->where('files.municipality', $municipality);
+        }
+
+        // Adjust Grouping Based on Timeframe
+        if ($timeframe === 'yearly') {
+            $query->groupBy(
+                'permits.permit_type',
+                DB::raw('YEAR(details.date_applied)'),
+                DB::raw("DATE_FORMAT(details.date_applied, '%b')")
+            );
+
+        } else { // Default to Monthly
+            $query->groupBy(
+                'permits.permit_type',
+                DB::raw('YEAR(details.date_applied)'),
+                DB::raw("DATE_FORMAT(details.date_applied, '%b')")
+            ) // Added missing group by field
+                ->orderBy(DB::raw('YEAR(details.date_applied)'), 'asc')
+                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(details.date_applied, '%b'), '%b')"), 'asc');
+        }
+
+        // Fetch Data
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+
 
 
 

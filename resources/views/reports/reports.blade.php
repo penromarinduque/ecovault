@@ -9,6 +9,7 @@
        <div>
             <x-cutting-permit-chart />
             <x-chart.tree-cutting-species-chart/>
+            <x-chart.tree-cutting-category-chart/>
        </div>
 
 

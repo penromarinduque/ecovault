@@ -173,7 +173,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/api/tree-cutting-statistics', [ChartingController::class, 'GetTreeCuttingStatistics']);
     Route::get('/api/tree-cutting-species-statistics', [ChartingController::class, 'GetTreeCuttingSpeciesChartData']);
-
+    Route::get('/api/tree-cutting-category-statistics', [ChartingController::class, 'GetTreeCuttingByCategory']);
 
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 
