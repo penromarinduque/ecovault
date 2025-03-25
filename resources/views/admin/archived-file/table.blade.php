@@ -7,18 +7,16 @@
     <div class="overflow-auto rounded-md text-black p-4">
 
 
-        <div class="w-full flex {{ Auth::user()->isAdmin ? '' : 'hidden' }}">
+        <div class="w-full flex justify-between {{ Auth::user()->isAdmin ? '' : 'hidden' }}">
             <div class="space-x-3 mb-4">
                 <x-button id="uploadBtn" class="toggle-btn" data-toggle-target="upload" aria-controls="section-upload"
                     data-role="upload" aria-expanded="false" label="Upload File" type="button" style="primary" />
 
-            
             </div>
         </div>
 
         <!-- call other pop up using x-component-->
         <x-modal.file-modal />
-       
         <!-- file sharing-->
         @component('components.file-share.file-share', [
             'includePermit' => true,
@@ -29,7 +27,9 @@
         ])
         @endcomponent
         <div class="grid">
-         
+
+
+
             <div id="table-container">
                 <div
                     class="overflow-x-auto bg-white rounded-md p-5 shadow-md border border-gray-300 min-h-[calc(80vh-80px)]">
@@ -41,7 +41,7 @@
                         'isArchived' => true,
                         'category' => $category ?? '',
                     ])
-                        <!--add something to use in the table updated by harvs-->
+                    <!--add something to use in the table updated by harvs-->
                     @endcomponent
                 </div>
             </div>
@@ -55,7 +55,7 @@
                             'isArchived' => true,
                             'category' => $category ?? '',
                         ])
-                            <!--add something to use in the table updated by harvs-->
+                        <!--add something to use in the table updated by harvs-->
                         @endcomponent
                         <!-- minimize table here-->
                     </div>

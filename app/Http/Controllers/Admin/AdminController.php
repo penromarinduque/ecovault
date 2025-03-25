@@ -205,6 +205,11 @@ class AdminController extends Controller
         return view('admin.archived-file.chainsaw-categories');
     }
 
+    function ShowMaintenance()
+    {
+        return view('admin.maintenance.maintenance');
+    }
+
     function ShowReports()
     {
         return view('reports.reports');

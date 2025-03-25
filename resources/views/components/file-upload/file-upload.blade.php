@@ -102,8 +102,7 @@
                         <div class="my-4">
                             <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date
                                 Applied</label>
-                            <input type="date" id="date_applied" name="date_applied"
-                                placeholder="Date Applied"
+                            <input type="date" id="date_applied" name="date_applied" placeholder="Date Applied"
                                 class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                 block w-full p-2.5 
                                                                                                                                 focus:border-green-500 focus:ring-green-500 
@@ -146,12 +145,14 @@
 
 
 
-                        <input type="hidden" id="office-source"  name="office_source" placeholder="Enter office source" value=''
+                        <input type="hidden" id="office-source" name="office_source"
+                            placeholder="Enter office source" value=''
                             class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                     block w-full p-2.5 
                                                                     focus:border-green-500 focus:ring-green-500 
                                                                     required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
+                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required>
                     </div>
 
                     <div class="w-full">
@@ -183,13 +184,13 @@
 
                                     <h2 class="text-xl font-bold mb-4">Add New Butterfly</h2>
                                     <input type="text" id="newScientificName" placeholder="Scientific Name"
-                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
                                     <input type="text" id="newCommonName" placeholder="Common Name"
-                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
                                     <input type="text" id="newFamily" placeholder="Family"
-                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
                                     <input type="text" id="newGenus" placeholder="Genus"
-                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
+                                        class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
                                     <textarea id="newDescription" placeholder="Description" class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
                                     <input type="text" id="newImageUrl" placeholder="Image URL"
                                         class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
@@ -236,7 +237,7 @@
                                             let li = document.createElement("li");
                                             li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
                                             li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
-                                            li.onclick = function () {
+                                            li.onclick = function() {
                                                 addToTableAdd(butterfly);
                                             };
                                             resultsList.appendChild(li);
@@ -283,21 +284,21 @@
                                 let description = document.getElementById("newDescription").value;
                                 let image_url = document.getElementById("newImageUrl").value;
 
-                                fetch('/butterfly/add', {  // <-- Ensure this matches your Laravel route
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                                    },
-                                    body: JSON.stringify({
-                                        scientific_name,
-                                        common_name,
-                                        family,
-                                        genus,
-                                        description,
-                                        image_url
+                                fetch('/butterfly/add', { // <-- Ensure this matches your Laravel route
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                                        },
+                                        body: JSON.stringify({
+                                            scientific_name,
+                                            common_name,
+                                            family,
+                                            genus,
+                                            description,
+                                            image_url
+                                        })
                                     })
-                                })
                                     .then(response => {
                                         if (!response.ok) {
                                             return response.json().then(err => Promise.reject(err));
@@ -668,7 +669,6 @@
     </form>
 </div>
 <script>
-   
     const fileInput = document.getElementById('file-upload');
     const fileUploadName = document.getElementById('file-upload-name');
     const fileUploadError = document.getElementById('file-upload-error');
@@ -781,22 +781,22 @@
 
         //console.log('this', queryParams);
         const formData = new FormData(this);
-        
+
         let butterfliesAdd = []; // Collect selected butterfly data
 
         if (type == 'local-transport-permit') {
             butterfliesAdd = getSelectedButterfliesAdd();
-            
+
 
             if (butterfliesAdd.length === 0) {
                 showToast({
                     type: 'failed',
                     message: 'Please select at least one butterfly before proceeding..',
-                    
+
                 });
-                 buttonText.classList.remove('hidden');
-                 buttonSpinner.classList.add('hidden');
-                  uploadButton.disabled = false;
+                buttonText.classList.remove('hidden');
+                buttonSpinner.classList.add('hidden');
+                uploadButton.disabled = false;
                 return; // Stop execution if the array is empty
             }
         }
@@ -823,7 +823,7 @@
             if (type !== undefined && type !== null && type !== '') {
                 const permitData = new FormData(this);
                 permitData.append('file_id', fileId);
-                
+
                 const permitUploadResponse = await fetch(`/permit-upload?${queryParams}`, {
                     method: 'POST',
                     body: permitData,
@@ -832,25 +832,27 @@
                     }
                 });
 
-                if(type == 'local-transport-permit'){
-                     console.log(butterfliesAdd)
-                     fetch(`/api/files/${fileId}/butterfly-details`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken
-                        },
-                           body: JSON.stringify({ butterflies: butterfliesAdd }) 
-                    })
+                if (type == 'local-transport-permit') {
+                    console.log(butterfliesAdd)
+                    fetch(`/api/files/${fileId}/butterfly-details`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            body: JSON.stringify({
+                                butterflies: butterfliesAdd
+                            })
+                        })
                         .then(response => response.json())
                         .then(data => console.log("Success:", data))
                         .catch(error => console.error("Error:", error));
-                   
+
 
                     document.getElementById("selectedButterflies").innerHTML = ""; // Clear table
                     document.getElementById("searchInput").value = ""; // Clear search input
                     document.getElementById("searchResults").innerHTML = ""; // Clear search results
-                 
+
                 }
 
 
@@ -887,7 +889,8 @@
             buttonSpinner.classList.add('hidden');
         }
     });
-   function getSelectedButterfliesAdd() {
+
+    function getSelectedButterfliesAdd() {
         let butterfliesAdd = [];
 
         document.querySelectorAll("#selectedButterflies tr").forEach(row => {
@@ -897,7 +900,11 @@
 
             if (quantityInput) {
                 let quantity = parseInt(quantityInput.value) || 0; // Get the quantity value
-                butterfliesAdd.push({ id, name, quantity });
+                butterfliesAdd.push({
+                    id,
+                    name,
+                    quantity
+                });
             }
         });
 

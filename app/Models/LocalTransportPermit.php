@@ -28,7 +28,7 @@ class LocalTransportPermit extends Model
 
     public function details()
     {
-        return $this->hasMany(TreeTransportPermitDetails::class);
+        return $this->hasMany(ButterflyDetails::class);
     }
 }
 

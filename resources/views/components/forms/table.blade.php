@@ -29,7 +29,6 @@
             category: category,
             isArchived: isArchived
         };
-
         // Remove empty parameters
         const filteredParams = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value !== '')

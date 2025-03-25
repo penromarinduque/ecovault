@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TreeTransportPermitDetails;
 use App\Models\TreeCuttingPermit;
 use App\Models\TransportPermit;
+use App\Models\LocalTransportPermit;
 use App\Models\TreeCuttingPermitDetail;
 use App\Models\FileHistory;
 use App\Models\ButterflyDetails;
@@ -286,7 +287,7 @@ abstract class BaseController extends Controller
                             ->where('file_id', $id)
                             ->first();
 
-                        $butterflyDetails = ButterflyDetails::with(['file', 'butterfly'])
+                        $butterflyDetails = ButterflyDetails::with(['butterfly'])
                             ->get()
                             ->map(function ($detail) {
                                 return [
