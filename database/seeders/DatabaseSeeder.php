@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Config;
 use App\Models\FileType;
+use Illuminate\Support\Arr;
+
 use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
@@ -58,6 +60,8 @@ class DatabaseSeeder extends Seeder
                 ] // Set or update values
             );
         }
+
+
 
 
 
@@ -121,6 +125,45 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+
+        $permitTypes = [
+            'tree-cutting-permits',
+            'chainsaw-registration',
+            'tree-plantation-registration',
+            'transport-permit',
+            'land-title',
+            'local-transport-permit',
+            'memoranda',
+            'letters',
+            'special-orders'
+        ];
+
+        $municipalities = ['Mogpog', 'Torrijos', 'Boac', 'Gasan', 'Buenavista', 'Santa Cruz'];
+
+        $files = [];
+
+        for ($i = 1; $i <= 100; $i++) {
+            $randomCreatedAt = Carbon::now()->subYears(rand(0, 3))->subMonths(rand(0, 11))->subDays(rand(0, 28));
+
+            $files[] = [
+                'permit_type' => Arr::random($permitTypes),
+                'category' => Arr::random(['Agricultural', 'Residential', 'Special', null]),
+                'municipality' => Arr::random($municipalities),
+                'report_type' => Arr::random(['Annual', 'Quarterly', 'Monthly', null]),
+                'file_name' => 'document_' . $i . '.pdf',
+                'file_path' => 'uploads/documents/document_' . $i . '.pdf',
+                'office_source' => Arr::random(['DENR', 'PENRO', 'CENRO', null]),
+                'classification' => Arr::random(['Public', 'Confidential', 'Restricted']),
+                'date_released' => $i % 2 == 0 ? $randomCreatedAt->copy()->addDays(rand(1, 30)) : null,
+                'is_archived' => $i % 3 == 0,
+                'archived_at' => $i % 3 == 0 ? $randomCreatedAt->copy()->addMonths(rand(1, 6)) : null,
+                'user_id' => 1, // Change if needed
+                'created_at' => $randomCreatedAt,
+                'updated_at' => $randomCreatedAt->copy()->addDays(rand(1, 20)),
+            ];
+        }
+
+        DB::table('files')->insert($files);
 
     }
 }

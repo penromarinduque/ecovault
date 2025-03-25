@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <div class=" rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">
+    <div class=" rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2 ">
 
         <h1 class="font-medium  text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
 
@@ -58,7 +58,7 @@
         </div>
 
         <h1 class="mx-40 my-4 font-semibold">Biodiversity</h1>
-        <div class="grid grid-cols-4 gap-8 mx-16 text-gray-700 font-semibold">
+        <div class="grid grid-cols-4 gap-8 mx-16 text-gray-700 font-semibold mb-10">
             <div class="flex flex-col items-center">
                 <a href="{{ route('file-manager.municipality.show', ['type' => 'local-transport-permit']) }}"
                     class="text-center">
