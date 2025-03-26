@@ -1,6 +1,6 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
     <div class="justify-between flex">
-        <h1 class="font-bold">Chainsaw Registration</h1>
+        <h1 class="font-bold">Tree Plantation Permit</h1>
         {{-- <h2>Total Permits: <span>0</span></h2> --}}
     </div>
 
