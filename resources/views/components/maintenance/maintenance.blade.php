@@ -1,7 +1,7 @@
 <!-- Be present above all else. - Naval Ravikant -->
 <div id="addButterflyModal" class="flex justify-center items-center z-50">
     <div class="p-6 rounded bg-white border border-gray-300 w-9/12 space-y-5">
-        <h2 class="text-2xl font-bold mb-6 text-center">Add New Butterfly</h2>
+        <h2 class="text-2xl text-gray-700 font-bold mb-6">Add New Butterfly</h2>
 
         <form id="butterflyForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -30,22 +30,27 @@
                 <div>
                     <label for="newGenus" class="block font-medium text-gray-700 mb-1">Genus</label>
                     <input type="text" name="genus" id="newGenus" placeholder="Add Genus"
-                        class="w-full p-2 border border-gray-300 rounded-lg" required />
+                        class="w-full p-2 border border-gray-300 rounded-lg" />
                 </div>
             </div>
 
             <!-- Description -->
-            <div>
-                <label for="newDescription" class="block font-medium text-gray-700 mb-1">Description</label>
-                <textarea name="description" id="newDescription" placeholder="Add Description"
-                    class="w-full p-2 border border-gray-300 rounded-lg" required></textarea>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+                <div class="">
+                    <label for="newDescription" class="block font-medium text-gray-700 mb-1">Description</label>
+                    <textarea name="description" id="newDescription" placeholder="Add Description"
+                        class="w-full p-2 border border-gray-300 rounded-lg" required></textarea>
+                </div>
             </div>
 
             <!-- Button -->
-            <div class="w-full">
-                <button type="submit"
-                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
+            <div class="w-full p-5 flex gap-4">
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Add
                     Butterfly</button>
+                <a href="{{ route('show.maintenance.table') }}"
+                    class="px-4 py-2 bg-none border border-gray-400 text-gray-600 font-medium rounded-lg hover:bg-slate-700 hover:text-white">View
+                    All
+                    Species</a>
             </div>
         </form>
     </div>
@@ -53,9 +58,9 @@
 
 <script>
     document.getElementById("butterflyForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent default form submission
 
-        const formData = new FormData(this); // Collect input values
+        const formData = new FormData(this); // Collect input values from the form
 
         fetch('/butterfly/add', {
                 method: "POST",
@@ -64,25 +69,32 @@
                 },
                 body: formData, // Send the collected form data
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to upload butterfly");
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    addToTableAdd(data.butterfly); // Add the new butterfly to your table
-                    this.reset(); // Clear form inputs
+                    this.reset(); // Reset form inputs
                     showToast({
                         type: 'success',
-                        message: 'Success! The upload is complete.',
+                        message: 'Success! The maintenance is complete.',
 
                     });
                 } else {
-                    console.error("Failed to add butterfly:", data.message);
+                    showToast({
+                        type: ' ',
+                        message: 'Failed to add butterfly. Please check your input.',
+                    });
                 }
             })
             .catch(error => {
                 console.error("Error adding butterfly:", error);
                 showToast({
-                    type: 'failed',
-                    message: 'Failed to add butterfly. Please check the input.',
+                    type: 'danger',
+                    message: 'Failed to add butterfly due to a server error.',
                 });
             });
     });

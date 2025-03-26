@@ -53,6 +53,14 @@
             </div>
         </div>
 
+        <div class="relative z-0 w-full mb-5 group">
+            <div
+                class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <span class="text-lg font-medium text-gray-800">Date Released:</span>
+                <span id="summary-date-released" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
+            </div>
+        </div>
+
         @if ($type == 'tree-plantation-registration')
             <div class="relative z-0 w-full mb-5 group">
                 <div

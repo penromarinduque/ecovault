@@ -118,8 +118,8 @@ class ButterflyController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'scientific_name' => 'required|string|max:255',
-            'common_name' => 'nullable|string|max:255',
+            'scientific_name' => 'required|string|max:255|unique:butterfly_species,scientific_name',
+            'common_name' => 'nullable|string|max:255|unique:butterfly_species,common_name',
             'family' => 'nullable|string|max:255',
             'genus' => 'nullable|string|max:255',
             'description' => 'nullable|string',
@@ -130,6 +130,7 @@ class ButterflyController extends Controller
         $butterfly = ButterflySpecies::create($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Butterfly added successfully!',
             'butterfly' => $butterfly
         ], 201);

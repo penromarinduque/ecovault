@@ -215,4 +215,9 @@ class AdminController extends Controller
         return view('reports.reports');
     }
 
+    function ShowMaintenanceTable()
+    {
+        return view('admin.maintenance.table');
+    }
+
 }

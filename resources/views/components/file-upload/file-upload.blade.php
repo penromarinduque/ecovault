@@ -461,9 +461,10 @@
                                 <option value="Special Tree Cutting Permit">Special Tree Cutting Permit</option>
                                 <option value="Tree Cutting Permit for planted/naturally growing growing trees">Tree
                                     Cutting Permit for
-                                    planted/naturally growing growing trees</option>
+                                    planted/naturally growing trees</option>
                                 <option value="Private Land Timber Permit">Private Land Timber Permit(PLTP)</option>
-                                <option value="Special Private Timber Permit">Special Private Timber Permit(SPTP)
+                                <option value="Special Private Land Timber Permit">Special Private Land Timber
+                                    Permit(SPLTP)
                                 </option>
                             </select>
                         @endif
