@@ -215,6 +215,39 @@ class AdminController extends Controller
         return view('reports.reports');
     }
 
+    function ShowTreeCuttingReport()
+    {
+        return view('reports.tree-cutting-permit');
+    }
+
+    function ShowTreePlantationReport()
+    {
+        return view('reports.tree-plantation-permit');
+    }
+
+    function ShowTransportPermitReport()
+    {
+        return view('reports.transport-permit');
+    }
+
+    function ShowChainsawRegistrationReport()
+    {
+        return view('reports.chainsaw-registration');
+    }
+
+    function ShowLandTitlesReport()
+    {
+        return view('reports.land-titles');
+    }
+
+    function ShowLocalTransportPermitReport()
+    {
+        return view('reports.local-transport-permit');
+    }
+
+
+
+
     function ShowMaintenanceTable()
     {
         return view('admin.maintenance.table');

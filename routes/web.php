@@ -193,6 +193,12 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 
 
+    Route::get('/report/tree-cutting-permit', [AdminController::class, 'ShowTreeCuttingReport'])->name('report-tcp.show');
+    Route::get('/report/tree-plantation-permit', [AdminController::class, 'ShowTreePlantationReport'])->name('report-tpp.show');
+    Route::get('/report/transport-permit', [AdminController::class, 'ShowTransportPermitReport'])->name('report-tp.show');
+    Route::get('/report/chainsaw-registration', [AdminController::class, 'ShowChainsawRegistrationReport'])->name('report-cr.show');
+    Route::get('/report/land-titles', [AdminController::class, 'ShowLandTitlesReport'])->name('report-tcp.lt');
+    Route::get('/report/local-transport-permit', [AdminController::class, 'ShowLocalTransportPermitReport'])->name('report-ltp.show');
 
 
 
