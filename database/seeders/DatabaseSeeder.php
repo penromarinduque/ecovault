@@ -164,6 +164,8 @@ class DatabaseSeeder extends Seeder
             ];
         }
 
+
+
         DB::table('files')->insert($files);
 
     }

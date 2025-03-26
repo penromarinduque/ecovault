@@ -2,7 +2,7 @@
    <div class="justify-between flex">
       <h1 class="font-bold">Tree Cutting Permit</h1>
       {{-- <h2>Total Permits: <span>0</span></h2> --}}
-</div>
+   </div>
 
    <hr class="my-4"></hr>
 

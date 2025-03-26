@@ -38,18 +38,7 @@
                         <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
                     </dl>
 
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
-                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
-                    </dl>
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
-                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
-                    </dl>
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
-                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
-                    </dl>
+                  
 
 
                 </div>
@@ -143,6 +132,7 @@
 
                         let options = {
                             series: seriesData,
+                          
                             chart: { type: "line", height: 450 },
                             xaxis: {
                                 type: "datetime",
