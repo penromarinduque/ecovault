@@ -4,7 +4,13 @@
 
 @section('content')
     <div class="h-[calc(90vh-100px)] rounded-md text-black p-4 bg-white shadow-md border border-300 mt-2">
-        <h1 class="font-medium text-2xl text-gray-500">Environmental Permits and Land Records Folder</h1>
+        <h1 class="font-medium text-2xl text-gray-500">
+            @if ($type == 'local-transport-permit')
+                Local Transport Permit
+            @else
+                Environmental Permits and Land Records Folder
+            @endif
+        </h1>
 
         <!-- Dynamic Grid Container -->
         <div id="municipalities-container" class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
@@ -41,10 +47,10 @@
                                     'text-center', 'mx-auto');
                                 const municipalityUrl =
                                     `{{ route('file-manager.table.show', ['type' => '__type__', 'municipality' => '__municipality__', 'category' => '__category__']) }}`
-                                        .replace('__type__', _type)
-                                        .replace('__municipality__', municipality.location)
-                                       .replace('__category__', _category ??
-                                            '');
+                                    .replace('__type__', _type)
+                                    .replace('__municipality__', municipality.location)
+                                    .replace('__category__', _category ??
+                                        '');
                                 const imgSrc = `{{ asset('__src__') }}`.replace('__src__', municipality
                                     .img_src);
                                 municipalityDiv.innerHTML = `
