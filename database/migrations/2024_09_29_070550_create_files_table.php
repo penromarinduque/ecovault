@@ -65,6 +65,7 @@ return new class extends Migration {
             $table->integer('number_of_trees');
             $table->string('location');
             $table->date('date_applied');
+            $table->string('species')->nullable();
             $table->timestamps();
         });
 

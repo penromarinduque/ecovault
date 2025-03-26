@@ -172,11 +172,27 @@ Route::middleware([VerifiedUser::class])->group(function () {
     //Charting 
     Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);
 
+    //TCS
     Route::get('/api/tree-cutting-statistics', [ChartingController::class, 'GetTreeCuttingStatistics']);
     Route::get('/api/tree-cutting-species-statistics', [ChartingController::class, 'GetTreeCuttingSpeciesChartData']);
     Route::get('/api/tree-cutting-category-statistics', [ChartingController::class, 'GetTreeCuttingByCategory']);
 
+    //Chainsaw
+    Route::get('/api/chainsaw-registration-statistics', [ChartingController::class, 'GetChainsawRegistrationStatistics']);
+    Route::get('/api/chainsaw-registration-statistics-by-category', [ChartingController::class, 'getChainsawRegistrationStatisticsByCategory']);
+
+    Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetPrivateTreePlantationRegistrations']);
+    Route::get('/api/tree-transport-permit-statistics', [ChartingController::class, 'GetTreeTransportStatistics']);
+    Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesChartData']);
+    Route::get('/api/land-statistics', [ChartingController::class, 'GetLandTitleChartData']);
+    Route::get('/api/local-transport-statistics', [ChartingController::class, 'GetLocalTransportPermitChartData']);
+
+
+
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
+
+
+
 
 
 
