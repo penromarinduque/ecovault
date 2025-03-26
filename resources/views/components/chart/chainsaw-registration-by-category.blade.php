@@ -1,14 +1,13 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
     <div class="justify-between flex">
-        <h1 class="font-bold">Chainsaw Registration</h1>
-        {{-- <h2>Total Permits: <span>0</span></h2> --}}
+        <h1 class="font-bold">Chainsaw Registration By New Registration</h1>
     </div>
 
     <hr class="my-4">
     </hr>
 
     <div class="flex gap-4 py-2 w-6/12">
-        <select id="location-filter"
+        <select id="crc_municipality_filter"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[100px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option value="">All</option>
             <option value="Gasan">Gasan</option>
@@ -18,39 +17,41 @@
             <option value="Santa Cruz">Santa Cruz</option>
         </select>
 
-        <select id="timeframe-filter"
+        <select id="crc_timeframe_filter"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px]  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option value="monthly">Monthly</option>
             <option value="yearly">Yearly</option>
         </select>
     </div>
 
-    <div id="tcp-chart"></div>
+    <div id="crc_chainsaw_chart"></div>
 </div>
 
 <!-- ApexCharts CDN -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
-    let tcp_chart;
-    const chartElement = document.getElementById("tcp-chart");
+    let crc_chainsaw_chart;
+    const crc_chartElement = document.getElementById("crc_chainsaw_chart");
 
-    async function fetchChartData(location = "", timeframe = "monthly") {
+    async function fetchCRCChartData(municipality = "", timeframe = "monthly") {
         try {
-            // Call the Laravel API with filters
-            const response = await fetch(`/api/chainsaw-registration-statistics?municipality=${location}&timeframe=${timeframe}`);
-            const { data } = await response.json();
+            const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}`);
+            const data = await response.json();
+
+              const { data } = await response.json();
             // Process API response
             let groupedData = groupData(data, timeframe);
             // Update the chart
-            tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: groupedData }]);
+            crc_chainsaw_chart.updateSeries([{ name: "Chainsaw Registration", data: groupedData }]);
 
         } catch (error) {
             console.error("Error fetching chart data:", error);
         }
     }
 
-    function groupData(data, timeframe) {
+
+     function groupData(data, timeframe) {
         const grouped = {};
 
         data.forEach(item => {
@@ -59,33 +60,31 @@
         });
 
         return Object.entries(grouped).map(([key, value]) => ({ x: key, y: value }));
-    }
-
+            }
     document.addEventListener("DOMContentLoaded", () => {
-        // Initial chart setup
         const options = {
-            colors: ["#1A56DB"],
-            series: [{ name: "Chainsaw Registration", data: [] }],
-            chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
-            xaxis: { forceNiceScale: true, labels: { style: { fontSize: '12px' } } },
-            yaxis: { show: true },
-            plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
+            chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },
+            colors: ["#DB1A56", "#1E88E5"],
+            series: [],
+            xaxis: { categories: [] },
+            yaxis: { title: { text: "Number of Registrations" } },
+            plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
+            dataLabels: { enabled: true }
         };
 
-        tcp_chart = new ApexCharts(chartElement, options);
-        tcp_chart.render();
+        crc_chainsaw_chart = new ApexCharts(crc_chartElement, options);
+        crc_chainsaw_chart.render();
 
         // Fetch initial data
-        fetchChartData();
+        fetchCRCChartData();
 
         // Add event listeners for dropdown changes
-        document.getElementById("location-filter").addEventListener("change", function () {
-            fetchChartData(this.value, document.getElementById("timeframe-filter").value);
+        document.getElementById("crc_municipality_filter").addEventListener("change", function () {
+            fetchCRCChartData(this.value, document.getElementById("crc_timeframe_filter").value);
         });
 
-        document.getElementById("timeframe-filter").addEventListener("change", function () {
-            fetchChartData(document.getElementById("location-filter").value, this.value);
+        document.getElementById("crc_timeframe_filter").addEventListener("change", function () {
+            fetchCRCChartData(document.getElementById("crc_municipality_filter").value, this.value);
         });
     });
-
 </script>

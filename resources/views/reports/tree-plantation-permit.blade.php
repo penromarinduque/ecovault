@@ -6,6 +6,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="space-y-4">
-    
+        <x-chart.tree-plantation-permit/>
     </div>
 @endsection

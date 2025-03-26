@@ -86,53 +86,6 @@ class ChartingController extends Controller
     }
 
 
-    // public function GetTreeSpeciesStatistic(Request $request)
-    // {
-    //     $timeframe = $request->query('timeframe', 'monthly');
-    //     $species = $request->query('species');
-    //     $municipality = $request->query('municipality');
-
-    //     // Base Query: Normalize species names
-    //     $query = DB::table('tree_cutting_permit_details as details')
-    //         ->join('tree_cutting_permits as permits', 'details.tree_cutting_permit_id', '=', 'permits.id')
-    //         ->join('files', 'permits.file_id', '=', 'files.id')
-    //         ->whereNotNull('files.date_released')
-    //         ->select(
-    //             DB::raw('SUM(details.number_of_trees) as total_trees'),
-    //             DB::raw("LOWER(TRIM(details.species)) as species"), // Normalize species
-    //             'files.municipality',
-    //             DB::raw('YEAR(files.date_released) as year'),
-    //             DB::raw("DATE_FORMAT(files.date_released, '%b') as month")
-    //         );
-
-    //     // Apply filters
-    //     if ($species) {
-    //         $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
-    //     }
-    //     if ($municipality) {
-    //         $query->where('files.municipality', $municipality);
-    //     }
-
-    //     // Adjust grouping based on timeframe
-    //     if ($timeframe === 'yearly') {
-    //         $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(files.date_released)'))
-    //             ->orderBy(DB::raw('YEAR(files.date_released)'), 'asc');
-    //     } else { // Default to monthly
-    //         $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(files.date_released)'), DB::raw("DATE_FORMAT(files.date_released, '%b')"))
-    //             ->orderBy(DB::raw('YEAR(files.date_released)'), 'asc')
-    //             ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(files.date_released, '%b'), '%b')"), 'asc');
-    //     }
-
-    //     // Fetch results
-    //     $data = $query->get();
-    //     $totalTrees = $data->sum('total_trees');
-
-    //     return response()->json([
-    //         'data' => $data,
-    //         'total_trees' => $totalTrees,
-    //     ]);
-    // }
-
 
     public function GetTreeCuttingSpeciesChartData(Request $request)
     {
@@ -239,36 +192,48 @@ class ChartingController extends Controller
     //Get Chainsaw Registration By Permit Count
     public function getChainsawRegistrationStatistics(Request $request)
     {
-        $timeframe = $request->query('timeframe', 'monthly'); // 'monthly' or 'yearly'
-        $municipality = $request->query('municipality');
+        $municipality = $request->query('municipality'); // Example: "Gasan"
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly' if not provided
 
-        $query = DB::table('files as f')
-            ->join('chainsaw_registrations as cr', 'f.id', '=', 'cr.file_id')
-            ->selectRaw("
-            f.municipality, 
-            COUNT(cr.id) AS total_permits, 
-            YEAR(f.date_released) AS year" .
-                ($timeframe === 'monthly' ? ", MONTH(f.date_released) AS month_number, DATE_FORMAT(f.date_released, '%b') AS month" : "")
-            )
-            ->whereNotNull('f.date_released');
+        // Base Query: Filter by permit type
+        $query = File::where('permit_type', 'chainsaw-registration')
+            ->whereNotNull('date_released');
 
         // Apply municipality filter if provided
         if ($municipality) {
-            $query->where('f.municipality', $municipality);
+            $query->where('municipality', $municipality);
         }
 
-        // Grouping logic based on timeframe
-        if ($timeframe === 'monthly') {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released), MONTH(f.date_released), DATE_FORMAT(f.date_released, "%b")'))
-                ->orderByRaw('YEAR(f.date_released) ASC, MONTH(f.date_released) ASC');
-        } else {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released)'))
-                ->orderByRaw('YEAR(f.date_released) ASC');
+        // Adjust grouping based on timeframe
+        if ($timeframe === 'yearly') {
+            $query->select(
+                DB::raw('count(*) as count'),
+                'municipality',
+                DB::raw('YEAR(date_released) as year')
+            )
+                ->groupBy('municipality', DB::raw('YEAR(date_released)'))
+                ->orderBy(DB::raw('YEAR(date_released)'), 'asc');
+        } else { // Default to monthly grouping
+            $query->select(
+                DB::raw('count(*) as count'),
+                'municipality',
+                DB::raw('YEAR(date_released) as year'),
+                DB::raw("DATE_FORMAT(date_released, '%b') as month") // Format month as "Jan", "Feb"
+            )
+                ->groupBy('municipality', DB::raw('YEAR(date_released)'), DB::raw("DATE_FORMAT(date_released, '%b')"))
+                ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
+                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc'); // Correct order
         }
 
+        // Get results
         $data = $query->get();
+        $totalCount = $data->sum('count'); // Calculate total count
 
-        return response()->json($data);
+        // Return JSON response
+        return response()->json([
+            'data' => $data,
+            'total_count' => $totalCount,
+        ]);
     }
 
 
@@ -313,34 +278,48 @@ class ChartingController extends Controller
 
     public function GetPrivateTreePlantationRegistrations(Request $request)
     {
-        $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality');
+        $municipality = $request->query('municipality'); // Example: "Gasan"
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly' if not provided
 
-        $query = File::selectRaw("
-            municipality,
-            COUNT(id) as total_registrations,
-            YEAR(date_released) as year,
-            MONTH(date_released) as month,
-            MIN(date_released) as first_release_date
-        ")
-            ->where('permit_type', 'tree-plantation-registration')
+        // Base Query: Filter by permit type
+        $query = File::where('permit_type', 'tree-plantation-registration')
             ->whereNotNull('date_released');
 
-        // Filter by municipality if provided
+        // Apply municipality filter if provided
         if ($municipality) {
             $query->where('municipality', $municipality);
         }
 
-        // Apply grouping based on timeframe
+        // Adjust grouping based on timeframe
         if ($timeframe === 'yearly') {
-            $query->groupBy('municipality', 'year')->orderBy('year', 'ASC');
-        } else { // Defaults to monthly
-            $query->groupBy('municipality', 'year', 'month')->orderBy('year', 'ASC')->orderBy('month', 'ASC');
+            $query->select(
+                DB::raw('count(*) as count'),
+                'municipality',
+                DB::raw('YEAR(date_released) as year')
+            )
+                ->groupBy('municipality', DB::raw('YEAR(date_released)'))
+                ->orderBy(DB::raw('YEAR(date_released)'), 'asc');
+        } else { // Default to monthly grouping
+            $query->select(
+                DB::raw('count(*) as count'),
+                'municipality',
+                DB::raw('YEAR(date_released) as year'),
+                DB::raw("DATE_FORMAT(date_released, '%b') as month") // Format month as "Jan", "Feb"
+            )
+                ->groupBy('municipality', DB::raw('YEAR(date_released)'), DB::raw("DATE_FORMAT(date_released, '%b')"))
+                ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
+                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc'); // Correct order
         }
 
+        // Get results
         $data = $query->get();
+        $totalCount = $data->sum('count'); // Calculate total count
 
-        return response()->json($data);
+        // Return JSON response
+        return response()->json([
+            'data' => $data,
+            'total_count' => $totalCount,
+        ]);
     }
 
 

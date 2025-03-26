@@ -7,5 +7,6 @@
 
     <div class="space-y-4">
       <x-chart.chainsaw-registration-chart/>
+      <x-chart.chainsaw-registration-by-category/>
     </div>
 @endsection

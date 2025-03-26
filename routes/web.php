@@ -170,6 +170,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/maintenance/ltp', [AdminController::class, 'ShowMaintenance'])->name('show.maintenance');
     Route::get('/maintenance/ltp/table', [AdminController::class, 'ShowMaintenanceTable'])->name('show.maintenance.table');
     Route::get('/show/species/ltp', [ButterflyController::class, 'GetAllSpecies'])->name('getAllSpecies');
+
     //Charting 
     Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);
 
@@ -185,6 +186,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetPrivateTreePlantationRegistrations']);
     Route::get('/api/tree-transport-permit-statistics', [ChartingController::class, 'GetTreeTransportStatistics']);
     Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesChartData']);
+
     Route::get('/api/land-statistics', [ChartingController::class, 'GetLandTitleChartData']);
     Route::get('/api/local-transport-statistics', [ChartingController::class, 'GetLocalTransportPermitChartData']);
 
@@ -192,17 +194,11 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 
-
     Route::get('/report/tree-cutting-permit', [AdminController::class, 'ShowTreeCuttingReport'])->name('report-tcp.show');
     Route::get('/report/tree-plantation-permit', [AdminController::class, 'ShowTreePlantationReport'])->name('report-tpp.show');
     Route::get('/report/transport-permit', [AdminController::class, 'ShowTransportPermitReport'])->name('report-tp.show');
     Route::get('/report/chainsaw-registration', [AdminController::class, 'ShowChainsawRegistrationReport'])->name('report-cr.show');
     Route::get('/report/land-titles', [AdminController::class, 'ShowLandTitlesReport'])->name('report-tcp.lt');
     Route::get('/report/local-transport-permit', [AdminController::class, 'ShowLocalTransportPermitReport'])->name('report-ltp.show');
-
-
-
-
-
 });
 

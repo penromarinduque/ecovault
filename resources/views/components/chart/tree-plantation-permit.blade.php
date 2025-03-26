@@ -38,12 +38,12 @@
     async function fetchChartData(location = "", timeframe = "monthly") {
         try {
             // Call the Laravel API with filters
-            const response = await fetch(`/api/chainsaw-registration-statistics?municipality=${location}&timeframe=${timeframe}`);
+            const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
             const { data } = await response.json();
             // Process API response
             let groupedData = groupData(data, timeframe);
             // Update the chart
-            tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: groupedData }]);
+            tcp_chart.updateSeries([{ name: "Tree Plantation", data: groupedData }]);
 
         } catch (error) {
             console.error("Error fetching chart data:", error);
@@ -65,7 +65,7 @@
         // Initial chart setup
         const options = {
             colors: ["#1A56DB"],
-            series: [{ name: "Chainsaw Registration", data: [] }],
+            series: [{ name: "Tree Plantation", data: [] }],
             chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
             xaxis: { forceNiceScale: true, labels: { style: { fontSize: '12px' } } },
             yaxis: { show: true },
