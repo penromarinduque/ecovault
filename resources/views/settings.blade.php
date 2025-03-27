@@ -176,6 +176,7 @@
                             if (response.ok) {
 
                                 fetchBackupFiles();
+                                fetchBackupFiles() {
                             } else {
 
                             }
