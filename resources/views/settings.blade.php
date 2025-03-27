@@ -176,7 +176,7 @@
                             if (response.ok) {
 
                                 fetchBackupFiles();
-                                fetchBackupFiles() {
+
                             } else {
 
                             }
@@ -272,11 +272,12 @@
                             })
                             .then(response => response.json())
                             .then(data => {
-                                ShowAlert(data.success);
+                                showToast("data backup successfully");
                                 fetchBackupFiles(); // Refresh backup list after creating a new backup
+
                             })
                             .catch(error => {
-                                ShowAlert(error, false);
+                                showToast(error, false);
                             })
                             .finally(() => {
                                 // Re-enable buttons
