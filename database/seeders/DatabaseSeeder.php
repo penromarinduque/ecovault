@@ -82,8 +82,7 @@ class DatabaseSeeder extends Seeder
             'MySqlDir' => ':\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe',
             'MySqlDumpDir' => 'C:\\\\xampp\\\\mysql\\\\bin\\\\mysqldump.exe'
         ]);
-
-        DB::table('butterfly_species')->insert([
+        $butterflies = [
             [
                 'scientific_name' => 'Papilio machaon',
                 'common_name' => 'Swallowtail Butterfly',
@@ -124,21 +123,19 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
-
-        $permitTypes = [
-            'tree-cutting-permits',
-            'chainsaw-registration',
-            'tree-plantation-registration',
-            'transport-permit',
-            'land-title',
-            'local-transport-permit',
-            'memoranda',
-            'letters',
-            'special-orders'
         ];
 
-        $municipalities = ['Mogpog', 'Torrijos', 'Boac', 'Gasan', 'Buenavista', 'Santa Cruz'];
+        // Insert butterflies into the butterfly_species table
+        foreach ($butterflies as $butterfly) {
+            DB::table('butterfly_species')->insert($butterfly);
+        }
+
+        $butterflySpecies = DB::table('butterfly_species')->pluck('id')->toArray();
+
+
+
+
+        // $municipalities = ['Mogpog', 'Torrijos', 'Boac', 'Gasan', 'Buenavista', 'Santa Cruz'];
 
         // //remove
         // $files = [];
@@ -164,9 +161,167 @@ class DatabaseSeeder extends Seeder
         //     ];
         // }
 
+        $municipalities = ['Mogpog', 'Torrijos', 'Boac', 'Gasan', 'Buenavista', 'Santa Cruz'];
+        $permitTypes = [
+            'tree-cutting-permits',
+            'chainsaw-registration',
+            'tree-plantation-registration',
+            'transport-permit',
+            'land-title',
+            'local-transport-permit',
+        ];
+        $tcpTypes = [
+            'Special Tree Cutting Permit',
+            'Tree Cutting Permit for planted/naturally growing trees',
+            'Private Land Timber Permit',
+            'Special Private Land Timber Permit',
+        ];
+        $classifications = ['Highly Technical', 'Simple'];
+        $chainsawCategories = ['New', 'Renewal'];
+        $landTitleCategories = ['Agricultural', 'Residential', 'Special'];
 
+        foreach (range(1, 50) as $index) {
+            $permitType = $permitTypes[array_rand($permitTypes)];
+            $municipality = $municipalities[array_rand($municipalities)];
+            $classification = $classifications[array_rand($classifications)];
 
-        // DB::table('files')->insert($files);
+            // Determine category value
+            $category = null;
+            if ($permitType === 'chainsaw-registration') {
+                $category = $chainsawCategories[array_rand($chainsawCategories)];
+            } elseif ($permitType === 'land-title') {
+                $category = $landTitleCategories[array_rand($landTitleCategories)];
+            }
+
+            // Generate random dates across different years
+            $dateReleased = Carbon::now()->subDays(rand(1, 1825)); // Up to 5 years ago
+            $dateApplied = Carbon::now()->subDays(rand(1, 1095)); // Up to 3 years ago
+            $dateOfTransport = Carbon::now()->addDays(rand(1, 365)); // Within the next year
+
+            // Insert into files table
+            $fileId = DB::table('files')->insertGetId([
+                'permit_type' => $permitType,
+                'category' => $category,
+                'municipality' => $municipality,
+                'report_type' => null,
+                'file_name' => Str::random(10) . '.pdf',
+                'file_path' => 'storage/files/' . Str::random(10) . '.pdf',
+                'office_source' => 'DENR',
+                'classification' => $classification,
+                'date_released' => $dateReleased,
+                'is_archived' => false,
+                'archived_at' => null,
+                'user_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Insert into the appropriate permit-specific table
+            switch ($permitType) {
+                case 'tree-cutting-permits':
+                    $permitId = DB::table('tree_cutting_permits')->insertGetId([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'permit_type' => $tcpTypes[array_rand($tcpTypes)],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    DB::table('tree_cutting_permit_details')->insert([
+                        'tree_cutting_permit_id' => $permitId,
+                        'number_of_trees' => rand(1, 50),
+                        'species' => 'Narra',
+                        'location' => $municipality,
+                        'date_applied' => $dateApplied,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+
+                case 'chainsaw-registration':
+                    DB::table('chainsaw_registrations')->insert([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'location' => $municipality,
+                        'serial_number' => strtoupper(Str::random(10)),
+                        'category' => $category,
+                        'date_applied' => $dateApplied,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+
+                case 'tree-plantation-registration':
+                    DB::table('tree_plantation_registration')->insert([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'number_of_trees' => rand(100, 500),
+                        'location' => $municipality,
+                        'date_applied' => $dateApplied,
+                        'species' => 'Mahogany',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+
+                case 'transport-permit':
+                    $permitId = DB::table('transport_permits')->insertGetId([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    DB::table('tree_transport_permit_details')->insert([
+                        'transport_permit_id' => $permitId,
+                        'number_of_trees' => rand(10, 100),
+                        'species' => 'Acacia',
+                        'destination' => 'Metro Manila',
+                        'date_of_transport' => $dateOfTransport,
+                        'date_applied' => $dateApplied,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+
+                case 'land-title':
+                    DB::table('land_titles')->insert([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'location' => $municipality,
+                        'lot_number' => strtoupper(Str::random(5)),
+                        'property_category' => $category,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+
+                case 'local-transport-permit':
+                    DB::table('local_transport_permits')->insert([
+                        'file_id' => $fileId,
+                        'name_of_client' => 'Client ' . $index,
+                        'business_farm_name' => 'Farm ' . strtoupper(Str::random(5)),
+                        'butterfly_permit_number' => strtoupper(Str::random(8)),
+                        'destination' => 'Manila Zoo',
+                        'date_applied' => $dateApplied,
+                        'date_released' => $dateReleased,
+                        'classification' => 'Endangered',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    $butterflyId = $butterflySpecies[array_rand($butterflySpecies)];
+                    DB::table('butterfly_details')->insert([
+                        'file_id' => $fileId,
+                        'butterfly_id' => $butterflyId,
+                        'quantity' => rand(5, 50),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    break;
+            }
+        }
 
     }
+
 }

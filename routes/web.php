@@ -202,5 +202,8 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/report/chainsaw-registration', [AdminController::class, 'ShowChainsawRegistrationReport'])->name('report-cr.show');
     Route::get('/report/land-titles', [AdminController::class, 'ShowLandTitlesReport'])->name('report-tcp.lt');
     Route::get('/report/local-transport-permit', [AdminController::class, 'ShowLocalTransportPermitReport'])->name('report-ltp.show');
+
+    Route::get('/report/local-transport-permits/chart', [ChartingController::class, 'getTransportPermitChartData']);
+
 });
 

@@ -21,7 +21,7 @@ class ChartingController extends Controller
 
         $query = DB::table('files')
             ->selectRaw("
-            DATE_FORMAT(created_at, ?) as period, 
+            DATE_FORMAT(date_released, ?) as period, 
             municipality, 
             COUNT(id) as total
         ")
@@ -84,9 +84,6 @@ class ChartingController extends Controller
             'total_count' => $totalCount,
         ]);
     }
-
-
-
     public function GetTreeCuttingSpeciesChartData(Request $request)
     {
         $timeframe = $request->query('timeframe', 'monthly');
@@ -479,45 +476,69 @@ class ChartingController extends Controller
     }
 
 
-    public function GetLocalTransportPermitChartData(Request $request)
+    // public function GetLocalTransportPermitChartData(Request $request)
+    // {
+    //     $timeframe = $request->query('timeframe', 'monthly'); // Default to monthly
+    //     $municipality = $request->query('municipality'); // Optional filter
+
+    //     // Base Query
+    //     $query = DB::table('files')
+    //         ->whereNotNull('date_released') // Only issued permits
+    //         ->where('permit_type', 'local-transport-permit') // Filter by permit type
+    //         ->select(
+    //             DB::raw('COUNT(id) as total_permits'),
+    //             'municipality',
+    //             DB::raw('YEAR(date_released) as year')
+    //         );
+
+    //     // Apply optional municipality filter
+    //     if ($municipality) {
+    //         $query->where('municipality', $municipality);
+    //     }
+
+    //     // Adjust grouping based on timeframe
+    //     if ($timeframe === 'yearly') {
+    //         $query->groupBy('municipality', DB::raw('YEAR(date_released)'));
+    //     } else { // Default to monthly
+    //         $query->addSelect(DB::raw("DATE_FORMAT(date_released, '%b %Y') as month"))
+    //             ->groupBy(
+    //                 'municipality',
+    //                 DB::raw('YEAR(date_released)'),
+    //                 DB::raw("DATE_FORMAT(date_released, '%b %Y')")
+    //             )
+    //             ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
+    //             ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc');
+    //     }
+
+    //     // Fetch results
+    //     $data = $query->get();
+
+    //     return response()->json($data);
+    // }
+
+
+    public function getTransportPermitChartData(Request $request)
     {
-        $timeframe = $request->query('timeframe', 'monthly'); // Default to monthly
-        $municipality = $request->query('municipality'); // Optional filter
-
-        // Base Query
-        $query = DB::table('files')
-            ->whereNotNull('date_released') // Only issued permits
-            ->where('permit_type', 'local-transport-permit') // Filter by permit type
+        $query = DB::table('local_transport_permits')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
             ->select(
-                DB::raw('COUNT(id) as total_permits'),
-                'municipality',
-                DB::raw('YEAR(date_released) as year')
-            );
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw('MONTH(local_transport_permits.date_released) as month'),
+                DB::raw('COUNT(local_transport_permits.id) as total_permits')
+            )
+            ->groupBy('files.municipality', 'year', 'month')
+            ->orderBy('year', 'DESC')
+            ->orderBy('month', 'DESC');
 
-        // Apply optional municipality filter
-        if ($municipality) {
-            $query->where('municipality', $municipality);
+        // Optional: Filter by municipality if requested
+        if ($request->has('municipality')) {
+            $query->where('files.municipality', $request->query('municipality'));
         }
 
-        // Adjust grouping based on timeframe
-        if ($timeframe === 'yearly') {
-            $query->groupBy('municipality', DB::raw('YEAR(date_released)'));
-        } else { // Default to monthly
-            $query->addSelect(DB::raw("DATE_FORMAT(date_released, '%b %Y') as month"))
-                ->groupBy(
-                    'municipality',
-                    DB::raw('YEAR(date_released)'),
-                    DB::raw("DATE_FORMAT(date_released, '%b %Y')")
-                )
-                ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
-                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc');
-        }
-
-        // Fetch results
-        $data = $query->get();
-
-        return response()->json($data);
+        return response()->json($query->get());
     }
+
 
 
 }
