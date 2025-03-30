@@ -1,111 +1,92 @@
-<div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-    <div class="justify-between flex">
-        <h1 class="font-bold">Tree Cutting Permit</h1>
-        {{-- <h2>Total Permits: <span>0</span></h2> --}}
+<div class="bg-white shadow-md rounded-lg p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Tree Cutting By Species</h3>
+        <h4 id="totalTCSRegistrations" class="text-sm font-medium text-gray-600">Total Trees Cut: 0</h4>
     </div>
-    <div class="flex gap-4 py-2 w-6/12">
-        <select id="tcs-location-filter"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[100px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="">All</option>
-            <option value="Gasan">Gasan</option>
-            <option value="Boac">Boac</option>
-            <option value="Buenavista">Buenavista</option>
-            <option value="Torijos">Torijos</option>
-            <option value="Santa Cruz">Santa Cruz</option>
-        </select>
-
-        <select id="tcs-timeframe-filter"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px]  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-        </select>
+    <div class="flex items-center space-x-4 mb-4">
+        <div>
+            <label for="tcs_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
+            <select id="tcs_municipality_filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="All">All</option>
+                <option value="Gasan">Gasan</option>
+                <option value="Boac">Boac</option>
+                <option value="Buenavista">Buenavista</option>
+                <option value="Torijos">Torijos</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+            </select>
+        </div>
+        <div>
+            <label for="tcs_timeframe_filter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
+            <select id="tcs_timeframe_filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </div>
+        <button id="applyTCSFilters"
+            class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            Apply Filters
+        </button>
     </div>
-    <div id="tcs-chart"></div>
-</div>
+    <div id="tcs_chart"></div>
+    <div id="no-data-tcs-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
 
-<script>
-    let tcsChart; // Store chart instance to update later
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let tcs_chart;
+            const tcs_chartElement = document.getElementById("tcs_chart");
+            const totalTCSRegistrationsElement = document.getElementById("totalTCSRegistrations");
+            const noDataTCSMessage = document.getElementById("no-data-tcs-message");
 
-    async function fetchTreeCuttingSpeciesData(location = "", timeframe = "monthly") {
-        try {
-            const url = `/api/tree-cutting-species-statistics?timeframe=${timeframe}&location=${location}`;
-            const response = await fetch(url);
-            return await response.json();
-        } catch (error) {
-            console.error("Error fetching tree-cutting data:", error);
-        }
-    }
+            async function fetchTCSChartData(municipality = "All", timeframe = "monthly") {
+                try {
+                    const response = await fetch(`/api/tree-cutting-species-statistics?municipality=${municipality}&timeframe=${timeframe}`);
+                    const { data, total_count } = await response.json();
 
-   async function formatChartData(location = "", timeframe = "monthly") {
-        const rawData = await fetchTreeCuttingSpeciesData(location, timeframe);
-
-        // Dynamically use year for yearly, month for monthly
-        const uniqueLabels = timeframe === "yearly"
-            ? [...new Set(rawData.map(row => row.year))].sort()  // Use years
-            : [...new Set(rawData.map(row => row.month))].sort(); // Use month-year
-
-        const speciesMap = {};
-
-        rawData.forEach(row => {
-            const { species, year, month, total_trees } = row;
-            const label = timeframe === "yearly" ? year : month; // Use correct label dynamically
-
-            if (!speciesMap[species]) {
-                speciesMap[species] = uniqueLabels.reduce((acc, lbl) => {
-                    acc[lbl] = 0;
-                    return acc;
-                }, {});
-            }
-
-            speciesMap[species][label] = total_trees; // Assign values correctly
-        });
-
-        const series = Object.keys(speciesMap).map(species => ({
-            name: species,
-            data: uniqueLabels.map(label => speciesMap[species][label] || 0) // Ensure correct mapping
-        }));
-
-        return { series, categories: uniqueLabels }; // ✅ Use uniqueLabels instead of uniqueMonths
-    }
-
-
-    async function renderTCSChart() {
-        const location = document.getElementById("tcs-location-filter").value;
-        const timeframe = document.getElementById("tcs-timeframe-filter").value;
-        const chartData = await formatChartData(location, timeframe);
-
-        const options = {
-            chart: {
-                type: 'bar',
-                stacked: true,
-                height: 300
-            },
-            series: chartData.series,
-            xaxis: {
-                categories: chartData.categories,
-            },
-            yaxis: {
-                title: { text: 'Total Trees Cut' },
-                labels: {
-                    formatter: function (value) {
-                        return Math.floor(value); // Ensures only whole numbers
+                    if (!data || data.length === 0) {
+                        noDataTCSMessage.classList.remove('hidden');
+                        tcs_chart.updateSeries([]);
+                        return;
                     }
+
+                    noDataTCSMessage.classList.add('hidden');
+                    totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+
+                    const groupedData = data.map(item => ({
+                        x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
+                        y: item.total_trees
+                    }));
+
+                    tcs_chart.updateSeries([{ name: "Trees Cut", data: groupedData }]);
+                } catch (error) {
+                    console.error("Error fetching chart data:", error);
                 }
             }
-        };
 
-        if (tcsChart) {
-            tcsChart.updateOptions(options); // Update chart instead of re-creating
-        } else {
-            tcsChart = new ApexCharts(document.querySelector("#tcs-chart"), options);
-            tcsChart.render();
-        }
-    }
+            const options = {
+                chart: { type: "bar", height: 350 },
+                colors: ["#1A56DB"],
+                series: [],
+                xaxis: { categories: [] },
+                yaxis: {
+                    title: { text: "Number of Trees Cut" },
+                    labels: { formatter: value => Math.round(value) }
+                },
+                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
+                dataLabels: { enabled: true }
+            };
 
-    // Attach event listeners for dropdowns
-    document.getElementById("tcs-location-filter").addEventListener("change", renderTCSChart);
-    document.getElementById("tcs-timeframe-filter").addEventListener("change", renderTCSChart);
+            tcs_chart = new ApexCharts(tcs_chartElement, options);
+            tcs_chart.render();
 
-    // Initial render
-    renderTCSChart();
-</script>
+            document.getElementById("applyTCSFilters").addEventListener("click", () => {
+                const municipality = document.getElementById("tcs_municipality_filter").value;
+                const timeframe = document.getElementById("tcs_timeframe_filter").value;
+                fetchTCSChartData(municipality, timeframe);
+            });
+
+            fetchTCSChartData();
+        });
+    </script>
+</div>
