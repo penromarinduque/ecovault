@@ -49,19 +49,10 @@
 
             async function fetchChartData(location = "All", timeframe = "monthly") {
                 try {
-                    console.log('Fetching chart data...');
                     const response = await fetch(`/api/chainsaw-registration-statistics?municipality=${location}&timeframe=${timeframe}`);
-                    console.log('API URL:', response.url);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
                     const { data, total_count } = await response.json();
-                    console.log('API Response:', data);
 
                     if (!data || data.length === 0) {
-                        console.warn('No data available.');
                         noDataMessage.classList.remove('hidden');
                         tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: [] }]);
                         return;
@@ -82,12 +73,10 @@
             }
 
             function groupData(data, timeframe) {
-                const grouped = {};
-                data.forEach(item => {
+                return data.map(item => {
                     const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`;
-                    grouped[key] = (grouped[key] || 0) + item.count;
+                    return { x: key, y: item.total_permits };
                 });
-                return Object.entries(grouped).map(([key, value]) => ({ x: key, y: value }));
             }
 
             const options = {

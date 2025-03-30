@@ -185,88 +185,77 @@ class ChartingController extends Controller
     //Get Chainsaw Registration By Permit Count
     public function getChainsawRegistrationStatistics(Request $request)
     {
-        $municipality = $request->query('municipality'); // Example: "Gasan"
-        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly' if not provided
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
 
-        // Base Query: Filter by permit type
-        $query = File::where('permit_type', 'chainsaw-registration')
-            ->whereNotNull('date_released');
+        $query = DB::table('files')
+            ->where('permit_type', 'chainsaw-registration')
+            ->whereNotNull('date_released')
+            ->selectRaw("
+                municipality,
+                COUNT(id) as total_permits,
+                YEAR(date_released) as year" .
+                ($timeframe === 'monthly' ? ", MONTH(date_released) as month_number, DATE_FORMAT(date_released, '%b') as month" : "")
+            );
 
-        // Apply municipality filter if provided
-        if ($municipality) {
+        if ($municipality !== 'All') {
             $query->where('municipality', $municipality);
         }
 
-        // Adjust grouping based on timeframe
-        if ($timeframe === 'yearly') {
-            $query->select(
-                DB::raw('count(*) as count'),
-                'municipality',
-                DB::raw('YEAR(date_released) as year')
-            )
-                ->groupBy('municipality', DB::raw('YEAR(date_released)'))
-                ->orderBy(DB::raw('YEAR(date_released)'), 'asc');
-        } else { // Default to monthly grouping
-            $query->select(
-                DB::raw('count(*) as count'),
-                'municipality',
-                DB::raw('YEAR(date_released) as year'),
-                DB::raw("DATE_FORMAT(date_released, '%b') as month") // Format month as "Jan", "Feb"
-            )
-                ->groupBy('municipality', DB::raw('YEAR(date_released)'), DB::raw("DATE_FORMAT(date_released, '%b')"))
-                ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
-                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc'); // Correct order
+        if ($timeframe === 'monthly') {
+            $query->groupBy('municipality', DB::raw('YEAR(date_released), MONTH(date_released), DATE_FORMAT(date_released, "%b")'))
+                ->orderByRaw('YEAR(date_released) ASC, MONTH(date_released) ASC');
+        } else {
+            $query->groupBy('municipality', DB::raw('YEAR(date_released)'))
+                ->orderByRaw('YEAR(date_released) ASC');
         }
 
-        // Get results
         $data = $query->get();
-        $totalCount = $data->sum('count'); // Calculate total count
+        $totalCount = $data->sum('total_permits'); // Calculate total permits
 
-        // Return JSON response
         return response()->json([
             'data' => $data,
             'total_count' => $totalCount,
         ]);
     }
 
-
-
-
-
-
     public function getChainsawRegistrationStatisticsByCategory(Request $request)
     {
-        $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality');
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
 
-        $query = DB::table('files as f')
+        $query = DB::table('files')
+            ->where('permit_type', 'chainsaw-registration')
+            ->whereNotNull('date_released')
             ->selectRaw("
-            f.municipality, 
-            COUNT(CASE WHEN f.category = 'new' THEN 1 END) AS new_registrations,
-            COUNT(CASE WHEN f.category = 'renewal' THEN 1 END) AS renewals,
-            YEAR(f.date_released) AS year" .
-                ($timeframe === 'monthly' ? ", MONTH(f.date_released) AS month_number, DATE_FORMAT(f.date_released, '%b') AS month" : "")
-            )
-            ->whereNotNull('f.date_released');
+                municipality,
+                COUNT(CASE WHEN category = 'new' THEN 1 END) AS new_registrations,
+                COUNT(CASE WHEN category = 'renewal' THEN 1 END) AS renewals,
+                YEAR(date_released) as year" .
+                ($timeframe === 'monthly' ? ", DATE_FORMAT(date_released, '%b') as month" : "") // Format month as "Jan", "Feb"
+            );
 
-        if ($municipality) {
-            $query->where('f.municipality', $municipality);
+        if ($municipality !== 'All') {
+            $query->where('municipality', $municipality);
         }
 
         if ($timeframe === 'monthly') {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released), MONTH(f.date_released), DATE_FORMAT(f.date_released, "%b")'))
-                ->orderByRaw('YEAR(f.date_released) ASC, MONTH(f.date_released) ASC');
+            $query->groupBy('municipality', DB::raw('YEAR(date_released), DATE_FORMAT(date_released, "%b")'))
+                ->orderByRaw('YEAR(date_released) ASC, STR_TO_DATE(DATE_FORMAT(date_released, "%b"), "%b") ASC');
         } else {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released)'))
-                ->orderByRaw('YEAR(f.date_released) ASC');
+            $query->groupBy('municipality', DB::raw('YEAR(date_released)'))
+                ->orderByRaw('YEAR(date_released) ASC');
         }
 
-        // Remove rows where both new_registrations and renewals are 0
         $query->havingRaw("new_registrations > 0 OR renewals > 0");
 
         $data = $query->get();
+        $totalCount = $data->sum(fn($item) => $item->new_registrations + $item->renewals); // Calculate total registrations
 
-        return response()->json($data);
+        return response()->json([
+            'data' => $data,
+            'total_count' => $totalCount,
+        ]);
     }
 
     public function GetPrivateTreePlantationRegistrations(Request $request)

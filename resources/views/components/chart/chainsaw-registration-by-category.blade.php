@@ -50,11 +50,9 @@
             async function fetchCRCChartData(municipality = "All", timeframe = "monthly") {
                 try {
                     const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}`);
-                    const data = await response.json();
-                    console.log('API Response:', data);
+                    const { data, total_count } = await response.json();
 
                     if (!data || data.length === 0) {
-                        console.warn('No data available.');
                         noDataMessage.classList.remove('hidden');
                         crc_chainsaw_chart.updateSeries([
                             { name: "New Registrations", data: [] },
@@ -65,9 +63,8 @@
 
                     noDataMessage.classList.add('hidden');
 
-                    // Calculate total registrations
-                    const totalRegistrations = data.reduce((sum, item) => sum + item.new_registrations + item.renewals, 0);
-                    totalRegistrationsElement.textContent = `Total Registrations: ${totalRegistrations}`;
+                    // Update total registrations
+                    totalRegistrationsElement.textContent = `Total Registrations: ${total_count}`;
 
                     // Group data for chart
                     const groupedData = groupData(data, timeframe);
@@ -85,17 +82,11 @@
             function groupData(data, timeframe) {
                 const newRegistrations = [];
                 const renewals = [];
-                const labels = new Set(); // Use a Set to ensure unique labels
-
                 data.forEach(item => {
-                    const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`;
-                    if (!labels.has(key)) {
-                        labels.add(key);
-                        newRegistrations.push({ x: key, y: item.new_registrations });
-                        renewals.push({ x: key, y: item.renewals });
-                    }
+                    const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`; // Use month as string
+                    newRegistrations.push({ x: key, y: item.new_registrations });
+                    renewals.push({ x: key, y: item.renewals });
                 });
-
                 return { newRegistrations, renewals };
             }
 
