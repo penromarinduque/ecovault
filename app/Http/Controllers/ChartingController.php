@@ -460,6 +460,42 @@ class ChartingController extends Controller
         return response()->json($data);
     }
 
+    public function GetLandTitleStatistics(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality');
+        $category = $request->query('category');
+
+        $query = DB::table('files')
+            ->where('permit_type', 'land-title')
+            ->whereNotNull('date_released')
+            ->select(
+                DB::raw('COUNT(id) as total_land_titles'),
+                'municipality',
+                'category',
+                DB::raw('YEAR(date_released) as year')
+            );
+
+        if ($municipality) {
+            $query->where('municipality', $municipality);
+        }
+        if ($category) {
+            $query->where('category', $category);
+        }
+
+        if ($timeframe === 'yearly') {
+            $query->groupBy('municipality', 'category', DB::raw('YEAR(date_released)'));
+        } else {
+            $query->addSelect(DB::raw("DATE_FORMAT(date_released, '%b') as month"))
+                ->groupBy('municipality', 'category', DB::raw('YEAR(date_released)'), DB::raw("DATE_FORMAT(date_released, '%b')"))
+                ->orderBy(DB::raw('YEAR(date_released)'), 'asc')
+                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc');
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
 
     // public function GetLocalTransportPermitChartData(Request $request)
     // {

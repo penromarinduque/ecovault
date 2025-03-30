@@ -198,6 +198,9 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/business-owners-by-municipality', [ChartingController::class, 'getBusinessOwnersByMunicipality']);
     Route::get('/api/species-transported-download', [ChartingController::class, 'downloadSpeciesTransportedReport']);
 
+    // Charting route for Land Title Statistics
+    Route::get('/api/land-title-statistics', [ChartingController::class, 'GetLandTitleStatistics']);
+
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 
     Route::get('/report/tree-cutting-permit', [AdminController::class, 'ShowTreeCuttingReport'])->name('report-tcp.show');
