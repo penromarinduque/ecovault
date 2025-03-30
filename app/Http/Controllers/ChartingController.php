@@ -538,30 +538,74 @@ class ChartingController extends Controller
     public function getTransportPermitsByMunicipality(Request $request)
     {
         $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality');
+        $municipality = $request->query('municipality', 'All');
 
         $query = DB::table('local_transport_permits')
             ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
             ->select(
                 'files.municipality',
                 DB::raw('COUNT(local_transport_permits.id) as total_permits'),
-                DB::raw('YEAR(local_transport_permits.date_released) as year'),
-                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+                DB::raw('YEAR(local_transport_permits.date_released) as year')
             )
             ->whereNotNull('local_transport_permits.date_released');
 
-        if ($municipality) {
-            $query->where('files.municipality', $municipality);
-        }
-
-        if ($timeframe === 'yearly') {
-            $query->groupBy('files.municipality', DB::raw('YEAR(local_transport_permits.date_released)'));
+        // Add month to SELECT and GROUP BY only if timeframe is monthly
+        if ($timeframe === 'monthly') {
+            $query->addSelect(DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month"))
+                ->groupBy(
+                    'files.municipality',
+                    DB::raw('YEAR(local_transport_permits.date_released)'),
+                    DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+                );
         } else {
             $query->groupBy(
                 'files.municipality',
-                DB::raw('YEAR(local_transport_permits.date_released)'),
-                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+                DB::raw('YEAR(local_transport_permits.date_released)')
             );
+        }
+
+        // Apply municipality filter if not "All"
+        if ($municipality !== 'All') {
+            $query->where('files.municipality', $municipality);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function getBusinessOwnersByMunicipality(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality', 'All');
+
+        $query = DB::table('local_transport_permits')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                'files.municipality',
+                DB::raw('COUNT(DISTINCT local_transport_permits.business_farm_name) as total_business_owners'),
+                DB::raw('YEAR(local_transport_permits.date_released) as year')
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        // Add month to SELECT and GROUP BY only if timeframe is monthly
+        if ($timeframe === 'monthly') {
+            $query->addSelect(DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month"))
+                ->groupBy(
+                    'files.municipality',
+                    DB::raw('YEAR(local_transport_permits.date_released)'),
+                    DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+                );
+        } else {
+            $query->groupBy(
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)')
+            );
+        }
+
+        // Apply municipality filter if not "All"
+        if ($municipality !== 'All') {
+            $query->where('files.municipality', $municipality);
         }
 
         $data = $query->get();
@@ -626,40 +670,6 @@ class ChartingController extends Controller
         }
 
         // Fetch results
-        $data = $query->get();
-
-        return response()->json($data);
-    }
-
-    public function getBusinessOwnersByMunicipality(Request $request)
-    {
-        $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality');
-
-        $query = DB::table('local_transport_permits')
-            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
-            ->select(
-                'files.municipality',
-                DB::raw('COUNT(DISTINCT local_transport_permits.business_farm_name) as total_business_owners'),
-                DB::raw('YEAR(local_transport_permits.date_released) as year'),
-                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
-            )
-            ->whereNotNull('local_transport_permits.date_released');
-
-        if ($municipality) {
-            $query->where('files.municipality', $municipality);
-        }
-
-        if ($timeframe === 'yearly') {
-            $query->groupBy('files.municipality', DB::raw('YEAR(local_transport_permits.date_released)'));
-        } else {
-            $query->groupBy(
-                'files.municipality',
-                DB::raw('YEAR(local_transport_permits.date_released)'),
-                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
-            );
-        }
-
         $data = $query->get();
 
         return response()->json($data);
