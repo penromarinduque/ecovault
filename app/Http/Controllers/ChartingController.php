@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Municipality;
+use App\Models\TreePlantation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -746,4 +747,40 @@ class ChartingController extends Controller
             ->header('Content-Disposition', "attachment; filename={$filename}");
     }
 
+    public function GetTreePlantationStatistics(Request $request)
+    {
+        $municipality = $request->query('municipality', '');
+        $timeframe = $request->query('timeframe', 'monthly');
+
+        $registrations = TreePlantation::query()
+            ->when($municipality, fn($query) => $query->where('location', $municipality))
+            ->selectRaw("YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count")
+            ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month')
+            ->get();
+
+        $speciesData = TreePlantation::query()
+            ->when($municipality, fn($query) => $query->where('location', $municipality))
+            ->selectRaw("species, YEAR(date_applied) as year, MONTH(date_applied) as month, SUM(number_of_trees) as number_of_trees")
+            ->groupByRaw($timeframe === 'yearly' ? 'species, year' : 'species, year, month')
+            ->get()
+            ->groupBy('species')
+            ->map(function ($group) {
+                return $group->map(function ($item) {
+                    return [
+                        'year' => $item->year,
+                        'month' => $item->month,
+                        'number_of_trees' => $item->number_of_trees,
+                    ];
+                });
+            });
+
+        // Calculate the total number of trees planted across all species
+        $totalTreesPlanted = $speciesData->flatten()->sum('number_of_trees');
+
+        return response()->json([
+            'registrations' => $registrations,
+            'speciesData' => $speciesData,
+            'totalTreesPlanted' => $totalTreesPlanted, // Include the total in the response
+        ]);
+    }
 }

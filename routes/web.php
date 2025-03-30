@@ -183,7 +183,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/chainsaw-registration-statistics', [ChartingController::class, 'GetChainsawRegistrationStatistics']);
     Route::get('/api/chainsaw-registration-statistics-by-category', [ChartingController::class, 'getChainsawRegistrationStatisticsByCategory']);
 
-    Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetPrivateTreePlantationRegistrations']);
+    Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetTreePlantationStatistics']);
 
     Route::get('/api/tree-transport-permit-statistics', [ChartingController::class, 'GetTreeTransportStatistics']);
     Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesChartData']);
