@@ -185,22 +185,22 @@ class ChartingController extends Controller
     //Get Chainsaw Registration By Permit Count
     public function getChainsawRegistrationStatistics(Request $request)
     {
-        $municipality = $request->query('municipality'); // Example: "Gasan"
-        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly' if not provided
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
 
         // Base Query: Filter by permit type
         $query = File::where('permit_type', 'chainsaw-registration')
             ->whereNotNull('date_released');
 
         // Apply municipality filter if provided
-        if ($municipality) {
+        if ($municipality !== 'All') {
             $query->where('municipality', $municipality);
         }
 
         // Adjust grouping based on timeframe
         if ($timeframe === 'yearly') {
             $query->select(
-                DB::raw('count(*) as count'),
+                DB::raw('COUNT(*) as count'),
                 'municipality',
                 DB::raw('YEAR(date_released) as year')
             )
@@ -208,7 +208,7 @@ class ChartingController extends Controller
                 ->orderBy(DB::raw('YEAR(date_released)'), 'asc');
         } else { // Default to monthly grouping
             $query->select(
-                DB::raw('count(*) as count'),
+                DB::raw('COUNT(*) as count'),
                 'municipality',
                 DB::raw('YEAR(date_released) as year'),
                 DB::raw("DATE_FORMAT(date_released, '%b') as month") // Format month as "Jan", "Feb"
@@ -218,9 +218,11 @@ class ChartingController extends Controller
                 ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(date_released, '%b'), '%b')"), 'asc'); // Correct order
         }
 
-        // Get results
+        // Execute query and fetch results
         $data = $query->get();
-        $totalCount = $data->sum('count'); // Calculate total count
+
+        // Calculate total count
+        $totalCount = $data->sum('count');
 
         // Return JSON response
         return response()->json([
@@ -229,16 +231,12 @@ class ChartingController extends Controller
         ]);
     }
 
-
-
-
-
-
     public function getChainsawRegistrationStatisticsByCategory(Request $request)
     {
-        $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality');
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
 
+        // Base Query
         $query = DB::table('files as f')
             ->selectRaw("
             f.municipality, 
@@ -247,25 +245,38 @@ class ChartingController extends Controller
             YEAR(f.date_released) AS year" .
                 ($timeframe === 'monthly' ? ", MONTH(f.date_released) AS month_number, DATE_FORMAT(f.date_released, '%b') AS month" : "")
             )
+            ->where('f.permit_type', 'chainsaw-registration') // Ensure correct permit type
             ->whereNotNull('f.date_released');
 
-        if ($municipality) {
+        // Apply municipality filter if provided
+        if ($municipality !== 'All') {
             $query->where('f.municipality', $municipality);
         }
 
+        // Adjust grouping based on timeframe
         if ($timeframe === 'monthly') {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released), MONTH(f.date_released), DATE_FORMAT(f.date_released, "%b")'))
+            $query->groupBy(
+                'f.municipality',
+                DB::raw('YEAR(f.date_released)'),
+                DB::raw('MONTH(f.date_released)'),
+                DB::raw("DATE_FORMAT(f.date_released, '%b')")
+            )
                 ->orderByRaw('YEAR(f.date_released) ASC, MONTH(f.date_released) ASC');
-        } else {
-            $query->groupBy('f.municipality', DB::raw('YEAR(f.date_released)'))
+        } else { // Yearly grouping
+            $query->groupBy(
+                'f.municipality',
+                DB::raw('YEAR(f.date_released)')
+            )
                 ->orderByRaw('YEAR(f.date_released) ASC');
         }
 
         // Remove rows where both new_registrations and renewals are 0
         $query->havingRaw("new_registrations > 0 OR renewals > 0");
 
+        // Execute query and fetch results
         $data = $query->get();
 
+        // Return JSON response
         return response()->json($data);
     }
 

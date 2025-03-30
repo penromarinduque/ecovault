@@ -5,8 +5,7 @@
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <div class="space-y-4">
-        <x-chart.local-transport-permit />
+    <div class="space-y-4">      
         <div class="bg-white shadow-md rounded-lg p-4">
             <h3 class="text-lg font-semibold mb-4">Total Number of Transport Permits Issued</h3>
             <div class="flex items-center space-x-4 mb-4">
@@ -127,12 +126,20 @@
                             type: 'bar',
                             height: 350
                         },
+                        colors: ['#FF6347'], // Custom color for this chart (Tomato)
                         series: [{
                             name: 'Total Species',
                             data: data.map(item => item.total_species)
                         }],
                         xaxis: {
                             categories: data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.species)
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: function (value) {
+                                    return Math.round(value); // Ensure solid numbers
+                                }
+                            }
                         }
                     };
 
@@ -167,12 +174,20 @@
                             type: 'bar',
                             height: 350
                         },
+                        colors: ['#1E90FF'], // Custom color for this chart (Dodger Blue)
                         series: [{
                             name: 'Total Permits',
                             data: data.map(item => item.total_permits)
                         }],
                         xaxis: {
-                            categories: data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.year)
+                            categories: data.map(item => timeframe === 'yearly' ? item.year : `${item.month} ${item.year}`)
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: function (value) {
+                                    return Math.round(value); // Ensure solid numbers
+                                }
+                            }
                         }
                     };
 
@@ -207,12 +222,20 @@
                             type: 'bar',
                             height: 350
                         },
+                        colors: ['#32CD32'], // Custom color for this chart (Lime Green)
                         series: [{
                             name: 'Total Business Owners',
                             data: data.map(item => item.total_business_owners)
                         }],
                         xaxis: {
-                            categories: data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.year)
+                            categories: data.map(item => timeframe === 'yearly' ? item.year : `${item.month} ${item.year}`)
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: function (value) {
+                                    return Math.round(value); // Ensure solid numbers
+                                }
+                            }
                         }
                     };
 
