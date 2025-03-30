@@ -192,7 +192,11 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/api/local-transport-statistics', [ChartingController::class, 'GetLocalTransportPermitChartData']);
 
-
+    // Charting routes for Local Transport Permits
+    Route::get('/api/transport-permits-by-municipality', [ChartingController::class, 'getTransportPermitsByMunicipality']);
+    Route::get('/api/species-transported-by-municipality', [ChartingController::class, 'getSpeciesTransportedByMunicipality']);
+    Route::get('/api/business-owners-by-municipality', [ChartingController::class, 'getBusinessOwnersByMunicipality']);
+    Route::get('/api/species-transported-download', [ChartingController::class, 'downloadSpeciesTransportedReport']);
 
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 

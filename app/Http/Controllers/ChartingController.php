@@ -19,21 +19,17 @@ class ChartingController extends Controller
     {
         $timeRange = $request->query('time_range', 'monthly');
 
+        // Adjust query format for Monthly or Yearly
+        $dateFormat = $timeRange === 'yearly' ? '%Y' : '%Y-%m';
+
         $query = DB::table('files')
             ->selectRaw("
-            DATE_FORMAT(date_released, ?) as period, 
-            municipality, 
-            COUNT(id) as total
-        ")
+                DATE_FORMAT(date_released, ?) as period, 
+                municipality, 
+                COUNT(id) as total
+            ", [$dateFormat]) // Pass the binding directly here
             ->groupBy('period', 'municipality')
             ->orderBy('period');
-
-        // Adjust query format for Monthly or Yearly
-        if ($timeRange === 'yearly') {
-            $query->setBindings(['%Y']);
-        } else {
-            $query->setBindings(['%Y-%m']);
-        }
 
         $data = $query->get();
 
@@ -539,6 +535,214 @@ class ChartingController extends Controller
         return response()->json($query->get());
     }
 
+    public function getTransportPermitsByMunicipality(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality');
 
+        $query = DB::table('local_transport_permits')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                'files.municipality',
+                DB::raw('COUNT(local_transport_permits.id) as total_permits'),
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        if ($municipality) {
+            $query->where('files.municipality', $municipality);
+        }
+
+        if ($timeframe === 'yearly') {
+            $query->groupBy('files.municipality', DB::raw('YEAR(local_transport_permits.date_released)'));
+        } else {
+            $query->groupBy(
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+            );
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function getSpeciesTransportedByMunicipality(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        $startDate = $request->query('start_date'); // Optional start date filter
+        $endDate = $request->query('end_date'); // Optional end date filter
+        $species = $request->query('species', 'All'); // Default to 'All'
+
+        // Base Query: Fetch species data related to Local Transport Permits
+        $query = DB::table('butterfly_details')
+            ->join('local_transport_permits', 'butterfly_details.file_id', '=', 'local_transport_permits.file_id')
+            ->join('butterfly_species', 'butterfly_details.butterfly_id', '=', 'butterfly_species.id')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                DB::raw("LOWER(TRIM(butterfly_species.common_name)) as species"), // Normalize species names
+                DB::raw('SUM(butterfly_details.quantity) as total_species'),
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        // Apply municipality filter if not "All"
+        if ($municipality !== 'All') {
+            $query->where('files.municipality', $municipality);
+        }
+
+        // Apply species filter if not "All"
+        if ($species !== 'All') {
+            $query->whereRaw("LOWER(TRIM(butterfly_species.common_name)) = ?", [strtolower(trim($species))]);
+        }
+
+        // Apply date range filter if provided
+        if ($startDate) {
+            $query->where('local_transport_permits.date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('local_transport_permits.date_released', '<=', $endDate);
+        }
+
+        // Adjust grouping based on timeframe
+        if ($timeframe === 'yearly') {
+            $query->groupBy(
+                DB::raw("LOWER(TRIM(butterfly_species.common_name))"),
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)')
+            );
+        } else {
+            $query->groupBy(
+                DB::raw("LOWER(TRIM(butterfly_species.common_name))"),
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+            );
+        }
+
+        // Fetch results
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function getBusinessOwnersByMunicipality(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality');
+
+        $query = DB::table('local_transport_permits')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                'files.municipality',
+                DB::raw('COUNT(DISTINCT local_transport_permits.business_farm_name) as total_business_owners'),
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        if ($municipality) {
+            $query->where('files.municipality', $municipality);
+        }
+
+        if ($timeframe === 'yearly') {
+            $query->groupBy('files.municipality', DB::raw('YEAR(local_transport_permits.date_released)'));
+        } else {
+            $query->groupBy(
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+            );
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function GetLocalTransportPermitChartData(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
+        $municipality = $request->query('municipality'); // Optional filter
+
+        // Base Query
+        $query = DB::table('local_transport_permits')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                'files.municipality',
+                DB::raw('COUNT(local_transport_permits.id) as total_permits'),
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        // Apply optional municipality filter
+        if ($municipality) {
+            $query->where('files.municipality', $municipality);
+        }
+
+        // Adjust grouping based on timeframe
+        if ($timeframe === 'yearly') {
+            $query->groupBy('files.municipality', DB::raw('YEAR(local_transport_permits.date_released)'));
+        } else {
+            $query->groupBy(
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released)'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
+            );
+        }
+
+        // Fetch results
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function downloadSpeciesTransportedReport(Request $request)
+    {
+        $timeframe = $request->query('timeframe', 'monthly');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Fetch data based on filters
+        $query = DB::table('butterfly_details')
+            ->join('local_transport_permits', 'butterfly_details.file_id', '=', 'local_transport_permits.file_id')
+            ->join('butterfly_species', 'butterfly_details.butterfly_id', '=', 'butterfly_species.id')
+            ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
+            ->select(
+                DB::raw("LOWER(TRIM(butterfly_species.common_name)) as species"),
+                DB::raw('SUM(butterfly_details.quantity) as total_species'),
+                'files.municipality',
+                DB::raw('YEAR(local_transport_permits.date_released) as year'),
+                DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month")
+            )
+            ->whereNotNull('local_transport_permits.date_released');
+
+        if ($startDate) {
+            $query->where('local_transport_permits.date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('local_transport_permits.date_released', '<=', $endDate);
+        }
+
+        $data = $query->get();
+
+        // Generate CSV content
+        $csvContent = "Species,Total Species,Municipality,Year,Month\n";
+        foreach ($data as $row) {
+            $csvContent .= "{$row->species},{$row->total_species},{$row->municipality},{$row->year},{$row->month}\n";
+        }
+
+        // Return CSV as a response
+        $filename = "species_report_{$startDate}_to_{$endDate}.csv";
+        return response($csvContent)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', "attachment; filename={$filename}");
+    }
 
 }
