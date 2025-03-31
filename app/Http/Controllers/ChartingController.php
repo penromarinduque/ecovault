@@ -754,21 +754,29 @@ class ChartingController extends Controller
 
         $registrations = TreePlantation::query()
             ->when($municipality, fn($query) => $query->where('location', $municipality))
-            ->selectRaw("YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count")
-            ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month')
+            ->selectRaw(
+                $timeframe === 'yearly'
+                ? "YEAR(date_applied) as year, COUNT(*) as count"
+                : "YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count"
+            )
+            ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month') // Group only by selected columns
             ->get();
 
         $speciesData = TreePlantation::query()
             ->when($municipality, fn($query) => $query->where('location', $municipality))
-            ->selectRaw("species, YEAR(date_applied) as year, MONTH(date_applied) as month, SUM(number_of_trees) as number_of_trees")
-            ->groupByRaw($timeframe === 'yearly' ? 'species, year' : 'species, year, month')
+            ->selectRaw(
+                $timeframe === 'yearly'
+                ? "species, YEAR(date_applied) as year, SUM(number_of_trees) as number_of_trees"
+                : "species, YEAR(date_applied) as year, MONTH(date_applied) as month, SUM(number_of_trees) as number_of_trees"
+            )
+            ->groupByRaw($timeframe === 'yearly' ? 'species, year' : 'species, year, month') // Group only by selected columns
             ->get()
             ->groupBy('species')
             ->map(function ($group) {
                 return $group->map(function ($item) {
                     return [
                         'year' => $item->year,
-                        'month' => $item->month,
+                        'month' => $item->month ?? null, // Handle null for yearly data
                         'number_of_trees' => $item->number_of_trees,
                     ];
                 });
