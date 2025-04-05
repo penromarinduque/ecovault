@@ -25,7 +25,7 @@
     const getChartOptions = (storageData) => {
         return {
             series: [storageData.penro_space, storageData.other_space, storageData.free_space],
-            colors: ["#1C64F2", "#16BDCA", "#FDBA8C"],
+            colors: ["#1C64F2", "#16BDCA", "#4CAF50"],
             chart: {
                 height: 320,
                 width: "100%",
