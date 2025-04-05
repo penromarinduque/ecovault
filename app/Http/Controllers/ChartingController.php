@@ -321,61 +321,6 @@ class ChartingController extends Controller
     }
 
 
-    public function GetTreeTransportSpeciesChartData(Request $request)
-    {
-        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
-        $municipality = $request->query('municipality'); // Optional municipality filter
-        $species = $request->query('species'); // Optional species filter
-
-        // Base Query: Normalize species names
-        $query = DB::table('tree_transport_permit_details as details')
-            ->join('transport_permits as permits', 'details.transport_permit_id', '=', 'permits.id')
-            ->join('files', 'permits.file_id', '=', 'files.id')
-            ->whereNotNull('details.date_of_transport') // Use correct date field
-            ->select(
-                DB::raw('SUM(details.number_of_trees) as total_trees'),
-                DB::raw("LOWER(TRIM(details.species)) as species"),
-                'files.municipality',
-                DB::raw('YEAR(details.date_of_transport) as year'),
-                DB::raw("DATE_FORMAT(details.date_of_transport, '%b %Y') as month"),
-                'details.date_of_transport'
-            );
-
-        // Apply filters
-        if ($municipality) {
-            $query->where('files.municipality', $municipality);
-        }
-        if ($species) {
-            $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
-        }
-
-        // Adjust grouping based on timeframe
-        if ($timeframe === 'yearly') {
-            $query->groupBy(
-                DB::raw("LOWER(TRIM(details.species))"),
-                'files.municipality',
-                DB::raw('YEAR(details.date_of_transport)'),
-                DB::raw("DATE_FORMAT(details.date_of_transport, '%b %Y')"),
-                'details.date_of_transport'
-            );
-        } else { // Default to monthly
-            $query->groupBy(
-                DB::raw("LOWER(TRIM(details.species))"),
-                'files.municipality',
-                DB::raw('YEAR(details.date_of_transport)'),
-                DB::raw("DATE_FORMAT(details.date_of_transport, '%b')"),
-                'details.date_of_transport'
-            )
-                ->orderBy(DB::raw('YEAR(details.date_of_transport)'), 'asc')
-                ->orderBy(DB::raw("STR_TO_DATE(DATE_FORMAT(details.date_of_transport, '%b'), '%b')"), 'asc');
-        }
-
-        // Fetch results
-        $data = $query->get();
-
-        return response()->json($data);
-    }
-
 
     public function GetLandTitleChartData(Request $request)
     {
@@ -791,4 +736,75 @@ class ChartingController extends Controller
             'totalTreesPlanted' => $totalTreesPlanted, // Include the total in the response
         ]);
     }
+
+    public function GetTreeTransportPermitStatistics(Request $request)
+    {
+        $municipality = $request->query('municipality', 'All');
+        $timeframe = $request->query('timeframe', 'monthly');
+
+        $query = DB::table('tree_transport_permit_details as details')
+            ->join('transport_permits as permits', 'details.transport_permit_id', '=', 'permits.id')
+            ->join('files', 'permits.file_id', '=', 'files.id')
+            ->selectRaw("
+                files.municipality,
+                COUNT(details.id) as total_permits,
+                YEAR(details.date_of_transport) as year" .
+                ($timeframe === 'monthly' ? ", MONTH(details.date_of_transport) as month" : "") // Ensure month is included
+            )
+            ->whereNotNull('details.date_of_transport');
+
+        if ($municipality !== 'All') {
+            $query->where('files.municipality', $municipality);
+        }
+
+        if ($timeframe === 'monthly') {
+            $query->groupBy('files.municipality', DB::raw('YEAR(details.date_of_transport), MONTH(details.date_of_transport)'))
+                ->orderByRaw('YEAR(details.date_of_transport) ASC, MONTH(details.date_of_transport) ASC');
+        } else {
+            $query->groupBy('files.municipality', DB::raw('YEAR(details.date_of_transport)'))
+                ->orderByRaw('YEAR(details.date_of_transport) ASC');
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function GetTreeSpeciesTransportedStatistics(Request $request)
+    {
+        $municipality = $request->query('municipality', 'All');
+        $timeframe = $request->query('timeframe', 'monthly');
+
+        $query = DB::table('tree_transport_permit_details as details')
+            ->join('transport_permits as permits', 'details.transport_permit_id', '=', 'permits.id')
+            ->join('files', 'permits.file_id', '=', 'files.id')
+            ->selectRaw("
+                LOWER(TRIM(details.species)) as species,
+                SUM(details.number_of_trees) as total_trees,
+                files.municipality,
+                YEAR(details.date_of_transport) as year" .
+                ($timeframe === 'monthly' ? ", DATE_FORMAT(details.date_of_transport, '%b') as month" : "")
+            )
+            ->whereNotNull('details.date_of_transport');
+
+        if ($municipality !== 'All') {
+            $query->where('files.municipality', $municipality);
+        }
+
+        if ($timeframe === 'monthly') {
+            $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(details.date_of_transport), DATE_FORMAT(details.date_of_transport, "%b")'))
+                ->orderByRaw('YEAR(details.date_of_transport) ASC, STR_TO_DATE(DATE_FORMAT(details.date_of_transport, "%b"), "%b") ASC');
+        } else {
+            $query->groupBy(DB::raw("LOWER(TRIM(details.species))"), 'files.municipality', DB::raw('YEAR(details.date_of_transport)'))
+                ->orderByRaw('YEAR(details.date_of_transport) ASC');
+        }
+
+        $data = $query->get();
+
+        return response()->json([
+            'data' => $data,
+            'total_count' => $data->sum('total_trees'),
+        ]);
+    }
+
 }

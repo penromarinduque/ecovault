@@ -121,25 +121,57 @@
                     return response.json();
                 })
                 .then(data => {
+                    if (!data || data.length === 0) {
+                        document.getElementById('speciesTransportedChart').innerHTML = '<p class="text-center text-gray-500">No data available for the selected filters.</p>';
+                        return;
+                    }
+
+                    const categories = [...new Set(data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.year))];
+                    const speciesGroups = [...new Set(data.map(item => item.species))];
+                    const series = speciesGroups.map(speciesName => ({
+                        name: speciesName,
+                        data: categories.map(category => {
+                            const entry = data.find(item => (item.month && item.year ? `${item.month} ${item.year}` : item.year) === category && item.species === speciesName);
+                            return entry ? entry.total_species : 0;
+                        })
+                    }));
+
                     const options = {
                         chart: {
                             type: 'bar',
-                            height: 350
+                            height: 350,
+                            stacked: true
                         },
-                        colors: ['#FF6347'], // Custom color for this chart (Tomato)
-                        series: [{
-                            name: 'Total Species',
-                            data: data.map(item => item.total_species)
-                        }],
+                        colors: ['#1A56DB', '#E91E63', '#FFC107', '#4CAF50', '#9C27B0'], // Custom colors
+                        series: series,
                         xaxis: {
-                            categories: data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.species)
+                            categories: categories,
+                            title: {
+                                text: 'Timeframe'
+                            }
                         },
                         yaxis: {
+                            title: {
+                                text: 'Number of Species Transported'
+                            },
                             labels: {
                                 formatter: function (value) {
                                     return Math.round(value); // Ensure solid numbers
                                 }
                             }
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '70%',
+                                borderRadius: 8
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true
+                        },
+                        legend: {
+                            position: 'top'
                         }
                     };
 

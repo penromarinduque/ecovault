@@ -11,4 +11,5 @@
         <x-chart.tree-plantation-registrations/>
         <x-chart.tree-planted-by-species/>
     </div>
+   
 @endsection
