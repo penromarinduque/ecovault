@@ -739,31 +739,31 @@ class ChartingController extends Controller
 
     public function GetTreeTransportPermitStatistics(Request $request)
     {
-        $municipality = $request->query('municipality', 'All');
-        $timeframe = $request->query('timeframe', 'monthly');
+        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
 
-        $query = DB::table('tree_transport_permit_details as details')
-            ->join('transport_permits as permits', 'details.transport_permit_id', '=', 'permits.id')
-            ->join('files', 'permits.file_id', '=', 'files.id')
+        $query = DB::table('files')
+            ->where('permit_type', 'transport-permit')
+            ->whereNotNull('date_released')
             ->selectRaw("
-                files.municipality,
-                COUNT(details.id) as total_permits,
-                YEAR(details.date_of_transport) as year" .
-                ($timeframe === 'monthly' ? ", MONTH(details.date_of_transport) as month" : "") // Ensure month is included
-            )
-            ->whereNotNull('details.date_of_transport');
+                YEAR(date_released) as year" .
+                ($timeframe === 'monthly' ? ", MONTH(date_released) as month" : "") . ",
+                COUNT(DISTINCT id) as total_permits
+            ");
 
+        // Apply municipality filter if not "All"
         if ($municipality !== 'All') {
-            $query->where('files.municipality', $municipality);
+            $query->where('municipality', $municipality);
         }
 
+        // Adjust grouping based on timeframe
         if ($timeframe === 'monthly') {
-            $query->groupBy('files.municipality', DB::raw('YEAR(details.date_of_transport), MONTH(details.date_of_transport)'))
-                ->orderByRaw('YEAR(details.date_of_transport) ASC, MONTH(details.date_of_transport) ASC');
+            $query->groupBy(DB::raw('YEAR(date_released), MONTH(date_released)'));
         } else {
-            $query->groupBy('files.municipality', DB::raw('YEAR(details.date_of_transport)'))
-                ->orderByRaw('YEAR(details.date_of_transport) ASC');
+            $query->groupBy(DB::raw('YEAR(date_released)'));
         }
+
+        $query->orderByRaw('YEAR(date_released) ASC' . ($timeframe === 'monthly' ? ', MONTH(date_released) ASC' : ''));
 
         $data = $query->get();
 

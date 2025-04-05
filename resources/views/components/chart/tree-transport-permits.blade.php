@@ -90,15 +90,26 @@
                 transport_chart.updateOptions({ xaxis: { categories: [] } });
             } else {
                 noDataMessage.classList.add("hidden");
+
                 const groupedData = data.map(item => ({
                     x: timeframe === "yearly" 
                         ? item.year 
                         : `${getMonthName(item.month || 1)} ${item.year}`, // Fallback to January if month is undefined
                     y: item.total_permits
                 }));
-                const categories = groupedData.map(item => item.x); // Extract x-axis labels
-                transport_chart.updateSeries([{ name: "Permits", data: groupedData }]);
-                transport_chart.updateOptions({ xaxis: { categories } });
+
+                const categories = groupedData.map(item => item.x);
+                const seriesData = groupedData.map(item => item.y);
+
+                transport_chart.updateSeries([{ name: "Permits", data: seriesData }]);
+                transport_chart.updateOptions({
+                    xaxis: {
+                        categories,
+                        labels: {
+                            formatter: (value) => value // Ensure correct formatting
+                        }
+                    }
+                });
             }
         }
 
@@ -107,7 +118,7 @@
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
-            return months[monthNumber - 1] || "Unknown"; // Handle invalid or undefined month numbers
+            return monthNumber >= 1 && monthNumber <= 12 ? months[monthNumber - 1] : "January"; // Default to January for invalid months
         }
     </script>
 </div>

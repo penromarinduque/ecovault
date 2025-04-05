@@ -70,25 +70,29 @@
                 data.forEach(item => {
                     const label = timeframe === "yearly" 
                         ? `${item.year}` 
-                        : `${getMonthName(item.month)} ${item.year}`;
+                        : `${getMonthName(item.month || 1)} ${item.year}`; // Fallback to January if month is undefined
                     categoriesSet.add(label);
 
                     if (!grouped[item.species]) {
-                        grouped[item.species] = [];
+                        grouped[item.species] = {};
                     }
-                    grouped[item.species].push({
-                        x: label,
-                        y: parseInt(item.total_trees, 10)
-                    });
+
+                    // Aggregate data for the same year or month
+                    if (!grouped[item.species][label]) {
+                        grouped[item.species][label] = 0;
+                    }
+                    grouped[item.species][label] += parseInt(item.total_trees, 10);
                 });
 
-                const categories = Array.from(categoriesSet);
+                const categories = Array.from(categoriesSet).sort((a, b) => {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB; // Ensure correct chronological order
+                });
+
                 const groupedData = Object.entries(grouped).map(([species, records]) => ({
                     name: species,
-                    data: categories.map(category => {
-                        const record = records.find(r => r.x === category);
-                        return record ? record.y : 0; // Fill missing points with 0
-                    })
+                    data: categories.map(category => records[category] || 0) // Fill missing points with 0
                 }));
 
                 return { groupedData, categories };
@@ -99,7 +103,7 @@
                     "January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ];
-                return months[monthNumber - 1] || "Unknown"; // Handle invalid or undefined month numbers
+                return monthNumber >= 1 && monthNumber <= 12 ? months[monthNumber - 1] : "January"; // Default to January for invalid months
             }
 
             const options = {
