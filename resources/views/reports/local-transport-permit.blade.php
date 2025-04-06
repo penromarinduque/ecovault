@@ -50,7 +50,10 @@
                 </div>
                 <div>
                     <label for="speciesFilter" class="block text-sm font-medium text-gray-700">Species:</label>
-                    <input type="text" id="speciesFilter" placeholder="All" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="speciesFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="All">All</option>
+                        <!-- Options will be dynamically populated -->
+                    </select>
                 </div>
                 <div>
                     <label for="startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
@@ -98,6 +101,23 @@
 
     <script>
         let speciesChart, transportChart, businessChart; // Declare chart instances globally
+
+        async function fetchSpeciesOptions() {
+            try {
+                const response = await fetch('/api/butterfly-species');
+                const species = await response.json();
+                const speciesFilter = document.getElementById("speciesFilter");
+
+                species.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.common_name;
+                    option.textContent = item.common_name;
+                    speciesFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching species:", error);
+            }
+        }
 
         // Fetch and render Species Transported Chart
         function fetchSpeciesTransportedChart() {
@@ -285,8 +305,9 @@
                 });
         }
 
-        // Load default charts on page load
+        // Load default charts and populate species dropdown on page load
         document.addEventListener('DOMContentLoaded', () => {
+            fetchSpeciesOptions(); // Populate species dropdown
             fetchSpeciesTransportedChart();
             fetchTransportPermitsChart();
             fetchBusinessOwnersChart();
