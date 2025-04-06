@@ -80,9 +80,13 @@ document.addEventListener('click', event => {
                     break;
                 case 'share':
                     fileShare(fileId);
-
+                    break;
                 case 'move':
                     fetchFileDataMove(fileId);   
+                    break;
+                case 'rename':
+                    renameFile(fileId);
+                    break;
             }
 
         }
@@ -189,6 +193,51 @@ async function archiveFile(fileId) {
 
         });
 
+    }
+}
+
+// Rename file function
+async function renameFile(fileId) {
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+    const newFileName = prompt("Enter the new file name:");
+
+    if (!newFileName) {
+        showToast({
+            type: 'danger',
+            message: 'Rename operation canceled. No new file name provided.',
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/files/rename/${fileId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ new_name: newFileName }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            refreshTable();
+            showToast({
+                type: 'success',
+                message: 'File renamed successfully.',
+            });
+        } else {
+            showToast({
+                type: 'danger',
+                message: result.message || 'An error occurred while renaming the file.',
+            });
+        }
+    } catch (error) {
+        showToast({
+            type: 'danger',
+            message: 'An error occurred while renaming the file.',
+        });
     }
 }
 

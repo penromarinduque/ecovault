@@ -223,9 +223,11 @@
             </a>
         </li>
          <li class="relative">
-            <a href="/api/files/download/${fileId}" target="_blank" class="flex items-center px-4 py-2 hover:bg-gray-100">
-           <i class='bx bxs-edit absolute left-4 text-lg'></i>
-                <span class="ml-7">Rename</span><!-- Text -->
+            <a class="toggle-btn w-full cursor-pointer text-left rename-button flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                data-file-id="${fileId}" data-role="rename" data-toggle-target="rename" aria-controls="section-rename"
+                aria-expanded="false">
+                <i class='bx bxs-edit absolute left-4 text-lg'></i>
+                <span class="ml-7">Rename</span>
             </a>
         </li>
         <li class="relative">

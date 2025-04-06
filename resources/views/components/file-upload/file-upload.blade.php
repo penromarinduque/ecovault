@@ -879,9 +879,10 @@
             uploadButton.disabled = false;
             this.reset();
         } catch (error) {
+            
             showToast({
                 type: 'danger',
-                message: 'Upload unsuccessful. Check your file or file format and try again.',
+                message: 'Upload unsuccessful. Check your file name if there are duplicate or file format and try again.',
                 // message: error.message
             });
             uploadButton.disabled = false;

@@ -94,6 +94,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/file-types', [FileManagerController::class, 'GetFileTypeByClassification']);
 
     Route::post('/api/files/move/{id}', [UploadController::class, "MoveFileById"]);
+    Route::post('/api/files/rename/{id}', [UploadController::class, 'RenameFileById'])->name('file.rename');
     Route::get('/superuser/test', function () {
         return view("superuser.test");
     });

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('category')->nullable();
             $table->string('municipality')->nullable();
             $table->string('report_type')->nullable();
-            $table->string(column: 'file_name');
+            $table->string(column: 'file_name')->unique();
             $table->string('file_path');
             $table->string('office_source')->nullable();
             $table->string('classification');
