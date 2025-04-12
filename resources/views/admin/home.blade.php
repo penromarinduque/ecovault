@@ -38,7 +38,7 @@
                         <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
                     </dl>
 
-                  
+
 
 
                 </div>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="col-span-2" >
-                       
+
 
 
                     </div>
@@ -132,7 +132,9 @@
 
                         let options = {
                             series: seriesData,
-                          
+                            stroke: {
+                                    curve: 'smooth',
+                                },
                             chart: { type: "line", height: 450 },
                             xaxis: {
                                 type: "datetime",

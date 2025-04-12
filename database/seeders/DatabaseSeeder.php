@@ -177,7 +177,7 @@ class DatabaseSeeder extends Seeder
             'Special Private Land Timber Permit',
         ];
         $classifications = ['Highly Technical', 'Simple'];
-        $chainsawCategories = ['New', 'Renewal'];
+        $chainsawCategories = ['new', 'renewal'];
         $landTitleCategories = ['Agricultural', 'Residential', 'Special'];
 
         foreach (range(1, 50) as $index) {

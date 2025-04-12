@@ -1,120 +1,100 @@
-<div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-    <div class="justify-between flex">
-        <h1 class="font-bold">Tree Cutting Permit</h1>
-        {{-- <h2>Total Permits: <span>0</span></h2> --}}
+<div class="bg-white shadow-md rounded-lg p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Tree Cutting By Category</h3>
+        <h4 id="totalTCCRegistrations" class="text-sm font-medium text-gray-600">Total Trees Cut: 0</h4>
     </div>
-    <div class="flex gap-4 py-2 w-6/12">
-        <select id="tcc-location-filter"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[100px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="">All</option>
-            <option value="Gasan">Gasan</option>
-            <option value="Boac">Boac</option>
-            <option value="Buenavista">Buenavista</option>
-            <option value="Torijos">Torijos</option>
-            <option value="Santa Cruz">Santa Cruz</option>
-        </select>
-
-        <select id="tcc-timeframe-filter"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px]  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-        </select>
+    <div class="flex items-center space-x-4 mb-4">
+        <div>
+            <label for="tcc_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
+            <select id="tcc_municipality_filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="All">All</option>
+                <option value="Gasan">Gasan</option>
+                <option value="Boac">Boac</option>
+                <option value="Buenavista">Buenavista</option>
+                <option value="Torijos">Torijos</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+            </select>
+        </div>
+        <div>
+            <label for="tcc_timeframe_filter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
+            <select id="tcc_timeframe_filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </div>
+        <button id="applyTCCFilters"
+            class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            Apply Filters
+        </button>
     </div>
-    <div id="tcc-chart"></div>
-</div>
+    <div id="tcc_chart"></div>
+    <div id="no-data-tcc-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
 
-<script>
-    let tccChart; // Store chart instance to update later
-    
-    async function fetchTreeCuttingCategoryData(location = "", timeframe = "monthly") {
-        try {
-            const url = `/api/tree-cutting-category-statistics?timeframe=${timeframe}&municipality=${location}`;
-            const response = await fetch(url);
-            return await response.json();
-        } catch (error) {
-            console.error("Error fetching tree-cutting data:", error);
-        }
-    }
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let tcc_chart;
+            const tcc_chartElement = document.getElementById("tcc_chart");
+            const totalTCCRegistrationsElement = document.getElementById("totalTCCRegistrations");
+            const noDataTCCMessage = document.getElementById("no-data-tcc-message");
 
-  async function formatChartCategoryData(location = "", timeframe = "monthly") {
-        const rawData = await fetchTreeCuttingCategoryData(location, timeframe);
+            async function fetchTCCChartData(municipality = "All", timeframe = "monthly") {
+                try {
+                    const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}`);
+                    const { data, total_count } = await response.json();
 
-        // Convert month abbreviations to ensure correct order
-        const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        // Generate unique labels: "Mar 2025" for monthly, "2025" for yearly
-        const uniqueLabels = timeframe === "yearly"
-            ? [...new Set(rawData.map(row => row.year))].sort()
-            : [...new Set(rawData.map(row => `${row.month} ${row.year}`))]
-                .sort((a, b) => {
-                    const [monthA, yearA] = a.split(" ");
-                    const [monthB, yearB] = b.split(" ");
-                    return yearA - yearB || monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
-                });
-
-        const permitTypeMap = {};
-
-        rawData.forEach(row => {
-            const { permit_type, year, month, total_trees } = row;
-            const label = timeframe === "yearly" ? year : `${month} ${year}`; // Format as "Mar 2025"
-
-            if (!permitTypeMap[permit_type]) {
-                permitTypeMap[permit_type] = uniqueLabels.reduce((acc, lbl) => {
-                    acc[lbl] = 0;
-                    return acc;
-                }, {});
-            }
-
-            permitTypeMap[permit_type][label] = parseInt(total_trees, 10);
-        });
-
-        const series = Object.keys(permitTypeMap).map(permit_type => ({
-            name: permit_type,
-            data: uniqueLabels.map(label => permitTypeMap[permit_type][label] || 0)
-        }));
-
-        return { series, categories: uniqueLabels };
-    }
-
-
-
-    async function renderTCCChart() {
-        const location = document.getElementById("tcc-location-filter").value;
-        const timeframe = document.getElementById("tcc-timeframe-filter").value;
-        const chartData = await formatChartCategoryData(location, timeframe);
-
-        const options = {
-            chart: {
-                type: 'bar',
-                stacked: true,
-                height: 300
-            },
-            series: chartData.series,
-            xaxis: {
-                categories: chartData.categories,
-            },
-            yaxis: {
-                title: { text: 'Total Trees Cut Per Category' },
-                labels: {
-                    formatter: function (value) {
-                        return Math.floor(value); // Ensures only whole numbers
+                    if (!data || data.length === 0) {
+                        noDataTCCMessage.classList.remove('hidden');
+                        tcc_chart.updateSeries([]);
+                        return;
                     }
+
+                    noDataTCCMessage.classList.add('hidden');
+                    totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+
+                    // Group data by category
+                    const categories = [...new Set(data.map(item => item.permit_type))];
+                    const groupedData = categories.map(category => ({
+                        name: category,
+                        data: data
+                            .filter(item => item.permit_type === category)
+                            .map(item => ({
+                                x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
+                                y: item.total_trees
+                            }))
+                    }));
+
+                    tcc_chart.updateSeries(groupedData);
+                } catch (error) {
+                    console.error("Error fetching chart data:", error);
                 }
             }
-        };
 
-        if (tccChart) {
-            tccChart.updateOptions(options); // Update chart instead of re-creating
-        } else {
-            tccChart = new ApexCharts(document.querySelector("#tcc-chart"), options);
-            tccChart.render();
-        }
-    }
+            const options = {
+                chart: { type: "bar", height: 350, stacked: true },
+                colors: ["#1A56DB", "#E91E63", "#FFC107", "#4CAF50", "#9C27B0"],
+                series: [],
+                xaxis: { categories: [] },
+                yaxis: {
+                    title: { text: "Number of Trees Cut" },
+                    labels: { formatter: value => Math.round(value) }
+                },
+                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
+                dataLabels: { enabled: true },
+                legend: { position: "top" }
+            };
 
-    // Attach event listeners for dropdowns
-    document.getElementById("tcc-location-filter").addEventListener("change", renderTCCChart);
-    document.getElementById("tcc-timeframe-filter").addEventListener("change", renderTCCChart);
+            tcc_chart = new ApexCharts(tcc_chartElement, options);
+            tcc_chart.render();
 
-    // Initial render
-    renderTCCChart();
-</script>
+            document.getElementById("applyTCCFilters").addEventListener("click", () => {
+                const municipality = document.getElementById("tcc_municipality_filter").value;
+                const timeframe = document.getElementById("tcc_timeframe_filter").value;
+                fetchTCCChartData(municipality, timeframe);
+            });
+
+            fetchTCCChartData();
+        });
+    </script>
+</div>

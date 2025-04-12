@@ -95,6 +95,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/file-types', [FileManagerController::class, 'GetFileTypeByClassification']);
 
     Route::post('/api/files/move/{id}', [UploadController::class, "MoveFileById"]);
+    Route::post('/api/files/rename/{id}', [UploadController::class, 'RenameFileById'])->name('file.rename');
     Route::get('/superuser/test', function () {
         return view("superuser.test");
     });
@@ -187,16 +188,26 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/chainsaw-registration-statistics', [ChartingController::class, 'GetChainsawRegistrationStatistics']);
     Route::get('/api/chainsaw-registration-statistics-by-category', [ChartingController::class, 'getChainsawRegistrationStatisticsByCategory']);
 
-    Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetPrivateTreePlantationRegistrations']);
+    Route::get('/api/tree-plantation-statistics', [ChartingController::class, 'GetTreePlantationStatistics']);
 
     Route::get('/api/tree-transport-permit-statistics', [ChartingController::class, 'GetTreeTransportStatistics']);
-    Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesChartData']);
+    Route::get('/api/tree-transport-permit-statistics', [ChartingController::class, 'GetTreeTransportPermitStatistics']);
+    Route::get('/api/tree-species-transported-statistics', [ChartingController::class, 'GetTreeSpeciesTransportedStatistics']);
+    // Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesChartData']);
+    Route::get('/api/tree-transport-species-statistics', [ChartingController::class, 'GetTreeTransportSpeciesStatistics']);
 
     Route::get('/api/land-statistics', [ChartingController::class, 'GetLandTitleChartData']);
 
     Route::get('/api/local-transport-statistics', [ChartingController::class, 'GetLocalTransportPermitChartData']);
 
+    // Charting routes for Local Transport Permits
+    Route::get('/api/transport-permits-by-municipality', [ChartingController::class, 'getTransportPermitsByMunicipality']);
+    Route::get('/api/species-transported-by-municipality', [ChartingController::class, 'getSpeciesTransportedByMunicipality']);
+    Route::get('/api/business-owners-by-municipality', [ChartingController::class, 'getBusinessOwnersByMunicipality']);
+    Route::get('/api/species-transported-download', [ChartingController::class, 'downloadSpeciesTransportedReport']);
 
+    // Charting route for Land Title Statistics
+    Route::get('/api/land-title-statistics', [ChartingController::class, 'GetLandTitleStatistics']);
 
     Route::get('/reports', [AdminController::class, 'ShowReports'])->name('report.show');
 
@@ -209,5 +220,6 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/report/local-transport-permits/chart', [ChartingController::class, 'getTransportPermitChartData']);
 
+    Route::get('/api/butterfly-species', [ButterflyController::class, 'GetAllSpecies']);
 });
 
