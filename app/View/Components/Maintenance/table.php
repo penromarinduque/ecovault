@@ -8,12 +8,13 @@ use Illuminate\View\Component;
 
 class table extends Component
 {
+    public $speciesType;
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($speciesType = null)
     {
-        //
+        $this->speciesType = $speciesType;
     }
 
     /**

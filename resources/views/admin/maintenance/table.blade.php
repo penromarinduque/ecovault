@@ -4,6 +4,6 @@
 
 @section('content')
 
-    <x-maintenance.table />
+    <x-maintenance.table :speciesType="$speciesType" />
 
 @endsection

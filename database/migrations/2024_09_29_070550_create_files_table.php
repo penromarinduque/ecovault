@@ -122,6 +122,13 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('tree_species', function (Blueprint $table) {
+            $table->id();
+            $table->string('common_name')->unique()->change();
+            $table->timestamps();
+        });
+
+
         Schema::create('butterfly_details', function (Blueprint $table) {
             $table->id();
 
@@ -150,6 +157,7 @@ return new class extends Migration {
         Schema::dropIfExists('chainsaw_registrations');
         Schema::dropIfExists('butterfly_details'); // Drop child table first
         Schema::dropIfExists('butterfly_species');
+        Schema::dropIfExists('tree_species');
         // Finally, drop the parent table
         Schema::dropIfExists('files');
     }

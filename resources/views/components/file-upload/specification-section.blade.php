@@ -23,13 +23,15 @@
                                 <div class="my-4">
                                     <label for="species" id="label-species"
                                         class="block mb-2 text-sm font-medium text-gray-700">Species</label>
-                                    <input type="text" id="species" name="species[]" placeholder="Enter Species"
-                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                    block w-full p-2.5 
-                                    focus:border-green-500 focus:ring-green-500 
-                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    <select id="species" name="species[]"
+                                        class="select-species bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+        block w-full p-2.5 
+        focus:border-green-500 focus:ring-green-500 
+        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                         autocomplete="off" required>
+                                        <option value="" disabled selected>Select a species</option>
+                                    </select>
                                 </div>
                                 <div class="my-4">
                                     <label for="number_of_trees" id="label-number_of_trees"
@@ -110,8 +112,27 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             uploadSpecification();
+            //  fetchTreeSpecies();
         });
 
+        async function fetchTreeSpecies(inputElement) {
+            try {
+                const response = await fetch('/api/tree-species');
+                if (response.ok) {
+                    const data = await response.json();
+                    inputElement.innerHTML = '<option value="" disabled selected>Select a species</option>';
+                    data.forEach(species => {
+                        const option = document.createElement('option');
+                        option.value = species.common_name;
+                        option.textContent = species.common_name;
+                        inputElement.appendChild(option);
+                    })
+
+                }
+            } catch {
+
+            }
+        }
 
         function uploadSpecification() {
             document.getElementById('add-file-specification').addEventListener('click', function() {
@@ -128,17 +149,14 @@
                     showToast({
                         type: 'danger',
                         message: 'Error! Try reloading the page.',
-
                     });
+                    return;
                 }
-                console.log(inputs);
-
 
                 if (existingEditSpecifications >= maxEditSpecifications) {
                     showToast({
                         type: 'danger',
-                        message: `Specification limit reach, you can only have ${maxEditSpecifications}`,
-
+                        message: `Specification limit reached, you can only have ${maxEditSpecifications}`,
                     });
                     return;
                 }
@@ -150,16 +168,20 @@
                     const inputElement = clone.querySelector(`#${inputId}`);
                     const labelElement = clone.querySelector(
                         `#label-${inputId}`); // Select label by prefixed ID
+                    if (inputId === 'species') {
+
+                        fetchTreeSpecies(inputElement);
+                    }
 
                     if (inputElement && labelElement) {
                         const uniqueId = `${inputId}-${idNameChanger}`;
 
                         inputElement.id = uniqueId;
-                        //inputElement.name = uniqueId;
                         labelElement.htmlFor = uniqueId;
                         labelElement.id = `label-${uniqueId}`;
                     }
                 });
+
                 // Set the dynamic ID for the specification container
                 const specificationDiv = clone.querySelector('.file-specification-box');
                 specificationDiv.id = `file-specification-box-${idNameChanger}`;
@@ -174,7 +196,6 @@
 
                 // Close button logic to remove and renumber remaining specifications
                 const closeBtn = clone.querySelector('#close-specification');
-
                 if (closeBtn) {
                     closeBtn.id = `close-specification-${idNameChanger}`;
                     closeBtn.addEventListener('click', function() {
@@ -185,18 +206,11 @@
 
                 // Append the cloned template to the container
                 document.getElementById('file-specification-container').appendChild(clone);
-            });
 
-        }
-        // Function to renumber specifications after deletion
-        function renumberSpecifications() {
-            const specifications = document.querySelectorAll('.file-specification-box');
-            specifications.forEach((spec, number) => {
-                const boxNumber = spec.querySelector('[id^="box-number"]');
-                if (boxNumber) {
-                    boxNumber.innerText = `Specification ${number + 1}`;
-                }
+                // Populate the species dropdown for the newly added template
             });
         }
+
+        // Function to populate the species dropdown for a specific container
     </script>
 @endif

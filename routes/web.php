@@ -21,6 +21,7 @@ use App\Http\Controllers\CRUD\SettingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CRUD\FolderController;
 use App\Http\Middleware\CheckQueryParameter;
+use App\Http\Controllers\CRUD\TreeController;
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password.forgot-password');
 })->name('password.request');
@@ -168,8 +169,11 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
     Route::post('/api/file/sync-butterflies/{fileId}', [ButterflyController::class, 'syncButterflyDetails'])->name('butterflies.sync');
     Route::get('/maintenance/ltp', [AdminController::class, 'ShowMaintenance'])->name('show.maintenance');
-    Route::get('/maintenance/ltp/table', [AdminController::class, 'ShowMaintenanceTable'])->name('show.maintenance.table');
+
+    Route::get('/maintenance/{speciesType}/table', [AdminController::class, 'ShowMaintenanceTable'])->name('show.maintenance.table');
     Route::get('/show/species/ltp', [ButterflyController::class, 'GetAllSpecies'])->name('getAllSpecies');
+    Route::post('/api/tree-species/add', [TreeController::class, 'AddTreeSpecies'])->name('tree.species.add');
+    Route::get('/api/tree-species', [TreeController::class, 'getAllTreeSpecies'])->name('tree.species.show');
 
     //Charting 
     Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);

@@ -248,9 +248,9 @@ class AdminController extends Controller
 
 
 
-    function ShowMaintenanceTable()
+    function ShowMaintenanceTable($speciesType)
     {
-        return view('admin.maintenance.table');
+        return view('admin.maintenance.table', compact('speciesType'));
     }
 
 }

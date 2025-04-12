@@ -146,6 +146,7 @@
                         </thead>
                         <tbody id="table-body" class="font-medium capitalize">
                             <!-- display the permit details here-->
+
                         </tbody>
                     </table>
                 </div>
@@ -241,7 +242,11 @@
                             const tableBody = document.getElementById('table-body');
                             tableBody.innerHTML = '';
 
+                            let totalQuantity = 0;
+
                             details.forEach((detail) => {
+                                totalQuantity += detail.quantity || 0; // Sum up the quantity
+
                                 let row = `
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-3">${detail.scientific_name || ''}</td>
@@ -252,6 +257,13 @@
 
                                 tableBody.insertAdjacentHTML('beforeend', row);
                             });
+                            let totalRow = `
+            <tr class="bg-gray-200 font-bold">
+                <td class="px-6 py-3 text-right" colspan="2">Total</td>
+                <td class="px-6 py-3">${totalQuantity}</td>
+            </tr>
+        `;
+                            tableBody.insertAdjacentHTML('beforeend', totalRow);
                         }
                     }
 

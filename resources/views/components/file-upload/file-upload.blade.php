@@ -361,7 +361,8 @@
                         </div>
                     @endif
                     <div class="my-4">
-                        <label for="office-source" class="block mb-2 text-sm font-medium text-gray-700">Office
+                        <label for="office-source" class="block mb-2 text-sm font-medium text-gray-700">Document
+                            Office
                             Source</label>
                         <input type="text" id="office-source" name="office_source"
                             placeholder="Enter office source"

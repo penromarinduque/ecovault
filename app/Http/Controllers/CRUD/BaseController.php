@@ -288,6 +288,7 @@ abstract class BaseController extends Controller
                             ->first();
 
                         $butterflyDetails = ButterflyDetails::with(['butterfly'])
+                            ->where('file_id', $id)
                             ->get()
                             ->map(function ($detail) {
                                 return [
