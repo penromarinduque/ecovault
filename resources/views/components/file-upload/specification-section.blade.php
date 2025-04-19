@@ -184,7 +184,8 @@
 
                 // Set the dynamic ID for the specification container
                 const specificationDiv = clone.querySelector('.file-specification-box');
-                specificationDiv.id = `file-specification-box-${idNameChanger}`;
+                specificationDiv
+                    .id = `file-specification-box-${idNameChanger}`;
 
                 // Display the current number of specifications in the label
                 const boxNumber = clone.querySelector('#box-number');
