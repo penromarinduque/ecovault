@@ -11,7 +11,7 @@
             <div class="flex items-center space-x-4 mb-4">
                 <div>
                     <label for="transportMunicipalityFilter" class="block text-sm font-medium text-gray-700">Municipality:</label>
-                    <select id="transportMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="transportMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
@@ -22,12 +22,12 @@
                 </div>
                 <div>
                     <label for="transportTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
-                    <select id="transportTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="transportTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
-                <button id="applyTransportFilters" class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="applyTransportFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>
@@ -39,7 +39,7 @@
             <div class="flex items-center space-x-4 mb-4">
                 <div>
                     <label for="municipalityFilter" class="block text-sm font-medium text-gray-700">Municipality:</label>
-                    <select id="municipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="municipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
@@ -50,20 +50,20 @@
                 </div>
                 <div>
                     <label for="speciesFilter" class="block text-sm font-medium text-gray-700">Species:</label>
-                    <select id="speciesFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="speciesFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <div>
                     <label for="startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
-                    <input type="date" id="startDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <input type="date" id="startDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
                 <div>
                     <label for="endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
-                    <input type="date" id="endDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <input type="date" id="endDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
-                <button id="applyFilters" class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="applyFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>
@@ -75,7 +75,7 @@
             <div class="flex items-center space-x-4 mb-4">
                 <div>
                     <label for="businessMunicipalityFilter" class="block text-sm font-medium text-gray-700">Municipality:</label>
-                    <select id="businessMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="businessMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
@@ -86,12 +86,12 @@
                 </div>
                 <div>
                     <label for="businessTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
-                    <select id="businessTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="businessTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
-                <button id="applyBusinessFilters" class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="applyBusinessFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>

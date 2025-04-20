@@ -7,7 +7,7 @@
         <div>
             <label for="location-filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="location-filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 <option value="All">All</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
@@ -19,13 +19,13 @@
         <div>
             <label for="timeframe-filter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
             <select id="timeframe-filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
             </select>
         </div>
         <button id="applyChainsawFilters"
-            class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
     </div>

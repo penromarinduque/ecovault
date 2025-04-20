@@ -7,7 +7,7 @@
         <div>
             <label for="tcs_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="tcs_municipality_filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 <option value="All">All</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
@@ -19,13 +19,13 @@
         <div>
             <label for="tcs_timeframe_filter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
             <select id="tcs_timeframe_filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
             </select>
         </div>
         <button id="applyTCSFilters"
-            class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
     </div>
@@ -53,20 +53,27 @@
                     noDataTCSMessage.classList.add('hidden');
                     totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
 
-                    const groupedData = data.map(item => ({
-                        x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
-                        y: item.total_trees
+                    // Group data by species
+                    const speciesList = [...new Set(data.map(item => item.species))];
+                    const groupedData = speciesList.map(species => ({
+                        name: species,
+                        data: data
+                            .filter(item => item.species === species)
+                            .map(item => ({
+                                x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
+                                y: item.total_trees
+                            }))
                     }));
 
-                    tcs_chart.updateSeries([{ name: "Trees Cut", data: groupedData }]);
+                    tcs_chart.updateSeries(groupedData);
                 } catch (error) {
                     console.error("Error fetching chart data:", error);
                 }
             }
 
             const options = {
-                chart: { type: "bar", height: 350 },
-                colors: ["#1A56DB"],
+                chart: { type: "bar", height: 350, stacked: true },
+                colors: ["#1A56DB", "#E91E63", "#FFC107", "#4CAF50", "#9C27B0"],
                 series: [],
                 xaxis: { categories: [] },
                 yaxis: {
@@ -74,7 +81,8 @@
                     labels: { formatter: value => Math.round(value) }
                 },
                 plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true }
+                dataLabels: { enabled: true },
+                legend: { position: "top" }
             };
 
             tcs_chart = new ApexCharts(tcs_chartElement, options);

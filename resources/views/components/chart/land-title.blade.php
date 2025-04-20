@@ -33,7 +33,7 @@
             <option value="Special">Special</option>
         </select>
 
-        <button id="applyFilters" class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button id="applyFilters" class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
     </div>
