@@ -32,7 +32,7 @@
                 <p class="text-xs md:text-md">PENRO MARINDUQUE</p>
             </div>
         </div>
-        <img src="images/BAGONG_PILIPINAS.png" alt="Bagong Pilipinas Logo"
+        <img src="{{asset('images/bagong-pilipinas.png')}}" alt="Bagong Pilipinas Logo"
             class="hidden md:inline w-16 md:w-20 drop-shadow-4xl">
     </div>
 
