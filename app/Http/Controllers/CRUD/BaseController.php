@@ -141,6 +141,7 @@ abstract class BaseController extends Controller
             ], 500);
         }
     }
+
     function GetFileAndPermits(Request $request)
     {
         try {
