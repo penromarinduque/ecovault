@@ -30,40 +30,46 @@
                     <p class="text-xl font-bold" id="zip-count">0</p> <!-- Placeholder for ZIP count -->
                 </div>
             </div>
-        <div class="flex items-center   mb-4 rounded">
-            <div class=" w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6">
-                <div class="flex gap-4 border-gray-200 border-b dark:border-gray-700 pb-3">
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Permits</dt>
-                        <dd id="permit-total-count" class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
-                    </dl>
+            <div class="flex items-center   mb-4 rounded">
+                <div class=" w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6">
+                    <div class="flex gap-4 border-gray-200 border-b dark:border-gray-700 pb-3">
+                        <dl>
+                            <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Total Files</dt>
+                            <dd id="permit-total-count"
+                                class="leading-none text-3xl font-bold text-gray-900 dark:text-white"></dd>
+                        </dl>
 
 
 
+
+                    </div>
+                    <div class="mt-4">
+
+
+                        <select id="filter-select"
+                            class="bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                            <option value="monthly"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                Monthly</option>
+                            <option value="yearly"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                Yearly</option>
+                        </select>
+                    </div>
+                    <div id="permit-chart"></div>
 
                 </div>
-                <div class="mt-4">
-
-
-                    <select id="filter-select" class="bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <option value="monthly" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Monthly</option>
-                        <option value="yearly" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yearly</option>
-                    </select>
-                </div>
-                <div id="permit-chart"></div>
 
             </div>
-
-        </div>
             <div class="flex items-center   mb-4 rounded">
                 <div class="grid grid-cols-3 gap-4"> <!-- Three-column grid layout for flexible sizing -->
                     <!-- Storage chart spans 1 column -->
                     <div class="h-full flex gap-2 col-span-1">
                         <x-storage-chart />
-                            {{-- <x-areaChart /> --}}
+                        {{-- <x-areaChart /> --}}
                     </div>
 
-                    <div class="col-span-2" >
+                    <div class="col-span-2">
 
 
 
@@ -82,7 +88,6 @@
     </div>
     </div>
     <script>
-
         fetch("/files/count")
             .then(response => {
                 if (!response.ok) {
@@ -104,68 +109,84 @@
                 console.error("There was a problem with the fetch operation:", error);
             });
 
-         let chart = null;
+        let chart = null;
 
-          function fetchPermitData(timeRange = "monthly") {
-                fetch(`/api/permit-statistics?time_range=${timeRange}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let groupedData = {};
-                        let totalPermits = 0;
+        function fetchPermitData(timeRange = "monthly") {
+            fetch(`/api/permit-statistics?time_range=${timeRange}`)
+                .then(response => response.json())
+                .then(data => {
+                    let groupedData = {};
+                    let totalPermits = 0;
 
-                        data.forEach(item => {
-                            let date = new Date(item.period).getTime(); // Convert to timestamp
+                    data.forEach(item => {
+                        let date = new Date(item.period).getTime(); // Convert to timestamp
 
-                            if (!groupedData[item.municipality]) {
-                                groupedData[item.municipality] = [];
-                            }
-                            groupedData[item.municipality].push({ x: date, y: item.total });
-                            totalPermits += item.total;
-                        });
-
-                        document.querySelector("#permit-total-count").innerText = totalPermits;
-
-                        let seriesData = Object.keys(groupedData).map(municipality => ({
-                            name: municipality,
-                            data: groupedData[municipality].sort((a, b) => a.x - b.x) // Ensure chronological order
-                        }));
-
-                        let options = {
-                            series: seriesData,
-                            stroke: {
-                                    curve: 'smooth',
-                                },
-                            chart: { type: "line", height: 450 },
-                            xaxis: {
-                                type: "datetime",
-                                title: { text: timeRange === "yearly" ? "Year" : "Month & Year" },
-                                labels: {
-                                    format: timeRange === "yearly" ? "yyyy" : "MMM yyyy"
-                                }
-                            },
-                            yaxis: { title: { text: "Number of Permits" } },
-
-                            tooltip: {
-                                x: { format: timeRange === "yearly" ? "yyyy" : "MMM yyyy" },
-                                y: { formatter: val => val + " Permits" }
-                            }
-                        };
-
-                        if (chart) {
-                            chart.destroy();
+                        if (!groupedData[item.municipality]) {
+                            groupedData[item.municipality] = [];
                         }
+                        groupedData[item.municipality].push({
+                            x: date,
+                            y: item.total
+                        });
+                        totalPermits += item.total;
+                    });
 
-                        chart = new ApexCharts(document.querySelector("#permit-chart"), options);
-                        chart.render();
-                    })
-                    .catch(error => console.error("Error fetching data:", error));
-            }
+                    document.querySelector("#permit-total-count").innerText = totalPermits;
 
-            document.querySelector("#filter-select").addEventListener("change", function () {
-                    fetchPermitData(this.value);
-                });
-            fetchPermitData();
+                    let seriesData = Object.keys(groupedData).map(municipality => ({
+                        name: municipality,
+                        data: groupedData[municipality].sort((a, b) => a.x - b
+                            .x) // Ensure chronological order
+                    }));
 
+                    let options = {
+                        series: seriesData,
+                        stroke: {
+                            curve: 'smooth',
+                        },
+                        chart: {
+                            type: "line",
+                            height: 450
+                        },
+                        xaxis: {
+                            type: "datetime",
+                            title: {
+                                text: timeRange === "yearly" ? "Year" : "Month & Year"
+                            },
+                            labels: {
+                                format: timeRange === "yearly" ? "yyyy" : "MMM yyyy"
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: "Number of Files"
+                            }
+                        },
+
+                        tooltip: {
+                            x: {
+                                format: timeRange === "yearly" ? "yyyy" : "MMM yyyy"
+                            },
+                            y: {
+                                formatter: val => val + " Permits"
+                            }
+                        }
+                    };
+
+                    if (chart) {
+                        chart.destroy();
+                    }
+
+                    chart = new ApexCharts(document.querySelector("#permit-chart"), options);
+                    chart.render();
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+
+        document.querySelector("#filter-select").addEventListener("change", function() {
+            fetchPermitData(this.value);
+        });
+        fetchPermitData();
     </script>
 
 

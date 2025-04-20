@@ -32,8 +32,20 @@
                             </div>
                             <div class="p-4 pt-0 grid grid-cols-2 gap-x-4 w-full font-medium">
                                 <input type="hidden" id="id[]" data-edit="id[]" name="id[]" value="">
-
                                 <div class="my-4">
+                                    <label for="species" id="label-species"
+                                        class="block mb-2 text-sm font-medium text-gray-700">Species</label>
+                                    <select id="species[]" data-edit="species[]" name="species[]"
+                                        class="select-species bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+        block w-full p-2.5 
+        focus:border-green-500 focus:ring-green-500 
+        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                        autocomplete="off" required>
+                                        <option value="" disabled selected>Select a species</option>
+                                    </select>
+                                </div>
+                                {{-- <div class="my-4">
                                     <label for="species[]"
                                         class="block mb-2 text-sm font-medium text-gray-700">Species</label>
                                     <input type="text" id="species[]" data-edit="species[]" name="species[]"
@@ -44,7 +56,7 @@
                                     required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                     valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                         autocomplete="off" required>
-                                </div>
+                                </div> --}}
                                 <div class="my-4">
                                     <label for="number_of_trees[]"
                                         class="block mb-2 text-sm font-medium text-gray-700">No.
@@ -127,7 +139,29 @@
 
         document.getElementById('add-edit-specification').addEventListener('click', function() {
             editSpecification();
+
         });
+
+        async function fetchTreeSpeciesEdit(dropdown) {
+            try {
+                const response = await fetch('/api/tree-species');
+                if (response.ok) {
+                    const data = await response.json();
+                    dropdown.innerHTML =
+                        '<option value="" disabled selected>Select a species</option>'; // Reset options
+                    data.forEach(species => {
+                        const option = document.createElement('option');
+                        option.value = species.common_name; // Assuming `common_name` is the value
+                        option.textContent = species.common_name; // Assuming `common_name` is the display text
+                        dropdown.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to fetch tree species:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching tree species:', error);
+            }
+        }
 
         function editSpecification() {
             const existingSpecifications = document.querySelectorAll('.file-specification-box').length;
@@ -144,8 +178,10 @@
             const clone = document.getElementById('edit-specification-template').content.cloneNode(true);
 
             // Set unique IDs and data-edit attributes
-            const inputs = clone.querySelectorAll('input[id]');
+            const inputs = clone.querySelectorAll('input[id], select[id]');
+
             inputs.forEach(input => {
+
                 let currentId = input.getAttribute('id'); // Get the current ID
                 if (currentId.includes("[]")) { // Check if it contains "[]"
                     const updatedId = currentId.replace("[]",
@@ -187,6 +223,14 @@
                     specificationDiv.remove();
                     renumberSpecifications();
                 });
+            }
+
+            const speciesDropdown = clone.querySelector('select[id^="species"]');
+            if (speciesDropdown) {
+                const uniqueId = `species[${editIdChanger}]`;
+                speciesDropdown.id = uniqueId;
+                //speciesDropdown.setAttribute('data-edit', uniqueId);
+                fetchTreeSpeciesEdit(speciesDropdown);
             }
 
             // Append the cloned template to the container

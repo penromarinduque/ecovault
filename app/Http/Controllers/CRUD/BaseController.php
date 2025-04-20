@@ -43,7 +43,7 @@ abstract class BaseController extends Controller
     public function GetFiles(Request $request)
     {        
         try {
-            
+            //make query to list the file that
             $type = $request->query('type');
             $municipality = $request->query('municipality');
             $report = $request->query('report');
@@ -64,7 +64,13 @@ abstract class BaseController extends Controller
                     ->get();
 
                 $files = $files->map(function ($file) use ($currentUserId) {
-                    $sharedUserIds = $file->fileShares->pluck('shared_with_user_id')->toArray();
+                    $validShares = $file->fileShares->filter(function ($share) {
+                        // Check if expiration_date is null or if it's a future date
+                        return is_null($share->expiration_date) || Carbon::parse($share->expiration_date)->isFuture();
+                    });
+
+                    // Get shared user IDs from valid shares only
+                    $sharedUserIds = $validShares->pluck('shared_with_user_id')->toArray();
                     return [
                         'id' => $file->id,
                         'file_name' => $file->file_name,
@@ -94,9 +100,16 @@ abstract class BaseController extends Controller
                     ->where('category', $category)
                     ->with(['user:id,name', 'fileShares']) // Load uploader and shared users
                     ->get()
-                    ->map(function ($file) use ($currentUserId) {
-                        $sharedUserIds = $file->fileShares->pluck('shared_with_user_id')->toArray();
-                        // Extract relevant permit details
+                    ->map(function ($file) {
+                        // Filter valid (non-expired) shares
+                        $validShares = $file->fileShares->filter(function ($share) {
+                            // Check if expiration_date is null or if it's a future date
+                            return is_null($share->expiration_date) || Carbon::parse($share->expiration_date)->isFuture();
+                        });
+
+                        // Get shared user IDs from valid shares only
+                        $sharedUserIds = $validShares->pluck('shared_with_user_id')->toArray();
+
                         return [
                             'id' => $file->id,
                             'file_name' => $file->file_name,
@@ -104,8 +117,8 @@ abstract class BaseController extends Controller
                             'office_source' => $file->office_source,
                             'user_name' => $file->user->name, // Uploader's name
                             'classification' => $file->classification,
-                            'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
-                            'shared_users' => $sharedUserIds, // Only include specific permit details
+                            'is_shared' => !empty($sharedUserIds), // true only if there are valid (non-expired) shares
+                            'shared_users' => $sharedUserIds, // Only include shared users with valid shares
                         ];
                     });
 
@@ -114,7 +127,6 @@ abstract class BaseController extends Controller
                     'data' => $files,
                     'message' => 'Files retrieved successfully',
                 ], 200);
-
             }
 
             return response()->json([

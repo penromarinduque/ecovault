@@ -19,198 +19,205 @@
 
 
                 @if ($type == 'local-transport-permit')
-                                        <div class="col-span-2 flex">
-                                            <div class="font-medium w-5/12">
-                                                <div class="my-4">
-                                                    <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
-                                                        Client</label>
-                                                    <input type="text" id="edit-name-of-client" name="name_of_client" placeholder="Enter Value"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                    <div class="col-span-2 flex">
+                        <div class="font-medium w-5/12">
+                            <div class="my-4">
+                                <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                                    Client</label>
+                                <input type="text" id="edit-name-of-client" name="name_of_client"
+                                    placeholder="Enter Value"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                 block w-full p-2.5 
                                                                                                                                 focus:border-green-500 focus:ring-green-500 
                                                                                                                                 required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                                 valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                    <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
-                                                        <span class="font-medium">Please!</span> Enter a valid name for the client!
-                                                    </p>
-                                                </div>
+                                    autocomplete="off" required>
+                                <p id="name-of-client-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid name for the client!
+                                </p>
+                            </div>
 
-                                                <div class="my-4">
-                                                    <label for="business-farm-name"
-                                                        class="block mb-2 text-sm font-medium text-gray-700">Business Farm Name</label>
-                                                    <input type="text" id="edit-business-farm-name" name="business_farm_name"
-                                                        placeholder="Enter Farm Name"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <div class="my-4">
+                                <label for="business-farm-name"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Business Farm Name</label>
+                                <input type="text" id="edit-business-farm-name" name="business_farm_name"
+                                    placeholder="Enter Farm Name"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                 block w-full p-2.5 
                                                                                                                                 focus:border-green-500 focus:ring-green-500 
                                                                                                                                 required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                                 valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                    <p id="business-farm-name-error" class="mt-2 text-sm text-red-600 hidden">
-                                                        <span class="font-medium">Please!</span> Enter a valid business farm name
-                                                    </p>
-                                                </div>
+                                    autocomplete="off" required>
+                                <p id="business-farm-name-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid business farm name
+                                </p>
+                            </div>
 
-                                                <div class="my-4">
-                                                    <label for="butterfly-permit-number"
-                                                        class="block mb-2 text-sm font-medium text-gray-700">Butterfly Permit Number</label>
-                                                    <input type="text" id="edit-butterfly-permit-number" name="butterfly_permit_number"
-                                                        placeholder="Enter Permit Number"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <div class="my-4">
+                                <label for="butterfly-permit-number"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Butterfly Permit Number</label>
+                                <input type="text" id="edit-butterfly-permit-number" name="butterfly_permit_number"
+                                    placeholder="Enter Permit Number"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                                         block w-full p-2.5 
                                                                                                                                                         focus:border-green-500 focus:ring-green-500 
                                                                                                                                                         required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                                                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                    <p id="butterfly-permit-number-error" class="mt-2 text-sm text-red-600 hidden">
-                                                        <span class="font-medium">Please!</span> Enter a valid business farm name
-                                                    </p>
-                                                </div>
+                                    autocomplete="off" required>
+                                <p id="butterfly-permit-number-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid business farm name
+                                </p>
+                            </div>
 
-                                                <div class="my-4">
-                                                    <label for="destination"
-                                                        class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
-                                                    <input type="text" id="edit-destination" name="destination" placeholder="Enter Destination"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <div class="my-4">
+                                <label for="destination"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Destination</label>
+                                <input type="text" id="edit-destination" name="destination"
+                                    placeholder="Enter Destination"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                                                                 block w-full p-2.5 
                                                                                                                                                                                 focus:border-green-500 focus:ring-green-500 
                                                                                                                                                                                 required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                                                                                 valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                    <p id="destination-error" class="mt-2 text-sm text-red-600 hidden">
-                                                        <span class="font-medium">Please!</span> Enter a valid Destination
-                                                    </p>
-                                                </div>
+                                    autocomplete="off" required>
+                                <p id="destination-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter a valid Destination
+                                </p>
+                            </div>
 
-                                                <div class="my-4">
-                                                    <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                                                        Applied</label>
-                                                    <input type="date" id="edit-date-applied" name="date_applied"
-                                                        placeholder="Date Applied"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <div class="my-4">
+                                <label for="Date Applied" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Applied</label>
+                                <input type="date" id="edit-date-applied" name="date_applied"
+                                    placeholder="Date Applied"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                                                         block w-full p-2.5 
                                                                                                                                                         focus:border-green-500 focus:ring-green-500 
                                                                                                                                                         required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                                                         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                    <p id=-date-applied-error" class="mt-2 text-sm text-red-600 hidden">
-                                                        <span class="font-medium">Please!</span> Enter valid Date
-                                                    </p>
+                                    autocomplete="off" required>
+                                <p id=-date-applied-error" class="mt-2 text-sm text-red-600 hidden">
+                                    <span class="font-medium">Please!</span> Enter valid Date
+                                </p>
 
-                                                </div>
+                            </div>
 
-                                                <div class="my-4">
-                                                    <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
-                                                        Release</label>
-                                                    <input type="date" id="edit-date-released" name="date_released"
-                                                        placeholder="Enter Date Release"
-                                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <div class="my-4">
+                                <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Release</label>
+                                <input type="date" id="edit-date-released" name="date_released"
+                                    placeholder="Enter Date Release"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                             block w-full p-2.5 
                                                                             focus:border-green-500 focus:ring-green-500 
                                                                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                        autocomplete="off" required>
-                                                </div>
+                                    autocomplete="off" required>
+                            </div>
 
 
-                                                <label for="classification"
-                                                    class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                                                <select id="edit-classification" name="classification"
-                                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <label for="classification"
+                                class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
+                            <select id="edit-classification" name="classification"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                                                 block w-full p-2.5 
                                                                                                                 focus:border-green-500 focus:ring-green-500 
                                                                                                                 required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                                                                 valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                                    autocomplete="off" required>
-                                                    <option value="" disabled selected hidden>Select a Classification</option>
-                                                    <option value="highly-technical">Highly Technical</option>
-                                                    <option value="simple">Simple</option>
-                                                </select>
+                                autocomplete="off" required>
+                                <option value="" disabled selected hidden>Select a Classification</option>
+                                <option value="highly-technical">Highly Technical</option>
+                                <option value="simple">Simple</option>
+                            </select>
 
 
 
-                                                <input type="hidden" id="edit-office-source"  name="office_source" placeholder="Enter office source" value=null 
-                                                    class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            <input type="hidden" id="edit-office-source" name="office_source"
+                                placeholder="Enter office source" value=null
+                                class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                                             block w-full p-2.5 
                                                                                             focus:border-green-500 focus:ring-green-500 
                                                                                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100" autocomplete="off" required>
-                                            </div>
+                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                        </div>
 
-                                            <div class="w-full">
-                                                <div class="max-w-lg mx-auto my-6">
-                                                    <div class="flex gap-2">
-                                                        <input type="text" id="edit-searchInput" placeholder="Search butterfly..."
-                                                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                                                        <button type="button" onclick="searchButterflies()"
-                                                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Search</button>
-                                                    </div>
+                        <div class="w-full">
+                            <div class="max-w-lg mx-auto my-6">
+                                <div class="flex gap-2">
+                                    <input type="text" id="edit-searchInput" placeholder="Search butterfly..."
+                                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                                    <button type="button" onclick="searchButterflies()"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Search</button>
+                                </div>
 
-                                                    <!-- Search Results -->
-                                                    <ul id="edit-searchResults"
-                                                        class="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
-                                                    </ul>
+                                <!-- Search Results -->
+                                <ul id="edit-searchResults"
+                                    class="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                                </ul>
 
-                                                    <!-- Modal Backdrop -->
-                                                    <div id="modalBackdropEdit" class="hidden fixed inset-0 bg-black bg-opacity-50"></div>
+                                <!-- Modal Backdrop -->
+                                <div id="modalBackdropEdit" class="hidden fixed inset-0 bg-black bg-opacity-50"></div>
 
-                                                    <!-- Add Butterfly Modal -->
-                                                    <div id="addButterflyModalEdit"
-                                                        class="hidden fixed inset-0 flex justify-center items-center z-50">
-                                                        <div class="bg-white p-6 rounded-lg shadow-lg w-9/12 relative">
-                                                            <!-- Close Button (X Icon) -->
-                                                            <button onclick="closeModal()"
-                                                                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
-                                                                ✖
-                                                            </button>
+                                <!-- Add Butterfly Modal -->
+                                <div id="addButterflyModalEdit"
+                                    class="hidden fixed inset-0 flex justify-center items-center z-50">
+                                    <div class="bg-white p-6 rounded-lg shadow-lg w-9/12 relative">
+                                        <!-- Close Button (X Icon) -->
+                                        <button onclick="closeModal()"
+                                            class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+                                            ✖
+                                        </button>
 
-                                                            <h2 class="text-xl font-bold mb-4">Add New Butterfly</h2>
-                                                            <input type="text" id="newEditScientificName" placeholder="Scientific Name"
-                                                                class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newEditCommonName" placeholder="Common Name"
-                                                                class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newEditFamily" placeholder="Family"
-                                                                class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <input type="text" id="newEditGenus" placeholder="Genus"
-                                                                class="w-full p-2 mb-2 border border-gray-300 rounded-lg"/>
-                                                            <textarea id="newEditDescription" placeholder="Description" class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
-                                                            <input type="text" id="newEditImageUrl" placeholder="Image URL"
-                                                                class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
+                                        <h2 class="text-xl font-bold mb-4">Add New Butterfly</h2>
+                                        <input type="text" id="newEditScientificName"
+                                            placeholder="Scientific Name"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
+                                        <input type="text" id="newEditCommonName" placeholder="Common Name"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
+                                        <input type="text" id="newEditFamily" placeholder="Family"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
+                                        <input type="text" id="newEditGenus" placeholder="Genus"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg" />
+                                        <textarea id="newEditDescription" placeholder="Description"
+                                            class="w-full p-2 mb-2 border border-gray-300 rounded-lg"></textarea>
+                                        <input type="text" id="newEditImageUrl" placeholder="Image URL"
+                                            class="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
 
-                                                            <button type="button"  onclick="addButterflyEdit()"
-                                                                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
-                                                                Butterfly</button>
-                                                        </div>
-                                                    </div>
+                                        <button type="button" onclick="addButterflyEdit()"
+                                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full">Add
+                                            Butterfly</button>
+                                    </div>
+                                </div>
 
-                                                    <!-- Selected Butterflies Table -->
-                                                    <div class="mt-4">
-                                                        <table class="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
-                                                            <thead>
-                                                                <tr class="bg-green-500 text-white">
-                                                                    <th class="py-2 px-4 text-left">Common/ScientificName</th>
-                                                                    <th class="py-2 px-4 text-left">Quantity</th>
-                                                                    <th class="py-2 px-4 text-left">Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="edit-selectedButterflies" class="bg-white"></tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
+                                <!-- Selected Butterflies Table -->
+                                <div class="mt-4">
+                                    <table class="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
+                                        <thead>
+                                            <tr class="bg-green-500 text-white">
+                                                <th class="py-2 px-4 text-left">Common/ScientificName</th>
+                                                <th class="py-2 px-4 text-left">Quantity</th>
+                                                <th class="py-2 px-4 text-left">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="edit-selectedButterflies" class="bg-white"></tbody>
+                                    </table>
+                                </div>
+                            </div>
 
 
-                                        </div>
+
+                        </div>
+
+
+                    </div>
                     <div class="mt-4 flex justify-end gap-4 col-span-2">
                         <button id="edit-btn" type="submit"
                             class="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 transition duration-200">
                             <span id="button-spinner" class="hidden">
-                                <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin"
-                                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg aria-hidden="true" role="status"
+                                    class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                         fill="#E5E7EB" />
@@ -224,12 +231,12 @@
                         </button>
                     </div>
                 @else
-
                     <!-- step 1 -->
                     <div class="font-medium ">
                         @if (!$record)
                             <div class="my-4">
-                                <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name of
+                                <label for="name-of-client" class="block mb-2 text-sm font-medium text-gray-700">Name
+                                    of
                                     Client</label>
                                 <input type="text" id="edit-name-of-client" name="name_of_client"
                                     placeholder="Enter value"
@@ -333,8 +340,8 @@
                                     Specification</h2>
                                 <button type="button" id="add-edit-specification"
                                     class="text-blue-700 mb-2 bg-blue-100 border border-blue-400 hover:bg-blue-200 focus:ring-2  focus:outline-none focus:ring-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
-                                    <svg class="size-5 text-red-700 font-extrabold" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="size-5 text-red-700 font-extrabold" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
                                             d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                             clip-rule="evenodd"></path>
@@ -348,7 +355,8 @@
                         @elseif ($type == 'chainsaw-registration')
                             <!-- Location Field -->
                             <div class="my-4">
-                                <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Location</label>
+                                <label for="location"
+                                    class="block mb-2 text-sm font-medium text-gray-700">Location</label>
                                 <input type="text" id="edit-location" name="location"
                                     class="location bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                             block w-full p-2.5 
@@ -356,7 +364,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter location">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -372,7 +381,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter serial number">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -388,7 +398,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required>
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -404,7 +415,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter number of trees">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -420,7 +432,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter location">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -436,7 +449,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required>
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -468,7 +482,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter location">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -484,7 +499,8 @@
                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                     autocomplete="off" required placeholder="Enter lot number">
-                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
                                     valid
                                     input!</p>
                             </div>
@@ -516,7 +532,7 @@
                 @endif
             </div>
 
-           
+
         </form>
     </div>
     <div id="skeleton" role="status" class="w-full animate-pulse hidden pt-4">
@@ -534,7 +550,7 @@
     // Fetches file data dynamically
 
     async function fetchEditFile(fileId) {
-       initializeButterfly(fileId);
+        initializeButterfly(fileId);
         let includePermit = {!! json_encode($includePermit ?? '') !!};
 
         const editContent = document.getElementById("edit-content");
@@ -542,9 +558,9 @@
 
         editContent.classList.add("hidden");
         skeleton.classList.remove("hidden");
-       
+
         //includePermit boolean if file have permit Y/N
-        
+
         const url = `/api/files/${fileId}?includePermit=${includePermit}`;
         try {
             const response = await fetch(url);
@@ -552,10 +568,10 @@
             if (!response.ok) throw new Error("You failed to fetch the data and permit");
 
             const data = await response.json();
-         
+
 
             if (data.success) {
-                   console.log(data);
+                console.log(data);
                 //    
                 const editForm = document.getElementById('edit-file-form');
                 editForm.dataset.fileId = fileId; // Set fileId in data-file-id
@@ -572,6 +588,7 @@
 
                 // Handle `permit` properties (if it exists)
                 if (data.permit) {
+                    console.log(data.permit);
                     Object.entries(data.permit).forEach(([key, value]) => {
                         const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
                         // Select all elements with the corresponding class and update their value
@@ -589,7 +606,7 @@
                         // }
 
                         const details = data.permit.details;
-
+                        console.log('wthis is', details);
                         for (let index = 0; index < details.length; index++) {
                             const detail = details[index];
 
@@ -604,22 +621,22 @@
 
 
                             // Find the newly cloned delete button
-                            Object.entries(detail).forEach(([key, value]) => {
-                                // Get the delete button based on the data-detail-id
-                                // Get the input based on the id
+                            Object.entries(detail).forEach(async ([key, value]) => {
                                 const input = document.querySelector(`[id="${key}[${index}]"]`);
-
-                                // If the input and deleteBtn exist, set their values
                                 if (input) {
-                                    input.value = value; // Set value for the input
+                                    if (input.tagName === 'SELECT' && key === 'species') {
+                                        // Fetch options first
+                                        await fetchTreeSpeciesEdit(input);
+                                        input.value = value; // now this will work
+                                    } else {
+                                        input.value = value;
+                                    }
                                 }
+
                                 if (closeBtn) {
                                     closeBtn.classList.add("hidden");
                                 }
-                                // Set the delete button's action and show it
-
                             });
-
                             if (deleteBtn) {
                                 deleteBtn.classList.remove('hidden');
 
@@ -671,22 +688,22 @@
         let butterflies = []
 
         if (type == 'local-transport-permit') {
-       
-        butterflies = getSelectedButterflies();
+
+            butterflies = getSelectedButterflies();
             console.log(butterflies)
 
-        if (butterflies.length === 0) {
-            showToast({
-                type: 'failed',
-                message: 'Please select at least one butterfly before proceeding..',
+            if (butterflies.length === 0) {
+                showToast({
+                    type: 'failed',
+                    message: 'Please select at least one butterfly before proceeding..',
 
-            });
-            buttonText.classList.remove('hidden');
-            buttonSpinner.classList.add('hidden');
-            uploadButton.disabled = false;
-            return; // Stop execution if the array is empty
+                });
+                buttonText.classList.remove('hidden');
+                buttonSpinner.classList.add('hidden');
+                uploadButton.disabled = false;
+                return; // Stop execution if the array is empty
+            }
         }
-       }
 
         // FormData will automatically group inputs like `details[0][species]`
         const formData = new FormData(this);
@@ -699,7 +716,7 @@
                 },
                 body: formData
             });
-            
+
             if (!editFileResponse.ok) throw new Error("File Update failed");
             const response = await editFileResponse.json();
 
@@ -707,13 +724,15 @@
                 if (type == 'local-transport-permit') {
 
                     fetch(`/api/file/sync-butterflies/${fileId}`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken
-                        },
-                        body: JSON.stringify({ butterflies })
-                    })
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            body: JSON.stringify({
+                                butterflies
+                            })
+                        })
                         .then(response => response.json())
                         .then(data => console.log("Success:", data))
                         .catch(error => console.error("Error:", error));
@@ -724,10 +743,9 @@
                     document.getElementById("edit-searchResults").innerHTML = ""; // Clear search results
 
                 }
-                
 
-            }
-            catch (error) {
+
+            } catch (error) {
                 showToast({
                     type: 'danger',
                     message: 'Failed to update butterfly details.',
@@ -795,66 +813,66 @@
 
 
 
-        
-      async function initializeButterfly(fileId) {
-            try {
-                // 68const fileId = document.getElementById("someElement")?.dataset.fileId;
-                if (!fileId) throw new Error("File ID is missing");
-                const tableBody = document.getElementById("edit-selectedButterflies");
-                if (tableBody) tableBody.innerHTML = "";
-                const response = await fetch(`/api/files/${fileId}/butterflies`);
-                const data = await response.json();
-             
-                data.forEach(butterfly => addToTableEdit(butterfly, true));
-            } catch (error) {
-                console.error("Error in initializeTable:", error);
-            }
+
+    async function initializeButterfly(fileId) {
+        try {
+            // 68const fileId = document.getElementById("someElement")?.dataset.fileId;
+            if (!fileId) throw new Error("File ID is missing");
+            const tableBody = document.getElementById("edit-selectedButterflies");
+            if (tableBody) tableBody.innerHTML = "";
+            const response = await fetch(`/api/files/${fileId}/butterflies`);
+            const data = await response.json();
+
+            data.forEach(butterfly => addToTableEdit(butterfly, true));
+        } catch (error) {
+            console.error("Error in initializeTable:", error);
         }
+    }
 
 
-        function searchButterflies() {
-            let query = document.getElementById("edit-searchInput").value;
-            fetch(`/api/butterflies/search?query=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    let resultsList = document.getElementById("edit-searchResults");
-                    resultsList.innerHTML = ""; // Clear previous results
+    function searchButterflies() {
+        let query = document.getElementById("edit-searchInput").value;
+        fetch(`/api/butterflies/search?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                let resultsList = document.getElementById("edit-searchResults");
+                resultsList.innerHTML = ""; // Clear previous results
 
-                    if (data.length === 0) {
-                        document.getElementById("modalBackdropEdit").classList.remove("hidden"); // Show backdrop
-                        document.getElementById("addButterflyModalEdit").classList.remove("hidden"); // Show modal
-                        return;
-                    }
-
-                    data.forEach(butterfly => {
-                        let li = document.createElement("li");
-                        li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
-                        li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
-                        li.onclick = function() {
-                            addToTableEdit(butterfly);
-                        };
-                        resultsList.appendChild(li);
-                    });
-                })
-                .catch(error => console.error("Error fetching data:", error));
-        }
-
-        function addToTableEdit(butterfly, isInitialLoad = false) {
-            let tableBody = document.getElementById("edit-selectedButterflies");
-
-            // Prevent duplicates
-            let existingRows = tableBody.querySelectorAll("tr");
-            for (let row of existingRows) {
-                if (row.getAttribute("data-id") === butterfly.id.toString()) {
-                    if (!isInitialLoad) alert("Already added!");
+                if (data.length === 0) {
+                    document.getElementById("modalBackdropEdit").classList.remove("hidden"); // Show backdrop
+                    document.getElementById("addButterflyModalEdit").classList.remove("hidden"); // Show modal
                     return;
                 }
-            }
 
-            let row = document.createElement("tr");
-            row.setAttribute("data-id", butterfly.id);
-            row.className = "border-b border-gray-200";
-            row.innerHTML = `
+                data.forEach(butterfly => {
+                    let li = document.createElement("li");
+                    li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
+                    li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
+                    li.onclick = function() {
+                        addToTableEdit(butterfly);
+                    };
+                    resultsList.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    }
+
+    function addToTableEdit(butterfly, isInitialLoad = false) {
+        let tableBody = document.getElementById("edit-selectedButterflies");
+
+        // Prevent duplicates
+        let existingRows = tableBody.querySelectorAll("tr");
+        for (let row of existingRows) {
+            if (row.getAttribute("data-id") === butterfly.id.toString()) {
+                if (!isInitialLoad) alert("Already added!");
+                return;
+            }
+        }
+
+        let row = document.createElement("tr");
+        row.setAttribute("data-id", butterfly.id);
+        row.className = "border-b border-gray-200";
+        row.innerHTML = `
                 <td class="py-2 px-4">${butterfly.common_name} / ${butterfly.scientific_name}</td>
                 <td class="py-2 px-4">
                     <input type="number" value="${butterfly.quantity || 1}" 
@@ -867,21 +885,22 @@
                     </button>
                 </td>
             `;
-            tableBody.appendChild(row);
-        }
-        function removeRow(button) {
-            button.closest("tr").remove();
-        }
+        tableBody.appendChild(row);
+    }
 
-        function addButterflyEdit() {
-            let scientific_name = document.getElementById("newEditScientificName").value;
-            let common_name = document.getElementById("newEditCommonName").value;
-            let family = document.getElementById("newEditFamily").value;
-            let genus = document.getElementById("newEditGenus").value;
-            let description = document.getElementById("newEditDescription").value;
-            let image_url = document.getElementById("newEditImageUrl").value;
+    function removeRow(button) {
+        button.closest("tr").remove();
+    }
 
-            fetch('/butterfly/add', {  // <-- Ensure this matches your Laravel route
+    function addButterflyEdit() {
+        let scientific_name = document.getElementById("newEditScientificName").value;
+        let common_name = document.getElementById("newEditCommonName").value;
+        let family = document.getElementById("newEditFamily").value;
+        let genus = document.getElementById("newEditGenus").value;
+        let description = document.getElementById("newEditDescription").value;
+        let image_url = document.getElementById("newEditImageUrl").value;
+
+        fetch('/butterfly/add', { // <-- Ensure this matches your Laravel route
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -896,58 +915,62 @@
                     image_url
                 })
             })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => Promise.reject(err));
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Add the newly created butterfly to the table
-                    addToTableEdit(data.butterfly);
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Add the newly created butterfly to the table
+                addToTableEdit(data.butterfly);
 
-                    // Clear the input fields
-                    document.getElementById("newEditScientificName").value = "";
-                    document.getElementById("newEditCommonName").value = "";
-                    document.getElementById("newEditFamily").value = "";
-                    document.getElementById("newEditGenus").value = "";
-                    document.getElementById("newEditDescription").value = "";
-                    document.getElementById("newEditImageUrl").value = "";
+                // Clear the input fields
+                document.getElementById("newEditScientificName").value = "";
+                document.getElementById("newEditCommonName").value = "";
+                document.getElementById("newEditFamily").value = "";
+                document.getElementById("newEditGenus").value = "";
+                document.getElementById("newEditDescription").value = "";
+                document.getElementById("newEditImageUrl").value = "";
 
-                    closeModal();
-                })
-                .catch(error => {
-                    console.error("Error adding butterfly:", error);
-                        showToast({
-                        type: 'failed',
-                        message: 'Failed to add butterfly. Please check the input.',
-
-                    });
+                closeModal();
+            })
+            .catch(error => {
+                console.error("Error adding butterfly:", error);
+                showToast({
+                    type: 'failed',
+                    message: 'Failed to add butterfly. Please check the input.',
 
                 });
-        }
 
-        function closeModal() {
-            document.getElementById("addButterflyModalEdit").classList.add("hidden");
-            document.getElementById("modalBackdropEdit").classList.add("hidden"); // Hide backdrop
-        }
-              
-        
-        function getSelectedButterflies() {
-            let butterflies = [];
-
-            document.querySelectorAll("#edit-selectedButterflies tr").forEach(row => {
-                let id = row.getAttribute("data-id"); // Get the data-id attribute
-                let name = row.cells[0].innerText.trim(); // Get Common/Scientific Name
-                let quantityInput = row.cells[1].querySelector("input"); // Input field in Quantity column
-
-                if (quantityInput) {
-                    let quantity = parseInt(quantityInput.value) || 0; // Get the quantity value
-                    butterflies.push({ id, name, quantity });
-                }
             });
+    }
 
-            console.log(butterflies); // Debugging output
-            return butterflies;
-        }
+    function closeModal() {
+        document.getElementById("addButterflyModalEdit").classList.add("hidden");
+        document.getElementById("modalBackdropEdit").classList.add("hidden"); // Hide backdrop
+    }
+
+
+    function getSelectedButterflies() {
+        let butterflies = [];
+
+        document.querySelectorAll("#edit-selectedButterflies tr").forEach(row => {
+            let id = row.getAttribute("data-id"); // Get the data-id attribute
+            let name = row.cells[0].innerText.trim(); // Get Common/Scientific Name
+            let quantityInput = row.cells[1].querySelector("input"); // Input field in Quantity column
+
+            if (quantityInput) {
+                let quantity = parseInt(quantityInput.value) || 0; // Get the quantity value
+                butterflies.push({
+                    id,
+                    name,
+                    quantity
+                });
+            }
+        });
+
+        console.log(butterflies); // Debugging output
+        return butterflies;
+    }
 </script>
