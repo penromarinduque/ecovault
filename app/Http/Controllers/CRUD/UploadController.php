@@ -45,10 +45,9 @@ class UploadController extends Controller
         ]);
 
         if ($request->file('file')->isValid()) {
-
             $file = $request->file('file');
             $originalFileName = $file->getClientOriginalName();
-            $sanitizedFileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $originalFileName);
+            $sanitizedFileName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $originalFileName);
             $extension = $file->getClientOriginalExtension();
 
             //file manager na folder
@@ -385,63 +384,69 @@ class UploadController extends Controller
     }
 
     public function RenameFileById(Request $request, $id)
-    {
-        $request->validate([
-            'new_name' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'new_name' => 'required|string|max:255',
+    ]);
 
-        DB::beginTransaction();
-        try {
-            $file = File::findOrFail($id);
+    DB::beginTransaction();
+    try {
+        $file = File::findOrFail($id);
 
-            if (!$file) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "File doesn't exist",
-                ], 404);
-            }
-
-            $currentFilePath = $file->file_path;
-            if (!Storage::disk('public')->exists($currentFilePath)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'File does not exist on the server.',
-                ], 404);
-            }
-
-            $newFileName = $request->input('new_name');
-            $newFilePath = dirname($currentFilePath) . '/' . $newFileName;
-
-            // Rename the file in storage
-            Storage::disk('public')->move($currentFilePath, $newFilePath);
-
-            // Update the file record in the database
-            $file->update([
-                'file_name' => $newFileName,
-                'file_path' => $newFilePath,
-            ]);
-
-            DB::commit();
-
-            FileHistory::create([
-                'file_id' => $file->id,
-                'action' => 'Renamed file',
-                'changes' => json_encode(['old_name' => basename($currentFilePath), 'new_name' => $newFileName]),
-                'user_id' => auth()->id() ?: 0,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'File renamed successfully.',
-                'file' => $file,
-            ], 200);
-        } catch (Exception $ex) {
-            DB::rollBack();
+        if (!$file) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to rename file.',
-                'error' => $ex->getMessage(),
-            ], 500);
+                'message' => "File doesn't exist",
+            ], 404);
         }
+
+        $currentFilePath = $file->file_path;
+        if (!Storage::disk('public')->exists($currentFilePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File does not exist on the server.',
+            ], 404);
+        }
+
+        $newFileName = $request->input('new_name');
+
+        // Ensure the new file name ends with .pdf
+        if (!str_ends_with($newFileName, '.pdf')) {
+            $newFileName .= '.pdf';
+        }
+
+        $newFilePath = dirname($currentFilePath) . '/' . $newFileName;
+
+        // Rename the file in storage
+        Storage::disk('public')->move($currentFilePath, $newFilePath);
+
+        // Update the file record in the database
+        $file->update([
+            'file_name' => $newFileName,
+            'file_path' => $newFilePath,
+        ]);
+
+        DB::commit();
+
+        FileHistory::create([
+            'file_id' => $file->id,
+            'action' => 'Renamed file',
+            'changes' => json_encode(['old_name' => basename($currentFilePath), 'new_name' => $newFileName]),
+            'user_id' => auth()->id() ?: 0,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'File renamed successfully.',
+            'file' => $file,
+        ], 200);
+    } catch (Exception $ex) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to rename file.',
+            'error' => $ex->getMessage(),
+        ], 500);
     }
+}
 }
