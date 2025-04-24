@@ -23,6 +23,14 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+        <div>
+            <label for="species-filter" class="block text-sm font-medium text-gray-700">Species:</label>
+            <select id="species-filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                <option value="">All</option>
+                <!-- Species options will be dynamically populated -->
+            </select>
+        </div>
         <button id="apply-species-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -37,6 +45,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             initializeSpeciesChart();
             setupSpeciesEventListeners();
+            fetchDistinctSpecies(); // Fetch distinct species
             fetchSpeciesChartData(); // Fetch initial data (monthly by default)
         });
 
@@ -63,13 +72,37 @@
             document.getElementById("apply-species-filters").addEventListener("click", () => {
                 const location = document.getElementById("species-location-filter").value;
                 const timeframe = document.getElementById("species-timeframe-filter").value;
-                fetchSpeciesChartData(location, timeframe);
+                const species = document.getElementById("species-filter").value;
+                fetchSpeciesChartData(location, timeframe, species);
             });
         }
 
-        async function fetchSpeciesChartData(location = "", timeframe = "monthly") {
+        async function fetchDistinctSpecies() {
             try {
-                const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
+                const response = await fetch('/api/distinct-tree-species');
+                if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
+
+                const species = await response.json();
+                const speciesFilter = document.getElementById("species-filter");
+
+                // Clear existing options
+                speciesFilter.innerHTML = '<option value="">All</option>';
+
+                // Populate dropdown with species
+                species.forEach(speciesName => {
+                    const option = document.createElement("option");
+                    option.value = speciesName;
+                    option.textContent = speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
+                    speciesFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching distinct species:", error);
+            }
+        }
+
+        async function fetchSpeciesChartData(location = "", timeframe = "monthly", species = "") {
+            try {
+                const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}&species=${species}`);
                 if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
                 const { speciesData } = await response.json();

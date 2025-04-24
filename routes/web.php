@@ -223,5 +223,6 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/api/butterfly-species', [ButterflyController::class, 'GetAllSpecies']);
 
     Route::get('/api/tree-transport-species', [ChartingController::class, 'getDistinctTreeSpecies']);
+    Route::get('/api/distinct-tree-species', [ChartingController::class, 'getDistinctTreePlantationSpecies']);
 });
 

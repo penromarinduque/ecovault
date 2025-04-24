@@ -693,49 +693,51 @@ class ChartingController extends Controller
     }
 
     public function GetTreePlantationStatistics(Request $request)
-    {
-        $municipality = $request->query('municipality', '');
-        $timeframe = $request->query('timeframe', 'monthly');
+{
+    $municipality = $request->query('municipality', '');
+    $timeframe = $request->query('timeframe', 'monthly');
+    $species = $request->query('species', '');
 
-        $registrations = TreePlantation::query()
-            ->when($municipality, fn($query) => $query->where('location', $municipality))
-            ->selectRaw(
-                $timeframe === 'yearly'
-                ? "YEAR(date_applied) as year, COUNT(*) as count"
-                : "YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count"
-            )
-            ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month') // Group only by selected columns
-            ->get();
+    $registrations = TreePlantation::query()
+        ->when($municipality, fn($query) => $query->where('location', $municipality))
+        ->when($species, fn($query) => $query->whereRaw("LOWER(TRIM(species)) = ?", [strtolower(trim($species))]))
+        ->selectRaw(
+            $timeframe === 'yearly'
+            ? "YEAR(date_applied) as year, COUNT(*) as count"
+            : "YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count"
+        )
+        ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month')
+        ->get();
 
-        $speciesData = TreePlantation::query()
-            ->when($municipality, fn($query) => $query->where('location', $municipality))
-            ->selectRaw(
-                $timeframe === 'yearly'
-                ? "species, YEAR(date_applied) as year, SUM(number_of_trees) as number_of_trees"
-                : "species, YEAR(date_applied) as year, MONTH(date_applied) as month, SUM(number_of_trees) as number_of_trees"
-            )
-            ->groupByRaw($timeframe === 'yearly' ? 'species, year' : 'species, year, month') // Group only by selected columns
-            ->get()
-            ->groupBy('species')
-            ->map(function ($group) {
-                return $group->map(function ($item) {
-                    return [
-                        'year' => $item->year,
-                        'month' => $item->month ?? null, // Handle null for yearly data
-                        'number_of_trees' => $item->number_of_trees,
-                    ];
-                });
+    $speciesData = TreePlantation::query()
+        ->when($municipality, fn($query) => $query->where('location', $municipality))
+        ->when($species, fn($query) => $query->whereRaw("LOWER(TRIM(species)) = ?", [strtolower(trim($species))]))
+        ->selectRaw(
+            $timeframe === 'yearly'
+            ? "species, YEAR(date_applied) as year, SUM(number_of_trees) as number_of_trees"
+            : "species, YEAR(date_applied) as year, MONTH(date_applied) as month, SUM(number_of_trees) as number_of_trees"
+        )
+        ->groupByRaw($timeframe === 'yearly' ? 'species, year' : 'species, year, month')
+        ->get()
+        ->groupBy('species')
+        ->map(function ($group) {
+            return $group->map(function ($item) {
+                return [
+                    'year' => $item->year,
+                    'month' => $item->month ?? null,
+                    'number_of_trees' => $item->number_of_trees,
+                ];
             });
+        });
 
-        // Calculate the total number of trees planted across all species
-        $totalTreesPlanted = $speciesData->flatten()->sum('number_of_trees');
+    $totalTreesPlanted = $speciesData->flatten()->sum('number_of_trees');
 
-        return response()->json([
-            'registrations' => $registrations,
-            'speciesData' => $speciesData,
-            'totalTreesPlanted' => $totalTreesPlanted, // Include the total in the response
-        ]);
-    }
+    return response()->json([
+        'registrations' => $registrations,
+        'speciesData' => $speciesData,
+        'totalTreesPlanted' => $totalTreesPlanted,
+    ]);
+}
 
     public function GetTreeTransportPermitStatistics(Request $request)
     {
@@ -816,4 +818,14 @@ class ChartingController extends Controller
         return response()->json($species);
     }
 
+    public function getDistinctTreePlantationSpecies()
+{
+    $species = DB::table('tree_plantation_registration')
+        ->selectRaw("DISTINCT LOWER(TRIM(species)) as species")
+        ->pluck('species');
+
+    return response()->json($species);
+}
+
+   
 }
