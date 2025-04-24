@@ -25,6 +25,14 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+        <div>
+            <label for="species-filter" class="block text-sm font-medium text-gray-700">Species:</label>
+            <select id="species-filter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                <option value="All">All</option>
+                {{-- Species options will be dynamically populated --}}
+            </select>
+        </div>
         <button id="apply-species-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -34,15 +42,33 @@
     <div id="no-data-message-species" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             let species_chart;
             const species_chartElement = document.getElementById("species-chart");
             const totalSpeciesTransportedElement = document.getElementById("totalSpeciesTransported");
             const noDataSpeciesMessage = document.getElementById("no-data-message-species");
 
-            async function fetchSpeciesChartData(municipality = "All", timeframe = "monthly") {
+            // Fetch distinct species for the dropdown
+            async function fetchSpeciesOptions() {
                 try {
-                    const response = await fetch(`/api/tree-species-transported-statistics?municipality=${municipality}&timeframe=${timeframe}`);
+                    const response = await fetch('/api/tree-transport-species');
+                    const species = await response.json();
+                    const speciesFilter = document.getElementById("species-filter");
+
+                    species.forEach(speciesName => {
+                        const option = document.createElement("option");
+                        option.value = speciesName;
+                        option.textContent = speciesName;
+                        speciesFilter.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error("Error fetching species options:", error);
+                }
+            }
+
+            async function fetchSpeciesChartData(municipality = "All", timeframe = "monthly", species = "All") {
+                try {
+                    const response = await fetch(`/api/tree-species-transported-statistics?municipality=${municipality}&timeframe=${timeframe}&species=${species}`);
                     const { data, total_count } = await response.json();
 
                     if (!data || data.length === 0) {
@@ -123,10 +149,14 @@
             species_chart = new ApexCharts(species_chartElement, options);
             species_chart.render();
 
+            // Fetch species options on page load
+            await fetchSpeciesOptions();
+
             document.getElementById("apply-species-filters").addEventListener("click", () => {
                 const municipality = document.getElementById("species-location-filter").value;
                 const timeframe = document.getElementById("species-timeframe-filter").value;
-                fetchSpeciesChartData(municipality, timeframe);
+                const species = document.getElementById("species-filter").value;
+                fetchSpeciesChartData(municipality, timeframe, species);
             });
 
             fetchSpeciesChartData();

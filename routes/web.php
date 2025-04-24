@@ -221,5 +221,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/report/local-transport-permits/chart', [ChartingController::class, 'getTransportPermitChartData']);
 
     Route::get('/api/butterfly-species', [ButterflyController::class, 'GetAllSpecies']);
+
+    Route::get('/api/tree-transport-species', [ChartingController::class, 'getDistinctTreeSpecies']);
 });
 

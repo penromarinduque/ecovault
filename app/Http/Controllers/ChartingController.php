@@ -807,4 +807,13 @@ class ChartingController extends Controller
         ]);
     }
 
+    public function getDistinctTreeSpecies()
+    {
+        $species = DB::table('tree_transport_permit_details')
+            ->selectRaw("DISTINCT LOWER(TRIM(species)) as species")
+            ->pluck('species');
+
+        return response()->json($species);
+    }
+
 }
