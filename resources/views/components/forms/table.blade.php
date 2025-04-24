@@ -46,7 +46,14 @@
             }
             const data = await response.json();
 
-            initializeTable(data);
+            if(type === 'local-transport-permit') {
+                // Check if the user is an admin
+                const excludeOfficeSource = true;
+                initializeTable(data, excludeOfficeSource);
+            } else {
+                initializeTable(data);
+            }
+            // initializeTable(data, excludeOfficeSource);
 
         } catch (error) {
             console.error('Fetch operation error:', error.message || error);
@@ -59,11 +66,11 @@
         }
     }
 
-    function initializeTable(data) {
+    function initializeTable(data, excludeOfficeSource = false) {
         if (dataTable) {
             dataTable.destroy();
         }
-        const customData = formData(data.data);
+        const customData = formData(data.data, excludeOfficeSource);
         const dataTableElement = document.getElementById("main-table");
 
         if (dataTableElement && typeof simpleDatatables.DataTable !== 'undefined') {
@@ -138,36 +145,53 @@
         });
     }
 
-    function formData(data) {
-        function formatDate(dateString) {
-            const options = {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }; // Customize as needed
-            return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
-        }
-        return {
-
-            headings: ["File Name", "Office Source", "Date Modified", "Modified By",
-                "Classification",
-                "Actions"
-            ],
-            data: data.map(file => ({
-                cells: [
-                    truncateFilename(file.file_name, 20),
-                    file.office_source,
-                    formatDate(file.updated_at),
-                    file.user_name,
-                    file.classification,
-                    generateKebab(file.id, file.shared_users, file.file_name),
-                ],
-                attributes: {
-                    class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
-                }
-            }))
-        };
+   function formData(data, excludeOfficeSource = false) {
+    function formatDate(dateString) {
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }; // Customize as needed
+        return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString));
     }
+
+    // Define headings dynamically
+    const headings = excludeOfficeSource
+        ? ["File Name", "Date Modified", "Modified By", "Classification", "Actions"]
+        : ["File Name", "Office Source", "Date Modified", "Modified By", "Classification", "Actions"];
+
+    // Map data dynamically
+    const dataRows = data.map(file => {
+        const cells = excludeOfficeSource
+            ? [
+                truncateFilename(file.file_name, 20),
+                formatDate(file.updated_at),
+                file.user_name,
+                file.classification,
+                generateKebab(file.id, file.shared_users, file.file_name),
+            ]
+            : [
+                truncateFilename(file.file_name, 20),
+                file.office_source,
+                formatDate(file.updated_at),
+                file.user_name,
+                file.classification,
+                generateKebab(file.id, file.shared_users, file.file_name),
+            ];
+
+        return {
+            cells: cells,
+            attributes: {
+                class: "text-gray-700 text-left font-semibold hover:bg-gray-100 capitalize"
+            }
+        };
+    });
+
+    return {
+        headings: headings,
+        data: dataRows
+    };
+}
 
     // Generate action buttons for dropdowns
     function generateKebab(fileId, fileShared, fileName) {
