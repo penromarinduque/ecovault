@@ -5,6 +5,8 @@ namespace App\Http\Controllers\CRUD;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TreeSpecies;
+use Illuminate\Support\Facades\DB;
+
 class TreeController extends Controller
 {
     public function AddTreeSpecies(Request $request)
@@ -26,8 +28,10 @@ class TreeController extends Controller
 
     public function getAllTreeSpecies()
     {
-        $species = TreeSpecies::all();
-        return response()->json($species);
+        $species = DB::table('tree_cutting_permit_details')
+            ->selectRaw('DISTINCT LOWER(TRIM(species)) as name')
+            ->get();
 
+        return response()->json($species);
     }
 }
