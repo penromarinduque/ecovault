@@ -7,14 +7,7 @@ use App\Models\QrValidation;
 use Illuminate\Http\Request;
 
 
-use App\Models\TreeCuttingPermit;
 use setasign\Fpdi\Fpdi;
-use App\Models\TreePlantation;
-use App\Models\TreeCutting;
-use App\Models\ChainsawRegistration;
-use App\Models\TreePlantationRegistration;
-use App\Models\TransportPermit;
-use App\Models\LandTitle;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Endroid\QrCode\Builder\Builder;
@@ -23,7 +16,6 @@ use App\Models\RecentActivity;
 use App\Models\File;
 use Exception;
 use App\Models\FileHistory;
-use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
 class UploadController extends Controller
 {
@@ -56,7 +48,6 @@ class UploadController extends Controller
             } else {
                 $uploadDir = "PENRO/uploads/{$report}";
             }
-
 
             //PENRO/uploads/{$request->input('report_type')}
 
@@ -140,7 +131,6 @@ class UploadController extends Controller
             'debug' => $request->all(),
         ]);
     }
-
     public function embedQrCodeInImage($filePath, $qrCodeFilePath)
     {
         try {

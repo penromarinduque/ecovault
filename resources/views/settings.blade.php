@@ -199,7 +199,7 @@
                             <div>
                                 <label for="backupSelect" class="block text-sm font-medium text-gray-700">Select Backup to
                                     Restore:</label>
-                                <select id="backupSelect"
+                                <select required id="backupSelect"
                                     class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                     <option value="" disabled selected>Select a backup file</option>
                                     {{-- Populate with available backup files from the server --}}
@@ -222,122 +222,177 @@
                     </div>
                 </div>
 
+                <div id="loadingPopup" class="fixed hidden inset-0 flex items-center justify-center z-50">
+                    <!-- Blocking overlay -->
+                    <div class="absolute inset-0 bg-gray-800 bg-opacity-30"></div>
+
+                    <!-- Popup content -->
+                    <div class="relative flex flex-col items-center bg-white bg-opacity-90 p-6 rounded-lg shadow-lg">
+                        <svg class="animate-spin h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        <p class="text-gray-700 mt-4">Processing, please wait...</p>
+                    </div>
+                </div>
+
+                <style>
+                    /* Make the popup and overlay transparent */
+                    #loadingPopup .absolute {
+                        background-color: rgba(31, 41, 55, 0.3); /* Semi-transparent dark background */
+                    }
+
+                    #loadingPopup .relative {
+                        background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background for the popup */
+                    }
+                </style>
+
                 <script>
-                    const csrfToken = document.querySelector('input[name="_token"]').value;
+    const csrfToken = document.querySelector('input[name="_token"]').value;
 
-                    // Fetch available backup files and populate the dropdown
-                    function fetchBackupFiles() {
-                        fetch('api/list-backups', {
-                                method: 'GET',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                const backupSelect = document.getElementById('backupSelect');
-                                backupSelect.innerHTML =
-                                    '<option value="" disabled selected>Select a backup file</option>'; // Reset dropdown
+    // Fetch available backup files and populate the dropdown
+    function fetchBackupFiles() {
+        fetch('api/list-backups', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const backupSelect = document.getElementById('backupSelect');
+                const recoverButton = document.getElementById('recover');
+                backupSelect.innerHTML =
+                    '<option value="" disabled selected>Select a backup file</option>'; // Reset dropdown
 
-                                // Populate dropdown with backup files
-                                data.files.forEach(file => {
-                                    const option = document.createElement('option');
-                                    option.value = file;
-                                    option.textContent = file;
-                                    backupSelect.appendChild(option);
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Failed to fetch backup files:', error);
-                            });
-                    }
+                // Populate dropdown with backup files
+                data.files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = file;
+                    backupSelect.appendChild(option);
+                });
 
-                    // Call fetchBackupFiles on page load to populate the dropdown
-                    document.addEventListener('DOMContentLoaded', fetchBackupFiles);
+                // Disable the restore button initially
+                recoverButton.disabled = true;
 
-                    function BackupFiles() {
-                        const backupButton = document.getElementById('backup');
-                        const recoverButton = document.getElementById('recover');
+                // Enable the restore button when a file is selected
+                backupSelect.addEventListener('change', () => {
+                    recoverButton.disabled = !backupSelect.value;
+                });
+            })
+            .catch(error => {
+                console.error('Failed to fetch backup files:', error);
+            });
+    }
 
-                        // Disable buttons
-                        backupButton.disabled = true;
-                        recoverButton.disabled = true;
+    // Call fetchBackupFiles on page load to populate the dropdown
+    document.addEventListener('DOMContentLoaded', fetchBackupFiles);
 
-                        fetch('/api/files/backup', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': csrfToken
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                showToast("data backup successfully");
-                                fetchBackupFiles(); // Refresh backup list after creating a new backup
+    function showLoadingPopup() {
+        const loadingPopup = document.getElementById('loadingPopup');
+        loadingPopup.classList.remove('hidden');
+    }
 
-                            })
-                            .catch(error => {
-                                showToast(error, false);
-                            })
-                            .finally(() => {
-                                // Re-enable buttons
-                                backupButton.disabled = false;
-                                recoverButton.disabled = false;
-                            });
-                    }
+    function hideLoadingPopup() {
+        const loadingPopup = document.getElementById('loadingPopup');
+        loadingPopup.classList.add('hidden');
+    }
 
-                    function RecoverFiles() {
-                        const backupButton = document.getElementById('backup');
-                        const recoverButton = document.getElementById('recover');
+        function RecoverFiles() {
+            const backupButton = document.getElementById('backup');
+            const recoverButton = document.getElementById('recover');
+            const selectedFile = document.getElementById('backupSelect').value;
 
-                        const selectedFile = document.getElementById('backupSelect').value;
-                        if (!selectedFile) {
-                            alert('Please select a backup file to restore.');
-                            return;
-                        }
+            // Disable buttons and show loading popup
+            backupButton.disabled = true;
+            recoverButton.disabled = true;
+            showLoadingPopup();
 
-                        // Disable buttons
-                        backupButton.disabled = true;
-                        recoverButton.disabled = true;
+            fetch('/api/files/restore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        backup_file: selectedFile
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                        showToast({
+                        type: 'success',
+                        message: 'Restore completed successfully!',
+                    });
+                })
+                .catch(error => {
+                   
+                     showToast({
+                    type: 'danger',
+                    message: 'An error occurred during restore.',
 
-                        fetch('/api/files/restore', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': csrfToken
-                                },
-                                body: JSON.stringify({
-                                    backup_file: selectedFile
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                ShowAlert(data.success);
-                            })
-                            .catch(error => {
-                                ShowAlert(error, false);
-                            })
-                            .finally(() => {
-                                // Re-enable buttons
-                                backupButton.disabled = false;
-                                recoverButton.disabled = false;
-                            });
-                    }
-                </script>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showTab(event, tabId) {
-            let tabs = document.querySelectorAll('.tab-panel');
-            let tabButtons = document.querySelectorAll('.tab-btn');
-
-            tabs.forEach(tab => tab.classList.add('hidden'));
-            tabButtons.forEach(button => button.classList.remove('active-tab'));
-
-            document.getElementById(tabId).classList.remove('hidden');
-            event.currentTarget.classList.add('active-tab');
+                });
+                })
+                .finally(() => {
+                    // Re-enable buttons and hide loading popup
+                    backupButton.disabled = false;
+                    recoverButton.disabled = false;
+                    hideLoadingPopup();
+                });
         }
+
+        function BackupFiles() {
+        const backupButton = document.getElementById('backup');
+        const recoverButton = document.getElementById('recover');
+
+        // Disable buttons and show loading popup
+        backupButton.disabled = true;
+        recoverButton.disabled = true;
+        showLoadingPopup();
+
+        fetch('/api/files/backup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast({
+                    type: 'success',
+                    message: 'Backup successfully',
+
+                });
+               
+                fetchBackupFiles(); 
+            })
+            .catch(error => {
+                 showToast({
+                    type: 'danger',
+                    message: 'An error occurred during backup.',
+
+                });
+              
+            })
+            .finally(() => {
+                // Re-enable buttons and hide loading popup
+                backupButton.disabled = false; // Ensure backup button is re-enabled
+                recoverButton.disabled = false;
+                hideLoadingPopup();
+            });
+        }
+
+        function showTab(event, tabId) {
+        let tabs = document.querySelectorAll('.tab-panel');
+        let tabButtons = document.querySelectorAll('.tab-btn');
+
+        tabs.forEach(tab => tab.classList.add('hidden'));
+        tabButtons.forEach(button => button.classList.remove('active-tab'));
+
+        document.getElementById(tabId).classList.remove('hidden');
+        event.currentTarget.classList.add('active-tab');
+    }
     </script>
 @endsection

@@ -7,17 +7,19 @@ use App\Models\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-
+use Symfony\Component\Process\Process;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 class BackupController extends Controller
 {
     public function Backup()
     {
         try {
             // Define database connection settings
-            $dbHost = env('DB_HOST', '127.0.0.1');
-            $dbName = env('DB_DATABASE', 'penro_archiving_system');
-            $dbUser = env('DB_USERNAME', 'root');
-            $dbPassword = env('DB_PASSWORD', '');
+            $dbHost = config('database.connections.mysql.host');
+            $dbName = config('database.connections.mysql.database');
+            $dbUser = config('database.connections.mysql.username');
+            $dbPassword = config('database.connections.mysql.password');
 
             $config = Config::First();
             $drive = $config->Drive;
@@ -36,19 +38,13 @@ class BackupController extends Controller
             // Create the mysqldump command
             $command = "$config->MySqlDumpDir -h$dbHost -u$dbUser " . ($dbPassword ? "-p$dbPassword " : "") . "$dbName > \"$backupFilePath\"";
             // Execute the command
-            Log::info("Backup commane: SQL => $$config->MySqlDumDir, Files => $backupDirFiles");
-
-            exec($command, $output, $returnVar);
-
+             exec($command, $output, $returnVar);
 
             if ($returnVar !== 0) {
                 return response()->json(['error' => 'Database backup failed.'], 500);
             }
             $zipFilePath = $backupDirFiles . '/' . $dbName . '_backup_' . date('Y_m_d_H_i_s') . '.zip';
-            Log::info("Backup directories: SQL => $backupDir, Files => $backupDirFiles");
-            Log::info("Backup file path: $backupFilePath");
-            Log::info("Zip file path: $zipFilePath");
-
+           
             // Create the ZipArchive and add the SQL backup and PENRO folder files
             $zip = new \ZipArchive();
             if ($zip->open($zipFilePath, \ZipArchive::CREATE) === true) {
@@ -57,10 +53,10 @@ class BackupController extends Controller
 
                 // Add files from PENRO folder to the zip
                 $penroDir = storage_path($config->StorePath); // Path to the PENRO folder
-                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($penroDir));
-                foreach ($files as $file) {
+                $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($penroDir));
+
+                foreach ($rii as $file) {
                     if (!$file->isDir()) {
-                        // Get the real path and relative path to add it in the zip
                         $filePath = $file->getRealPath();
                         $relativePath = 'PENRO/' . substr($filePath, strlen($penroDir) + 1);
                         $zip->addFile($filePath, $relativePath);
@@ -74,20 +70,21 @@ class BackupController extends Controller
 
 
             return response()->json(['success' => 'Database backup was successful. File saved to ' . $backupFilePath]);
-        } catch (\Exception $e) {
-            Log::error('Database backup failed: ' . $e->getMessage());
+        } catch (\Exception $e) {            
             return response()->json(['error' => 'Database backup failed: ' . $e->getMessage()], 500);
         }
     }
     public function Restore(Request $request)
     {
         try {
+            $request->validate([
+                'backup_file' => 'required|string',
+            ]);
             $config = Config::find(1);
             $drive = $config->Drive;
             // Validate the zip file parameter
             $zipFileName = $request->input('backup_file');
-            Log::info("Requested backup file: $zipFileName"); // Add this line to log the file name
-
+           
             if (!$zipFileName) {
                 return response()->json(['error' => 'No backup file specified.'], 400);
             }
@@ -99,8 +96,7 @@ class BackupController extends Controller
 
             // Full path to the selected backup file
             $zipFilePath = $backupDir . '/' . $zipFileName;
-            Log::info("Backup file full path: $zipFilePath"); // Add this to verify the full path
-
+          
             if (!File::exists($zipFilePath)) {
                 return response()->json(['error' => 'Specified backup file does not exist.'], 404);
             }
@@ -113,7 +109,7 @@ class BackupController extends Controller
 
             $zip = new \ZipArchive();
             if ($zip->open($zipFilePath) === true) {
-                Log::info("Successfully opened zip file: $zipFilePath");
+               
                 $zip->extractTo($tempExtractDir);
                 $zip->close();
             } else {
@@ -123,8 +119,7 @@ class BackupController extends Controller
 
             // Log the extracted files to ensure there's an .sql file
             $extractedFiles = File::files($tempExtractDir);
-            Log::info("Extracted files: " . implode(', ', $extractedFiles));
-
+            
             // Locate the .sql file inside the extracted directory
             $sqlFile = collect(File::files($tempExtractDir))->firstWhere(fn($file) => $file->getExtension() === 'sql');
             if (!$sqlFile) {
@@ -140,9 +135,7 @@ class BackupController extends Controller
             // Restore database from SQL file
             $command = "$config->MySqlDir -h$dbHost -u$dbUser " . ($dbPassword ? "-p$dbPassword " : "") . "$dbName < \"" . $sqlFile->getRealPath() . "\"";
             exec($command, $output, $returnVar);
-            Log::info('Restore command executed: ' . $command);
-            Log::info('Restore command output: ' . implode("\n", $output));
-
+          
             if ($returnVar !== 0) {
                 return response()->json(['error' => 'Database restore failed.'], 500);
             }
@@ -161,8 +154,7 @@ class BackupController extends Controller
         } catch (\Exception $e) {
             // Rest of the process...
         } catch (\Exception $e) {
-            Log::error('Database and PENRO folder restore failed: ' . $e->getMessage());
-            return response()->json(['error' => 'Database and PENRO folder restore failed: ' . $e->getMessage()], 500);
+             return response()->json(['error' => 'Database and PENRO folder restore failed: ' . $e->getMessage()], 500);
         }
     }
 
@@ -183,9 +175,6 @@ class BackupController extends Controller
         // Scan the directory for files
         $files = scandir($backupDir); // List all files in the directory
 
-        // Log the files to confirm they're being retrieved
-        Log::info("Files in backup directory: " . implode(', ', $files));
-        Log::info("Files in backup directory: " . print_r($files, true));
         // Filter out only zip files
         $backupFiles = array_filter($files, function ($file) use ($backupDir) {
             return is_file($backupDir . DIRECTORY_SEPARATOR . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'zip';
@@ -193,7 +182,6 @@ class BackupController extends Controller
 
         // If no zip files found, return an error message
         if (empty($backupFiles)) {
-            Log::error("No zip backup files found in directory: $backupDir");
             return response()->json(['error' => 'No backup files found.'], 200);
         }
 
