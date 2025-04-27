@@ -28,9 +28,7 @@ class TreeController extends Controller
 
     public function getAllTreeSpecies()
     {
-        $species = DB::table('tree_cutting_permit_details')
-            ->selectRaw('DISTINCT LOWER(TRIM(species)) as name')
-            ->get();
+        $species = TreeSpecies::all()->unique('common_name');
 
         return response()->json($species);
     }

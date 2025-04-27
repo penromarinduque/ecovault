@@ -112,35 +112,72 @@
             }
         }
 
-        function updateSpeciesChart(data, timeframe) {
-            const noDataMessage = document.getElementById("no-data-message-trees");
+     function updateSpeciesChart(data, timeframe) {
+    const noDataMessage = document.getElementById("no-data-message-trees");
 
-            if (!data || Object.keys(data).length === 0) {
-                noDataMessage.classList.remove("hidden");
-                species_chart.updateSeries([]);
-            } else {
-                noDataMessage.classList.add("hidden");
+    if (!data || Object.keys(data).length === 0) {
+        noDataMessage.classList.remove("hidden");
+        species_chart.updateSeries([]); // Clear existing series
+        species_chart.updateOptions({
+            xaxis: { categories: [] } // Clear categories if no data
+        });
+    } else {
+        noDataMessage.classList.add("hidden");
 
-                const series = Object.entries(data).map(([species, records]) => ({
-                    name: species,
-                    data: records.map(record => ({
-                        x: timeframe === "yearly" 
-                            ? record.year 
-                            : `${getMonthName(record.month)} ${record.year}`, // Format month as name
-                        y: record.number_of_trees,
-                    })),
+        // Group data by species, format x and y
+        const series = Object.entries(data).map(([species, records]) => {
+            let groupedData;
+
+            if (timeframe === "yearly") {
+                // Group by year for the yearly view
+                groupedData = records.map(item => ({
+                    x: item.year.toString(),
+                    y: parseInt(item.number_of_trees, 10) // Ensure numeric values
                 }));
-
-                species_chart.updateSeries(series);
+            } else {
+                // Group by month and year for the monthly view
+                groupedData = records.map(item => ({
+                    x: `${getMonthName(item.month)} ${item.year}`, // Format as "Month Year"
+                    y: parseInt(item.number_of_trees, 10) // Ensure numeric values
+                }));
             }
+
+            return {
+                name: species,
+                data: groupedData
+            };
+        });
+
+        // Generate categories for the x-axis
+        let categories = [];
+        if (timeframe === "yearly") {
+            // Collect unique years
+            categories = [...new Set(Object.values(data).flat().map(record => record.year))];
+        } else if (timeframe === "monthly") {
+            // Collect unique "Month Year" values
+            categories = [...new Set(Object.values(data).flat().map(record => `${getMonthName(record.month)} ${record.year}`))];
         }
 
-        function getMonthName(monthNumber) {
-            const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            return months[monthNumber - 1]; // Convert month number to name
-        }
+        // Update the chart options
+        species_chart.updateOptions({
+            xaxis: {
+                categories: categories, // Update categories based on timeframe
+            }
+        });
+
+        // Update the chart series with the new data
+        species_chart.updateSeries(series);
+    }
+}
+
+function getMonthName(monthNumber) {
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    return months[monthNumber - 1]; // Convert month number to name
+}
+
+
     </script>
 </div>

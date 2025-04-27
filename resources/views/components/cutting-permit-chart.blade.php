@@ -44,30 +44,42 @@
             const totalTCPRegistrationsElement = document.getElementById("totalTCPRegistrations");
             const noDataTCPMessage = document.getElementById("no-data-tcp-message");
 
-            async function fetchTCPChartData(municipality = "All", timeframe = "monthly") {
-                try {
-                    const response = await fetch(`/api/tree-cutting-statistics?municipality=${municipality}&timeframe=${timeframe}`);
-                    const { data, total_count } = await response.json();
+           async function fetchTCPChartData(municipality = "All", timeframe = "monthly") {
+    try {
+        const response = await fetch(`/api/tree-cutting-statistics?municipality=${municipality}&timeframe=${timeframe}`);
+        const { data, total_count } = await response.json();
 
-                    if (!data || data.length === 0) {
-                        noDataTCPMessage.classList.remove('hidden');
-                        tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: [] }]);
-                        return;
-                    }
+        if (!data || data.length === 0) {
+            noDataTCPMessage.classList.remove('hidden');
+            tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: [] }]);
+            tcp_chart.updateOptions({ xaxis: { categories: [] } }); // reset x-axis too
+            totalTCPRegistrationsElement.textContent = `Total Permits: 0`;
+            return;
+        }
 
-                    noDataTCPMessage.classList.add('hidden');
-                    totalTCPRegistrationsElement.textContent = `Total Permits: ${total_count}`;
+        noDataTCPMessage.classList.add('hidden');
+        totalTCPRegistrationsElement.textContent = `Total Permits: ${total_count}`;
 
-                    const groupedData = data.map(item => ({
-                        x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
-                        y: item.count
-                    }));
+        const categories = data.map(item => (
+            timeframe === "yearly" ? `${item.year}` : `${item.month} ${item.year}`
+        ));
 
-                    tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: groupedData }]);
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
-                }
+        const counts = data.map(item => item.count);
+
+        tcp_chart.updateOptions({
+            xaxis: {
+                categories: categories
             }
+        });
+
+        tcp_chart.updateSeries([{
+            name: "Tree Cutting Permits",
+            data: counts
+        }]);
+    } catch (error) {
+        console.error("Error fetching chart data:", error);
+    }
+}
 
             const options = {
                 chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },

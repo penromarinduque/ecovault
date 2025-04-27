@@ -98,6 +98,7 @@ class FileManagerController extends BaseController
                         'number_of_trees' => $request->number_of_trees,
                         'location' => $request->location,
                         'date_applied' => $request->date_applied,
+                        'species' => $request->input('species')
                     ]);
                     break;
 
