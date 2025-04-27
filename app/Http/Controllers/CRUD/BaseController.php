@@ -480,6 +480,7 @@ abstract class BaseController extends Controller
                             'number_of_trees' => $request->input('number_of_trees') ?? null,
                             'location' => $request->input('location') ?? null,
                             'date_applied' => $request->input('date_applied') ?? null,
+                            'species' => $request->input('edit-species-tp') ?? null,
                         ]);
                         break;
 
