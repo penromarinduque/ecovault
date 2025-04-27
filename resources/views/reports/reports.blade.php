@@ -20,7 +20,7 @@
 
         <a href="{{ route('report-tp.show') }}"
             class="flex items-center justify-between space-x-4 p-4 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600">
-            <span>Transport Permit</span>
+            <span>Tree Transport Permit</span>
             <img src="{{ asset('images/reports/tree transport.png') }}" alt="Transport Permits" class="w-10">
         </a>
 
