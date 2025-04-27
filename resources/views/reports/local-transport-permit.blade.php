@@ -16,7 +16,7 @@
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
                         <option value="Buenavista">Buenavista</option>
-                        <option value="Torijos">Torijos</option>
+                        <option value="Torrijos">Torrijos</option>
                         <option value="Santa Cruz">Santa Cruz</option>
                     </select>
                 </div>
@@ -44,7 +44,7 @@
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
                         <option value="Buenavista">Buenavista</option>
-                        <option value="Torijos">Torijos</option>
+                        <option value="Torrijos">Torrijos</option>
                         <option value="Santa Cruz">Santa Cruz</option>
                     </select>
                 </div>
@@ -80,7 +80,7 @@
                         <option value="Gasan">Gasan</option>
                         <option value="Boac">Boac</option>
                         <option value="Buenavista">Buenavista</option>
-                        <option value="Torijos">Torijos</option>
+                        <option value="Torrijos">Torrijos</option>
                         <option value="Santa Cruz">Santa Cruz</option>
                     </select>
                 </div>

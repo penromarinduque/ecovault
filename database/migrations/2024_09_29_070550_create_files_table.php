@@ -124,8 +124,10 @@ return new class extends Migration {
 
         Schema::create('tree_species', function (Blueprint $table) {
             $table->id();
-            $table->string('common_name')->unique();
+            $table->string('common_name');
             $table->timestamps();
+
+            $table->unique(['common_name']);
         });
 
 

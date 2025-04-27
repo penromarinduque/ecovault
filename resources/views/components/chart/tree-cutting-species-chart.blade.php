@@ -12,14 +12,14 @@
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
                 <option value="Buenavista">Buenavista</option>
-                <option value="Torijos">Torijos</option>
+                <option value="Torrijos">Torrijos</option>
                 <option value="Santa Cruz">Santa Cruz</option>
             </select>
         </div>
         <div>
             <label for="tcs_species_filter" class="block text-sm font-medium text-gray-700">Species:</label>
             <select id="tcs_species_filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" >
                 <option value="All">All</option>
                 <!-- Species options will be dynamically populated -->
             </select>
@@ -55,46 +55,57 @@
                     const speciesFilter = document.getElementById("tcs_species_filter");
 
                     species.forEach(speciesItem => {
-                        const option = document.createElement("option");
-                        option.value = speciesItem.name;
-                        option.textContent = speciesItem.name;
-                        speciesFilter.appendChild(option);
+                        if (speciesItem.common_name) {  // <-- use common_name
+                            const option = document.createElement("option");
+                            option.value = speciesItem.common_name; // <-- use common_name
+                            option.textContent = speciesItem.common_name; // <-- use common_name                          
+                            speciesFilter.appendChild(option);
+                        }
                     });
                 } catch (error) {
                     console.error("Error fetching species options:", error);
                 }
             }
 
+
             // Fetch chart data based on filters
-            async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All") {
-                try {
-                    const response = await fetch(`/api/tree-cutting-species-statistics?municipality=${municipality}&timeframe=${timeframe}&species=${species}`);
-                    const { data, total_count } = await response.json();
+          async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All") {
+    try {
+        const response = await fetch(`/api/tree-cutting-species-statistics?municipality=${municipality}&timeframe=${timeframe}&species=${species}`);
+        const { data, total_count } = await response.json();
 
-                    if (!data || data.length === 0) {
-                        noDataTCSMessage.classList.remove('hidden');
-                        tcs_chart.updateSeries([]);
-                        return;
-                    }
+        if (!data || data.length === 0) {
+            noDataTCSMessage.classList.remove('hidden');
+            tcs_chart.updateSeries([]);
+            tcs_chart.updateOptions({ xaxis: { categories: [] } }); // <-- reset x-axis too
+            return;
+        }
 
-                    noDataTCSMessage.classList.add('hidden');
-                    totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+        noDataTCSMessage.classList.add('hidden');
+        totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
 
-                    // Group data by species
-                    const groupedData = data.map(item => ({
-                        x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
-                        y: item.total_trees
-                    }));
+        // Group data by species
+        const groupedData = data.map(item => ({
+            x: timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`,
+            y: Number(item.total_trees)
+        }));
 
-                    // Update chart with species name in the series
-                    tcs_chart.updateSeries([{
-                        name: species === "All" ? "All Species" : species,
-                        data: groupedData
-                    }]);
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
-                }
-            }
+        // Extract x-axis categories separately
+        const xCategories = groupedData.map(item => item.x);
+
+        // Update chart with both new series and x-axis
+        tcs_chart.updateOptions({
+            xaxis: { categories: xCategories },
+            series: [{
+                name: species === "All" ? "All Species" : species,
+                data: groupedData.map(item => item.y)
+            }]
+        });
+
+    } catch (error) {
+        console.error("Error fetching chart data:", error);
+    }
+}
 
             const options = {
                 chart: { type: "bar", height: 350 },

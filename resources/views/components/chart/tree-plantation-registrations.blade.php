@@ -15,7 +15,7 @@
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
                 <option value="Buenavista">Buenavista</option>
-                <option value="Torijos">Torijos</option>
+                <option value="Torrijos">Torrijos</option>
                 <option value="Santa Cruz">Santa Cruz</option>
             </select>
         </div>
@@ -66,40 +66,55 @@
             });
         }
 
-        async function fetchRegistrationsChartData(location = "", timeframe = "monthly") {
-            try {
-                const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
-                if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
+       async function fetchRegistrationsChartData(location = "", timeframe = "monthly") {
+    try {
+        const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
+        if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
-                const { registrations } = await response.json();
-                updateRegistrationsChart(registrations, timeframe);
-            } catch (error) {
-                console.error("Error fetching chart data:", error);
-            }
+        const { registrations } = await response.json();
+        updateRegistrationsChart(registrations, timeframe);
+    } catch (error) {
+        console.error("Error fetching chart data:", error);
+    }
+}
+
+function updateRegistrationsChart(data, timeframe) {
+    const noDataMessage = document.getElementById("no-data-message-registrations");
+
+    if (!data || data.length === 0) {
+        noDataMessage.classList.remove("hidden");
+        tcp_chart.updateSeries([{ name: "Registrations", data: [] }]);
+    } else {
+        noDataMessage.classList.add("hidden");
+        
+        let groupedData;
+        
+        if (timeframe === "yearly") {
+            // Group by year for the yearly view
+            groupedData = data.map(item => ({
+                x: item.year.toString(),
+                y: item.count
+            }));
+        } else {
+            // Group by month and year for the monthly view
+            groupedData = data.map(item => ({
+                x: `${getMonthName(item.month)} ${item.year}`, // Format as "Month Year"
+                y: item.count
+            }));
         }
 
-        function updateRegistrationsChart(data, timeframe) {
-            const noDataMessage = document.getElementById("no-data-message-registrations");
+        // Update the chart data
+        tcp_chart.updateSeries([{ name: "Registrations", data: groupedData }]);
+    }
+}
 
-            if (!data || data.length === 0) {
-                noDataMessage.classList.remove("hidden");
-                tcp_chart.updateSeries([{ name: "Registrations", data: [] }]);
-            } else {
-                noDataMessage.classList.add("hidden");
-                const groupedData = data.map(item => ({
-                    x: timeframe === "yearly" ? item.year : `${getMonthName(item.month)} ${item.year}`, // Format month as name
-                    y: item.count
-                }));
-                tcp_chart.updateSeries([{ name: "Registrations", data: groupedData }]);
-            }
-        }
+function getMonthName(monthNumber) {
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    return months[monthNumber - 1]; // Convert month number to name
+}
 
-        function getMonthName(monthNumber) {
-            const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            return months[monthNumber - 1]; // Convert month number to name
-        }
     </script>
 </div>

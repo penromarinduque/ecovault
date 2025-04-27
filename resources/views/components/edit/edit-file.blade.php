@@ -328,6 +328,22 @@
                                     <option value="highly-technical">Highly Technical</option>
                                     <option value="simple">Simple</option>
                                 </select>
+                            
+
+                            <div class="my-4">
+                                <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Release</label>
+                                <input type="date" id="edit-date-released" name="date_released"
+                                    placeholder="Enter Date Release"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                            block w-full p-2.5 
+                                                                            focus:border-green-500 focus:ring-green-500 
+                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                            </div>
+                           
+
                             @endif
                         </div>
                     </div>
@@ -437,8 +453,24 @@
                                     valid
                                     input!</p>
                             </div>
-
+                            
                             <!-- Date Applied Field -->
+                            <div class="my-4">
+                                <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
+                                    Applied</label>
+                                <input type="date" id="edit-date-applied" name="date_applied"
+                                    class="date-applied bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                            block w-full p-2.5 
+                            focus:border-green-500 focus:ring-green-500 
+                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
+                                    Enter
+                                    valid
+                                    input!</p>
+                            </div>
+
                             <div class="my-4">
                                 <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
                                     Applied</label>

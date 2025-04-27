@@ -15,6 +15,7 @@ class TreePlantation extends Model
         'number_of_trees',
         'location',
         'date_applied',
+        'species',
     ];
 
     public function file()

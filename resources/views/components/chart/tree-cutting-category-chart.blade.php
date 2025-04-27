@@ -12,7 +12,7 @@
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
                 <option value="Buenavista">Buenavista</option>
-                <option value="Torijos">Torijos</option>
+                <option value="Torrijos">Torrijos</option>
                 <option value="Santa Cruz">Santa Cruz</option>
             </select>
         </div>
@@ -39,37 +39,53 @@
             const totalTCCRegistrationsElement = document.getElementById("totalTCCRegistrations");
             const noDataTCCMessage = document.getElementById("no-data-tcc-message");
 
-            async function fetchTCCChartData(municipality = "All", timeframe = "monthly") {
-                try {
-                    const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}`);
-                    const { data, total_count } = await response.json();
+           async function fetchTCCChartData(municipality = "All", timeframe = "monthly") {
+    try {
+        const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}`);
+        const { data, total_count } = await response.json();
 
-                    if (!data || data.length === 0) {
-                        noDataTCCMessage.classList.remove('hidden');
-                        tcc_chart.updateSeries([]);
-                        return;
-                    }
+        if (!data || data.length === 0) {
+            noDataTCCMessage.classList.remove('hidden');
+            tcc_chart.updateSeries([]);
+            tcc_chart.updateOptions({ xaxis: { categories: [] } });
+            return;
+        }
 
-                    noDataTCCMessage.classList.add('hidden');
-                    totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+        noDataTCCMessage.classList.add('hidden');
+        totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
 
-                    // Group data by category
-                    const categories = [...new Set(data.map(item => item.permit_type))];
-                    const groupedData = categories.map(category => ({
-                        name: category,
-                        data: data
-                            .filter(item => item.permit_type === category)
-                            .map(item => ({
-                                x: timeframe === "yearly" ? item.year : `${item.month} ${item.year}`,
-                                y: item.total_trees
-                            }))
-                    }));
+        // Group data by category
+        const categories = [...new Set(data.map(item => item.permit_type))];
 
-                    tcc_chart.updateSeries(groupedData);
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
-                }
+        const xAxisLabels = [...new Set(
+            data.map(item => timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`)
+        )];
+
+        const groupedData = categories.map(category => ({
+            name: category,
+            data: xAxisLabels.map(label => {
+                const found = data.find(item => {
+                    const itemLabel = timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`;
+                    return item.permit_type === category && itemLabel === label;
+                });
+                return {
+                    x: label,
+                    y: found ? found.total_trees : 0
+                };
+            })
+        }));
+
+        tcc_chart.updateSeries(groupedData);
+        tcc_chart.updateOptions({
+            xaxis: {
+                categories: xAxisLabels
             }
+        });
+
+    } catch (error) {
+        console.error("Error fetching chart data:", error);
+    }
+}
 
             const options = {
                 chart: { type: "bar", height: 350, stacked: true },

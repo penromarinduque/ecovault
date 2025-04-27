@@ -596,6 +596,43 @@
                                 valid
                                 input!</p>
                         </div>
+
+                       <div class="my-4">
+                            <label for="species" class="block mb-2 text-sm font-medium text-gray-700">Species</label>
+                            <select id="species" name="species"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <!-- Options will be dynamically populated -->
+                            </select>
+                        </div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", async () => {
+                                    const speciesSelect = document.getElementById('species');
+                                    try {
+                                        const response = await fetch('/api/tree-species');
+                                        if (response.ok) {
+                                            const data = await response.json();
+                                            speciesSelect.innerHTML = '<option value="" disabled selected hidden>Select a species</option>';
+                                            data.forEach(species => {
+                                                const option = document.createElement('option');
+                                                option.value = species.common_name;
+                                                option.textContent = species.common_name;
+                                                speciesSelect.appendChild(option);
+                                            });
+                                        }
+                                    } catch (error) {
+                                        console.error('Failed to fetch species', error);
+                                    }
+                                });
+                            </script>
+
+
+                        
                     @elseif ($type == 'transport-permit')
                         <!-- Transport Permits Inputs -->
                         <div class="my-4">
@@ -783,7 +820,7 @@
 
         //console.log('this', queryParams);
         const formData = new FormData(this);
-
+        
         let butterfliesAdd = []; // Collect selected butterfly data
 
         if (type == 'local-transport-permit') {
