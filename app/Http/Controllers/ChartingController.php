@@ -28,7 +28,8 @@ class ChartingController extends Controller
                 DATE_FORMAT(date_released, ?) as period, 
                 municipality, 
                 COUNT(id) as total
-            ", [$dateFormat]) // Pass the binding directly here
+            ", [$dateFormat])
+          ->whereNotNull('municipality')// Pass the binding directly here
             ->groupBy('period', 'municipality')
             ->orderBy('period');
 

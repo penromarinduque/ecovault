@@ -291,10 +291,17 @@
             </a>
         </li>
         <li class="relative">
-            <a onclick="archiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+           ${
+            isArchived
+            ? `<a onclick="unarchiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
+                <i class='bx bxs-archive-out absolute left-4 text-lg'></i>
+                <span class="ml-7">Unarchive</span>
+            </a>`
+            : `<a onclick="archiveFile(${fileId})" class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
                 <i class='bx bxs-archive-in absolute left-4 text-lg'></i>
-                <span class="ml-7">Archived</span>
-            </a>
+                <span class="ml-7">Archive</span>
+            </a>`
+        }
         </li>
     `;
 
