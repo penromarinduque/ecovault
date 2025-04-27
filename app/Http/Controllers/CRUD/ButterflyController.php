@@ -19,7 +19,7 @@ class ButterflyController extends Controller
     // Get all species
     public function GetAllSpecies()
     {
-        return response()->json(ButterflySpecies::select('common_name', 'family', 'genus', 'description', 'scientific_name')->get());
+        return response()->json(ButterflySpecies::select('common_name', 'id', 'family', 'genus', 'description', 'scientific_name')->get());
     }
 
     // Update a species by ID

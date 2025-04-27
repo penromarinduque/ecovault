@@ -165,6 +165,8 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/butterfly', [AdminController::class, 'ShowButterflyList'])->name('butterfly.show');
     Route::post('/butterfly/add', [ButterflyController::class, 'AddSpecies']);
+
+    Route::delete('/delete/butterfly/species/{id}', [ButterflyController::class, 'DeleteSpeciesById']);
     //   Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
     Route::post('/api/files/{fileId}/butterfly-details', [ButterflyController::class, 'AddButterflyDetails']);
     Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
