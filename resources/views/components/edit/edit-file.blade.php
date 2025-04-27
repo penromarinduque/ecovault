@@ -471,21 +471,22 @@
                                     input!</p>
                             </div>
 
-                            <div class="my-4">
-                                <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
-                                    Applied</label>
-                                <input type="date" id="edit-date-applied" name="date_applied"
+                           <div class="my-4">
+                                <label for="species" class="block mb-2 text-sm font-medium text-gray-700">Species</label>
+                                <select id="edit-species-tp" name="edit-species-tp"
                                     class="date-applied bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                            block w-full p-2.5 
-                            focus:border-green-500 focus:ring-green-500 
-                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                    autocomplete="off" required>
+                                    block w-full p-2.5 
+                                    focus:border-green-500 focus:ring-green-500 
+                                    required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    required>
+                                    <option value="" disabled selected>Select Species</option>
+                                    <!-- Options will be populated dynamically -->
+                                </select>
                                 <p class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span>
-                                    Enter
-                                    valid
-                                    input!</p>
+                                    Enter valid input!</p>
                             </div>
+
                         @elseif ($type == 'transport-permit')
                             <!-- Transport Permits Inputs -->
                             <div class="my-4">
@@ -590,7 +591,8 @@
 
         editContent.classList.add("hidden");
         skeleton.classList.remove("hidden");
-
+        // Fetch tree species from the API
+       
         //includePermit boolean if file have permit Y/N
 
         const url = `/api/files/${fileId}?includePermit=${includePermit}`;
@@ -600,11 +602,58 @@
             if (!response.ok) throw new Error("You failed to fetch the data and permit");
 
             const data = await response.json();
-
+            
 
             if (data.success) {
-                console.log(data);
-                //    
+    const selectedSpecies = data.permit.species; 
+fetch('/api/tree-species')
+  .then(response => response.json())
+  .then(data => {
+    const speciesSelect = document.getElementById('edit-species-tp');
+
+    // Clear existing options
+    speciesSelect.innerHTML = '<option value="" disabled selected>Select Species</option>';
+
+    // Track if the selected species is in the list
+    let speciesInList = false;
+
+    // Loop through species and add each one to the dropdown
+    data.forEach(speciesItem => {
+      const option = document.createElement('option');
+      option.value = speciesItem.common_name; // Use 'common_name' as the value
+      option.textContent = speciesItem.common_name; // Display the 'common_name' as the text
+      speciesSelect.appendChild(option);
+
+      // Check if the species in the list matches the selected species
+      if (speciesItem.common_name === selectedSpecies) {
+        speciesInList = true;
+      }
+    });
+
+    // If the selected species is not in the list, add it as a disabled option
+    if (!speciesInList && selectedSpecies) {
+      const option = document.createElement('option');
+      option.value = selectedSpecies;
+      option.textContent = selectedSpecies; // Mark as deleted
+      option.disabled = true;
+      speciesSelect.appendChild(option);
+    }
+
+    // Set the selected value (even if the species was deleted or not in the list)
+    speciesSelect.value = selectedSpecies;
+
+    // If the selected species doesn't exist in the list, display it as "deleted"
+    if (!speciesInList && selectedSpecies) {
+      speciesSelect.value = selectedSpecies;
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching tree species:', error);
+  });
+
+
+                // Get the species input element
+                
                 const editForm = document.getElementById('edit-file-form');
                 editForm.dataset.fileId = fileId; // Set fileId in data-file-id
                 // Handle `file` properties
@@ -613,6 +662,8 @@
                     const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
                     // Select all elements with the corresponding class and update their value
                     const input = document.getElementById(`edit-${idSelector}`);
+                   
+
                     if (input) {
                         input.value = value;
                     }
@@ -739,7 +790,7 @@
 
         // FormData will automatically group inputs like `details[0][species]`
         const formData = new FormData(this);
-
+        console.log(formData.get('edit-species-tp'))
         try {
             const editFileResponse = await fetch(`/api/files/update/${fileId}?${queryParams}`, {
                 method: 'POST',
