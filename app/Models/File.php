@@ -68,6 +68,19 @@ class File extends Model
             'user_id' => auth()->id() ?: 0,
         ]);
     }
+     public function unarchive()
+    {
+        $this->is_archived = false;
+        $this->archived_at = now();
+        $this->save();
+
+        FileHistory::create([
+            'file_id' => $this->id,
+            'action' => 'File has been unarchived',
+            'changes' => json_encode(['attributes' => $this->file]),
+            'user_id' => auth()->id() ?: 0,
+        ]);
+    }
 
     // Check if the file is archived
     public function isArchived()

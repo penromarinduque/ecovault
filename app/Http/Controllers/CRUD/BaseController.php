@@ -39,6 +39,36 @@ abstract class BaseController extends Controller
 
         }
     }
+
+    public function UnarchivedById($id)
+    {
+        try {
+            $file = File::findOrFail($id);
+
+
+            $file->update([
+                'is_archived' => false,
+                'archived_at' => null,
+            ]);
+
+            $file->save();
+
+            return response()->json(data: [
+                'success' => true,
+                'message' => 'Unarchived successfully',
+                'files' => $file,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Archiving the file failed',
+                'error' => $e->getMessage(),
+            ]);
+
+        }
+    }
     //Error in Administrative Document
     public function GetFiles(Request $request)
     {        

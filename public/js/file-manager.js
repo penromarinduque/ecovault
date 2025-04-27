@@ -196,6 +196,48 @@ async function archiveFile(fileId) {
     }
 }
 
+async function unarchiveFile(fileId) {
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+
+    try {
+        const response = await fetch(`/api/files/unarchived/${fileId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+            console.log('succccc')
+
+            refreshTable();
+
+            showToast({
+                type: 'success',
+                message: 'File successfully unarchived.',
+
+            });
+
+        } else {
+            showToast({
+                type: 'danger',
+                message: 'An error occurred while unarchiving the file.',
+
+            });
+
+        }
+    } catch (error) {
+        showToast({
+            type: 'danger',
+            message: 'An error occurred while archiving the file.',
+
+        });
+
+    }
+}
+
+
 // Rename file function
 async function renameFile(fileId) {
     const csrfToken = document.querySelector('input[name="_token"]').value;
