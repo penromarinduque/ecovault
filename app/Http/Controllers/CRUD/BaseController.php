@@ -186,10 +186,30 @@ abstract class BaseController extends Controller
             // Determine which table to join based on permit_type
             switch ($permitType) {
                 case 'tree-cutting-permits':
-                    $query = TreeCuttingPermit::with('details') // Load related details
+                    $query = TreeCuttingPermit::with('details')
                         ->join('files', 'files.id', '=', 'tree_cutting_permits.file_id')
                         ->where('tree_cutting_permits.name_of_client', 'like', "%{$clientSearch}%")
-                        ->select('files.*', 'tree_cutting_permits.*'); // Select required columns
+                        ->select(
+                            'files.id',
+                            'files.permit_type', // ✅ Take permit_type from files table only
+                            'files.category',
+                            'files.municipality',
+                            'files.report_type',
+                            'files.file_name',
+                            'files.file_path',
+                            'files.office_source',
+                            'files.classification',
+                            'files.date_released',
+                            'files.is_archived',
+                            'files.archived_at',
+                            'files.user_id',
+                            'files.created_at',
+                            'files.updated_at',
+                            'tree_cutting_permits.id as tree_cutting_permit_id', // ✅ Give alias to prevent overwrite
+                            'tree_cutting_permits.name_of_client'
+                            // select only what you actually need from tree_cutting_permits
+                        );
+
                     break;
 
                 case 'transport-permit':
