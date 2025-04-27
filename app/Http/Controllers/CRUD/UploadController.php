@@ -39,7 +39,7 @@ class UploadController extends Controller
         if ($request->file('file')->isValid()) {
             $file = $request->file('file');
             $originalFileName = $file->getClientOriginalName();
-            $sanitizedFileName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $originalFileName);
+            $sanitizedFileName = preg_replace('/[^a-zA-Z0-9_\-]/', '.', $originalFileName);
             $extension = $file->getClientOriginalExtension();
 
             //file manager na folder
