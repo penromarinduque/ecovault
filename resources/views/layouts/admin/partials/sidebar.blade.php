@@ -65,7 +65,7 @@
                         <span class="text-lg font-semibold text-gray-200">Reports</span>
                     </a>
                 </li>
-                {{-- <li
+                <li
                     class="flex items-center space-x-4 hover:bg-[#47476e] px-5 py-3 rounded-lg transition-colors duration-200">
                     <a href="{{ route('client.records.show') }}" class="flex items-center gap-4 w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -79,7 +79,7 @@
                         </svg>
                         <span class="text-lg font-semibold text-gray-200">Client file search</span>
                     </a>
-                </li> --}}
+                </li>
             @endif
 
 
