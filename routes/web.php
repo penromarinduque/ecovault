@@ -166,18 +166,24 @@ Route::middleware([VerifiedUser::class])->group(function () {
     Route::get('/butterfly', [AdminController::class, 'ShowButterflyList'])->name('butterfly.show');
     Route::post('/butterfly/add', [ButterflyController::class, 'AddSpecies']);
 
+    Route::get('show/edit/maintenance/{speciesType}/{id}', [AdminController::class, 'ShowMaintenanceEdit'])->name('maintenance.edit');
+    Route::get('/species/edit/{id}', [ButterflyController::class, 'GetSpeciesById'])->name('butterfly.edit');
+
     Route::delete('/delete/butterfly/species/{id}', [ButterflyController::class, 'DeleteSpeciesById']);
     //   Route::put('/butterfly/edit/{$id}', [AdminController::clas, 'Show'])
     Route::post('/api/files/{fileId}/butterfly-details', [ButterflyController::class, 'AddButterflyDetails']);
     Route::get('/api/files/{fileId}/butterflies', [ButterflyController::class, 'GetButterflyDetails']);
     Route::post('/api/file/sync-butterflies/{fileId}', [ButterflyController::class, 'syncButterflyDetails'])->name('butterflies.sync');
     Route::get('/maintenance/ltp', [AdminController::class, 'ShowMaintenance'])->name('show.maintenance');
+    Route::post('/update/species/{id}', [ButterflyController::class, 'UpdateSpeciesById'])->name('update.species');
 
     Route::get('/maintenance/{speciesType}/table', [AdminController::class, 'ShowMaintenanceTable'])->name('show.maintenance.table');
     Route::get('/show/species/ltp', [ButterflyController::class, 'GetAllSpecies'])->name('getAllSpecies');
     Route::post('/api/tree-species/add', [TreeController::class, 'AddTreeSpecies'])->name('tree.species.add');
     Route::get('/api/tree-species', [TreeController::class, 'getAllTreeSpecies'])->name('tree.species.show');
-
+    Route::get('/api/tree-species/{id}', [TreeController::class, 'getTreeSpeciesById'])->name('tree.species.get');
+    Route::post('/api/tree-species/update/{id}', [TreeController::class, 'updateTreeSpecies'])->name('tree.species.update');
+    Route::delete('/api/tree-species/{id}', [TreeController::class, 'deleteTreeSpecies'])->name('tree.species.delete');
     //Charting 
     Route::get('/api/permit-statistics', [ChartingController::class, 'permitStatistics']);
 

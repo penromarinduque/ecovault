@@ -252,5 +252,10 @@ class AdminController extends Controller
     {
         return view('admin.maintenance.table', compact('speciesType'));
     }
+    public function ShowMaintenanceEdit($speciesType, $id)
+    {
+        // To check the values received in the URL
+        return view('admin.maintenance.edit-maintenance', compact('speciesType', 'id'));
+    }
 
 }

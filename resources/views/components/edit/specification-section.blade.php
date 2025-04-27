@@ -42,7 +42,7 @@
         required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
         valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                         autocomplete="off" required>
-                                        <option value="" disabled selected>Select a species</option>
+                                        <option value="" disabled selected></option>
                                     </select>
                                 </div>
                                 {{-- <div class="my-4">

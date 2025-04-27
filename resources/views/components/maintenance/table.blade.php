@@ -76,11 +76,6 @@
     </div>
 </div>
 
-
-
-
-
-
 <script>
     // Fetch data from the server and update the table dynamically
     function loadButterflySpecies() {
@@ -96,24 +91,28 @@
                     row.classList.add("bg-white", "dark:bg-gray-800", "hover:bg-gray-50",
                         "dark:hover:bg-gray-600");
 
+                    // Dynamically create the edit URL with speciesType and species.id
+                    const editUrl =
+                        `/show/edit/maintenance/{{ $speciesType }}/${species.id}`;
+
                     row.innerHTML = `
-    <td class="px-6 py-4">${index + 1}</td> <!-- Row number -->
-    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-        ${species.common_name || 'N/A'} <span class="text-blue-700">/</span> ${species.scientific_name}
-    </th>
-    <td class="px-6 py-4">${species.family || 'N/A'}</td>
-    <td class="px-6 py-4">${species.genus || 'N/A'}</td>
-    <td class="px-6 py-4">${species.description || 'N/A'}</td>
-    <td class="px-6 py-4 text-right space-x-2">
-        <a href="#"
-            class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
-            Edit
-        </a>
-        <button data-id="${species.id}" class="delete-btn hover:bg-red-900  inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
-            Delete
-        </button>
-    </td>
-`;
+                    <td class="px-6 py-4">${index + 1}</td> <!-- Row number -->
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        ${species.common_name || 'N/A'} <span class="text-blue-700">/</span> ${species.scientific_name}
+                    </th>
+                    <td class="px-6 py-4">${species.family || 'N/A'}</td>
+                    <td class="px-6 py-4">${species.genus || 'N/A'}</td>
+                    <td class="px-6 py-4">${species.description || 'N/A'}</td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <a href="${editUrl}"
+                            class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                            Edit
+                        </a>
+                        <button data-id="${species.id}" class="delete-btn hover:bg-red-900 inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+                            Delete
+                        </button>
+                    </td>
+                `;
                     tableBody.appendChild(row);
                 });
             })
@@ -121,6 +120,7 @@
                 console.error("Error fetching species:", error);
             });
     }
+
 
     function showTreeSpecies() {
         fetch('/api/tree-species')
@@ -135,14 +135,24 @@
                     row.classList.add("bg-white", "dark:bg-gray-800", "hover:bg-gray-50",
                         "dark:hover:bg-gray-600");
 
+                    const editUrl =
+                        `/show/edit/maintenance/{{ $speciesType }}/${species.id}`;
+                    // Dynamically create the edit URL with speciesType and species.id
+
                     row.innerHTML = `
                   <td class="px-6 py-4">${index + 1}</td> <!-- Row number -->
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      ${species.name}
+                      ${species.common_name}
                   </th>
-                  <td class="px-6 py-4 text-right">
-                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                  </td>
+                 <td class="px-6 py-4 text-right space-x-2">
+          <a href="${editUrl}"
+                            class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                            Edit
+                        </a>
+        <button data-id="${species.id}" class="delete-btn hover:bg-red-900  inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+            Delete
+        </button>
+    </td>
               `;
                     tableBody.appendChild(row);
                 });
@@ -153,7 +163,14 @@
 
     function deleteSpecies(speciesId) {
         // Make a DELETE request to the server to delete the species
-        fetch(`/delete/butterfly/species/${speciesId}`, {
+        let url = '';
+        if ("{{ $speciesType }}" == 'butterfly') {
+            url = `/delete/butterfly/species/${speciesId}`;
+        } else if ("{{ $speciesType }}" == 'tree') {
+            url = `/api/tree-species/${speciesId}`;
+        }
+
+        fetch(url, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -163,9 +180,22 @@
             .then(response => {
                 if (response.ok) {
                     // Species deleted successfully, reload the table
-                    loadButterflySpecies();
+                    if ("{{ $speciesType }}" == 'butterfly') {
+                        loadButterflySpecies();
+                    } else if ("{{ $speciesType }}" == 'tree') {
+                        showTreeSpecies();
+                    }
+                    showToast({
+                        type: 'success',
+                        message: 'Species successfully deleted.',
+
+                    });
                 } else {
-                    console.error("Error deleting species:", response.statusText);
+                    showToast({
+                        type: 'danger',
+                        message: 'Failed to delete the species.',
+
+                    });
                 }
             })
             .catch(error => {

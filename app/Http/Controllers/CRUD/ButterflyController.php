@@ -13,7 +13,12 @@ class ButterflyController extends Controller
     // Get a single species by ID
     public function GetSpeciesById($id)
     {
-        return ButterflySpecies::find($id);
+        $species = ButterflySpecies::find($id);
+        if ($species) {
+            return response()->json($species);
+        } else {
+            return response()->json(['error' => 'Species not found'], 404);
+        }
     }
 
     // Get all species
@@ -23,16 +28,29 @@ class ButterflyController extends Controller
     }
 
     // Update a species by ID
-    public function UpdateSpeciesById($id, $data)
+    public function UpdateSpeciesById(Request $request, $id)
     {
+        // Find the species by its ID
         $species = ButterflySpecies::find($id);
 
         if (!$species) {
-            return null; // Return null if species not found
+            return response()->json(['error' => 'Species not found'], 404);
         }
 
+        // Validate incoming data if needed
+        $data = $request->validate([
+            'scientific_name' => 'required|string|max:255',
+            'common_name' => 'nullable|string|max:255',
+            'family' => 'nullable|string|max:255',
+            'genus' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        // Update the species with the validated data
         $species->update($data);
-        return $species;
+
+        // Return the updated species
+        return response()->json($species);
     }
 
     public function search(Request $request)
@@ -174,6 +192,9 @@ class ButterflyController extends Controller
 
         return response()->json($butterflies);
     }
+
+
+
 
 
 
