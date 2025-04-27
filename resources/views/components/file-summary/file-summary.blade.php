@@ -40,7 +40,7 @@
             <div class="relative z-0 w-full mb-5 group">
                 <div
                     class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <span class="text-lg font-medium text-gray-800">Office Source:</span>
+                    <span class="text-lg font-medium text-gray-800">Document Office Source:</span>
                     <span id="summary-office-source" class="text-gray-500 capitalize font-semibold pl-4 "> </span>
                 </div>
             </div>
@@ -118,6 +118,17 @@
                 </div>
             </div>
         @endif
+        @if ($type == 'tree-cutting-permits')
+            <div class="relative z-0 w-full mb-5 group">
+                <div
+                    class="py-2.5 px-0 w-full text-lg text-gray-800 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <span class="text-lg font-medium text-gray-800">Tree Cutting permit Type:</span>
+                    <span id="summary-permit-type" class="text-gray-500 capitalize font-semibold pl-4 ">
+                    </span>
+                </div>
+            </div>
+        @endif
+
         @if (in_array($type, ['tree-cutting-permits', 'transport-permit', 'local-transport-permit']))
             <div class="relative overflow-x-auto mt-12">
 

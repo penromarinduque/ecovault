@@ -142,13 +142,31 @@
 
         });
 
-        async function fetchTreeSpeciesEdit(dropdown) {
+        async function fetchTreeSpeciesEdit(dropdown, defaultValue) {
             try {
                 const response = await fetch('/api/tree-species');
                 if (response.ok) {
                     const data = await response.json();
-                    dropdown.innerHTML =
-                        '<option value="" disabled selected>Select a species</option>'; // Reset options
+
+                    // Reset options and add the default option
+                    dropdown.innerHTML = '';
+
+                    // Check if the default value exists in the fetched data
+                    const defaultExists = data.some(species => species.common_name === defaultValue);
+
+                    // Add the default value as the first option
+                    if (defaultExists) {
+                        dropdown.innerHTML = `<option value="${defaultValue}" selected>${defaultValue}</option>`;
+                    } else if (defaultValue) {
+                        // Add the default value as "Unavailable" if it doesn't exist in the fetched data
+                        dropdown.innerHTML =
+                            `<option value="${defaultValue}" selected>${defaultValue}</option>`;
+                    } else {
+                        // Add a placeholder if no default value is provided
+                        dropdown.innerHTML = `<option value="" disabled selected>Select a species</option>`;
+                    }
+
+                    // Populate the dropdown with fetched species
                     data.forEach(species => {
                         const option = document.createElement('option');
                         option.value = species.common_name; // Assuming `common_name` is the value
@@ -157,9 +175,11 @@
                     });
                 } else {
                     console.error('Failed to fetch tree species:', response.statusText);
+                    dropdown.innerHTML = '<option value="" disabled selected>Error loading species</option>';
                 }
             } catch (error) {
                 console.error('Error fetching tree species:', error);
+                dropdown.innerHTML = '<option value="" disabled selected>Error loading species</option>';
             }
         }
 

@@ -133,9 +133,9 @@
             let url = '';
 
             if (speciesType === 'butterfly') {
-                url = `/species/update/${id}`;
+                url = `/update/species/${id}`;
             } else if (speciesType === 'tree') {
-                url = `('/api/tree-species/update/${id}`;
+                url = `/api/tree-species/update/${id}`;
             } else {
                 console.error('Unknown species type:', speciesType);
                 return;
@@ -159,7 +159,7 @@
                 console.log('Updated Species:', data);
                 showToast({
                     type: 'success',
-                    message: 'Tree species updated successfully!',
+                    message: 'Species updated successfully!',
                 });
             } catch (error) {
                 console.error('Error updating species:', error);

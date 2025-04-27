@@ -71,7 +71,7 @@ abstract class BaseController extends Controller
     }
     //Error in Administrative Document
     public function GetFiles(Request $request)
-    {        
+    {
         try {
             //make query to list the file that
             $type = $request->query('type');
@@ -108,7 +108,7 @@ abstract class BaseController extends Controller
                         'office_source' => $file->office_source,
                         'user_name' => $file->user->name,
                         'classification' => $file->classification,
-                        'is_shared' => !empty($sharedUserIds) , // Check if there are any fileShares
+                        'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
                         'shared_users' => $sharedUserIds, // List of user IDs who have access
                     ];
                 });
@@ -441,6 +441,7 @@ abstract class BaseController extends Controller
                         // Update the TreeCuttingPermit (main data)
                         $treeCuttingPermit->update([
                             'name_of_client' => $request->input('name_of_client'), // Update the client name
+                            'permit_type' => $request->input('permit_type'), // Update the permit type
                         ]);
                         // Get the arrays from the request
                         $detailIds = $request->input('id'); // e.g. [1, 2]

@@ -263,6 +263,27 @@
                                 <span class="font-medium">Please!</span> Enter valid input!
                             </p>
                         </div>
+                        @if ($type == 'tree-cutting-permits')
+                            <label for="tcp-type" class="block mb-2 text-sm font-medium text-gray-700">Tree Cutting
+                                Permit Type</label>
+                            <select id="edit-permit-type" name="permit_type"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                    block w-full p-2.5 
+                                                                    focus:border-green-500 focus:ring-green-500 
+                                                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                                <option value="" disabled selected hidden>Choose Tree Cutting Permit</option>
+                                <option value="Special Tree Cutting Permit">Special Tree Cutting Permit</option>
+                                <option value="Tree Cutting Permit for planted/naturally growing growing trees">Tree
+                                    Cutting Permit for
+                                    planted/naturally growing trees</option>
+                                <option value="Private Land Timber Permit">Private Land Timber Permit(PLTP)</option>
+                                <option value="Special Private Land Timber Permit">Special Private Land Timber
+                                    Permit(SPLTP)
+                                </option>
+                            </select>
+                        @endif
 
                         <div class="my-4">
                             @if ($type == 'land-title')
@@ -328,21 +349,22 @@
                                     <option value="highly-technical">Highly Technical</option>
                                     <option value="simple">Simple</option>
                                 </select>
-                            
 
-                            <div class="my-4">
-                                <label for="date-released" class="block mb-2 text-sm font-medium text-gray-700">Date
-                                    Release</label>
-                                <input type="date" id="edit-date-released" name="date_released"
-                                    placeholder="Enter Date Release"
-                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+
+                                <div class="my-4">
+                                    <label for="date-released"
+                                        class="block mb-2 text-sm font-medium text-gray-700">Date
+                                        Release</label>
+                                    <input type="date" id="edit-date-released" name="date_released"
+                                        placeholder="Enter Date Release"
+                                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
                                                                             block w-full p-2.5 
                                                                             focus:border-green-500 focus:ring-green-500 
                                                                             required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
                                                                             valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                    autocomplete="off" required>
-                            </div>
-                           
+                                        autocomplete="off" required>
+                                </div>
+
 
                             @endif
                         </div>
@@ -453,7 +475,7 @@
                                     valid
                                     input!</p>
                             </div>
-                            
+
                             <!-- Date Applied Field -->
                             <div class="my-4">
                                 <label for="date_applied" class="block mb-2 text-sm font-medium text-gray-700">Date
@@ -658,7 +680,7 @@
                                 if (input) {
                                     if (input.tagName === 'SELECT' && key === 'species') {
                                         // Fetch options first
-                                        await fetchTreeSpeciesEdit(input);
+                                        await fetchTreeSpeciesEdit(input, defaultValue = value);
                                         input.value = value; // now this will work
                                     } else {
                                         input.value = value;
