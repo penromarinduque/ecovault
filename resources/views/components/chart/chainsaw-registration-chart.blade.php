@@ -36,77 +36,99 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (typeof ApexCharts === "undefined") {
-                console.error("ApexCharts is not defined. Ensure the library is loaded.");
+     document.addEventListener("DOMContentLoaded", () => {
+    if (typeof ApexCharts === "undefined") {
+        console.error("ApexCharts is not defined. Ensure the library is loaded.");
+        return;
+    }
+
+    let tcp_chart;
+    const chartElement = document.getElementById("tcp-chart");
+    const totalPermitsElement = document.getElementById("totalPermits");
+    const noDataMessage = document.getElementById("no-data-message");
+
+    async function fetchChartData(location = "All", timeframe = "monthly") {
+        try {
+            const response = await fetch(`/api/chainsaw-registration-statistics?municipality=${location}&timeframe=${timeframe}`);
+            const { data, total_count } = await response.json();
+
+            if (!data || data.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: [] }]);
                 return;
             }
 
-            let tcp_chart;
-            const chartElement = document.getElementById("tcp-chart");
-            const totalPermitsElement = document.getElementById("totalPermits");
-            const noDataMessage = document.getElementById("no-data-message");
+            noDataMessage.classList.add('hidden');
 
-            async function fetchChartData(location = "All", timeframe = "monthly") {
-                try {
-                    const response = await fetch(`/api/chainsaw-registration-statistics?municipality=${location}&timeframe=${timeframe}`);
-                    const { data, total_count } = await response.json();
+            const groupedData = groupData(data, timeframe);
 
-                    if (!data || data.length === 0) {
-                        noDataMessage.classList.remove('hidden');
-                        tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: [] }]);
-                        return;
-                    }
+            // Update total permits
+            totalPermitsElement.textContent = `Total Permits: ${total_count}`;
 
-                    noDataMessage.classList.add('hidden');
+            // Update chart data
+            tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: groupedData.data }]);
+            tcp_chart.updateOptions({
+                xaxis: {
+                    categories: groupedData.categories, // Set x-axis categories dynamically
+                    labels: { style: { fontSize: '12px' } },
+                },
+            });
 
-                    const groupedData = groupData(data, timeframe);
+        } catch (error) {
+            console.error("Error fetching chart data:", error);
+        }
+    }
 
-                    // Update total permits
-                    totalPermitsElement.textContent = `Total Permits: ${total_count}`;
+    function groupData(data, timeframe) {
+        const categories = [];
+        const chartData = [];
 
-                    // Update chart
-                    tcp_chart.updateSeries([{ name: "Chainsaw Registration", data: groupedData }]);
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
+        data.forEach(item => {
+            let label = "";
+            if (timeframe === "yearly") {
+                label = item.year.toString(); // Year as the label
+            } else if (timeframe === "monthly") {
+                label = `${item.month} ${item.year}`; // Month and year for monthly data
+            }
+
+            if (!categories.includes(label)) {
+                categories.push(label);
+            }
+
+            chartData.push({ x: label, y: item.total_permits });
+        });
+
+        return { categories, data: chartData };
+    }
+
+    const options = {
+        colors: ["#1A56DB"],
+        series: [{ name: "Chainsaw Registration", data: [] }],
+        chart: { type: "bar", height: 320, fontFamily: "Inter, sans-serif" },
+        xaxis: { categories: [], labels: { style: { fontSize: '12px' } } },
+        yaxis: {
+            show: true,
+            labels: {
+                formatter: function (value) {
+                    return Math.round(value); // Ensure solid numbers
                 }
             }
+        },
+        plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
+    };
 
-            function groupData(data, timeframe) {
-                return data.map(item => {
-                    const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`;
-                    return { x: key, y: item.total_permits };
-                });
-            }
+    tcp_chart = new ApexCharts(chartElement, options);
+    tcp_chart.render();
 
-            const options = {
-                colors: ["#1A56DB"],
-                series: [{ name: "Chainsaw Registration", data: [] }],
-                chart: { type: "bar", height: 320, fontFamily: "Inter, sans-serif" },
-                xaxis: { labels: { style: { fontSize: '12px' } } },
-                yaxis: {
-                    show: true,
-                    labels: {
-                        formatter: function (value) {
-                            return Math.round(value); // Ensure solid numbers
-                        }
-                    }
-                },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
-            };
+    // Fetch initial data
+    fetchChartData();
 
-            tcp_chart = new ApexCharts(chartElement, options);
-            tcp_chart.render();
-
-            // Fetch initial data
-            fetchChartData();
-
-            // Apply filters on button click
-            document.getElementById("applyChainsawFilters").addEventListener("click", () => {
-                const location = document.getElementById("location-filter").value;
-                const timeframe = document.getElementById("timeframe-filter").value;
-                fetchChartData(location, timeframe);
-            });
-        });
-    </script>
+    // Apply filters on button click
+    document.getElementById("applyChainsawFilters").addEventListener("click", () => {
+        const location = document.getElementById("location-filter").value;
+        const timeframe = document.getElementById("timeframe-filter").value;
+        fetchChartData(location, timeframe);
+    });
+});
+</script>
 </div>

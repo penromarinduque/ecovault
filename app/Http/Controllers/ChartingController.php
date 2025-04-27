@@ -187,43 +187,55 @@ class ChartingController extends Controller
     }
 
     public function getChainsawRegistrationStatisticsByCategory(Request $request)
-    {
-        $municipality = $request->query('municipality', 'All'); // Default to 'All'
-        $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
+{
+    $municipality = $request->query('municipality', 'All'); // Default to 'All'
+    $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
+    $dataType = $request->query('dataType', 'all'); // Default to 'both'
 
-        $query = DB::table('files')
-            ->where('permit_type', 'chainsaw-registration')
-            ->whereNotNull('date_released')
-            ->selectRaw("
-                municipality,
-                COUNT(CASE WHEN category = 'new' THEN 1 END) AS new_registrations,
-                COUNT(CASE WHEN category = 'renewal' THEN 1 END) AS renewals,
-                YEAR(date_released) as year" .
-                ($timeframe === 'monthly' ? ", DATE_FORMAT(date_released, '%b') as month" : "") // Format month as "Jan", "Feb"
-            );
+    $query = DB::table('files')
+        ->where('permit_type', 'chainsaw-registration')
+        ->whereNotNull('date_released')
+        ->selectRaw("
+            municipality,
+            COUNT(CASE WHEN category = 'new' THEN 1 END) AS new_registrations,
+            COUNT(CASE WHEN category = 'renewal' THEN 1 END) AS renewals,
+            YEAR(date_released) as year" . 
+            ($timeframe === 'monthly' ? ", DATE_FORMAT(date_released, '%b') as month" : "") // Format month as "Jan", "Feb"
+        );
 
-        if ($municipality !== 'All') {
-            $query->where('municipality', $municipality);
-        }
-
-        if ($timeframe === 'monthly') {
-            $query->groupBy('municipality', DB::raw('YEAR(date_released), DATE_FORMAT(date_released, "%b")'))
-                ->orderByRaw('YEAR(date_released) ASC, STR_TO_DATE(DATE_FORMAT(date_released, "%b"), "%b") ASC');
-        } else {
-            $query->groupBy('municipality', DB::raw('YEAR(date_released)'))
-                ->orderByRaw('YEAR(date_released) ASC');
-        }
-
-        $query->havingRaw("new_registrations > 0 OR renewals > 0");
-
-        $data = $query->get();
-        $totalCount = $data->sum(fn($item) => $item->new_registrations + $item->renewals); // Calculate total registrations
-
-        return response()->json([
-            'data' => $data,
-            'total_count' => $totalCount,
-        ]);
+    if ($municipality !== 'All') {
+        $query->where('municipality', $municipality);
     }
+
+    if ($timeframe === 'monthly') {
+        $query->groupBy('municipality', DB::raw('YEAR(date_released), DATE_FORMAT(date_released, "%b")'))
+            ->orderByRaw('YEAR(date_released) ASC, STR_TO_DATE(DATE_FORMAT(date_released, "%b"), "%b") ASC');
+    } else {
+        $query->groupBy('municipality', DB::raw('YEAR(date_released)'))
+            ->orderByRaw('YEAR(date_released) ASC');
+    }
+
+    // Filter based on the selected dataType
+    if ($dataType === 'new') {
+        // Only return data for new registrations
+        $query->havingRaw('new_registrations > 0');
+    } elseif ($dataType === 'renewal') {
+        // Only return data for renewals
+        $query->havingRaw('renewals > 0');
+    } else {
+        // Include both new registrations and renewals (both is the default)
+        $query->havingRaw("new_registrations > 0 OR renewals > 0");
+    }
+
+    $data = $query->get();
+    $totalCount = $data->sum(fn($item) => $item->new_registrations + $item->renewals); // Calculate total registrations
+
+    return response()->json([
+        'data' => $data,
+        'total_count' => $totalCount,
+    ]);
+}
+
 
     public function GetPrivateTreePlantationRegistrations(Request $request)
     {

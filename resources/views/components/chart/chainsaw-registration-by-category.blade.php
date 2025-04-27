@@ -12,7 +12,7 @@
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
                 <option value="Buenavista">Buenavista</option>
-              <option value="Torrijos">Torrijos</option>
+                <option value="Torrijos">Torrijos</option>
                 <option value="Santa Cruz">Santa Cruz</option>
             </select>
         </div>
@@ -24,101 +24,110 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+        <div>
+            <label for="crc_data_type_filter" class="block text-sm font-medium text-gray-700">Category:</label>
+            <select id="crc_data_type_filter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                <option value="all">All</option>
+                <option value="new">New Registrations</option>
+                <option value="renewal">Renewals</option>
+            </select>
+        </div>
         <button id="applyCRCFilters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
     </div>
-    <div id="crc_chainsaw_chart"></div>
+    <div id="crc_chainsaw_chart" style=""></div>
     <div id="no-data-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
 
     <!-- Ensure ApexCharts CDN is loaded -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (typeof ApexCharts === "undefined") {
-                console.error("ApexCharts is not defined. Ensure the library is loaded.");
-                return;
-            }
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof ApexCharts === "undefined") {
+            console.error("ApexCharts is not defined. Ensure the library is loaded.");
+            return;
+        }
 
-            let crc_chainsaw_chart;
-            const crc_chartElement = document.getElementById("crc_chainsaw_chart");
-            const totalRegistrationsElement = document.getElementById("totalRegistrations");
-            const noDataMessage = document.getElementById("no-data-message");
+        let crc_chainsaw_chart;
+        const crc_chartElement = document.getElementById("crc_chainsaw_chart");
+        const totalRegistrationsElement = document.getElementById("totalRegistrations");
+        const noDataMessage = document.getElementById("no-data-message");
 
-            async function fetchCRCChartData(municipality = "All", timeframe = "monthly") {
-                try {
-                    const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}`);
-                    const { data, total_count } = await response.json();
+        async function fetchCRCChartData(municipality = "All", timeframe = "monthly", dataType = "all") {
+            try {
+                const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}&dataType=${dataType}`);
+                const { data, total_count } = await response.json();
 
-                    if (!data || data.length === 0) {
-                        noDataMessage.classList.remove('hidden');
-                        crc_chainsaw_chart.updateSeries([
-                            { name: "New Registrations", data: [] },
-                            { name: "Renewals", data: [] }
-                        ]);
-                        return;
-                    }
-
-                    noDataMessage.classList.add('hidden');
-
-                    // Update total registrations
-                    totalRegistrationsElement.textContent = `Total Registrations: ${total_count}`;
-
-                    // Group data for chart
-                    const groupedData = groupData(data, timeframe);
-
-                    // Update chart
+                if (!data || data.length === 0) {
+                    noDataMessage.classList.remove('hidden');
                     crc_chainsaw_chart.updateSeries([
-                        { name: "New Registrations", data: groupedData.newRegistrations },
-                        { name: "Renewals", data: groupedData.renewals }
+                        { name: "New Registrations", data: [] },
+                        { name: "Renewals", data: [] }
                     ]);
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
+                    return;
                 }
+
+                noDataMessage.classList.add('hidden');
+
+                // Update total registrations
+                totalRegistrationsElement.textContent = `Total Registrations: ${total_count}`;
+
+                // Group data for chart
+                const groupedData = groupData(data, timeframe);
+
+                // Update chart
+                crc_chainsaw_chart.updateSeries([
+                    { name: "New Registrations", data: groupedData.newRegistrations },
+                    { name: "Renewals", data: groupedData.renewals }
+                ]);
+            } catch (error) {
+                console.error("Error fetching chart data:", error);
             }
+        }
 
-            function groupData(data, timeframe) {
-                const newRegistrations = [];
-                const renewals = [];
-                data.forEach(item => {
-                    const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`; // Use month as string
-                    newRegistrations.push({ x: key, y: item.new_registrations });
-                    renewals.push({ x: key, y: item.renewals });
-                });
-                return { newRegistrations, renewals };
-            }
-
-            const options = {
-                chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },
-                colors: ["#DB1A56", "#1E88E5"],
-                series: [],
-                xaxis: { categories: [] },
-                yaxis: {
-                    title: { text: "Number of Registrations" },
-                    labels: {
-                        formatter: function (value) {
-                            return Math.round(value); // Ensure solid numbers
-                        }
-                    }
-                },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true }
-            };
-
-            crc_chainsaw_chart = new ApexCharts(crc_chartElement, options);
-            crc_chainsaw_chart.render();
-
-            // Fetch initial data
-            fetchCRCChartData();
-
-            // Apply filters on button click
-            document.getElementById("applyCRCFilters").addEventListener("click", () => {
-                const municipality = document.getElementById("crc_municipality_filter").value;
-                const timeframe = document.getElementById("crc_timeframe_filter").value;
-                fetchCRCChartData(municipality, timeframe);
+        function groupData(data, timeframe) {
+            const newRegistrations = [];
+            const renewals = [];
+            data.forEach(item => {
+                const key = timeframe === "yearly" ? item.year : `${item.month} ${item.year}`; // Use month as string
+                newRegistrations.push({ x: key, y: item.new_registrations });
+                renewals.push({ x: key, y: item.renewals });
             });
+            return { newRegistrations, renewals };
+        }
+
+        const options = {
+            chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },
+            colors: ["#DB1A56", "#1E88E5"],
+            series: [],
+            xaxis: { categories: [] },
+            yaxis: {
+                title: { text: "Number of Registrations" },
+                labels: {
+                    formatter: function (value) {
+                        return Math.round(value); // Ensure solid numbers
+                    }
+                }
+            },
+            //  plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
+            dataLabels: { enabled: true }
+        };
+
+        crc_chainsaw_chart = new ApexCharts(crc_chartElement, options);
+        crc_chainsaw_chart.render();
+
+        // Fetch initial data
+        fetchCRCChartData();
+
+        // Apply filters on button click
+        document.getElementById("applyCRCFilters").addEventListener("click", () => {
+            const municipality = document.getElementById("crc_municipality_filter").value;
+            const timeframe = document.getElementById("crc_timeframe_filter").value;
+            const dataType = document.getElementById("crc_data_type_filter").value;
+            fetchCRCChartData(municipality, timeframe, dataType);
         });
+    });
     </script>
 </div>
