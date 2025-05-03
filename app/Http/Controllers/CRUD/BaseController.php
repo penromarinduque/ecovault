@@ -75,7 +75,7 @@ abstract class BaseController extends Controller
         try {
             //make query to list the file that
             $type = $request->query('type');
-            $municipality = $request->query('municipality');
+            $municipality = $request->query('municipality') ?? null;
             $report = $request->query('report');
             $isArchived = filter_var($request->query('isArchived', false), FILTER_VALIDATE_BOOLEAN);
             $currentUserId = auth()->id(); // Get the currently logged-in user's ID
@@ -119,11 +119,42 @@ abstract class BaseController extends Controller
                     'data' => $files
                 ]);
             }
-
             // If $type and $municipality are provided, fetch files with join
-            elseif (!empty($type) && !empty($municipality)) {
+            elseif ($type== 'local-transport-permit') {
+                $files = File::where('is_archived', $isArchived)
+                    ->where('permit_type', $type)                   
+                    ->where('category', $category)
+                    ->with(['user:id,name', 'fileShares']) // Load uploader and shared users
+                    ->get()
+                    ->map(function ($file) {
+                        // Filter valid (non-expired) shares
+                        $validShares = $file->fileShares->filter(function ($share) {
+                            // Check if expiration_date is null or if it's a future date
+                            return is_null($share->expiration_date) || Carbon::parse($share->expiration_date)->isFuture();
+                        });
 
+                        // Get shared user IDs from valid shares only
+                        $sharedUserIds = $validShares->pluck('shared_with_user_id')->toArray();
 
+                        return [
+                            'id' => $file->id,
+                            'file_name' => $file->file_name,
+                            'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                            'office_source' => $file->office_source,
+                            'user_name' => $file->user->name, // Uploader's name
+                            'classification' => $file->classification,
+                            'is_shared' => !empty($sharedUserIds), // true only if there are valid (non-expired) shares
+                            'shared_users' => $sharedUserIds, // Only include shared users with valid shares
+                        ];
+                    });
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $files,
+                    'message' => 'Files retrieved successfully',
+                ], 200);
+             }
+             elseif (!empty($type) && !empty($municipality)) {
                 $files = File::where('is_archived', $isArchived)
                     ->where('permit_type', $type)
                     ->where('municipality', $municipality)
@@ -158,6 +189,7 @@ abstract class BaseController extends Controller
                     'message' => 'Files retrieved successfully',
                 ], 200);
             }
+
 
             return response()->json([
                 'success' => false,

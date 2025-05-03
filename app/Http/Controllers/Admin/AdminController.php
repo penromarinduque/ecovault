@@ -63,6 +63,10 @@ class AdminController extends Controller
         $type = $request->query('type');
         $municipality = $request->query('municipality') ?? null;
         $category = $request->query('category') ?? null;
+        
+        if($type == "local-transport-permit"){
+            return view('admin.file-manager.table', compact('type', 'municipality', 'category')); 
+        }
         if (!$type || !$municipality) {
             abort(404);
         }
