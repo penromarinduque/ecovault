@@ -41,6 +41,8 @@ class ChartingController extends Controller
     {
         $municipality = $request->query('municipality', 'All');
         $timeframe = $request->query('timeframe', 'monthly');
+        $startDate = $request->query('start_date'); // Start date filter
+        $endDate = $request->query('end_date'); // End date filter
 
         $query = DB::table('files')
             ->where('permit_type', 'tree-cutting-permits')
@@ -54,6 +56,14 @@ class ChartingController extends Controller
 
         if ($municipality !== 'All') {
             $query->where('municipality', $municipality);
+        }
+
+        // Apply start and end date filters
+        if ($startDate) {
+            $query->where('date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('date_released', '<=', $endDate);
         }
 
         if ($timeframe === 'monthly') {
@@ -77,6 +87,8 @@ class ChartingController extends Controller
         $municipality = $request->query('municipality', 'All');
         $timeframe = $request->query('timeframe', 'monthly');
         $species = $request->query('species', 'All');
+        $startDate = $request->query('start_date'); // Start date filter
+        $endDate = $request->query('end_date'); // End date filter
 
         $query = DB::table('tree_cutting_permit_details as details')
             ->join('tree_cutting_permits as permits', 'details.tree_cutting_permit_id', '=', 'permits.id')
@@ -95,6 +107,14 @@ class ChartingController extends Controller
 
         if ($species !== 'All') {
             $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
+        }
+
+        // Apply start and end date filters
+        if ($startDate) {
+            $query->where('details.date_applied', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('details.date_applied', '<=', $endDate);
         }
 
         if ($timeframe === 'monthly') {

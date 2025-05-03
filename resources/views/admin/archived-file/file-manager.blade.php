@@ -61,7 +61,7 @@
                             <h1 class="mx-40 my-4 font-semibold">Biodiversity</h1>
                             <div class="grid grid-cols-4 gap-8 mx-16 text-gray-700 font-semibold">
                                 <div class="flex flex-col items-center">
-                                    <a href="{{ route('archived-file.file-manager.municipality.show', ['type' => 'local-transport-permit']) }}" class="text-center">
+                                     <a href="{{ route('file-manager.table.show', ['type' => 'local-transport-permit', 'municipality' => '', 'category' => '', 'isArchived' => true]) }}"             
                                         <img src="{{ asset('images/admin/folder.png') }}" alt="Land Titles/ Patented Lots" class="w-24 mb-2">
                                         <h2 class="w-[120px]">Local Tranport Permit</h2>
                                     </a>

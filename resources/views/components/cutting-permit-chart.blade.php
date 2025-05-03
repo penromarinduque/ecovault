@@ -24,6 +24,16 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+        <div>
+            <label for="startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
         <button id="applyTCPFilters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -44,42 +54,48 @@
             const totalTCPRegistrationsElement = document.getElementById("totalTCPRegistrations");
             const noDataTCPMessage = document.getElementById("no-data-tcp-message");
 
-           async function fetchTCPChartData(municipality = "All", timeframe = "monthly") {
-    try {
-        const response = await fetch(`/api/tree-cutting-statistics?municipality=${municipality}&timeframe=${timeframe}`);
-        const { data, total_count } = await response.json();
+            async function fetchTCPChartData(municipality = "All", timeframe = "monthly", startDate = null, endDate = null) {
+                try {
+                    const url = new URL('/api/tree-cutting-statistics', window.location.origin);
+                    url.searchParams.append('municipality', municipality);
+                    url.searchParams.append('timeframe', timeframe);
+                    if (startDate) url.searchParams.append('start_date', startDate);
+                    if (endDate) url.searchParams.append('end_date', endDate);
 
-        if (!data || data.length === 0) {
-            noDataTCPMessage.classList.remove('hidden');
-            tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: [] }]);
-            tcp_chart.updateOptions({ xaxis: { categories: [] } }); // reset x-axis too
-            totalTCPRegistrationsElement.textContent = `Total Permits: 0`;
-            return;
-        }
+                    const response = await fetch(url);
+                    const { data, total_count } = await response.json();
 
-        noDataTCPMessage.classList.add('hidden');
-        totalTCPRegistrationsElement.textContent = `Total Permits: ${total_count}`;
+                    if (!data || data.length === 0) {
+                        noDataTCPMessage.classList.remove('hidden');
+                        tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: [] }]);
+                        tcp_chart.updateOptions({ xaxis: { categories: [] } });
+                        totalTCPRegistrationsElement.textContent = `Total Permits: 0`;
+                        return;
+                    }
 
-        const categories = data.map(item => (
-            timeframe === "yearly" ? `${item.year}` : `${item.month} ${item.year}`
-        ));
+                    noDataTCPMessage.classList.add('hidden');
+                    totalTCPRegistrationsElement.textContent = `Total Permits: ${total_count}`;
 
-        const counts = data.map(item => item.count);
+                    const categories = data.map(item => (
+                        timeframe === "yearly" ? `${item.year}` : `${item.month} ${item.year}`
+                    ));
 
-        tcp_chart.updateOptions({
-            xaxis: {
-                categories: categories
+                    const counts = data.map(item => item.count);
+
+                    tcp_chart.updateOptions({
+                        xaxis: {
+                            categories: categories
+                        }
+                    });
+
+                    tcp_chart.updateSeries([{
+                        name: "Tree Cutting Permits",
+                        data: counts
+                    }]);
+                } catch (error) {
+                    console.error("Error fetching chart data:", error);
+                }
             }
-        });
-
-        tcp_chart.updateSeries([{
-            name: "Tree Cutting Permits",
-            data: counts
-        }]);
-    } catch (error) {
-        console.error("Error fetching chart data:", error);
-    }
-}
 
             const options = {
                 chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },
@@ -106,7 +122,9 @@
             document.getElementById("applyTCPFilters").addEventListener("click", () => {
                 const municipality = document.getElementById("tcp_municipality_filter").value;
                 const timeframe = document.getElementById("tcp_timeframe_filter").value;
-                fetchTCPChartData(municipality, timeframe);
+                const startDate = document.getElementById("startDateFilter").value;
+                const endDate = document.getElementById("endDateFilter").value;
+                fetchTCPChartData(municipality, timeframe, startDate, endDate);
             });
         });
     </script>

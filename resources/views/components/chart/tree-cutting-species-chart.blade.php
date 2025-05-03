@@ -19,7 +19,7 @@
         <div>
             <label for="tcs_species_filter" class="block text-sm font-medium text-gray-700">Species:</label>
             <select id="tcs_species_filter"
-                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" >
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 <option value="All">All</option>
                 <!-- Species options will be dynamically populated -->
             </select>
@@ -31,6 +31,16 @@
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
             </select>
+        </div>
+        <div>
+            <label for="tcs_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="tcs_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="tcs_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="tcs_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
         </div>
         <button id="applyTCSFilters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
@@ -53,12 +63,12 @@
                     const response = await fetch(`/api/tree-species`);
                     const species = await response.json();
                     const speciesFilter = document.getElementById("tcs_species_filter");
-
+                    
                     species.forEach(speciesItem => {
-                        if (speciesItem.common_name) {  // <-- use common_name
+                        if (speciesItem.common_name) {
                             const option = document.createElement("option");
-                            option.value = speciesItem.common_name; // <-- use common_name
-                            option.textContent = speciesItem.common_name; // <-- use common_name                          
+                            option.value = speciesItem.common_name;
+                            option.textContent = speciesItem.common_name;
                             speciesFilter.appendChild(option);
                         }
                     });
@@ -67,45 +77,56 @@
                 }
             }
 
-
             // Fetch chart data based on filters
-          async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All") {
-    try {
-        const response = await fetch(`/api/tree-cutting-species-statistics?municipality=${municipality}&timeframe=${timeframe}&species=${species}`);
-        const { data, total_count } = await response.json();
+            async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All", startDate = null, endDate = null) {
+                try {
+                    const url = new URL('/api/tree-cutting-species-statistics', window.location.origin);
+                    url.searchParams.append('municipality', municipality);
+                    url.searchParams.append('timeframe', timeframe);
+                    url.searchParams.append('species', species);
 
-        if (!data || data.length === 0) {
-            noDataTCSMessage.classList.remove('hidden');
-            tcs_chart.updateSeries([]);
-            tcs_chart.updateOptions({ xaxis: { categories: [] } }); // <-- reset x-axis too
-            return;
-        }
+                    if (startDate) {
+                        url.searchParams.append('start_date', startDate);
+                    }
+                    if (endDate) {
+                        url.searchParams.append('end_date', endDate);
+                    }
 
-        noDataTCSMessage.classList.add('hidden');
-        totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+                    // Debugging: Log the final URL
+                    console.log("Final URL:", url.toString());
 
-        // Group data by species
-        const groupedData = data.map(item => ({
-            x: timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`,
-            y: Number(item.total_trees)
-        }));
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Failed to fetch data");
+                    const { data, total_count } = await response.json();
 
-        // Extract x-axis categories separately
-        const xCategories = groupedData.map(item => item.x);
+                    if (!data || data.length === 0) {
+                        noDataTCSMessage.classList.remove('hidden');
+                        tcs_chart.updateSeries([]);
+                        tcs_chart.updateOptions({ xaxis: { categories: [] } });
+                        return;
+                    }
 
-        // Update chart with both new series and x-axis
-        tcs_chart.updateOptions({
-            xaxis: { categories: xCategories },
-            series: [{
-                name: species === "All" ? "All Species" : species,
-                data: groupedData.map(item => item.y)
-            }]
-        });
+                    noDataTCSMessage.classList.add('hidden');
+                    totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
 
-    } catch (error) {
-        console.error("Error fetching chart data:", error);
-    }
-}
+                    const groupedData = data.map(item => ({
+                        x: timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`,
+                        y: Number(item.total_trees)
+                    }));
+
+                    const xCategories = groupedData.map(item => item.x);
+
+                    tcs_chart.updateOptions({
+                        xaxis: { categories: xCategories },
+                        series: [{
+                            name: species === "All" ? "All Species" : species,
+                            data: groupedData.map(item => item.y)
+                        }]
+                    });
+                } catch (error) {
+                    console.error("Error fetching chart data:", error);
+                }
+            }
 
             const options = {
                 chart: { type: "bar", height: 350 },
@@ -124,10 +145,33 @@
             tcs_chart.render();
 
             document.getElementById("applyTCSFilters").addEventListener("click", () => {
+                const startDateElement = document.getElementById("tcs_startDateFilter");
+                const endDateElement = document.getElementById("tcs_endDateFilter");
+
+                console.log("Start Date Element:", startDateElement);
+                console.log("End Date Element:", endDateElement);
+
+                if (!startDateElement || !endDateElement) {
+                    alert("Start Date or End Date input is missing in the DOM.");
+                    return;
+                }
+
+                const startDate = startDateElement.value;
+                const endDate = endDateElement.value;
+
+                console.log("Start Date Value:", startDate);
+                console.log("End Date Value:", endDate);
+
+                if (!startDate || !endDate) {
+                    alert("Please select both start and end dates.");
+                    return;
+                }
+
                 const municipality = document.getElementById("tcs_municipality_filter").value;
                 const timeframe = document.getElementById("tcs_timeframe_filter").value;
                 const species = document.getElementById("tcs_species_filter").value;
-                fetchTCSChartData(municipality, timeframe, species);
+
+                fetchTCSChartData(municipality, timeframe, species, startDate, endDate);
             });
 
             fetchSpeciesOptions();
