@@ -113,16 +113,30 @@
             <h3 class="text-lg font-semibold mb-4">Total Number of Business Owners with Local Transport Permits</h3>
             <div class="flex items-center space-x-4 mb-4">
                 <div>
-                    <label for="businessMunicipalityFilter" class="block text-sm font-medium text-gray-700">Municipality:</label>
-                    <select id="businessMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <label for="businessDestinationFilter" class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select id="businessDestinationFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
-                        <option value="Gasan">Gasan</option>
-                        <option value="Boac">Boac</option>
-                        <option value="Buenavista">Buenavista</option>
-                        <option value="Torrijos">Torrijos</option>
-                        <option value="Santa Cruz">Santa Cruz</option>
+                        <!-- Options will be dynamically populated -->
                     </select>
                 </div>
+                <script>
+                    // Populate destination dropdown for business owners chart from /api/ltp/destination
+                    document.addEventListener('DOMContentLoaded', async () => {
+                        try {
+                            const response = await fetch('/api/ltp/destination');
+                            const destinations = await response.json();
+                            const select = document.getElementById('businessDestinationFilter');
+                            destinations.forEach(dest => {
+                                const option = document.createElement('option');
+                                option.value = dest;
+                                option.textContent = dest;
+                                select.appendChild(option);
+                            });
+                        } catch (e) {
+                            console.error('Error fetching destinations:', e);
+                        }
+                    });
+                </script>
                 <div>
                     <label for="businessTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
                     <select id="businessTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
@@ -301,13 +315,12 @@
 
         // Fetch and render Business Owners Chart
         function fetchBusinessOwnersChart() {
-            const municipality = document.getElementById('businessMunicipalityFilter').value || 'All';
+            // const municipality = document.getElementById('businessMunicipalityFilter').value || 'All';
             const timeframe = document.getElementById('businessTimeframeFilter').value || 'monthly';
-
+            const des = document.getElementById('businessDestinationFilter').value || 'All';
             const url = new URL('/api/business-owners-by-municipality', window.location.origin);
             url.searchParams.append('timeframe', timeframe);
-            if (municipality !== 'All') url.searchParams.append('municipality', municipality);
-
+            if(des !== 'All') url.searchParams.append('destination', des);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {

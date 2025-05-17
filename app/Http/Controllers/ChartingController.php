@@ -576,8 +576,7 @@ class ChartingController extends Controller
     public function getBusinessOwnersByMunicipality(Request $request)
     {
         $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality', 'All');
-
+        $destination = $request->query('destination', 'all'); // Default to 'All'
         $query = DB::table('local_transport_permits')
             ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
             ->select(
@@ -586,7 +585,9 @@ class ChartingController extends Controller
                 DB::raw('YEAR(local_transport_permits.date_released) as year')
             )
             ->whereNotNull('local_transport_permits.date_released');
-
+            if($destination !== 'all') {
+                $query->where('local_transport_permits.destination', $destination);
+            }   
         // Add month to SELECT and GROUP BY only if timeframe is monthly
         if ($timeframe === 'monthly') {
             $query->addSelect(DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month"))
@@ -603,10 +604,7 @@ class ChartingController extends Controller
         }
 
         // Apply municipality filter if not "All"
-        if ($municipality !== 'All') {
-            $query->where('files.municipality', $municipality);
-        }
-
+    
         $data = $query->get();
 
         return response()->json($data);
