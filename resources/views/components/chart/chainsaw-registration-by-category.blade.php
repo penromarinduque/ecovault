@@ -32,6 +32,18 @@
                 <option value="renewal">Renewals</option>
             </select>
         </div>
+
+        <div>
+            <label for="crc_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="crc_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="crc_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="crc_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+
         <button id="applyCRCFilters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -55,9 +67,28 @@
         const totalRegistrationsElement = document.getElementById("totalRegistrations");
         const noDataMessage = document.getElementById("no-data-message");
 
-        async function fetchCRCChartData(municipality = "All", timeframe = "monthly", dataType = "all") {
+        async function fetchCRCChartData(municipality = "All", timeframe = "monthly", dataType = "all", startDate,endDate) {
             try {
-                const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}&dataType=${dataType}`);
+                // const response = await fetch(`/api/chainsaw-registration-statistics-by-category?municipality=${municipality}&timeframe=${timeframe}&dataType=${dataType}`);
+                
+                const url = new URL('/api/chainsaw-registration-statistics-by-category', window.location.origin);
+                url.searchParams.append('municipality', municipality);
+                url.searchParams.append('timeframe', timeframe);
+                if (dataType) url.searchParams.append('dataType', dataType);
+                if (startDate) url.searchParams.append('start_date', startDate);    
+                if (endDate) url.searchParams.append('end_date', endDate);
+                const response = await fetch(url);   
+                // const url = new URL('api/chainsaw-registration-statistics-by-category', window.location.origin);
+                // url.searchParams.append('municipality', location);
+                // url
+                // url.searchParams.append('timeframe', timeframe);
+                // if (species) url.searchParams.append('species', species);
+                // if (startDate) url.searchParams.append('start_date', startDate);
+                // if (endDate) url.searchParams.append('end_date', endDate);
+
+                // const response = await fetch(url);
+               
+               
                 const { data, total_count } = await response.json();
 
                 if (!data || data.length === 0) {
@@ -126,7 +157,9 @@
             const municipality = document.getElementById("crc_municipality_filter").value;
             const timeframe = document.getElementById("crc_timeframe_filter").value;
             const dataType = document.getElementById("crc_data_type_filter").value;
-            fetchCRCChartData(municipality, timeframe, dataType);
+            const startDate = document.getElementById("crc_startDateFilter").value;
+            const endDate = document.getElementById("crc_endDateFilter").value;
+            fetchCRCChartData(municipality, timeframe, dataType, startDate, endDate);
         });
     });
     </script>
