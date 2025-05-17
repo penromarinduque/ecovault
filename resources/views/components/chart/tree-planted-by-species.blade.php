@@ -23,6 +23,8 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+      
+        
         <div>
             <label for="species-filter" class="block text-sm font-medium text-gray-700">Species:</label>
             <select id="species-filter"
@@ -30,6 +32,17 @@
                 <option value="">All</option>
                 <!-- Species options will be dynamically populated -->
             </select>
+        </div>
+
+        <div>
+            <label for="species-startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="species-startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="species-endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="species-endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
         </div>
         <button id="apply-species-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
@@ -73,7 +86,9 @@
                 const location = document.getElementById("species-location-filter").value;
                 const timeframe = document.getElementById("species-timeframe-filter").value;
                 const species = document.getElementById("species-filter").value;
-                fetchSpeciesChartData(location, timeframe, species);
+                const startDate = document.getElementById("species-startDateFilter").value;
+                const endDate = document.getElementById("species-endDateFilter").value;
+                fetchSpeciesChartData(location, timeframe, species, startDate, endDate);
             });
         }
 
@@ -100,9 +115,16 @@
             }
         }
 
-        async function fetchSpeciesChartData(location = "", timeframe = "monthly", species = "") {
+        async function fetchSpeciesChartData(location = "", timeframe = "monthly", species = "", startDate, endDate) {
             try {
-                const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}&species=${species}`);
+                const url = new URL('/api/tree-plantation-statistics', window.location.origin);
+                url.searchParams.append('municipality', location);
+                url.searchParams.append('timeframe', timeframe);
+                if (species) url.searchParams.append('species', species);
+                if (startDate) url.searchParams.append('start_date', startDate);
+                if (endDate) url.searchParams.append('end_date', endDate);
+
+                const response = await fetch(url);
                 if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
                 const { speciesData } = await response.json();
@@ -110,6 +132,7 @@
             } catch (error) {
                 console.error("Error fetching species chart data:", error);
             }
+               
         }
 
      function updateSpeciesChart(data, timeframe) {

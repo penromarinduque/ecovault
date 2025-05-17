@@ -783,6 +783,12 @@ class ChartingController extends Controller
     $speciesData = TreePlantation::query()
         ->when($municipality, fn($query) => $query->where('location', $municipality))
         ->when($species, fn($query) => $query->whereRaw("LOWER(TRIM(species)) = ?", [strtolower(trim($species))]))
+        ->when($startDate, fn($query) => 
+        $query->where('date_applied', '>=', $startDate)
+            )
+            ->when($endDate, fn($query) => 
+                $query->where('date_applied', '<=', $endDate)
+            )
         ->selectRaw(
             $timeframe === 'yearly'
             ? "species, YEAR(date_applied) as year, SUM(number_of_trees) as number_of_trees"
