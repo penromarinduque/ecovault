@@ -33,6 +33,17 @@
             <option value="Special">Special</option>
         </select>
 
+        <div>
+            <label for="startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+
         <button id="applyFilters" class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
@@ -48,11 +59,13 @@
     let tcp_chart;
     const chartElement = document.getElementById("tcp-chart");
     const totalLandTitlesElement = document.getElementById("totalLandTitles");
-
+    const startDate = document.getElementById("startDateFilter");
+    const endDate= document.getElementById("endDateFilter");
     async function fetchChartData(location = "", timeframe = "monthly", category = "") {
         try {
+        
             const response = await fetch(
-                `/api/land-title-statistics?municipality=${location}&timeframe=${timeframe}&category=${category}`);
+                `/api/land-title-statistics?municipality=${location}&timeframe=${timeframe}&category=${category}&start_date=${startDate.value}&end_date=${endDate.value}`);
             const data = await response.json();
 
             if (data.length === 0) {
