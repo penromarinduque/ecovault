@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="space-y-4">
-        <x-chart.tree-transport-permits/>
-        <x-chart.tree-species-transported/>
+        {{-- <x-chart.tree-transport-permits/> --}}
+        {{-- <x-chart.tree-species-transported/> --}}
     </div>
 @endsection

@@ -318,7 +318,8 @@ class ChartingController extends Controller
     {
         $municipality = $request->query('municipality'); // Example: "Boac"
         $timeframe = $request->query('timeframe', 'monthly'); // Default: 'monthly'
-
+        $startDate = $request->query('start_date'); // Optional start date filter
+        $endDate = $request->query('end_date'); // Optional end date filter
         // Base Query: Filter by permit type
         $query = File::where('permit_type', 'transport-permit')
             ->whereNotNull('date_released');
@@ -326,6 +327,13 @@ class ChartingController extends Controller
         // Apply municipality filter if provided
         if ($municipality) {
             $query->where('municipality', $municipality);
+        }
+        // Apply start and end date filters
+        if ($startDate) {
+            $query->where('date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('date_released', '<=', $endDate);
         }
 
         // Adjust grouping based on timeframe

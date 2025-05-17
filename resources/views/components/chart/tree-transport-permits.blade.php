@@ -27,6 +27,19 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+
+
+        <div>
+            <label for="ttp_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="ttp_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="ttp_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="ttp_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+
         <button id="apply-transport-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -34,91 +47,81 @@
     </div>
     <div id="transport-chart"></div>
     <div id="no-data-message-transport" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
-
-    <script>
-        let transport_chart;
-
-        document.addEventListener("DOMContentLoaded", () => {
-            initializeTransportChart();
-            setupTransportEventListeners();
-            fetchTransportChartData(); // Fetch initial data (monthly by default)
-        });
-
-        function initializeTransportChart() {
-            const options = {
-                colors: ["#1A56DB"],
-                series: [{ name: "Permits", data: [] }],
-                chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
-                xaxis: {
-                    labels: { style: { fontSize: '12px' } },
-                    title: { text: "Timeframe" } // Add x-axis title
-                },
-                yaxis: { show: true },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
-            };
-
-            transport_chart = new ApexCharts(document.getElementById("transport-chart"), options);
-            transport_chart.render();
+   
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    function loadTransportChart() {
+        const municipality = document.getElementById('location-filter').value;
+        const timeframe = document.getElementById('timeframe-filter').value;
+        const startDate = document.getElementById('ttp_startDateFilter').value;
+        const endDate = document.getElementById('ttp_endDateFilter').value;
+        const url = new URL('/api/tree-transport-permit-statistics', window.location.origin);
+        url.searchParams.append('municipality', municipality);
+        url.searchParams.append('timeframe', timeframe);    
+        if (startDate) {
+            url.searchParams.append('start_date', startDate);
+        }
+        if (endDate) {
+            url.searchParams.append('end_date', endDate);
         }
 
-        function setupTransportEventListeners() {
-            document.getElementById("apply-transport-filters").addEventListener("click", () => {
-                const location = document.getElementById("location-filter").value;
-                const timeframe = document.getElementById("timeframe-filter").value;
-                fetchTransportChartData(location, timeframe);
-            });
-        }
+        fetch(url)
+            .then(response => response.json())
+            .then(res => {
+                const chartData = res.data;
 
-        async function fetchTransportChartData(location = "", timeframe = "monthly") {
-            try {
-                const response = await fetch(`/api/tree-transport-permit-statistics?municipality=${location}&timeframe=${timeframe}`);
-                if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
+                const chartContainer = document.getElementById('transport-chart');
+                const noDataMessage = document.getElementById('no-data-message-transport');
 
-                const data = await response.json();
-                updateTransportChart(data, timeframe);
-            } catch (error) {
-                console.error("Error fetching chart data:", error);
-            }
-        }
+                if (!chartData.length) {
+                    chartContainer.innerHTML = '';
+                    noDataMessage.classList.remove('hidden');
+                    return;
+                }
 
-        function updateTransportChart(data, timeframe) {
-            const noDataMessage = document.getElementById("no-data-message-transport");
+                noDataMessage.classList.add('hidden');
 
-            if (!data || data.length === 0) {
-                noDataMessage.classList.remove("hidden");
-                transport_chart.updateSeries([{ name: "Permits", data: [] }]);
-                transport_chart.updateOptions({ xaxis: { categories: [] } });
-            } else {
-                noDataMessage.classList.add("hidden");
+                const categories = [];
+                const seriesData = [];
 
-                const groupedData = data.map(item => ({
-                    x: timeframe === "yearly" 
-                        ? item.year 
-                        : `${getMonthName(item.month || 1)} ${item.year}`, // Fallback to January if month is undefined
-                    y: item.total_permits
-                }));
+                chartData.forEach(item => {
+                    const label = timeframe === 'yearly' ? `${item.year}` : `${item.month} ${item.year}`;
+                    categories.push(label);
+                    seriesData.push(item.count);
+                });
 
-                const categories = groupedData.map(item => item.x);
-                const seriesData = groupedData.map(item => item.y);
-
-                transport_chart.updateSeries([{ name: "Permits", data: seriesData }]);
-                transport_chart.updateOptions({
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 350
+                    },
+                    series: [{
+                        name: 'Transport Permits',
+                        data: seriesData
+                    }],
                     xaxis: {
-                        categories,
-                        labels: {
-                            formatter: (value) => value // Ensure correct formatting
+                        categories: categories
+                    },
+                    colors: ['#16a34a'],
+                    tooltip: {
+                        y: {
+                            formatter: val => `${val} permit(s)`
                         }
                     }
-                });
-            }
-        }
+                };
 
-        function getMonthName(monthNumber) {
-            const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            return monthNumber >= 1 && monthNumber <= 12 ? months[monthNumber - 1] : "January"; // Default to January for invalid months
-        }
-    </script>
-</div>
+                chartContainer.innerHTML = ''; // Clear old chart
+                const chart = new ApexCharts(chartContainer, options);
+                chart.render();
+            })
+            .catch(error => {
+                console.error('Error fetching chart data:', error);
+                document.getElementById('transport-chart').innerHTML = '';
+                document.getElementById('no-data-message-transport').classList.remove('hidden');
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTransportChart);
+    document.getElementById('apply-transport-filters').addEventListener('click', loadTransportChart);
+</script>
