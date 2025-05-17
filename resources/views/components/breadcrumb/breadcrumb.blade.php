@@ -14,7 +14,9 @@
         !Route::is('report-tcp.lt') &&
         !Route::is('report-ltp.show') &&
         !Route::is('show.maintenance.table') &&
+        !Route::is('maintenance.edit') &&
         !Route::is('show.maintenance'))
+
 
     <nav class="w-max flex py-2 text-gray-700 rounded-lg" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">

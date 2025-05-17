@@ -128,6 +128,7 @@
                 });
             });
     });
+
     document.getElementById("treeForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent default form submission
 
