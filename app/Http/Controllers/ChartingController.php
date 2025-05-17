@@ -182,7 +182,8 @@ class ChartingController extends Controller
     {
         $municipality = $request->query('municipality', 'All'); // Default to 'All'
         $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
-
+        $startDate = $request->query('start_date'); // Optional start date filter
+        $endDate = $request->query('end_date'); // Optional end date filter
         $query = DB::table('files')
             ->where('permit_type', 'chainsaw-registration')
             ->whereNotNull('date_released')
@@ -195,6 +196,13 @@ class ChartingController extends Controller
 
         if ($municipality !== 'All') {
             $query->where('municipality', $municipality);
+        }
+        // Apply start and end date filters 
+        if ($startDate) {
+            $query->where('date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('date_released', '<=', $endDate);
         }
 
         if ($timeframe === 'monthly') {
