@@ -10,22 +10,47 @@
             <h3 class="text-lg font-semibold mb-4">Total Number of Transport Permits Issued</h3>
             <div class="flex items-center space-x-4 mb-4">
                 <div>
-                    <label for="transportMunicipalityFilter" class="block text-sm font-medium text-gray-700">Municipality:</label>
-                    <select id="transportMunicipalityFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <label for="transportDestinationFilter" class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select id="transportDestinationFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
-                        <option value="Gasan">Gasan</option>
-                        <option value="Boac">Boac</option>
-                        <option value="Buenavista">Buenavista</option>
-                        <option value="Torrijos">Torrijos</option>
-                        <option value="Santa Cruz">Santa Cruz</option>
-                    </select>
+                        <!-- Options will be dynamically populated -->
+                    </select>                   
                 </div>
+                <script>
+                    // Populate destination dropdown from /api/ltp/destination
+                    document.addEventListener('DOMContentLoaded', async () => {
+                        try {
+                            const response = await fetch('/api/ltp/destination');
+                            const destinations = await response.json();
+                            const select = document.getElementById('transportDestinationFilter');
+                            destinations.forEach(dest => {
+                                const option = document.createElement('option');
+                                option.value = dest;
+                                option.textContent = dest;
+                                select.appendChild(option);
+                            });
+                        } catch (e) {
+                            console.error('Error fetching destinations:', e);
+                        }
+                    });
+                </script>
                 <div>
                     <label for="transportTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
                     <select id="transportTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
+                </div>
+
+                <div>
+                    <label for="transportstartDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+                    <input type="date" id="transportstartDateFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                    <label for="transportendDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+                    <input type="date" id="transportendDateFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
                 <button id="applyTransportFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
@@ -211,13 +236,16 @@
 
         // Fetch and render Transport Permits Chart
         function fetchTransportPermitsChart() {
-            const municipality = document.getElementById('transportMunicipalityFilter').value || 'All';
+            // const municipality = document.getElementById('transportMunicipalityFilter').value || 'All';
             const timeframe = document.getElementById('transportTimeframeFilter').value || 'monthly';
-
+            const startDate = document.getElementById('transportstartDateFilter').value;
+            const endDate = document.getElementById('transportendDateFilter').value;
+            const des = document.getElementById('transportDestinationFilter').value || 'All';
             const url = new URL('/api/transport-permits-by-municipality', window.location.origin);
             url.searchParams.append('timeframe', timeframe);
-            if (municipality !== 'All') url.searchParams.append('municipality', municipality);
-
+            if (startDate) url.searchParams.append('start_date', startDate);
+            if (endDate) url.searchParams.append('end_date', endDate);
+            if(des !== 'All') url.searchParams.append('destination', des);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {

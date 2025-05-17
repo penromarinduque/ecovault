@@ -160,7 +160,7 @@ Route::middleware([VerifiedUser::class])->group(function () {
 
     Route::get('/qr-validation/file-summary/{file_id}', [AdminController::class, 'ShowFileSummary'])->name('qr.file-summary');
 
-
+    Route::get('/api/ltp/destination', [ChartingController::class, 'getDistinctLocalTransportDestinations']);
     Route::get('/api/permit/type', [PermitTypeController::class, 'GetPermitTypes']);
     Route::get('/files/filter', [FileManagerController::class, 'GetFileAndPermits']);
 

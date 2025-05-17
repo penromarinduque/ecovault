@@ -492,64 +492,86 @@ class ChartingController extends Controller
 
     public function getTransportPermitChartData(Request $request)
     {
+        $request->start_date = $request->query('start_date');
+        $request->end_date = $request->query('end_date');
+
         $query = DB::table('local_transport_permits')
             ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
             ->select(
-                'files.municipality',
                 DB::raw('YEAR(local_transport_permits.date_released) as year'),
                 DB::raw('MONTH(local_transport_permits.date_released) as month'),
-                DB::raw('COUNT(local_transport_permits.id) as total_permits')
+                DB::raw('COUNT(local_transport_permits.id) as total_permits'),
+                DB::raw('LOWER(TRIM(local_transport_permits.destination)) as destination')
             )
-            ->groupBy('files.municipality', 'year', 'month')
+            ->groupBy('destination')
             ->orderBy('year', 'DESC')
             ->orderBy('month', 'DESC');
 
-        // Optional: Filter by municipality if requested
-        if ($request->has('municipality')) {
-            $query->where('files.municipality', $request->query('municipality'));
-        }
 
+        if($request->has('start_date') && $request->has('end_date')) {
+            $query->whereBetween('local_transport_permits.date_released', [$request->start_date, $request->end_date]);
+        }
         return response()->json($query->get());
     }
 
     public function getTransportPermitsByMunicipality(Request $request)
     {
         $timeframe = $request->query('timeframe', 'monthly');
-        $municipality = $request->query('municipality', 'All');
-
+        $startDate = $request->query('start_date'); // Optional start date filter
+        $endDate = $request->query('end_date'); // Optional end date filter
+        // $municipality = $request->query('municipality', 'All');
+        $destination = $request->query('destination', 'all'); // Default to 'All'
         $query = DB::table('local_transport_permits')
             ->join('files', 'local_transport_permits.file_id', '=', 'files.id')
             ->select(
-                'files.municipality',
+                // 'files.municipality',
+                DB::raw('LOWER(TRIM(local_transport_permits.destination)) as destination'),
                 DB::raw('COUNT(local_transport_permits.id) as total_permits'),
                 DB::raw('YEAR(local_transport_permits.date_released) as year')
             )
-            ->whereNotNull('local_transport_permits.date_released');
-
+            ->whereNotNull('local_transport_permits.date_released')
+            ->groupBy('destination');
         // Add month to SELECT and GROUP BY only if timeframe is monthly
+        if ($startDate) {
+            $query->where('local_transport_permits.date_released', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('local_transport_permits.date_released', '<=', $endDate);
+        }
+        if($destination !== 'all') {
+            $query->where('local_transport_permits.destination', $destination);
+        }
         if ($timeframe === 'monthly') {
             $query->addSelect(DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b') as month"))
                 ->groupBy(
-                    'files.municipality',
+                   
                     DB::raw('YEAR(local_transport_permits.date_released)'),
                     DB::raw("DATE_FORMAT(local_transport_permits.date_released, '%b')")
                 );
         } else {
             $query->groupBy(
-                'files.municipality',
+               
                 DB::raw('YEAR(local_transport_permits.date_released)')
             );
         }
 
         // Apply municipality filter if not "All"
-        if ($municipality !== 'All') {
-            $query->where('files.municipality', $municipality);
-        }
-
+      
         $data = $query->get();
 
         return response()->json($data);
     }
+
+    public function getDistinctLocalTransportDestinations()
+    {
+        $destinations = DB::table('local_transport_permits')
+            ->selectRaw('DISTINCT LOWER(TRIM(destination)) as destination')
+            ->get()
+            ->pluck('destination'); // Pluck here works because it's a collection now
+    
+        return response()->json($destinations);
+    }
+    
 
     public function getBusinessOwnersByMunicipality(Request $request)
     {
