@@ -615,11 +615,11 @@ class ChartingController extends Controller
     public function getSpeciesTransportedByMunicipality(Request $request)
     {
         $timeframe = $request->query('timeframe', 'monthly'); // Default to 'monthly'
-        $municipality = $request->query('municipality', 'All'); // Default to 'All'
+        // $municipality = $request->query('municipality', 'All'); // Default to 'All'
         $startDate = $request->query('start_date'); // Optional start date filter
         $endDate = $request->query('end_date'); // Optional end date filter
         $species = $request->query('species', 'All'); // Default to 'All'
-
+        $destination = $request->query('destination', 'all'); // Default to 'All'
         // Base Query: Fetch species data related to Local Transport Permits
         $query = DB::table('butterfly_details')
             ->join('local_transport_permits', 'butterfly_details.file_id', '=', 'local_transport_permits.file_id')
@@ -635,8 +635,8 @@ class ChartingController extends Controller
             ->whereNotNull('local_transport_permits.date_released');
 
         // Apply municipality filter if not "All"
-        if ($municipality !== 'All') {
-            $query->where('files.municipality', $municipality);
+        if($destination !== 'all') {
+            $query->where('local_transport_permits.destination', $destination);
         }
 
         // Apply species filter if not "All"
