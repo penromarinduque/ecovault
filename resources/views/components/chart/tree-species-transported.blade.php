@@ -33,6 +33,18 @@
                 {{-- Species options will be dynamically populated --}}
             </select>
         </div>
+
+        
+        <div>
+            <label for="species_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="species_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="species_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="species_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
         <button id="apply-species-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -40,126 +52,111 @@
     </div>
     <div id="species-chart"></div>
     <div id="no-data-message-species" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
-
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            let species_chart;
-            const species_chartElement = document.getElementById("species-chart");
-            const totalSpeciesTransportedElement = document.getElementById("totalSpeciesTransported");
-            const noDataSpeciesMessage = document.getElementById("no-data-message-species");
-
-            // Fetch distinct species for the dropdown
-            async function fetchSpeciesOptions() {
-                try {
-                    const response = await fetch('/api/tree-transport-species');
-                    const species = await response.json();
-                    const speciesFilter = document.getElementById("species-filter");
-
-                    species.forEach(speciesName => {
-                        const option = document.createElement("option");
-                        option.value = speciesName;
-                        option.textContent = speciesName;
-                        speciesFilter.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error("Error fetching species options:", error);
-                }
-            }
-
-            async function fetchSpeciesChartData(municipality = "All", timeframe = "monthly", species = "All") {
-                try {
-                    const response = await fetch(`/api/tree-species-transported-statistics?municipality=${municipality}&timeframe=${timeframe}&species=${species}`);
-                    const { data, total_count } = await response.json();
-
-                    if (!data || data.length === 0) {
-                        noDataSpeciesMessage.classList.remove('hidden');
-                        species_chart.updateSeries([]);
-                        species_chart.updateOptions({ xaxis: { categories: [] } });
-                        return;
-                    }
-
-                    noDataSpeciesMessage.classList.add('hidden');
-                    totalSpeciesTransportedElement.textContent = `Total Trees Transported: ${total_count}`;
-
-                    const { groupedData, categories } = groupDataBySpecies(data, timeframe);
-                    species_chart.updateSeries(groupedData);
-                    species_chart.updateOptions({ xaxis: { categories } });
-                } catch (error) {
-                    console.error("Error fetching chart data:", error);
-                }
-            }
-
-            function groupDataBySpecies(data, timeframe) {
-                const grouped = {};
-                const categoriesSet = new Set();
-
-                data.forEach(item => {
-                    const label = timeframe === "yearly" 
-                        ? `${item.year}` 
-                        : `${getMonthName(item.month || 1)} ${item.year}`; // Fallback to January if month is undefined
-                    categoriesSet.add(label);
-
-                    if (!grouped[item.species]) {
-                        grouped[item.species] = {};
-                    }
-
-                    // Aggregate data for the same year or month
-                    if (!grouped[item.species][label]) {
-                        grouped[item.species][label] = 0;
-                    }
-                    grouped[item.species][label] += parseInt(item.total_trees, 10);
+        async function loadSpeciesOptions() {
+            const speciesSelect = document.getElementById('species-filter');
+            try {
+                const res = await fetch('/api/tree-transport-species');
+                const data = await res.json();
+    
+                speciesSelect.innerHTML = `<option value="All">All</option>`;
+                data.forEach(species => {
+                    const option = document.createElement('option');
+                    option.value = species;
+                    option.textContent = species;
+                    speciesSelect.appendChild(option);
                 });
-
-                const categories = Array.from(categoriesSet).sort((a, b) => {
-                    const dateA = new Date(a);
-                    const dateB = new Date(b);
-                    return dateA - dateB; // Ensure correct chronological order
-                });
-
-                const groupedData = Object.entries(grouped).map(([species, records]) => ({
-                    name: species,
-                    data: categories.map(category => records[category] || 0) // Fill missing points with 0
-                }));
-
-                return { groupedData, categories };
+            } catch (error) {
+                console.error('Failed to load species options:', error);
             }
+        }
+    
+        async function loadSpeciesChart() {
+            const municipality = document.getElementById('species-location-filter').value;
+            const timeframe = document.getElementById('species-timeframe-filter').value;
+            const species = document.getElementById('species-filter').value;
+            const startDate = document.getElementById('species_startDateFilter').value;
+            const endDate = document.getElementById('species_endDateFilter').value;
 
-            function getMonthName(monthNumber) {
-                const months = [
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
-                return monthNumber >= 1 && monthNumber <= 12 ? months[monthNumber - 1] : "January"; // Default to January for invalid months
-            }
-
-            const options = {
-                chart: { type: "bar", height: 350, stacked: true },
-                colors: ["#1A56DB", "#E91E63", "#FFC107", "#4CAF50", "#9C27B0"],
-                series: [],
-                xaxis: { categories: [] },
-                yaxis: {
-                    title: { text: "Number of Trees Transported" },
-                    labels: { formatter: value => Math.round(value) }
-                },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true },
-                legend: { position: "top" }
-            };
-
-            species_chart = new ApexCharts(species_chartElement, options);
-            species_chart.render();
-
-            // Fetch species options on page load
-            await fetchSpeciesOptions();
-
-            document.getElementById("apply-species-filters").addEventListener("click", () => {
-                const municipality = document.getElementById("species-location-filter").value;
-                const timeframe = document.getElementById("species-timeframe-filter").value;
-                const species = document.getElementById("species-filter").value;
-                fetchSpeciesChartData(municipality, timeframe, species);
+            const chartContainer = document.getElementById('species-chart');
+            const noDataMessage = document.getElementById('no-data-message-species');
+            const totalDisplay = document.getElementById('totalSpeciesTransported');
+    
+            const params = new URLSearchParams({
+                municipality: municipality === 'All' ? '' : municipality,
+                timeframe,
+                species: species === 'All' ? '' : species,
+                startDate: startDate || '',
+                endDate: endDate || '',
             });
-
-            fetchSpeciesChartData();
+    
+            try {
+                const res = await fetch(`/api/tree-species-transported-statistics?${params.toString()}`);
+                const result = await res.json();
+    
+                const data = result.data || [];
+                const total = result.total_count || 0;
+    
+                if (!data.length) {
+                    chartContainer.innerHTML = '';
+                    noDataMessage.classList.remove('hidden');
+                    totalDisplay.textContent = 'Total Trees Transported: 0';
+                    return;
+                }
+    
+                noDataMessage.classList.add('hidden');
+                totalDisplay.textContent = `Total Trees Transported: ${total}`;
+    
+                const categories = [];
+                const seriesData = [];
+    
+                data.forEach(item => {
+                    const label = timeframe === 'yearly'
+                        ? `${item.year}`
+                        : `${item.month} ${item.year}`;
+                    categories.push(label);
+                    seriesData.push(parseInt(item.total_trees));
+                });
+    
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 350
+                    },
+                    series: [{
+                        name: 'Total Trees',
+                        data: seriesData
+                    }],
+                    xaxis: {
+                        categories: categories
+                    },
+                    colors: ['#10B981'], // Tailwind green-500
+                    tooltip: {
+                        y: {
+                            formatter: val => `${val} tree(s)`
+                        }
+                    }
+                };
+    
+                chartContainer.innerHTML = ''; // Clear existing
+                const chart = new ApexCharts(chartContainer, options);
+                chart.render();
+    
+            } catch (error) {
+                console.error('Failed to load chart:', error);
+                chartContainer.innerHTML = '';
+                noDataMessage.classList.remove('hidden');
+                totalDisplay.textContent = 'Total Trees Transported: 0';
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSpeciesOptions().then(loadSpeciesChart);
         });
+    
+        document.getElementById('apply-species-filters').addEventListener('click', loadSpeciesChart);
     </script>
+    
+
 </div>

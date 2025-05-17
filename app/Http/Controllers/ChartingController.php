@@ -861,7 +861,9 @@ class ChartingController extends Controller
     {
         $municipality = $request->query('municipality', 'All');
         $timeframe = $request->query('timeframe', 'monthly');
-
+        $species = $request->query('species', 'All');
+        $startDate = $request->query('startDate'); // Optional start date filter
+        $endDate = $request->query('endDate'); // Optional end date filter
         $query = DB::table('tree_transport_permit_details as details')
             ->join('transport_permits as permits', 'details.transport_permit_id', '=', 'permits.id')
             ->join('files', 'permits.file_id', '=', 'files.id')
@@ -876,6 +878,15 @@ class ChartingController extends Controller
 
         if ($municipality !== 'All') {
             $query->where('files.municipality', $municipality);
+        }
+        if($startDate) {
+            $query->where('details.date_of_transport', '>=', $startDate);
+        }
+        if($endDate) {
+            $query->where('details.date_of_transport', '<=', $endDate);
+        }
+        if($species !== 'All') {
+            $query->whereRaw("LOWER(TRIM(details.species)) = ?", [strtolower(trim($species))]);
         }
 
         if ($timeframe === 'monthly') {

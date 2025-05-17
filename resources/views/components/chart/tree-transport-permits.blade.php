@@ -28,7 +28,6 @@
             </select>
         </div>
 
-
         <div>
             <label for="ttp_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
             <input type="date" id="ttp_startDateFilter"

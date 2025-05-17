@@ -8,6 +8,6 @@
 
     <div class="space-y-4">
         <x-chart.tree-transport-permits/>
-        {{-- <x-chart.tree-species-transported/> --}}
+        <x-chart.tree-species-transported/>
     </div>
 @endsection
