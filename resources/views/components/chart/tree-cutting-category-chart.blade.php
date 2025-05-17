@@ -24,6 +24,17 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+
+        <div>
+            <label for="tcc_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="tcc_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="tcc_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="tcc_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
         <button id="applyTCCFilters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -39,17 +50,18 @@
             const totalTCCRegistrationsElement = document.getElementById("totalTCCRegistrations");
             const noDataTCCMessage = document.getElementById("no-data-tcc-message");
 
-           async function fetchTCCChartData(municipality = "All", timeframe = "monthly") {
-    try {
-        const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}`);
-        const { data, total_count } = await response.json();
+           async function fetchTCCChartData(municipality = "All", timeframe = "monthly", startDate = null, endDate = null) {
+             try {
+            const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}&start_date=${startDate}&end_date=${endDate}`);
+                      
+            const { data, total_count } = await response.json();
 
-        if (!data || data.length === 0) {
-            noDataTCCMessage.classList.remove('hidden');
-            tcc_chart.updateSeries([]);
-            tcc_chart.updateOptions({ xaxis: { categories: [] } });
-            return;
-        }
+            if (!data || data.length === 0) {
+                noDataTCCMessage.classList.remove('hidden');
+                tcc_chart.updateSeries([]);
+                tcc_chart.updateOptions({ xaxis: { categories: [] } });
+                return;
+            }
 
         noDataTCCMessage.classList.add('hidden');
         totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
@@ -107,7 +119,11 @@
             document.getElementById("applyTCCFilters").addEventListener("click", () => {
                 const municipality = document.getElementById("tcc_municipality_filter").value;
                 const timeframe = document.getElementById("tcc_timeframe_filter").value;
-                fetchTCCChartData(municipality, timeframe);
+                const startDate = document.getElementById("tcc_startDateFilter").value;
+                const endDate = document.getElementById("tcc_endDateFilter").value;
+                console.log("Start Date:", startDate);
+                console.log("End Date:", endDate);
+                fetchTCCChartData(municipality, timeframe, startDate, endDate);
             });
 
             fetchTCCChartData();
