@@ -2,6 +2,8 @@
 
 <!-- When there is no desire, all things are at peace. - Laozi -->
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <img src="{{ asset('images/reports/ltp.png') }}" alt="Local Transport Permit" class="w-20">
+
     <div class="justify-between flex">
         <h1 class="font-bold">Local Transport Permits</h1>
         {{-- <h2>Total Permits: <span>0</span></h2> --}}

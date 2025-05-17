@@ -1,5 +1,7 @@
 <!-- When there is no desire, all things are at peace. - Laozi -->
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <img src="{{ asset('images/reports/lands.png') }}" alt="Land Titles" class="w-20">
+
     <div class="justify-between flex">
         <h1 class="font-bold">Land Title</h1>
         <h4 id="totalLandTitles" class="text-sm font-medium text-gray-600">Total Land Titles: 0</h4>
@@ -33,7 +35,8 @@
             <option value="Special">Special</option>
         </select>
 
-        <button id="applyFilters" class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <button id="applyFilters"
+            class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
         </button>
     </div>
@@ -52,12 +55,16 @@
     async function fetchChartData(location = "", timeframe = "monthly", category = "") {
         try {
             const response = await fetch(
-                `/api/land-title-statistics?municipality=${location}&timeframe=${timeframe}&category=${category}`);
+                `/api/land-title-statistics?municipality=${location}&timeframe=${timeframe}&category=${category}`
+            );
             const data = await response.json();
 
             if (data.length === 0) {
                 console.warn("No data available for the selected filters.");
-                tcp_chart.updateSeries([{ name: "Land Title", data: [] }]);
+                tcp_chart.updateSeries([{
+                    name: "Land Title",
+                    data: []
+                }]);
                 totalLandTitlesElement.textContent = "Total Land Titles: 0";
                 return;
             }
@@ -92,7 +99,10 @@
     document.addEventListener("DOMContentLoaded", () => {
         const options = {
             colors: ["#1A56DB"],
-            series: [{ name: "Land Title", data: [] }],
+            series: [{
+                name: "Land Title",
+                data: []
+            }],
             chart: {
                 type: "bar",
                 height: "320px",
@@ -100,7 +110,11 @@
             },
             xaxis: {
                 forceNiceScale: true,
-                labels: { style: { fontSize: '12px' } }
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
             },
             yaxis: {
                 show: true,
@@ -111,7 +125,11 @@
                 }
             },
             plotOptions: {
-                bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 }
+                bar: {
+                    horizontal: false,
+                    columnWidth: "70%",
+                    borderRadius: 8
+                }
             }
         };
 

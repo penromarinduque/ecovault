@@ -1,4 +1,6 @@
 <div class="bg-white shadow-md rounded-lg p-4">
+    <img src="{{ asset('images/reports/tree cutting.png') }}" alt="Tree Cutting Permits" class="w-20">
+
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold">Tree Cutting Permit</h3>
         <h4 id="totalTCPRegistrations" class="text-sm font-medium text-gray-600">Total Permits: 0</h4>
@@ -40,7 +42,8 @@
         </button>
     </div>
     <div id="tcp_chart"></div>
-    <div id="no-data-tcp-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-tcp-message" class="hidden text-center text-gray-500">No data available for the selected filters.
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -54,7 +57,8 @@
             const totalTCPRegistrationsElement = document.getElementById("totalTCPRegistrations");
             const noDataTCPMessage = document.getElementById("no-data-tcp-message");
 
-            async function fetchTCPChartData(municipality = "All", timeframe = "monthly", startDate = null, endDate = null) {
+            async function fetchTCPChartData(municipality = "All", timeframe = "monthly", startDate = null,
+                endDate = null) {
                 try {
                     const url = new URL('/api/tree-cutting-statistics', window.location.origin);
                     url.searchParams.append('municipality', municipality);
@@ -63,12 +67,22 @@
                     if (endDate) url.searchParams.append('end_date', endDate);
 
                     const response = await fetch(url);
-                    const { data, total_count } = await response.json();
+                    const {
+                        data,
+                        total_count
+                    } = await response.json();
 
                     if (!data || data.length === 0) {
                         noDataTCPMessage.classList.remove('hidden');
-                        tcp_chart.updateSeries([{ name: "Tree Cutting Permits", data: [] }]);
-                        tcp_chart.updateOptions({ xaxis: { categories: [] } });
+                        tcp_chart.updateSeries([{
+                            name: "Tree Cutting Permits",
+                            data: []
+                        }]);
+                        tcp_chart.updateOptions({
+                            xaxis: {
+                                categories: []
+                            }
+                        });
                         totalTCPRegistrationsElement.textContent = `Total Permits: 0`;
                         return;
                     }
@@ -98,20 +112,36 @@
             }
 
             const options = {
-                chart: { type: "bar", height: 350, fontFamily: "Inter, sans-serif" },
+                chart: {
+                    type: "bar",
+                    height: 350,
+                    fontFamily: "Inter, sans-serif"
+                },
                 colors: ["#1A56DB"],
                 series: [],
-                xaxis: { categories: [] },
+                xaxis: {
+                    categories: []
+                },
                 yaxis: {
-                    title: { text: "Number of Permits" },
+                    title: {
+                        text: "Number of Permits"
+                    },
                     labels: {
-                        formatter: function (value) {
+                        formatter: function(value) {
                             return Math.round(value);
                         }
                     }
                 },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true }
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: "70%",
+                        borderRadius: 8
+                    }
+                },
+                dataLabels: {
+                    enabled: true
+                }
             };
 
             tcp_chart = new ApexCharts(tcp_chartElement, options);

@@ -1,4 +1,6 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <img src="{{ asset('images/reports/tree plantation.png') }}" alt="Tree Plantation Permits" class="w-20">
+
     <div class="justify-between flex">
         <h1 class="font-bold">Tree Plantation Registrations</h1>
     </div>
@@ -44,7 +46,8 @@
         </button>
     </div>
     <div id="tcp-chart"></div>
-    <div id="no-data-message-registrations" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-message-registrations" class="hidden text-center text-gray-500">No data available for the selected
+        filters.</div>
 
     <script>
         let tcp_chart;
@@ -58,11 +61,32 @@
         function initializeRegistrationsChart() {
             const options = {
                 colors: ["#1A56DB"],
-                series: [{ name: "Registrations", data: [] }],
-                chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
-                xaxis: { labels: { style: { fontSize: '12px' } } },
-                yaxis: { show: true },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
+                series: [{
+                    name: "Registrations",
+                    data: []
+                }],
+                chart: {
+                    type: "bar",
+                    height: "320px",
+                    fontFamily: "Inter, sans-serif"
+                },
+                xaxis: {
+                    labels: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    show: true
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: "70%",
+                        borderRadius: 8
+                    }
+                }
             };
 
             tcp_chart = new ApexCharts(document.getElementById("tcp-chart"), options);
@@ -79,74 +103,81 @@
             });
         }
 
-       async function fetchRegistrationsChartData(location = "", timeframe = "monthly", start_date, end_date) {
-        const noDataMessage = document.getElementById("no-data-message-registrations");
-        noDataMessage.classList.add("hidden");
+        async function fetchRegistrationsChartData(location = "", timeframe = "monthly", start_date, end_date) {
+            const noDataMessage = document.getElementById("no-data-message-registrations");
+            noDataMessage.classList.add("hidden");
 
-        // Construct the URL with query parameters
-        const url = new URL('/api/tree-plantation-statistics', window.location.origin);
-        url.searchParams.append('municipality', location);
-        url.searchParams.append('timeframe', timeframe);
-        if (start_date) url.searchParams.append('start_date', start_date);
-        if (end_date) url.searchParams.append('end_date', end_date);
+            // Construct the URL with query parameters
+            const url = new URL('/api/tree-plantation-statistics', window.location.origin);
+            url.searchParams.append('municipality', location);
+            url.searchParams.append('timeframe', timeframe);
+            if (start_date) url.searchParams.append('start_date', start_date);
+            if (end_date) url.searchParams.append('end_date', end_date);
 
-        // Fetch data from the API
-    try {
-        const params = new URLSearchParams({
-            municipality: location,
-            timeframe: timeframe
-        });
+            // Fetch data from the API
+            try {
+                const params = new URLSearchParams({
+                    municipality: location,
+                    timeframe: timeframe
+                });
 
-        if (start_date) params.append('start_date', start_date);
-        if (end_date) params.append('end_date', end_date);
+                if (start_date) params.append('start_date', start_date);
+                if (end_date) params.append('end_date', end_date);
 
-        const response = await fetch(`/api/tree-plantation-statistics?${params.toString()}`);
-        if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
+                const response = await fetch(`/api/tree-plantation-statistics?${params.toString()}`);
+                if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
-        const { registrations } = await response.json();
-        updateRegistrationsChart(registrations, timeframe);
-    } catch (error) {
-        console.error("Error fetching chart data:", error);
-    }
-}
-
-function updateRegistrationsChart(data, timeframe) {
-    const noDataMessage = document.getElementById("no-data-message-registrations");
-
-    if (!data || data.length === 0) {
-        noDataMessage.classList.remove("hidden");
-        tcp_chart.updateSeries([{ name: "Registrations", data: [] }]);
-    } else {
-        noDataMessage.classList.add("hidden");
-        
-        let groupedData;
-        
-        if (timeframe === "yearly") {
-            // Group by year for the yearly view
-            groupedData = data.map(item => ({
-                x: item.year.toString(),
-                y: item.count
-            }));
-        } else {
-            // Group by month and year for the monthly view
-            groupedData = data.map(item => ({
-                x: `${getMonthName(item.month)} ${item.year}`, // Format as "Month Year"
-                y: item.count
-            }));
+                const {
+                    registrations
+                } = await response.json();
+                updateRegistrationsChart(registrations, timeframe);
+            } catch (error) {
+                console.error("Error fetching chart data:", error);
+            }
         }
 
-        // Update the chart data
-        tcp_chart.updateSeries([{ name: "Registrations", data: groupedData }]);
-    }
-}
+        function updateRegistrationsChart(data, timeframe) {
+            const noDataMessage = document.getElementById("no-data-message-registrations");
 
-function getMonthName(monthNumber) {
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-    return months[monthNumber - 1]; // Convert month number to name
-}
+            if (!data || data.length === 0) {
+                noDataMessage.classList.remove("hidden");
+                tcp_chart.updateSeries([{
+                    name: "Registrations",
+                    data: []
+                }]);
+            } else {
+                noDataMessage.classList.add("hidden");
 
+                let groupedData;
+
+                if (timeframe === "yearly") {
+                    // Group by year for the yearly view
+                    groupedData = data.map(item => ({
+                        x: item.year.toString(),
+                        y: item.count
+                    }));
+                } else {
+                    // Group by month and year for the monthly view
+                    groupedData = data.map(item => ({
+                        x: `${getMonthName(item.month)} ${item.year}`, // Format as "Month Year"
+                        y: item.count
+                    }));
+                }
+
+                // Update the chart data
+                tcp_chart.updateSeries([{
+                    name: "Registrations",
+                    data: groupedData
+                }]);
+            }
+        }
+
+        function getMonthName(monthNumber) {
+            const months = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            return months[monthNumber - 1]; // Convert month number to name
+        }
     </script>
 </div>

@@ -5,16 +5,21 @@
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <div class="space-y-4">      
+    <div class="space-y-4">
+
         <div class="bg-white shadow-md rounded-lg p-4">
+            <img src="{{ asset('images/reports/ltp.png') }}" alt="Local Transport Permit" class="w-20">
+
             <h3 class="text-lg font-semibold mb-4">Total Number of Transport Permits Issued</h3>
             <div class="flex items-center space-x-4 mb-4">
                 <div>
-                    <label for="transportDestinationFilter" class="block text-sm font-medium text-gray-700">Destination:</label>
-                    <select id="transportDestinationFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <label for="transportDestinationFilter"
+                        class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select id="transportDestinationFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <!-- Options will be dynamically populated -->
-                    </select>                   
+                    </select>
                 </div>
                 <script>
                     // Populate destination dropdown from /api/ltp/destination
@@ -36,14 +41,16 @@
                 </script>
                 <div>
                     <label for="transportTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
-                    <select id="transportTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <select id="transportTimeframeFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="transportstartDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+                    <label for="transportstartDateFilter" class="block text-sm font-medium text-gray-700">Start
+                        Date:</label>
                     <input type="date" id="transportstartDateFilter"
                         class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
@@ -52,7 +59,8 @@
                     <input type="date" id="transportendDateFilter"
                         class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
-                <button id="applyTransportFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button id="applyTransportFilters"
+                    class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>
@@ -63,8 +71,10 @@
             <h3 class="text-lg font-semibold mb-4">Total Number of Species Transported</h3>
             <div class="flex items-center space-x-4 mb-4">
                 <div>
-                    <label for="speciesDestinationFilter" class="block text-sm font-medium text-gray-700">Destination:</label>
-                    <select id="speciesDestinationFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <label for="speciesDestinationFilter"
+                        class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select id="speciesDestinationFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <!-- Options will be dynamically populated -->
                     </select>
@@ -89,20 +99,24 @@
                 </script>
                 <div>
                     <label for="speciesFilter" class="block text-sm font-medium text-gray-700">Species:</label>
-                    <select id="speciesFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <select id="speciesFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <div>
                     <label for="startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
-                    <input type="date" id="startDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <input type="date" id="startDateFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
                 <div>
                     <label for="endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
-                    <input type="date" id="endDateFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <input type="date" id="endDateFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
-                <button id="applyFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button id="applyFilters"
+                    class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>
@@ -113,8 +127,10 @@
             <h3 class="text-lg font-semibold mb-4">Total Number of Business Owners with Local Transport Permits</h3>
             <div class="flex items-center space-x-4 mb-4">
                 <div>
-                    <label for="businessDestinationFilter" class="block text-sm font-medium text-gray-700">Destination:</label>
-                    <select id="businessDestinationFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <label for="businessDestinationFilter"
+                        class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select id="businessDestinationFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="All">All</option>
                         <!-- Options will be dynamically populated -->
                     </select>
@@ -139,12 +155,14 @@
                 </script>
                 <div>
                     <label for="businessTimeframeFilter" class="block text-sm font-medium text-gray-700">Timeframe:</label>
-                    <select id="businessTimeframeFilter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <select id="businessTimeframeFilter"
+                        class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
-                <button id="applyBusinessFilters" class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button id="applyBusinessFilters"
+                    class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     Apply Filters
                 </button>
             </div>
@@ -185,7 +203,7 @@
             // if (municipality !== 'All') url.searchParams.append('municipality', municipality);
             if (startDate) url.searchParams.append('start_date', startDate);
             if (endDate) url.searchParams.append('end_date', endDate);
-           if(des !== 'All') url.searchParams.append('destination', des);
+            if (des !== 'All') url.searchParams.append('destination', des);
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -195,16 +213,20 @@
                 })
                 .then(data => {
                     if (!data || data.length === 0) {
-                        document.getElementById('speciesTransportedChart').innerHTML = '<p class="text-center text-gray-500">No data available for the selected filters.</p>';
+                        document.getElementById('speciesTransportedChart').innerHTML =
+                            '<p class="text-center text-gray-500">No data available for the selected filters.</p>';
                         return;
                     }
 
-                    const categories = [...new Set(data.map(item => item.month && item.year ? `${item.month} ${item.year}` : item.year))];
+                    const categories = [...new Set(data.map(item => item.month && item.year ?
+                        `${item.month} ${item.year}` : item.year))];
                     const speciesGroups = [...new Set(data.map(item => item.species))];
                     const series = speciesGroups.map(speciesName => ({
                         name: speciesName,
                         data: categories.map(category => {
-                            const entry = data.find(item => (item.month && item.year ? `${item.month} ${item.year}` : item.year) === category && item.species === speciesName);
+                            const entry = data.find(item => (item.month && item.year ?
+                                    `${item.month} ${item.year}` : item.year) === category &&
+                                item.species === speciesName);
                             return entry ? entry.total_species : 0;
                         })
                     }));
@@ -228,7 +250,7 @@
                                 text: 'Number of Species Transported'
                             },
                             labels: {
-                                formatter: function (value) {
+                                formatter: function(value) {
                                     return Math.round(value); // Ensure solid numbers
                                 }
                             }
@@ -273,7 +295,7 @@
             url.searchParams.append('timeframe', timeframe);
             if (startDate) url.searchParams.append('start_date', startDate);
             if (endDate) url.searchParams.append('end_date', endDate);
-            if(des !== 'All') url.searchParams.append('destination', des);
+            if (des !== 'All') url.searchParams.append('destination', des);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -288,11 +310,12 @@
                             data: data.map(item => item.total_permits)
                         }],
                         xaxis: {
-                            categories: data.map(item => timeframe === 'yearly' ? item.year : `${item.month} ${item.year}`)
+                            categories: data.map(item => timeframe === 'yearly' ? item.year :
+                                `${item.month} ${item.year}`)
                         },
                         yaxis: {
                             labels: {
-                                formatter: function (value) {
+                                formatter: function(value) {
                                     return Math.round(value); // Ensure solid numbers
                                 }
                             }
@@ -320,7 +343,7 @@
             const des = document.getElementById('businessDestinationFilter').value || 'All';
             const url = new URL('/api/business-owners-by-municipality', window.location.origin);
             url.searchParams.append('timeframe', timeframe);
-            if(des !== 'All') url.searchParams.append('destination', des);
+            if (des !== 'All') url.searchParams.append('destination', des);
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -335,11 +358,12 @@
                             data: data.map(item => item.total_business_owners)
                         }],
                         xaxis: {
-                            categories: data.map(item => timeframe === 'yearly' ? item.year : `${item.month} ${item.year}`)
+                            categories: data.map(item => timeframe === 'yearly' ? item.year :
+                                `${item.month} ${item.year}`)
                         },
                         yaxis: {
                             labels: {
-                                formatter: function (value) {
+                                formatter: function(value) {
                                     return Math.round(value); // Ensure solid numbers
                                 }
                             }

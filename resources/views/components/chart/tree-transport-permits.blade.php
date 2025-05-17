@@ -1,4 +1,6 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <img src="{{ asset('images/reports/tree transport.png') }}" alt="Transport Permits" class="w-20">
+
     <div class="justify-between flex">
         <h1 class="font-bold">Tree Transport Permits</h1>
     </div>
@@ -45,8 +47,9 @@
         </button>
     </div>
     <div id="transport-chart"></div>
-    <div id="no-data-message-transport" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
-   
+    <div id="no-data-message-transport" class="hidden text-center text-gray-500">No data available for the selected
+        filters.</div>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
@@ -57,7 +60,7 @@
         const endDate = document.getElementById('ttp_endDateFilter').value;
         const url = new URL('/api/tree-transport-permit-statistics', window.location.origin);
         url.searchParams.append('municipality', municipality);
-        url.searchParams.append('timeframe', timeframe);    
+        url.searchParams.append('timeframe', timeframe);
         if (startDate) {
             url.searchParams.append('start_date', startDate);
         }

@@ -1,4 +1,5 @@
 <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+
     <div class="justify-between flex">
         <h1 class="font-bold">Tree Plantation Permit</h1>
     </div>
@@ -38,14 +39,15 @@
         </button>
     </div>
     <div id="tcp-chart"></div>
-    <div id="no-data-message-registrations" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-message-registrations" class="hidden text-center text-gray-500">No data available for the selected
+        filters.</div>
 </div>
 
 <!-- Trees Planted By Species Card -->
 <div class="bg-white shadow-md rounded-lg p-4">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold">Trees Planted By Species</h3>
-      
+
     </div>
     <div class="flex items-center space-x-4 mb-4">
         <div>
@@ -74,7 +76,8 @@
         </button>
     </div>
     <div id="species-chart"></div>
-    <div id="no-data-message-trees" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-message-trees" class="hidden text-center text-gray-500">No data available for the selected filters.
+    </div>
 </div>
 
 <!-- ApexCharts CDN -->
@@ -92,25 +95,66 @@
     function initializeCharts() {
         const tcpOptions = {
             colors: ["#1A56DB"],
-            series: [{ name: "Registrations", data: [] }],
-            chart: { type: "bar", height: "320px", fontFamily: "Inter, sans-serif" },
-            xaxis: { labels: { style: { fontSize: '12px' } } },
-            yaxis: { show: true },
-            plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } }
+            series: [{
+                name: "Registrations",
+                data: []
+            }],
+            chart: {
+                type: "bar",
+                height: "320px",
+                fontFamily: "Inter, sans-serif"
+            },
+            xaxis: {
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            yaxis: {
+                show: true
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "70%",
+                    borderRadius: 8
+                }
+            }
         };
 
         const speciesOptions = {
-            chart: { type: "bar", height: 350, stacked: true },
+            chart: {
+                type: "bar",
+                height: 350,
+                stacked: true
+            },
             colors: ["#1A56DB", "#E91E63", "#FFC107", "#4CAF50", "#9C27B0"],
             series: [],
-            xaxis: { categories: [] },
-            yaxis: {
-                title: { text: "Number of Trees Planted" },
-                labels: { formatter: value => Math.round(value) }
+            xaxis: {
+                categories: []
             },
-            plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-            dataLabels: { enabled: true },
-            legend: { position: "top" }
+            yaxis: {
+                title: {
+                    text: "Number of Trees Planted"
+                },
+                labels: {
+                    formatter: value => Math.round(value)
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "70%",
+                    borderRadius: 8
+                }
+            },
+            dataLabels: {
+                enabled: true
+            },
+            legend: {
+                position: "top"
+            }
         };
 
         tcp_chart = new ApexCharts(document.getElementById("tcp-chart"), tcpOptions);
@@ -134,12 +178,18 @@
         });
     }
 
-    async function fetchChartData(location = "", timeframe = "monthly", speciesLocation = "", speciesTimeframe = "monthly") {
+    async function fetchChartData(location = "", timeframe = "monthly", speciesLocation = "", speciesTimeframe =
+        "monthly") {
         try {
-            const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
+            const response = await fetch(
+                `/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
             if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
-            const { registrations, speciesData, totalTreesPlanted } = await response.json();
+            const {
+                registrations,
+                speciesData,
+                totalTreesPlanted
+            } = await response.json();
 
             updateRegistrationsChart(registrations, timeframe);
             updateSpeciesChart(speciesData, speciesTimeframe);
@@ -157,12 +207,18 @@
 
         if (!data || data.length === 0) {
             noDataMessage.classList.remove("hidden");
-            tcp_chart.updateSeries([{ name: "Registrations", data: [] }]);
+            tcp_chart.updateSeries([{
+                name: "Registrations",
+                data: []
+            }]);
             totalRegistrationsElement.textContent = "Total: 0";
         } else {
             noDataMessage.classList.add("hidden");
             const groupedData = groupData(data, timeframe);
-            tcp_chart.updateSeries([{ name: "Registrations", data: groupedData }]);
+            tcp_chart.updateSeries([{
+                name: "Registrations",
+                data: groupedData
+            }]);
             totalRegistrationsElement.textContent = `Total: ${data.reduce((sum, item) => sum + item.count, 0)}`;
         }
     }
