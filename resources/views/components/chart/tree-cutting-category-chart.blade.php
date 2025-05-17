@@ -52,8 +52,19 @@
 
            async function fetchTCCChartData(municipality = "All", timeframe = "monthly", startDate = null, endDate = null) {
              try {
-            const response = await fetch(`/api/tree-cutting-category-statistics?municipality=${municipality}&timeframe=${timeframe}&start_date=${startDate}&end_date=${endDate}`);
-                      
+                const url = new URL('/api/tree-cutting-category-statistics', window.location.origin);
+                    url.searchParams.append('municipality', municipality);
+                    url.searchParams.append('timeframe', timeframe);
+                    // url.searchParams.append('species', species);
+
+                    if (startDate) {
+                        url.searchParams.append('start_date', startDate);
+                    }
+                    if (endDate) {
+                        url.searchParams.append('end_date', endDate);
+                    }
+
+                    const response = await fetch(url);            
             const { data, total_count } = await response.json();
 
             if (!data || data.length === 0) {
