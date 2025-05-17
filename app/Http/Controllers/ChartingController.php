@@ -440,6 +440,8 @@ class ChartingController extends Controller
         $timeframe = $request->query('timeframe', 'monthly');
         $municipality = $request->query('municipality');
         $category = $request->query('category');
+        $startDate = $request->query('start_date'); // Optional start date filter
+        $endDate = $request->query('end_date'); // Optional end date filter
 
         $query = DB::table('files')
             ->where('permit_type', 'land-title')
@@ -457,7 +459,12 @@ class ChartingController extends Controller
         if ($category) {
             $query->where('category', $category);
         }
-
+        if($startDate) {
+            $query->where('date_released', '>=', $startDate);
+        }
+        if($endDate) {
+            $query->where('date_released', '<=', $endDate);
+        }
         if ($timeframe === 'yearly') {
             $query->groupBy('municipality', 'category', DB::raw('YEAR(date_released)'));
         } else {
