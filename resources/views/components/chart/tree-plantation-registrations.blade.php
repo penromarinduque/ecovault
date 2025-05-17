@@ -27,6 +27,17 @@
                 <option value="yearly">Yearly</option>
             </select>
         </div>
+
+        <div>
+            <label for="tcp_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input type="date" id="tcp_startDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
+        <div>
+            <label for="tcp_endDateFilter" class="block text-sm font-medium text-gray-700">End Date:</label>
+            <input type="date" id="tcp_endDateFilter"
+                class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+        </div>
         <button id="apply-registration-filters"
             class="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
             Apply Filters
@@ -62,13 +73,34 @@
             document.getElementById("apply-registration-filters").addEventListener("click", () => {
                 const location = document.getElementById("location-filter").value;
                 const timeframe = document.getElementById("timeframe-filter").value;
-                fetchRegistrationsChartData(location, timeframe);
+                const startDate = document.getElementById("tcp_startDateFilter").value;
+                const endDate = document.getElementById("tcp_endDateFilter").value;
+                fetchRegistrationsChartData(location, timeframe, startDate, endDate);
             });
         }
 
-       async function fetchRegistrationsChartData(location = "", timeframe = "monthly") {
+       async function fetchRegistrationsChartData(location = "", timeframe = "monthly", start_date, end_date) {
+        const noDataMessage = document.getElementById("no-data-message-registrations");
+        noDataMessage.classList.add("hidden");
+
+        // Construct the URL with query parameters
+        const url = new URL('/api/tree-plantation-statistics', window.location.origin);
+        url.searchParams.append('municipality', location);
+        url.searchParams.append('timeframe', timeframe);
+        if (start_date) url.searchParams.append('start_date', start_date);
+        if (end_date) url.searchParams.append('end_date', end_date);
+
+        // Fetch data from the API
     try {
-        const response = await fetch(`/api/tree-plantation-statistics?municipality=${location}&timeframe=${timeframe}`);
+        const params = new URLSearchParams({
+            municipality: location,
+            timeframe: timeframe
+        });
+
+        if (start_date) params.append('start_date', start_date);
+        if (end_date) params.append('end_date', end_date);
+
+        const response = await fetch(`/api/tree-plantation-statistics?${params.toString()}`);
         if (!response.ok) throw new Error(`API call failed with status ${response.status}`);
 
         const { registrations } = await response.json();

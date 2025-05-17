@@ -757,17 +757,28 @@ class ChartingController extends Controller
     $municipality = $request->query('municipality', '');
     $timeframe = $request->query('timeframe', 'monthly');
     $species = $request->query('species', '');
+    $startDate = $request->query('start_date'); // Optional start date filter
+    $endDate = $request->query('end_date'); // Optional end date filter
 
     $registrations = TreePlantation::query()
-        ->when($municipality, fn($query) => $query->where('location', $municipality))
-        ->when($species, fn($query) => $query->whereRaw("LOWER(TRIM(species)) = ?", [strtolower(trim($species))]))
-        ->selectRaw(
-            $timeframe === 'yearly'
+    ->when($municipality, fn($query) => $query->where('location', $municipality))
+    ->when($species, fn($query) => 
+        $query->whereRaw("LOWER(TRIM(species)) = ?", [strtolower(trim($species))])
+    )
+    ->when($startDate, fn($query) => 
+        $query->where('date_applied', '>=', $startDate)
+    )
+    ->when($endDate, fn($query) => 
+        $query->where('date_applied', '<=', $endDate)
+    )
+    ->selectRaw(
+        $timeframe === 'yearly'
             ? "YEAR(date_applied) as year, COUNT(*) as count"
             : "YEAR(date_applied) as year, MONTH(date_applied) as month, COUNT(*) as count"
-        )
-        ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month')
-        ->get();
+    )
+    ->groupByRaw($timeframe === 'yearly' ? 'year' : 'year, month')
+    ->get();
+
 
     $speciesData = TreePlantation::query()
         ->when($municipality, fn($query) => $query->where('location', $municipality))
