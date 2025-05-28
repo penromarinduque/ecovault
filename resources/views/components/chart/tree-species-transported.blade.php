@@ -8,13 +8,13 @@
             <label for="species-location-filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="species-location-filter"
                 class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                <option value="All">All</option>
+                <option value="">All</option>
+                <option value="Buenavista">Buenavista</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
-                <option value="Buenavista">Buenavista</option>
-                <option value="Torrijos">Torrijos</option>
-                <option value="Santa Cruz">Santa Cruz</option>
                 <option value="Mogpog">Mogpog</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Torrijos">Torrijos</option>
             </select>
         </div>
         <div>
@@ -34,7 +34,7 @@
             </select>
         </div>
 
-        
+
         <div>
             <label for="species_startDateFilter" class="block text-sm font-medium text-gray-700">Start Date:</label>
             <input type="date" id="species_startDateFilter"
@@ -51,7 +51,8 @@
         </button>
     </div>
     <div id="species-chart"></div>
-    <div id="no-data-message-species" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-message-species" class="hidden text-center text-gray-500">No data available for the selected
+        filters.</div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         async function loadSpeciesOptions() {
@@ -59,7 +60,7 @@
             try {
                 const res = await fetch('/api/tree-transport-species');
                 const data = await res.json();
-    
+
                 speciesSelect.innerHTML = `<option value="All">All</option>`;
                 data.forEach(species => {
                     const option = document.createElement('option');
@@ -71,7 +72,7 @@
                 console.error('Failed to load species options:', error);
             }
         }
-    
+
         async function loadSpeciesChart() {
             const municipality = document.getElementById('species-location-filter').value;
             const timeframe = document.getElementById('species-timeframe-filter').value;
@@ -82,7 +83,7 @@
             const chartContainer = document.getElementById('species-chart');
             const noDataMessage = document.getElementById('no-data-message-species');
             const totalDisplay = document.getElementById('totalSpeciesTransported');
-    
+
             const params = new URLSearchParams({
                 municipality: municipality === 'All' ? '' : municipality,
                 timeframe,
@@ -90,35 +91,35 @@
                 startDate: startDate || '',
                 endDate: endDate || '',
             });
-    
+
             try {
                 const res = await fetch(`/api/tree-species-transported-statistics?${params.toString()}`);
                 const result = await res.json();
-    
+
                 const data = result.data || [];
                 const total = result.total_count || 0;
-    
+
                 if (!data.length) {
                     chartContainer.innerHTML = '';
                     noDataMessage.classList.remove('hidden');
                     totalDisplay.textContent = 'Total Trees Transported: 0';
                     return;
                 }
-    
+
                 noDataMessage.classList.add('hidden');
                 totalDisplay.textContent = `Total Trees Transported: ${total}`;
-    
+
                 const categories = [];
                 const seriesData = [];
-    
+
                 data.forEach(item => {
-                    const label = timeframe === 'yearly'
-                        ? `${item.year}`
-                        : `${item.month} ${item.year}`;
+                    const label = timeframe === 'yearly' ?
+                        `${item.year}` :
+                        `${item.month} ${item.year}`;
                     categories.push(label);
                     seriesData.push(parseInt(item.total_trees));
                 });
-    
+
                 const options = {
                     chart: {
                         type: 'bar',
@@ -138,11 +139,11 @@
                         }
                     }
                 };
-    
+
                 chartContainer.innerHTML = ''; // Clear existing
                 const chart = new ApexCharts(chartContainer, options);
                 chart.render();
-    
+
             } catch (error) {
                 console.error('Failed to load chart:', error);
                 chartContainer.innerHTML = '';
@@ -150,13 +151,13 @@
                 totalDisplay.textContent = 'Total Trees Transported: 0';
             }
         }
-    
+
         document.addEventListener('DOMContentLoaded', () => {
             loadSpeciesOptions().then(loadSpeciesChart);
         });
-    
+
         document.getElementById('apply-species-filters').addEventListener('click', loadSpeciesChart);
     </script>
-    
+
 
 </div>

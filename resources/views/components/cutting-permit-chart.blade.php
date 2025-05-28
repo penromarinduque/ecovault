@@ -10,12 +10,13 @@
             <label for="tcp_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="tcp_municipality_filter"
                 class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                <option value="All">All</option>
+                <option value="">All</option>
+                <option value="Buenavista">Buenavista</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
-                <option value="Buenavista">Buenavista</option>
-                <option value="Torrijos">Torrijos</option>
+                <option value="Mogpog">Mogpog</option>
                 <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Torrijos">Torrijos</option>
             </select>
         </div>
         <div>

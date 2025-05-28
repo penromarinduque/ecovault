@@ -8,12 +8,13 @@
             <label for="tcc_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="tcc_municipality_filter"
                 class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                <option value="All">All</option>
+                <option value="">All</option>
+                <option value="Buenavista">Buenavista</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
-                <option value="Buenavista">Buenavista</option>
-                <option value="Torrijos">Torrijos</option>
+                <option value="Mogpog">Mogpog</option>
                 <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Torrijos">Torrijos</option>
             </select>
         </div>
         <div>
@@ -41,7 +42,8 @@
         </button>
     </div>
     <div id="tcc_chart"></div>
-    <div id="no-data-tcc-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-tcc-message" class="hidden text-center text-gray-500">No data available for the selected filters.
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -50,9 +52,10 @@
             const totalTCCRegistrationsElement = document.getElementById("totalTCCRegistrations");
             const noDataTCCMessage = document.getElementById("no-data-tcc-message");
 
-           async function fetchTCCChartData(municipality = "All", timeframe = "monthly", startDate = null, endDate = null) {
-             try {
-                const url = new URL('/api/tree-cutting-category-statistics', window.location.origin);
+            async function fetchTCCChartData(municipality = "All", timeframe = "monthly", startDate = null,
+                endDate = null) {
+                try {
+                    const url = new URL('/api/tree-cutting-category-statistics', window.location.origin);
                     url.searchParams.append('municipality', municipality);
                     url.searchParams.append('timeframe', timeframe);
                     // url.searchParams.append('species', species);
@@ -64,64 +67,94 @@
                         url.searchParams.append('end_date', endDate);
                     }
 
-                    const response = await fetch(url);            
-            const { data, total_count } = await response.json();
+                    const response = await fetch(url);
+                    const {
+                        data,
+                        total_count
+                    } = await response.json();
 
-            if (!data || data.length === 0) {
-                noDataTCCMessage.classList.remove('hidden');
-                tcc_chart.updateSeries([]);
-                tcc_chart.updateOptions({ xaxis: { categories: [] } });
-                return;
+                    if (!data || data.length === 0) {
+                        noDataTCCMessage.classList.remove('hidden');
+                        tcc_chart.updateSeries([]);
+                        tcc_chart.updateOptions({
+                            xaxis: {
+                                categories: []
+                            }
+                        });
+                        return;
+                    }
+
+                    noDataTCCMessage.classList.add('hidden');
+                    totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
+
+                    // Group data by category
+                    const categories = [...new Set(data.map(item => item.permit_type))];
+
+                    const xAxisLabels = [...new Set(
+                        data.map(item => timeframe === "yearly" ? item.year.toString() :
+                            `${item.month} ${item.year}`)
+                    )];
+
+                    const groupedData = categories.map(category => ({
+                        name: category,
+                        data: xAxisLabels.map(label => {
+                            const found = data.find(item => {
+                                const itemLabel = timeframe === "yearly" ? item.year
+                                    .toString() : `${item.month} ${item.year}`;
+                                return item.permit_type === category &&
+                                    itemLabel === label;
+                            });
+                            return {
+                                x: label,
+                                y: found ? found.total_trees : 0
+                            };
+                        })
+                    }));
+
+                    tcc_chart.updateSeries(groupedData);
+                    tcc_chart.updateOptions({
+                        xaxis: {
+                            categories: xAxisLabels
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching chart data:", error);
+                }
             }
-
-        noDataTCCMessage.classList.add('hidden');
-        totalTCCRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
-
-        // Group data by category
-        const categories = [...new Set(data.map(item => item.permit_type))];
-
-        const xAxisLabels = [...new Set(
-            data.map(item => timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`)
-        )];
-
-        const groupedData = categories.map(category => ({
-            name: category,
-            data: xAxisLabels.map(label => {
-                const found = data.find(item => {
-                    const itemLabel = timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`;
-                    return item.permit_type === category && itemLabel === label;
-                });
-                return {
-                    x: label,
-                    y: found ? found.total_trees : 0
-                };
-            })
-        }));
-
-        tcc_chart.updateSeries(groupedData);
-        tcc_chart.updateOptions({
-            xaxis: {
-                categories: xAxisLabels
-            }
-        });
-
-    } catch (error) {
-        console.error("Error fetching chart data:", error);
-    }
-}
 
             const options = {
-                chart: { type: "bar", height: 350, stacked: true },
+                chart: {
+                    type: "bar",
+                    height: 350,
+                    stacked: true
+                },
                 colors: ["#1A56DB", "#E91E63", "#FFC107", "#4CAF50", "#9C27B0"],
                 series: [],
-                xaxis: { categories: [] },
-                yaxis: {
-                    title: { text: "Number of Trees Cut" },
-                    labels: { formatter: value => Math.round(value) }
+                xaxis: {
+                    categories: []
                 },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true },
-                legend: { position: "top" }
+                yaxis: {
+                    title: {
+                        text: "Number of Trees Cut"
+                    },
+                    labels: {
+                        formatter: value => Math.round(value)
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: "70%",
+                        borderRadius: 8
+                    }
+                },
+                dataLabels: {
+                    enabled: true
+                },
+                legend: {
+                    position: "top"
+                }
             };
 
             tcc_chart = new ApexCharts(tcc_chartElement, options);

@@ -8,12 +8,13 @@
             <label for="tcs_municipality_filter" class="block text-sm font-medium text-gray-700">Municipality:</label>
             <select id="tcs_municipality_filter"
                 class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                <option value="All">All</option>
+                <option value="">All</option>
+                <option value="Buenavista">Buenavista</option>
                 <option value="Gasan">Gasan</option>
                 <option value="Boac">Boac</option>
-                <option value="Buenavista">Buenavista</option>
-                <option value="Torrijos">Torrijos</option>
+                <option value="Mogpog">Mogpog</option>
                 <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Torrijos">Torrijos</option>
             </select>
         </div>
         <div>
@@ -48,7 +49,8 @@
         </button>
     </div>
     <div id="tcs_chart"></div>
-    <div id="no-data-tcs-message" class="hidden text-center text-gray-500">No data available for the selected filters.</div>
+    <div id="no-data-tcs-message" class="hidden text-center text-gray-500">No data available for the selected filters.
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -63,7 +65,7 @@
                     const response = await fetch(`/api/tree-species`);
                     const species = await response.json();
                     const speciesFilter = document.getElementById("tcs_species_filter");
-                    
+
                     species.forEach(speciesItem => {
                         if (speciesItem.common_name) {
                             const option = document.createElement("option");
@@ -78,7 +80,8 @@
             }
 
             // Fetch chart data based on filters
-            async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All", startDate = null, endDate = null) {
+            async function fetchTCSChartData(municipality = "All", timeframe = "monthly", species = "All",
+                startDate = null, endDate = null) {
                 try {
                     const url = new URL('/api/tree-cutting-species-statistics', window.location.origin);
                     url.searchParams.append('municipality', municipality);
@@ -97,12 +100,19 @@
 
                     const response = await fetch(url);
                     if (!response.ok) throw new Error("Failed to fetch data");
-                    const { data, total_count } = await response.json();
+                    const {
+                        data,
+                        total_count
+                    } = await response.json();
 
                     if (!data || data.length === 0) {
                         noDataTCSMessage.classList.remove('hidden');
                         tcs_chart.updateSeries([]);
-                        tcs_chart.updateOptions({ xaxis: { categories: [] } });
+                        tcs_chart.updateOptions({
+                            xaxis: {
+                                categories: []
+                            }
+                        });
                         return;
                     }
 
@@ -110,14 +120,17 @@
                     totalTCSRegistrationsElement.textContent = `Total Trees Cut: ${total_count}`;
 
                     const groupedData = data.map(item => ({
-                        x: timeframe === "yearly" ? item.year.toString() : `${item.month} ${item.year}`,
+                        x: timeframe === "yearly" ? item.year.toString() :
+                            `${item.month} ${item.year}`,
                         y: Number(item.total_trees)
                     }));
 
                     const xCategories = groupedData.map(item => item.x);
 
                     tcs_chart.updateOptions({
-                        xaxis: { categories: xCategories },
+                        xaxis: {
+                            categories: xCategories
+                        },
                         series: [{
                             name: species === "All" ? "All Species" : species,
                             data: groupedData.map(item => item.y)
@@ -129,16 +142,33 @@
             }
 
             const options = {
-                chart: { type: "bar", height: 350 },
+                chart: {
+                    type: "bar",
+                    height: 350
+                },
                 colors: ["#1A56DB"],
                 series: [],
-                xaxis: { categories: [] },
-                yaxis: {
-                    title: { text: "Number of Trees Cut" },
-                    labels: { formatter: value => Math.round(value) }
+                xaxis: {
+                    categories: []
                 },
-                plotOptions: { bar: { horizontal: false, columnWidth: "70%", borderRadius: 8 } },
-                dataLabels: { enabled: true }
+                yaxis: {
+                    title: {
+                        text: "Number of Trees Cut"
+                    },
+                    labels: {
+                        formatter: value => Math.round(value)
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: "70%",
+                        borderRadius: 8
+                    }
+                },
+                dataLabels: {
+                    enabled: true
+                }
             };
 
             tcs_chart = new ApexCharts(tcs_chartElement, options);
