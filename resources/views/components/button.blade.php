@@ -1,4 +1,4 @@
-<button type="{{ $type }}" id="{{ $id }}" onclick="{{ $onclick }}"
+<button type="{{ $type }}" id="{{ $id }}" onclick="{{ $onclick ?? null }}"
     {{ $attributes->merge([
         'class' =>
             $style === 'primary'
