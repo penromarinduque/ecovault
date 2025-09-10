@@ -56,8 +56,8 @@
             // initializeTable(data, excludeOfficeSource);
 
         } catch (error) {
-            console.error('Fetch operation error:', error.message || error);
-
+            console.log('Fetch operation error:', error);
+            console.log('adasdasd')
             showToast({
                 type: 'danger',
                 message: 'failed! to fetch data.',
@@ -158,8 +158,7 @@
     // Define headings dynamically
     const headings = excludeOfficeSource
         ? ["File Name", "Date Modified", "Modified By", "Classification", "Actions"]
-        : ["File Name", "Office Source", "Date Modified", "Modified By", "Classification", "Actions"];
-
+        : ["Title", "Control No.", "Date", "Actions"];
     // Map data dynamically
     const dataRows = data.map(file => {
         const cells = excludeOfficeSource
@@ -172,10 +171,8 @@
             ]
             : [
                 truncateFilename(file.file_name, 20),
-                file.office_source,
-                formatDate(file.updated_at),
-                file.user_name,
-                file.classification,
+                file.control_no,
+                formatDate(file.created_at),
                 generateKebab(file.id, file.shared_users, file.file_name),
             ];
 

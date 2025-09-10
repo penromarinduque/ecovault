@@ -105,7 +105,9 @@ abstract class BaseController extends Controller
                         'id' => $file->id,
                         'file_name' => $file->file_name,
                         'updated_at' => $file->updated_at->format('Y-m-d H:i:s'),
+                        'created_at' => $file->created_at->format('Y-m-d H:i:s'),
                         'office_source' => $file->office_source,
+                        'control_no' => $file->control_no,
                         'user_name' => $file->user->name,
                         'classification' => $file->classification,
                         'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares

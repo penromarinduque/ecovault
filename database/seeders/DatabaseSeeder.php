@@ -48,6 +48,10 @@ class DatabaseSeeder extends Seeder
             ['group_name' => 'Adminstrative', 'type_name' => 'letters', 'classification_id' => 2, 'folder_name' => 'Letters'],
             ['group_name' => 'Adminstrative', 'type_name' => 'special-orders', 'classification_id' => 2, 'folder_name' => 'Special Orders'],
             ['group_name' => 'Adminstrative', 'type_name' => 'reports', 'classification_id' => 2, 'folder_name' => 'Reports'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'DENR_SPECIAL_ORDER', 'classification_id' => 2, 'folder_name' => 'DENR Special Orders'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'REGIONAL_SPECIAL_ORDER', 'classification_id' => 2, 'folder_name' => 'Regional Special Orders'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'PENRO_SPECIAL_ORDER', 'classification_id' => 2, 'folder_name' => 'PENRO Special Orders'],
+            ['group_name' => 'Adminstrative', 'type_name' => 'PENRO_MEMORANDUM_ORDER', 'classification_id' => 2, 'folder_name' => 'PENRO Memorandum Orders'],
         ];
 
         foreach ($fileTypes as $fileType) {

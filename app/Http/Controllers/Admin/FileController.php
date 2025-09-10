@@ -153,8 +153,7 @@ class FileController extends Controller
                     ]);
                     break;
 
-                case 'tree-plantation-registration
-':
+                case 'tree-plantation-registration':
                     DB::table('tree_plantation_registration')->where('file_id', $fileId)->update([
                         'name_of_client' => $request->input('permit.name_of_client'),
                         'number_of_trees' => $request->input('permit.number_of_trees'),

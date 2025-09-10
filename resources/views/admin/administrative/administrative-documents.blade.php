@@ -12,7 +12,7 @@
         <div class="grid grid-cols-4 gap-8 m-16 text-gray-700 font-semibold">
             <!-- Tree Cutting Permits -->
             <!-- Administrative Folders -->
-            <div class="flex flex-col items-center">
+            {{-- <div class="flex flex-col items-center">
                 <a href="{{ route('administrative.record.show', ['record' => 'memoranda']) }}" class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Memoranda Folder" class="w-24 mb-2">
                     <h2 class="w-[120px]">Memoranda</h2>
@@ -37,6 +37,33 @@
                 <a href="{{ route('administrative.record.show', ['record' => 'reports']) }}" class="text-center">
                     <img src="{{ asset('images/admin/folder.png') }}" alt="Reports Folder" class="w-24 mb-2">
                     <h2 class="w-[120px]">Reports</h2>
+                </a>
+            </div> --}}
+            <div class="flex flex-col items-center">
+                <a href="{{ route('administrative.record.show', ['record' => 'DENR_SPECIAL_ORDER']) }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="DENR Special Orders" class="w-24 mb-2">
+                    <h2 class="w-[120px]">DENR Special Orders</h2>
+                </a>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <a href="{{ route('administrative.record.show', ['record' => 'REGIONAL_SPECIAL_ORDER']) }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="Regional Special Orders" class="w-24 mb-2">
+                    <h2 class="w-[120px]">Regional Special Orders</h2>
+                </a>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <a href="{{ route('administrative.record.show', ['record' => 'PENRO_SPECIAL_ORDER']) }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="PENRO Special Orders" class="w-24 mb-2">
+                    <h2 class="w-[120px]">PENRO Special Orders</h2>
+                </a>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <a href="{{ route('administrative.record.show', ['record' => 'PENRO_MEMORANDUM_ORDER']) }}" class="text-center">
+                    <img src="{{ asset('images/admin/folder.png') }}" alt="PENRO Memorandum Orders" class="w-24 mb-2">
+                    <h2 class="w-[120px]">PENRO Memorandum Orders</h2>
                 </a>
             </div>
         </div>

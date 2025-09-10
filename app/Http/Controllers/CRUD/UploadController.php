@@ -61,8 +61,9 @@ class UploadController extends Controller
                 'permit_type' => $type,  // Ensure this is present in the request
                 'category' => $category, // This can be null
                 'municipality' => $municipality, // Ensure this is present in the request
-                'report_type' => $report,
-                'file_name' => $originalFileName,
+                'report_type' => $report,                
+                'file_name' => $request->input('title') ?? $sanitizedFileName, // Use title if provided, else original name
+                'control_no' => $request->input('control_no') ?? null,
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'), // Ensure this is present in the request

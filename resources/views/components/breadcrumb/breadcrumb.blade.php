@@ -218,7 +218,7 @@
                         <a href="{{ $record }}"
                             class="{{ Route::is('administrative.record.show') || Route::is('archived-file.administrative.record.show') ? 'text-blue-600 inline-flex items-center text-sm font-medium hover:text-blue-600 ms-2' : 'ms-2 inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-700' }}
                                 pointer-events-none cursor-not-allowed">
-                            {{ ucwords(str_replace('-', ' ', $record)) }}
+                            {{ ucwords(str_replace('_', ' ', $record)) }}
                         </a>
                     </div>
                 </li>

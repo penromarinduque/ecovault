@@ -378,6 +378,32 @@
                     </div>
 
                     <div class="my-4">
+                        <label for="title" class="block mb-2 text-sm font-medium text-gray-700">Document Title</label>
+                        <input type="text" id="title" name="title"
+                            placeholder="Enter Document Title"
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                            block w-full p-2.5 
+                                            focus:border-green-500 focus:ring-green-500 
+                                            required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required>
+                        <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid input!</p>
+                    </div>
+
+                    <div class="my-4">
+                        <label for="control_no" class="block mb-2 text-sm font-medium text-gray-700">Document Control No.</label>
+                        <input type="text" id="control_no" name="control_no"
+                            placeholder="Enter Document Control No."
+                            class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                            block w-full p-2.5 
+                                            focus:border-green-500 focus:ring-green-500 
+                                            required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                            autocomplete="off" required>
+                        <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid input!</p>
+                    </div>
+
+                    <div class="my-4">
                         @if ($type == 'land-title')
                             @if ($municipality == 'Santa Cruz')
                                 {{-- Content specific for Sta Cruz --}}
@@ -443,9 +469,6 @@
                             </select>
                         @endif
                     </div>
-
-
-
 
                     <div class="my-4">
                         @if ($type == 'tree-cutting-permits')
@@ -711,6 +734,7 @@
     const fileInput = document.getElementById('file-upload');
     const fileUploadName = document.getElementById('file-upload-name');
     const fileUploadError = document.getElementById('file-upload-error');
+    const fileUploadTitle = document.getElementById('title');
 
 
     function validateFile() {
@@ -741,10 +765,11 @@
 
     fileInput.addEventListener('change', function() {
         const fileUploadError = document.getElementById('file-upload-error');
-
         if (fileInput.files.length > 0) {
             const selectedFile = fileInput.files[0];
+             console.log(selectedFile);
             fileUploadName.textContent = selectedFile.name; // Update Step 1
+            // fileUploadTitle.value = selectedFile.name;
             fileUploadError.classList.add('invisible'); // Hide error if file is chosen
         } else {
             fileUploadName.textContent = 'No file chosen'; // Reset if no file is chosen
@@ -808,7 +833,8 @@
             municipality: municipality,
             report: report || '',
             category: category || '',
-            isArchived: isArchived
+            isArchived: isArchived,
+
         };
 
         const filteredParams = Object.fromEntries(
@@ -839,7 +865,7 @@
                 return; // Stop execution if the array is empty
             }
         }
-
+        console.log(formData);
 
         try {
             // File upload
@@ -917,7 +943,7 @@
             uploadButton.disabled = false;
             this.reset();
         } catch (error) {
-            
+            console.log(error);
             showToast({
                 type: 'danger',
                 message: 'Upload unsuccessful. Check your file name if there are duplicate or file format and try again.',

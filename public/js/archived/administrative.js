@@ -367,6 +367,7 @@ function hideError(elementId) {
 function updateFileName() {
     const fileInput = document.getElementById('file-upload');
     const fileNameElement = document.getElementById('file-upload-name');
+    const titleElement = document.getElementById('title');
     const file = fileInput.files[0];
 
     if (file) {
@@ -383,6 +384,7 @@ function updateFileName() {
 
         // Display shortened name with extension
         fileNameElement.textContent = displayName + '.' + fileExtension;
+        titleElement.textContent = displayName;
         document.getElementById('file-upload-error').classList.add('invisible'); // Hide the error once a file is selected
     } else {
         fileNameElement.textContent = "No file chosen";

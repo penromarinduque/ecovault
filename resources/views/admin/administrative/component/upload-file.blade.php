@@ -31,6 +31,20 @@
 
             <!-- Left Section -->
             <div class="flex-1">
+                <!-- Title Field -->
+                <div>
+                    <label for="office_source" class="block mb-2 text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" id="title" name="title"
+                        class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                        block w-full p-2.5 
+                        focus:border-green-500 focus:ring-green-500 
+                        required:border-red-500 required:ring-red-500  required:text-red-500 required:placeholder:text-red-500
+                        valid:border-green-500 valid:ring-green-500 valid:text-green-500 "
+                        placeholder="Enter Title" required>
+                    <p class="mt-2 text-sm text-red-600 h-6 invisible"><span class="font-medium">Please!</span> Enter
+                        valid input!</p>
+                </div>
+
                 <!-- Office Source Field -->
                 <div>
                     <label for="office_source" class="block mb-2 text-sm font-medium text-gray-700">Office
