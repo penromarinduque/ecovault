@@ -50,5 +50,5 @@
     @include('layouts.user.partials.footer')
 
 </body>
-
+<script src="{{ asset('js/jquery/jquery.js') }}"></script>
 </html>

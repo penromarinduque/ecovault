@@ -47,5 +47,6 @@
         });
     </script>
 </body>
+<script src="{{ asset('js/jquery/jquery.js') }}"></script>
 
 </html>

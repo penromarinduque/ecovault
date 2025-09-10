@@ -13,7 +13,7 @@
                 </svg>
             </button>
         </div>
-        <form id="edit-file-form" class="space-y-4">
+        <form id="edit-file-form" class="space-y-4" data-file-id="">
             @csrf
             <div class="grid grid-cols-2 gap-x-10">
 
@@ -118,27 +118,27 @@
 
                             <label for="classification"
                                 class="block mb-2 text-sm font-medium text-gray-700">Classification</label>
-                            <select id="edit-classification" name="classification"
-                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                                                                                                block w-full p-2.5 
-                                                                                                                focus:border-green-500 focus:ring-green-500 
-                                                                                                                required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                                                                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
-                                autocomplete="off" required>
-                                <option value="" disabled selected hidden>Select a Classification</option>
-                                <option value="highly-technical">Highly Technical</option>
-                                <option value="simple">Simple</option>
-                            </select>
+                                <select id="edit-classification" name="classification"
+                                    class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                                                                                    block w-full p-2.5 
+                                                                                                                    focus:border-green-500 focus:ring-green-500 
+                                                                                                                    required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                                                                                                    valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                    autocomplete="off" required>
+                                    <option value="" disabled selected hidden>Select a Classification</option>
+                                    <option value="highly-technical">Highly Technical</option>
+                                    <option value="simple">Simple</option>
+                                </select>
 
 
 
                             <input type="hidden" id="edit-office-source" name="office_source"
                                 placeholder="Enter office source" value=null
                                 class=" bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
-                                                                                            block w-full p-2.5 
-                                                                                            focus:border-green-500 focus:ring-green-500 
-                                                                                            required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
-                                                                                            valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                        block w-full p-2.5 
+                                        focus:border-green-500 focus:ring-green-500 
+                                        required:border-gray-500 required:ring-gray-500  required:text-gray-500 required:placeholder:text-gray-500
+                                        valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
                                 autocomplete="off" required>
                         </div>
 
@@ -262,6 +262,31 @@
                             <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden">
                                 <span class="font-medium">Please!</span> Enter valid input!
                             </p>
+                        </div>
+                        <div class="my-4">
+                            <label for="title" class="block mb-2 text-sm font-medium text-gray-700">Document Title</label>
+                            <input type="text" id="title" name="title"
+                                placeholder="Enter Document Title"
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                block w-full p-2.5 
+                                                focus:border-green-500 focus:ring-green-500 
+                                                required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                            <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid input!</p>
+                        </div>
+
+                        <div class="my-4">
+                            <label for="control_no" class="block mb-2 text-sm font-medium text-gray-700">Document Control No.</label>
+                            <input type="text" id="control_no" name="control_no"
+                                placeholder="Enter Document Control No."
+                                class="bg-gray-50 border border-gray-500 text-gray-900 placeholder-gray-700 text-sm rounded-lg 
+                                                block w-full p-2.5 
+                                                focus:border-green-500 focus:ring-green-500 
+                                                required:border-gray-500 required:ring-gray-500 required:text-gray-500 required:placeholder:text-gray-500
+                                                valid:border-green-500 valid:ring-green-500 valid:text-green-800 valid:bg-green-100"
+                                autocomplete="off" required>
+                            <p id="office-source-error" class="mt-2 text-sm text-red-600 hidden"><span class="font-medium">Please!</span> Enter valid input!</p>
                         </div>
                         @if ($type == 'tree-cutting-permits')
                             <label for="tcp-type" class="block mb-2 text-sm font-medium text-gray-700">Tree Cutting
@@ -603,7 +628,6 @@
 
 <script>
     // Fetches file data dynamically
-
     async function fetchEditFile(fileId) {
         initializeButterfly(fileId);
         let includePermit = {!! json_encode($includePermit ?? '') !!};
@@ -625,57 +649,54 @@
 
             const data = await response.json();
             
+            if (data.success && includePermit) {
+                const selectedSpecies = data.permit.species; 
+                fetch('/api/tree-species')
+                .then(response => response.json())
+                .then(data => {
+                    const speciesSelect = document.getElementById('edit-species-tp');
 
-            if (data.success) {
-    const selectedSpecies = data.permit.species; 
-fetch('/api/tree-species')
-  .then(response => response.json())
-  .then(data => {
-    const speciesSelect = document.getElementById('edit-species-tp');
+                    // Clear existing options
+                    speciesSelect.innerHTML = '<option value="" disabled selected>Select Species</option>';
 
-    // Clear existing options
-    speciesSelect.innerHTML = '<option value="" disabled selected>Select Species</option>';
+                    // Track if the selected species is in the list
+                    let speciesInList = false;
 
-    // Track if the selected species is in the list
-    let speciesInList = false;
+                    // Loop through species and add each one to the dropdown
+                    data.forEach(speciesItem => {
+                        const option = document.createElement('option');
+                        option.value = speciesItem.common_name; // Use 'common_name' as the value
+                        option.textContent = speciesItem.common_name; // Display the 'common_name' as the text
+                        speciesSelect.appendChild(option);
 
-    // Loop through species and add each one to the dropdown
-    data.forEach(speciesItem => {
-      const option = document.createElement('option');
-      option.value = speciesItem.common_name; // Use 'common_name' as the value
-      option.textContent = speciesItem.common_name; // Display the 'common_name' as the text
-      speciesSelect.appendChild(option);
+                        // Check if the species in the list matches the selected species
+                        if (speciesItem.common_name === selectedSpecies) {
+                            speciesInList = true;
+                        }
+                    });
 
-      // Check if the species in the list matches the selected species
-      if (speciesItem.common_name === selectedSpecies) {
-        speciesInList = true;
-      }
-    });
+                    // If the selected species is not in the list, add it as a disabled option
+                    if (!speciesInList && selectedSpecies) {
+                        const option = document.createElement('option');
+                        option.value = selectedSpecies;
+                        option.textContent = selectedSpecies; // Mark as deleted
+                        option.disabled = true;
+                        speciesSelect.appendChild(option);
+                    }
 
-    // If the selected species is not in the list, add it as a disabled option
-    if (!speciesInList && selectedSpecies) {
-      const option = document.createElement('option');
-      option.value = selectedSpecies;
-      option.textContent = selectedSpecies; // Mark as deleted
-      option.disabled = true;
-      speciesSelect.appendChild(option);
-    }
+                    // Set the selected value (even if the species was deleted or not in the list)
+                    speciesSelect.value = selectedSpecies;
 
-    // Set the selected value (even if the species was deleted or not in the list)
-    speciesSelect.value = selectedSpecies;
-
-    // If the selected species doesn't exist in the list, display it as "deleted"
-    if (!speciesInList && selectedSpecies) {
-      speciesSelect.value = selectedSpecies;
-    }
-  })
-  .catch(error => {
-    console.error('Error fetching tree species:', error);
-  });
-
+                    // If the selected species doesn't exist in the list, display it as "deleted"
+                    if (!speciesInList && selectedSpecies) {
+                    speciesSelect.value = selectedSpecies;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching tree species:', error);
+                });
 
                 // Get the species input element
-                
                 const editForm = document.getElementById('edit-file-form');
                 editForm.dataset.fileId = fileId; // Set fileId in data-file-id
                 // Handle `file` properties
@@ -684,7 +705,6 @@ fetch('/api/tree-species')
                     const idSelector = key.replace(/_/g, '-'); // Prepare the class name selector
                     // Select all elements with the corresponding class and update their value
                     const input = document.getElementById(`edit-${idSelector}`);
-                   
 
                     if (input) {
                         input.value = value;
@@ -709,7 +729,6 @@ fetch('/api/tree-species')
                         // if (specificationTemplate) {
                         //     specificationTemplate.innerHTML = "";
                         // }
-
                         const details = data.permit.details;
                         console.log('wthis is', details);
                         for (let index = 0; index < details.length; index++) {
@@ -755,11 +774,15 @@ fetch('/api/tree-species')
                         }
                     }
                 }
-            } else {
+            } 
+            else if(data.success && !includePermit){
+                autofillForm(data);
+            }
+            else {
                 console.error('API Error:', data.message); // Log the error if the API call failed
             }
         } catch (error) {
-            console.error("Error fetching data:", error); // Log any errors that occur
+            console.log("Error fetching data:", error); // Log any errors that occur
         } finally {
             editContent.classList.remove("hidden");
             skeleton.classList.add("hidden");
@@ -767,12 +790,12 @@ fetch('/api/tree-species')
 
     }
 
-
     //upload the edited file and permits
     document.getElementById('edit-file-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const csrfToken = "{{ csrf_token() }}";
-        const fileId = event.target.dataset.fileId;
+        const fileId = $('#edit-file-form').data('fileId');
+        console.log("Editing File ID:", event.target);
         document.getElementById('edit-file-form').classList.add('pointer-events-none', 'opacity-50');
         //parameters
 
@@ -876,6 +899,16 @@ fetch('/api/tree-species')
         }
     });
 
+    function autofillForm(data) {
+        console.log("Data to Edit: ", data);
+        $('#edit-file-form').data('fileId', data.file.id); // Set fileId in data-file-id
+        $('#edit-file-form #title').val(data.file.file_name);
+        $('#edit-file-form #edit-office-source').val(data.file.office_source);
+        $('#edit-file-form #edit-classification').val(data.file.classification);
+        $('#edit-file-form #control_no').val(data.file.control_no);
+        $('#edit-file-form #edit-date-released').val(data.file.date_released);
+    }
+
     function deleteDetail(id) {
         const csrfToken = "{{ csrf_token() }}"; // Laravel CSRF token
 
@@ -891,33 +924,27 @@ fetch('/api/tree-species')
         const queryParams = new URLSearchParams(filteredParams).toString();
 
         fetch(`/api/delete/details/${id}?${queryParams}`, {
-                method: 'DELETE', // Use DELETE method, not POST
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken, // Include CSRF token for security
-                },
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                showToast({
-                    type: 'success',
-                    message: 'Success! The specification is deleted.',
-
-                });
-
-            })
-            .catch((error) => {
-                showToast({
-                    type: 'danger',
-                    message: 'Unable to delete the selected detail.',
-
-                });
-
+            method: 'DELETE', // Use DELETE method, not POST
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken, // Include CSRF token for security
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            showToast({
+                type: 'success',
+                message: 'Success! The specification is deleted.',
             });
+
+        })
+        .catch((error) => {
+            showToast({
+                type: 'danger',
+                message: 'Unable to delete the selected detail.',
+            });
+        });
     }
-
-
-
 
     async function initializeButterfly(fileId) {
         try {
@@ -934,32 +961,31 @@ fetch('/api/tree-species')
         }
     }
 
-
     function searchButterflies() {
         let query = document.getElementById("edit-searchInput").value;
         fetch(`/api/butterflies/search?query=${query}`)
-            .then(response => response.json())
-            .then(data => {
-                let resultsList = document.getElementById("edit-searchResults");
-                resultsList.innerHTML = ""; // Clear previous results
+        .then(response => response.json())
+        .then(data => {
+            let resultsList = document.getElementById("edit-searchResults");
+            resultsList.innerHTML = ""; // Clear previous results
 
-                if (data.length === 0) {
-                    document.getElementById("modalBackdropEdit").classList.remove("hidden"); // Show backdrop
-                    document.getElementById("addButterflyModalEdit").classList.remove("hidden"); // Show modal
-                    return;
-                }
+            if (data.length === 0) {
+                document.getElementById("modalBackdropEdit").classList.remove("hidden"); // Show backdrop
+                document.getElementById("addButterflyModalEdit").classList.remove("hidden"); // Show modal
+                return;
+            }
 
-                data.forEach(butterfly => {
-                    let li = document.createElement("li");
-                    li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
-                    li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
-                    li.onclick = function() {
-                        addToTableEdit(butterfly);
-                    };
-                    resultsList.appendChild(li);
-                });
-            })
-            .catch(error => console.error("Error fetching data:", error));
+            data.forEach(butterfly => {
+                let li = document.createElement("li");
+                li.textContent = butterfly.common_name + ' / ' + butterfly.scientific_name;
+                li.className = "p-2 cursor-pointer hover:bg-blue-100 border-b";
+                li.onclick = function() {
+                    addToTableEdit(butterfly);
+                };
+                resultsList.appendChild(li);
+            });
+        })
+        .catch(error => console.error("Error fetching data:", error));
     }
 
     function addToTableEdit(butterfly, isInitialLoad = false) {
@@ -1006,56 +1032,55 @@ fetch('/api/tree-species')
         let image_url = document.getElementById("newEditImageUrl").value;
 
         fetch('/butterfly/add', { // <-- Ensure this matches your Laravel route
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    scientific_name,
-                    common_name,
-                    family,
-                    genus,
-                    description,
-                    image_url
-                })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                scientific_name,
+                common_name,
+                family,
+                genus,
+                description,
+                image_url
             })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => Promise.reject(err));
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Add the newly created butterfly to the table
-                addToTableEdit(data.butterfly);
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Add the newly created butterfly to the table
+            addToTableEdit(data.butterfly);
 
-                // Clear the input fields
-                document.getElementById("newEditScientificName").value = "";
-                document.getElementById("newEditCommonName").value = "";
-                document.getElementById("newEditFamily").value = "";
-                document.getElementById("newEditGenus").value = "";
-                document.getElementById("newEditDescription").value = "";
-                document.getElementById("newEditImageUrl").value = "";
+            // Clear the input fields
+            document.getElementById("newEditScientificName").value = "";
+            document.getElementById("newEditCommonName").value = "";
+            document.getElementById("newEditFamily").value = "";
+            document.getElementById("newEditGenus").value = "";
+            document.getElementById("newEditDescription").value = "";
+            document.getElementById("newEditImageUrl").value = "";
 
-                closeModal();
-            })
-            .catch(error => {
-                console.error("Error adding butterfly:", error);
-                showToast({
-                    type: 'failed',
-                    message: 'Failed to add butterfly. Please check the input.',
-
-                });
+            closeModal();
+        })
+        .catch(error => {
+            console.error("Error adding butterfly:", error);
+            showToast({
+                type: 'failed',
+                message: 'Failed to add butterfly. Please check the input.',
 
             });
+
+        });
     }
 
     function closeModal() {
         document.getElementById("addButterflyModalEdit").classList.add("hidden");
         document.getElementById("modalBackdropEdit").classList.add("hidden"); // Hide backdrop
     }
-
 
     function getSelectedButterflies() {
         let butterflies = [];
@@ -1075,7 +1100,6 @@ fetch('/api/tree-species')
             }
         });
 
-        console.log(butterflies); // Debugging output
         return butterflies;
     }
 </script>

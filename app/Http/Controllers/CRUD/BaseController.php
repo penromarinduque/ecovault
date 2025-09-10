@@ -463,6 +463,9 @@ abstract class BaseController extends Controller
             $file->update([
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'),
+                'control_no' => $request->input('control_no'),
+                'file_name' => $request->input('title'),
+                'date_released' => $request->input('date_released'),
                 'updated_at' => now(), // Set the update timestamp
             ]);
 
