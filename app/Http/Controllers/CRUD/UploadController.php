@@ -16,6 +16,7 @@ use App\Models\RecentActivity;
 use App\Models\File;
 use Exception;
 use App\Models\FileHistory;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 class UploadController extends Controller
 {
@@ -55,7 +56,7 @@ class UploadController extends Controller
             // Get the relative path to store in the database
             $relativeFilePath = str_replace('public/', '', $filePath); // Remove 'public/' to get the path you want to store
 
-
+            Log::info("Request :", $request->all());
             // Create the form data to store in your database
             $formData = [
                 'permit_type' => $type,  // Ensure this is present in the request
@@ -63,7 +64,7 @@ class UploadController extends Controller
                 'municipality' => $municipality, // Ensure this is present in the request
                 'report_type' => $report,                
                 'file_name' => $request->input('title') ?? $sanitizedFileName, // Use title if provided, else original name
-                'control_no' => $request->input('control_no') ?? null,
+                'control_no' => $request->input('control_no'),
                 'file_path' => $relativeFilePath, // The path to the uploaded file
                 'office_source' => $request->input('office_source'),
                 'classification' => $request->input('classification'), // Ensure this is present in the request

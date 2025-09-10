@@ -22,7 +22,8 @@ class File extends Model
         'user_id',
         'is_archived',
         'archived_at',
-        'date_released'
+        'date_released',
+        'control_no'
     ];
 
     public function user()

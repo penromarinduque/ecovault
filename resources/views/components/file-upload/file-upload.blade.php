@@ -878,6 +878,8 @@
                 body: formData
             });
 
+            console.log("Response Status:", fileUploadResponse); // Debugging line
+
             if (!fileUploadResponse.ok) throw new Error("File upload failed");
 
             const fileResponseData = await fileUploadResponse.json();
