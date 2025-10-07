@@ -273,6 +273,7 @@
                 });
                 form.classList.remove('pointer-events-none');
             } finally {
+                // console.error('Error:', error);
                 // Always remove the pointer-events-none class
                 form.classList.remove('pointer-events-none', 'opacity-50');
                 document.getElementById('form-spinner').classList.add('hidden');

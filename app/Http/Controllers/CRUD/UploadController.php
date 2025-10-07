@@ -133,6 +133,7 @@ class UploadController extends Controller
             'debug' => $request->all(),
         ]);
     }
+
     public function embedQrCodeInImage($filePath, $qrCodeFilePath)
     {
         try {
@@ -219,6 +220,7 @@ class UploadController extends Controller
             throw new Exception("Could not open ZIP file at: {$fullFilePath}");
         }
     }
+
     private function deleteDir($dir)
     {
         if (!is_dir($dir)) {
@@ -231,61 +233,108 @@ class UploadController extends Controller
         }
         rmdir($dir);
     }
+
+    // public function embedQrCodeInPdf($filePath, $qrCodePath)
+    // {
+    //     // Load the existing PDF file
+    //     $fullFilePath = storage_path("app/public/{$filePath}");
+
+    //     // Check if the PDF file exists
+    //     if (!file_exists($fullFilePath)) {
+    //         throw new Exception("PDF file not found at: {$fullFilePath}");
+    //     }
+
+    //     // Load the QR Code image
+    //     $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
+    //     if (!file_exists($qrCodeFullPath)) {
+    //         throw new Exception("QR Code not found at: {$qrCodeFullPath}");
+    //     }
+
+    //     // Create a new FPDI object
+    //     $pdf = new Fpdi();
+
+    //     // Set the source file
+    //     $pageCount = $pdf->setSourceFile($fullFilePath);
+
+    //     // Import each page
+    //     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+    //         // Import the current page as a template
+    //         $templateId = $pdf->importPage($pageNo);
+
+    //         // Add a new page and use the imported template
+    //         $pdf->AddPage();
+    //         $pdf->useTemplate($templateId);
+
+    //         // Get the page dimensions
+    //         $pageWidth = $pdf->GetPageWidth();
+    //         $pageHeight = $pdf->GetPageHeight();
+    //         Log::info("Page Width: {$pageWidth}, Page Height: {$pageHeight}");
+    //         $marginRight = 10; // Margin from the right edge of the page
+    //         $marginBottom = 10; // Margin from the bottom edge of the page
+
+    //         // Set QR Code size and position (adjust as needed)
+    //         $qrCodeWidth = 20; // Width in mm
+    //         $qrCodeHeight = 20; // Height in mm
+
+    //         // Calculate the QR code position at the bottom-right corner
+    //         $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
+    //         $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
+
+    //         // Add the QR Code image, which will appear on top of any existing content
+    //         $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
+    //     }
+
+
+    //     // Save the modified PDF to the same file path
+    //     $pdf->Output('F', $fullFilePath);
+
+    //     return $fullFilePath;
+    // }
+
     public function embedQrCodeInPdf($filePath, $qrCodePath)
     {
-        // Load the existing PDF file
         $fullFilePath = storage_path("app/public/{$filePath}");
+        $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
 
-        // Check if the PDF file exists
         if (!file_exists($fullFilePath)) {
             throw new Exception("PDF file not found at: {$fullFilePath}");
         }
 
-        // Load the QR Code image
-        $qrCodeFullPath = storage_path("app/public/{$qrCodePath}");
         if (!file_exists($qrCodeFullPath)) {
             throw new Exception("QR Code not found at: {$qrCodeFullPath}");
         }
 
-        // Create a new FPDI object
         $pdf = new Fpdi();
-
-        // Set the source file
         $pageCount = $pdf->setSourceFile($fullFilePath);
 
-        // Import each page
         for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            // Import the current page as a template
+            // Import page and get its size
             $templateId = $pdf->importPage($pageNo);
+            $size = $pdf->getTemplateSize($templateId);
 
-            // Add a new page and use the imported template
-            $pdf->AddPage();
+            // Add a new page using the same size and orientation as the template
+            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
             $pdf->useTemplate($templateId);
 
-            // Get the page dimensions
-            $pageWidth = $pdf->GetPageWidth();
-            $pageHeight = $pdf->GetPageHeight();
-            $marginRight = 10; // Margin from the right edge of the page
-            $marginBottom = 10; // Margin from the bottom edge of the page
+            // Log the actual size
+            Log::info("Page {$pageNo} - Width: {$size['width']}, Height: {$size['height']}");
 
-            // Set QR Code size and position (adjust as needed)
-            $qrCodeWidth = 20; // Width in mm
-            $qrCodeHeight = 20; // Height in mm
+            // QR Code placement
+            $qrCodeWidth = 20;
+            $qrCodeHeight = 20;
+            $marginRight = 10;
+            $marginBottom = 10;
 
-            // Calculate the QR code position at the bottom-right corner
-            $xPosition = $pageWidth - $qrCodeWidth - $marginRight;
-            $yPosition = $pageHeight - $qrCodeHeight - $marginBottom;
+            $xPosition = $size['width'] - $qrCodeWidth - $marginRight;
+            $yPosition = $size['height'] - $qrCodeHeight - $marginBottom;
 
-            // Add the QR Code image, which will appear on top of any existing content
             $pdf->Image($qrCodeFullPath, $xPosition, $yPosition, $qrCodeWidth, $qrCodeHeight);
         }
 
-
-        // Save the modified PDF to the same file path
         $pdf->Output('F', $fullFilePath);
-
         return $fullFilePath;
     }
+
 
     public function MoveFileById(Request $request, $id)
     {
@@ -376,69 +425,69 @@ class UploadController extends Controller
     }
 
     public function RenameFileById(Request $request, $id)
-{
-    $request->validate([
-        'new_name' => 'required|string|max:255',
-    ]);
-
-    DB::beginTransaction();
-    try {
-        $file = File::findOrFail($id);
-
-        if (!$file) {
-            return response()->json([
-                'success' => false,
-                'message' => "File doesn't exist",
-            ], 404);
-        }
-
-        $currentFilePath = $file->file_path;
-        if (!Storage::disk('public')->exists($currentFilePath)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'File does not exist on the server.',
-            ], 404);
-        }
-
-        $newFileName = $request->input('new_name');
-
-        // Ensure the new file name ends with .pdf
-        if (!str_ends_with($newFileName, '.pdf')) {
-            $newFileName .= '.pdf';
-        }
-
-        $newFilePath = dirname($currentFilePath) . '/' . $newFileName;
-
-        // Rename the file in storage
-        Storage::disk('public')->move($currentFilePath, $newFilePath);
-
-        // Update the file record in the database
-        $file->update([
-            'file_name' => $newFileName,
-            'file_path' => $newFilePath,
+    {
+        $request->validate([
+            'new_name' => 'required|string|max:255',
         ]);
 
-        DB::commit();
+        DB::beginTransaction();
+        try {
+            $file = File::findOrFail($id);
 
-        FileHistory::create([
-            'file_id' => $file->id,
-            'action' => 'Renamed file',
-            'changes' => json_encode(['old_name' => basename($currentFilePath), 'new_name' => $newFileName]),
-            'user_id' => auth()->id() ?: 0,
-        ]);
+            if (!$file) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "File doesn't exist",
+                ], 404);
+            }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'File renamed successfully.',
-            'file' => $file,
-        ], 200);
-    } catch (Exception $ex) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to rename file.',
-            'error' => $ex->getMessage(),
-        ], 500);
+            $currentFilePath = $file->file_path;
+            if (!Storage::disk('public')->exists($currentFilePath)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File does not exist on the server.',
+                ], 404);
+            }
+
+            $newFileName = $request->input('new_name');
+
+            // Ensure the new file name ends with .pdf
+            if (!str_ends_with($newFileName, '.pdf')) {
+                $newFileName .= '.pdf';
+            }
+
+            $newFilePath = dirname($currentFilePath) . '/' . $newFileName;
+
+            // Rename the file in storage
+            Storage::disk('public')->move($currentFilePath, $newFilePath);
+
+            // Update the file record in the database
+            $file->update([
+                'file_name' => $newFileName,
+                'file_path' => $newFilePath,
+            ]);
+
+            DB::commit();
+
+            FileHistory::create([
+                'file_id' => $file->id,
+                'action' => 'Renamed file',
+                'changes' => json_encode(['old_name' => basename($currentFilePath), 'new_name' => $newFileName]),
+                'user_id' => auth()->id() ?: 0,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File renamed successfully.',
+                'file' => $file,
+            ], 200);
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to rename file.',
+                'error' => $ex->getMessage(),
+            ], 500);
+        }
     }
-}
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Http\Requests\AuthenticateRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -61,6 +62,7 @@ class AuthController extends Controller
                 'redirect' => route('verification.show'),
             ], 201);
         } catch (\Exception $e) {
+            Log::info("Registration Error :", $e);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to create account. Please try again later.',
