@@ -111,6 +111,7 @@ abstract class BaseController extends Controller
                         'user_name' => $file->user->name,
                         'classification' => $file->classification,
                         'is_shared' => !empty($sharedUserIds), // Check if there are any fileShares
+                        'date_released' => $file->date_released ? Carbon::parse($file->date_released)->format('Y-m-d') : null,
                         'shared_users' => $sharedUserIds, // List of user IDs who have access
                     ];
                 });

@@ -172,7 +172,7 @@
             : [
                 truncateFilename(file.file_name, 20),
                 file.control_no,
-                formatDate(file.created_at),
+                formatDate(file.date_released),
                 generateKebab(file.id, file.shared_users, file.file_name),
             ];
 
